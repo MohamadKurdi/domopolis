@@ -407,6 +407,7 @@
 	$registry->set('openaiAdaptor', 	new hobotix\OpenAIAdaptor($registry));
 	$registry->set('phoneValidator', 	new hobotix\phoneValidator($registry));
 	$registry->set('smsAdaptor', 		new hobotix\SmsAdaptor($registry));
+	$registry->set('Fiscalisation',		new hobotix\Fiscalisation($registry));
 	
 	$registry->set('bypass_rainforest_caches_and_settings', true);
 	$registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));

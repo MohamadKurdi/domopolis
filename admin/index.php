@@ -70,6 +70,7 @@ require_once(DIR_SYSTEM . 'library/hobotix/OpenAIAdaptor.php');
 require_once(DIR_SYSTEM . 'library/hobotix/SimpleProcess.php');
 require_once(DIR_SYSTEM . 'library/hobotix/TranslateAdaptor.php');
 require_once(DIR_SYSTEM . 'library/hobotix/CheckBoxUA.php');		
+require_once(DIR_SYSTEM . 'library/hobotix/Fiscalisation.php');
 
 $registry 	= new Registry();
 $loader 	= new Loader($registry);
@@ -210,6 +211,7 @@ $registry->set('openaiAdaptor', 	new hobotix\OpenAIAdaptor($registry));
 $registry->set('translateAdaptor', 	new hobotix\TranslateAdaptor($registry));
 $registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
 $registry->set('checkBoxUA', 		new hobotix\CheckBoxUA($registry));
+$registry->set('Fiscalisation',		new hobotix\Fiscalisation($registry));
 
 if (!$registry->get('config')->get('config_enable_amazon_specific_modes')){
 	$registry->set('bypass_rainforest_caches_and_settings', true);

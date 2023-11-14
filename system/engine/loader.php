@@ -14,7 +14,7 @@
 			$this->registry->set($key, $value);
 		}
 		
-		public function library(string $library) {
+		public function library(string $library):void {
 			$file = DIR_SYSTEM . 'library/' . $library . '.php';
 			
 			if (file_exists($file)) {
@@ -25,7 +25,7 @@
 			}
 		}
 		
-		public function helper(string $helper) {
+		public function helper(string $helper):void {
 			$file = DIR_SYSTEM . 'helper/' . $helper . '.php';
 			
 			if (file_exists($file)) {
@@ -36,7 +36,7 @@
 			}
 		}
 		
-		public function model(string $model, string $load_from = DIR_APPLICATION) {			
+		public function model(string $model, string $load_from = DIR_APPLICATION):void {			
 			$file  = $load_from . 'model/' . $model . '.php';
 			$class = 'Model' . preg_replace('/[^a-zA-Z0-9]/', '', $model);
 			
@@ -49,12 +49,18 @@
 				exit();					
 			}
 		}
+
+		public function models(array $models = [], string $load_from = DIR_APPLICATION):void {
+			foreach ($models as $model){
+				$this->model($model, $load_from);
+			}
+		}
 		
-		public function load_catalog_model(string $model) {
+		public function load_catalog_model(string $model):void {
 			$this->model($model, DIR_CATALOG);
 		}
 		
-		public function database($driver, $hostname, $username, $password, $database) {
+		public function database($driver, $hostname, $username, $password, $database):void {
 			$file  = DIR_SYSTEM . 'database/' . $driver . '.php';
 			$class = 'Database' . preg_replace('/[^a-zA-Z0-9]/', '', $driver);
 			

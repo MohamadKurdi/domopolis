@@ -369,6 +369,7 @@ $registry->set('rainforestAmazon',  new hobotix\RainforestAmazon($registry));
 $registry->set('pricevaAdaptor',    new hobotix\PricevaAdaptor($registry));
 $registry->set('courierServices',   new hobotix\CourierServices($registry));
 $registry->set('checkBoxUA',        new hobotix\CheckBoxUA($registry));
+$registry->set('Fiscalisation',     new hobotix\Fiscalisation($registry));
 $registry->set('encryption',        new Encryption($registry->get('config')->get('config_encryption')));
 
 

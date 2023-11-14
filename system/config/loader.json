@@ -34,7 +34,8 @@
 		"/hobotix/OpenAIAdaptor",
 		"/hobotix/MinifyAdaptor",
 		"/hobotix/PhoneValidator",		
-		"/hobotix/CheckBoxUA"
+		"/hobotix/CheckBoxUA",
+		"/hobotix/Fiscalisation"
 	],
 	"startup_libraries":[
 		"engine/action",

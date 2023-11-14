@@ -487,11 +487,7 @@ class CheckBoxUA {
 
     public function setOrderNotNeedCheckbox($order_id){
         $this->db->ncquery("UPDATE `order` SET needs_checkboxua = '0' WHERE order_id = '" . (int)$order_id . "'");
-    }
-
-    public function setOrderPaidBy($order_id, $paid_by){
-        $this->db->ncquery("UPDATE `order` SET paid_by = '" . $this->db->escape($paid_by) . "' WHERE order_id = '" . (int)$order_id . "'");
-    }
+    } 
 
     private function getProductsForReceipt($data=array()){
         if(!isset($data['products'])){
