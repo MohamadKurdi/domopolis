@@ -305,11 +305,12 @@
 						</td>
 						<td style="width: 15%">
 							<span class="status_color" style="display:inline-block; padding:3px 5px;background:#00ad07; color:#FFF">Привязать к бренду</span>					
+							<span style="border-bottom:1px dashed #CF4A61; cursor:pointer; color:#CF4A61;" onclick="$('#manufacturer').val(''); $('#manufacturer_id').val('');">очистить</span>
 						</td>
 						<td style="width: 25%">
-							<span class="status_color" style="display:inline-block; padding:3px 5px;background:#7F00FF; color:#FFF">Привязать к специальной категории</span>		
+							<span class="status_color" style="display:inline-block; padding:3px 5px;background:#7F00FF; color:#FFF">Привязать к специальной категории</span>
+							<span style="border-bottom:1px dashed #CF4A61; cursor:pointer; color:#CF4A61;" onclick="$('#category_related').val(''); $('#category_related_id').val('');">очистить</span>
 						</td>
-
 						<td style="width: 15%">
 							<span class="status_color" style="display:inline-block; padding:3px 5px;background:#7F00FF; color:#FFF">Без пересечений</span>		
 						</td>
@@ -331,19 +332,12 @@
 							</select>
 						</td>
 						<td>
-							<input type="text" name="manufacturer" value="<?php echo $manufacturer ?>" />
-							<input type="hidden" name="manufacturer_id" value="<?php echo $manufacturer_id; ?>" />			
+							<input type="text" name="manufacturer" id="manufacturer" value="<?php echo $manufacturer ?>" />
+							<input type="hidden" name="manufacturer_id" id="manufacturer_id" value="<?php echo $manufacturer_id; ?>" />			
 						</td>
-						<td>
-							<div>
-								<div style="float:left;width:350px;">							
-									<input type="text" name="category_related" id="category_related" value="<?php echo $category_related; ?>" style="width:90%" />							
-									<input type="hidden" name="category_related_id" id="category_related_id" value="<?php echo $category_related_id; ?>" />
-								</div>
-								<div style="float:right;width:100px;">
-									<a onclick="$('#category_related').val(''); $('#category_related_id').val('');" class="button"><span>Очистить</span></a>
-								</div>
-							</div>
+						<td>								
+							<input type="text" name="category_related" id="category_related" value="<?php echo $category_related; ?>" style="width:90%" />							
+							<input type="hidden" name="category_related_id" id="category_related_id" value="<?php echo $category_related_id; ?>" />															
 						</td>
 
 						<td>

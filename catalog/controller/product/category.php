@@ -744,12 +744,12 @@
 				}
 				
 				if( ! empty( $fmSettings['in_stock_default_selected'] ) ) {
-					$this->data['column_left'] = $this->getChild('common/column_left');
-					$this->data['column_right'] = $this->getChild('common/column_right');
-					$this->data['content_top'] = $this->getChild('common/content_top');
-					$this->data['mfp_column_left'] = true;
+					$this->data['column_left'] 		= $this->getChild('common/column_left');
+					$this->data['column_right'] 	= $this->getChild('common/column_right');
+					$this->data['content_top'] 		= $this->getChild('common/content_top');
+					$this->data['mfp_column_left'] 	= true;
 					$this->data['mfp_column_right'] = true;
-					$this->data['mfp_content_top'] = true;
+					$this->data['mfp_content_top'] 	= true;
 				}
 				
 				$product_total = $this->model_catalog_product->getTotalProducts($data); 	
@@ -796,12 +796,12 @@
 								$image = $this->model_tool_image->resize($this->config->get('config_noimage'), 407, 491);
 							}
 							
-							$action_data = array(
-							'is_inserted_action' => true,
-							'thumb'       => $image,
-							'title' => $action['title'],
-							'href' => $this->url->link('information/actions','actions_id=' . $action['actions_id'])
-							);
+							$action_data = [
+							'is_inserted_action' 	=> true,
+							'thumb'       			=> $image,
+							'title' 				=> $action['title'],
+							'href' 					=> $this->url->link('information/actions','actions_id=' . $action['actions_id'])
+							];
 							
 							$counter = 1;
 							$tmp_products = array();
@@ -829,12 +829,12 @@
 								$image = $this->model_tool_image->resize($this->config->get('config_noimage'), 407, 491);
 							}
 							
-							$action_data = array(
+							$action_data = [
 							'is_inserted_action' 	=> true,
 							'thumb'       			=> $image,
 							'title' 				=> $action['title'],
 							'href' 					=> $this->url->link('information/actions','actions_id=' . $action['actions_id'])
-							);
+							];
 							
 							$counter = 1;
 							$tmp_products = array();
@@ -849,7 +849,6 @@
 							}
 							$this->data['products'] = $tmp_products;
 						}
-						
 					}
 				}
 				
@@ -868,9 +867,7 @@
 						
 						if ($result['menu_name']){
 							$result['name'] = $result['menu_name'];
-						}
-						
-						//	$product_total = $this->model_catalog_product->getTotalProducts($data);				
+						}			
 						
 						if (!empty($this->request->get['intersection_id']) && $result['category_id'] == $this->request->get['intersection_id']){
 							$intersection_active = true;
@@ -907,9 +904,7 @@
 							
 							if ($result['menu_name']){
 								$result['name'] = $result['menu_name'];
-							}
-							
-							//	$product_total = $this->model_catalog_product->getTotalProducts($data);				
+							}		
 							
 							if (!empty($this->request->get['intersection_id']) && $result['category_id'] == $this->request->get['intersection_id']){
 								$intersection_active = true;

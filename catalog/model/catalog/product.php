@@ -1020,7 +1020,7 @@
 					} else {
 					$sql .= " LEFT JOIN product p ON (p2c.product_id = p.product_id)";
 				}
-				} else {
+			} else {
 				$sql .= " FROM product p";
 			}
 			
@@ -1229,6 +1229,14 @@
 			if (!empty($data['filter_collection_id'])) {
 				$sql .= " AND p.collection_id = '" . (int)$data['filter_collection_id'] . "'";
 			}
+
+			if (!empty($data['filter_actions_id'])) {
+				$sql .= " AND p.product_id IN (SELECT product_id FROM actions_to_product a2p WHERE actions_id = '" . (int)$data['filter_actions_id'] . "')";
+			}
+
+			if (!empty($data['filter_product_additional_offer'])) {
+				$sql .= " AND p.product_id IN (SELECT product_id FROM product_additional_offer pao WHERE ao_group LIKE '" .$this->db->escape($data['filter_product_additional_offer']). "')";
+			}
 			
 			if (!empty($this->request->get['path'])){
 				$path = '';				
@@ -1250,6 +1258,10 @@
 			}
 			
 			if (!empty($data['filterinstock'])) {
+				$sql .= " AND p." . $this->config->get('config_warehouse_identifier') . " > 0";
+			}
+
+			if (!empty($data['filter_in_stock'])) {
 				$sql .= " AND p." . $this->config->get('config_warehouse_identifier') . " > 0";
 			}
 
@@ -1418,8 +1430,7 @@
 			
 			return $product_data;
 		}
-
-		
+	
 		public function getProductAdditionalOffer($product_id){
 			
 			$query = $this->db->query("SELECT ao.* FROM product_additional_offer ao LEFT JOIN product_additional_offer_to_store ao2s ON (ao.product_additional_offer_id = ao2s.product_additional_offer_id)
@@ -2283,18 +2294,16 @@
 		public function getProductImageTitleAlt($product_id){
 			$data = [];
 			$query =$this->db->query("SELECT alt_image,title_image FROM product_description WHERE product_id = '". (int)$product_id ."'  ");
-			//return $query->rows;
 			
 			foreach ($query->rows as $result) {
-				$data['alt'] =$result['alt_image'];
-				$data['title'] = $result['title_image'];
+				$data['alt'] 	=	$result['alt_image'];
+				$data['title'] 	= 	$result['title_image'];
 				
 			}
 			return $data;
 		}
 		
-		public function getProductDiscounts($product_id){
-			
+		public function getProductDiscounts($product_id){			
 			$query = $this->db->query("SELECT * FROM product_discount WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND quantity > 1 AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity ASC, priority ASC, price ASC");
 			
 			return $query->rows;
@@ -2610,7 +2619,7 @@
 					} else {
 					$sql .= " LEFT JOIN product p ON (p2c.product_id = p.product_id)";
 				}
-				} else {
+			} else {
 				$sql .= " FROM product p";
 			}
 			
@@ -2785,6 +2794,14 @@
 			if (!empty($data['filter_collection_id'])) {
 				$sql .= " AND p.collection_id = '" . (int)$data['filter_collection_id'] . "'";
 			}
+
+			if (!empty($data['filter_actions_id'])) {
+				$sql .= " AND p.product_id IN (SELECT product_id FROM actions_to_product a2p WHERE actions_id = '" . (int)$data['filter_actions_id'] . "')";
+			}
+
+			if (!empty($data['filter_product_additional_offer'])) {
+				$sql .= " AND p.product_id IN (SELECT product_id FROM product_additional_offer pao WHERE ao_group LIKE '" .$this->db->escape($data['filter_product_additional_offer']). "')";
+			}
 			
 			if (!empty($data['new'])) {
 				if (!$this->config->get('config_ignore_manual_marker_productnews')){
@@ -2815,6 +2832,10 @@
 			}
 			
 			if (!empty($data['filterinstock'])) {
+				$sql .= " AND p." . $this->config->get('config_warehouse_identifier') . " > 0";
+			}
+
+			if (!empty($data['filter_in_stock'])) {
 				$sql .= " AND p." . $this->config->get('config_warehouse_identifier') . " > 0";
 			}
 

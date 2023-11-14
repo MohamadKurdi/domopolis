@@ -1,6 +1,6 @@
 <?php 
 class ControllerInformationActions extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {  
 		$this->language->load('information/actions');
@@ -26,7 +26,7 @@ class ControllerInformationActions extends Controller {
 		$this->data['text_archive'] = $this->language->get('archive');
 		$this->data['text_action_sale_ended'] = $this->language->get('text_action_sale_ended');
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -47,9 +47,7 @@ class ControllerInformationActions extends Controller {
 			}
 		}
 
-
 		if ($this->error && isset($this->error['error'])) {
-
 			$this->document->setTitle($this->error['error']);
 
 			$actions_all = NULL;
@@ -73,10 +71,9 @@ class ControllerInformationActions extends Controller {
 				}	
 
 				if ($template = $this->model_design_layout->getLayoutTemplateByLayoutId($layout_id)) {
-					$this->template = $this->config->get('config_template') . '/template/' . $template;
+					$this->template = $template;
 				}
 			}								
-
 		}
 
 		$this->children = array(
@@ -92,7 +89,6 @@ class ControllerInformationActions extends Controller {
 	}
 
 	public function getAction($actions_id) {
-
 		foreach ($this->language->loadRetranslate('product/single') as $translationСode => $translationText){
 			$this->data[$translationСode] = $translationText;
 		}
@@ -100,6 +96,32 @@ class ControllerInformationActions extends Controller {
 		foreach ($this->language->loadRetranslate('actions/actions') as $translationСode => $translationText){
 			$this->data[$translationСode] = $translationText;
 		}
+
+		if (isset($this->request->get['sort'])) {
+			$sort = $this->request->get['sort'];
+		} else {			
+			$sort = $this->config->get('sort_default');
+		}
+
+		if (isset($this->request->get['order'])) {
+			$order = $this->request->get['order'];
+		} else {
+			$order = $this->config->get('order_default');
+		}
+
+		if (isset($this->request->get['page'])) {
+			$page = $this->request->get['page'];
+		} else { 
+			$page = 1;
+		}							
+
+		if (isset($this->request->get['limit'])) {
+			$limit = (int)$this->request->get['limit'];
+		} else {
+			$limit = $this->config->get('config_catalog_limit');
+		}
+
+		$this->data['page_type'] = 'category';
 
 		$actions_setting = $this->config->get('actions_setting');	
 		$action_info = $this->model_catalog_actions->getActions($actions_id);
@@ -116,9 +138,8 @@ class ControllerInformationActions extends Controller {
 		}
 
 		foreach ($additionalActions as $k => $v) {
-
 			$date_start = date( 'j', $v['date_start'] ) . ' ' . $this->model_catalog_actions->getMonthName(date( 'n', $v['date_start'] ));
-			$date_end = date( 'j', $v['date_end'] ) . ' ' . $this->model_catalog_actions->getMonthName(date( 'n', $v['date_end'] ));
+			$date_end 	= date( 'j', $v['date_end'] ) . ' ' . $this->model_catalog_actions->getMonthName(date( 'n', $v['date_end'] ));
 
 			if ($actions_setting['show_date']) {
 				$date = sprintf($this->language->get('date_actions_format'), $date_start, $date_end);
@@ -134,40 +155,32 @@ class ControllerInformationActions extends Controller {
 
 		$this->data['text_read_more'] = $this->language->get('text_read_more');
 
-		$this->data['additionalActions'] = $additionalActions;
-		$this->data['product_related'] = array();
+		$this->data['additionalActions'] 	= $additionalActions;
+		$this->data['product_related'] 		= [];
 
-		$products = [];
-		if ($action_info['ao_group']){
-			$products = $this->model_catalog_actions->getProductIdsByAdditionalOfferGroup($action_info['ao_group']);
-		} elseif (!empty($action_info['product_related'])) {
-			$products = explode(',', $action_info['product_related']);
-		} elseif (!empty($action_info['category_related_id'])) {
-			//TODO - just list of products by category, like in category listing
-			if ($action_info['category_related_no_intersections']){
-				$products = [];
-			}
+		if ($action_info['deletenotinstock'] || $action_info['only_in_stock']){
+			$filter_in_stock = true;
+		} else {
+			$filter_in_stock = false;
 		}
 
-		$results = [];
-		if( $products ) {								
-			foreach ($products as $product_id) {
-				if (trim($product_id) && $product_info = $this->model_catalog_product->getProduct($product_id)){
-					if ($action_info['deletenotinstock']){
-						if (!$product_info['current_in_stock']){
-							continue;
-						}
-					}
-					if ($action_info['only_in_stock']){
-						if (!$product_info['current_in_stock']){
-							continue;
-						}
-					}
+		$data = [				
+				'filter_in_stock' 				=> $filter_in_stock,
+				'no_child'      				=> true, 
+				'sort'               			=> $sort,
+				'order'              			=> $order,
+				'start'              			=> ($page - 1) * $limit,
+				'limit'              			=> $limit
+		];
 
-					$results[$product_id] = $product_info;
-				}
-			}			
+		if (!empty($action_info['ao_group'])){
+			$data['filter_product_additional_offer'] = $action_info['ao_group'];
+		} else {
+			$data['filter_actions_id'] = $actions_id;
 		}
+		
+		$results 		= $this->model_catalog_product->getProducts($data);
+		$product_total 	=  $this->model_catalog_product->getTotalProducts($data);
 
 		$this->data['product_related'] = $this->model_catalog_product->prepareProductToArray($results);		
 
@@ -276,11 +289,44 @@ class ControllerInformationActions extends Controller {
 		} 
 
 		$this->data['fancybox']		= $action_info['fancybox'];
-		$this->data['content'] = html_entity_decode($action_info['content'], ENT_QUOTES, 'UTF-8');
+		$this->data['content'] 		= html_entity_decode($action_info['content'], ENT_QUOTES, 'UTF-8');
 
-		$this->data['button_cart'] = $this->language->get('button_cart');
-		$this->data['button_continue'] = $this->language->get('button_all_actions');
-		$this->data['continue'] = $this->url->link('information/actions');
+		$this->data['button_cart'] 		= $this->language->get('button_cart');
+		$this->data['button_continue'] 	= $this->language->get('button_all_actions');
+		$this->data['continue'] 		= $this->url->link('information/actions');
+
+		$url = '';
+
+		if( ! empty( $this->request->get['mfp'] ) ) {
+			$url .= '&mfp=' . $this->request->get['mfp'];
+		}				
+
+		if (isset($this->request->get['sort'])) {
+			$url .= '&sort=' . $this->request->get['sort'];
+		}	
+
+		if (isset($this->request->get['order'])) {
+			$url .= '&order=' . $this->request->get['order'];
+		}
+
+		if (isset($this->request->get['limit'])) {
+			$url .= '&limit=' . $this->request->get['limit'];
+		}
+				
+		$pagination 		= new Pagination($this->registry);
+		$pagination->total 	= $product_total;
+		$pagination->page 	= $page;
+		$pagination->limit 	= $limit;
+		$pagination->text 	= $this->language->get('text_pagination');
+		$pagination->url 	= $this->url->link('information/actions','actions_id=' . $actions_id . $url . '&page={page}');
+
+		$this->data['text_show_more'] 	= $this->language->get('text_show_more');
+		$this->data['pagination'] 		= $pagination->render();
+		$this->data['pagination_text'] 	= $pagination->render_text();
+
+		$this->data['sort']  = $sort;
+		$this->data['order'] = $order;
+		$this->data['limit'] = $limit;
 	}
 
 	public function getList($archive = false) {
@@ -333,7 +379,7 @@ class ControllerInformationActions extends Controller {
 			$results = $this->model_catalog_actions->getActionsAll( ($page - 1) * $limit, $limit);
 		}
 
-		$this->data['actions_all'] = array();
+		$this->data['actions_all'] = [];
 
 		foreach ($results as $result) {
 
@@ -381,7 +427,7 @@ class ControllerInformationActions extends Controller {
 		}
 
 
-		$this->data['limits'] = array();
+		$this->data['limits'] = [];
 
 		$limits = array_unique(array($this->config->get('config_catalog_limit'), $this->config->get('config_catalog_limit') * 2, $this->config->get('config_catalog_limit') * 3));
 		sort($limits);

@@ -1,4 +1,4 @@
-<?php echo $header; ?><?php echo $column_left; ?><?php echo $column_right; ?>
+<?php echo $header; ?>
 <?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
 <style type="text/css">
 	#countdown .digit {
@@ -187,12 +187,30 @@
 					</div>
 				</div>
 				
-				<?php if( count($product_related) > 0) { ?>
+				<?php if( count($product_related) > 0) { ?>				
 					<div id="product-grid-link" class="action-product-block">
 						<div class="actionsRelHeader">
 							<h2 class="title"><?php echo $text_relproduct_header; ?> </h2>
 						</div>
 						<div class="catalog__content ">
+							<!--aside-->
+							<?php if ($column_left && empty($do_not_show_left_aside_in_list)) { ?>
+								<div class="aside">
+									<!-- <div class="filter-btn" data-name-btn="Показать фильтр" data-name-btn-opened="Скрыть фильтр"></div> -->
+									<!--filter-->
+									<div class="filter">
+										<!--accordion-->
+										<div class="accordion">
+											<!--accordion__item-->
+											<?php echo $column_left; ?>
+											<!--/accordion__item-->
+										</div>
+									</div>
+									<!--/filter-->
+								</div>
+							<?php } ?>
+							<!--/aside-->
+
 							<!--product__grid-->
 							<div class="product__grid" id="product__grid">
 								<!--product__item-->
@@ -203,7 +221,14 @@
 							</div>
 							<!--/product__grid-->
 						</div>
-					</div>   
+					</div> 
+
+					<output id="output" class="hidden"></output>
+					<!--/product__grid-->
+					
+					<!--pages-->
+					<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/pagination.tpl')); ?>
+					<!--/pages-->  
 				<?php } ?>
 					<?php if (!empty($additionalActions)){ ?>
 						<div class="last-action-block">
@@ -227,26 +252,6 @@
 					<?php } ?>
 				<?php } else {?>
 				
-				<?php if ($actions_all) { ?>
-					
-					<!--  <div class="product-filter">
-						
-						<div class="limit"><b><?php echo $text_limit; ?> </b>
-						<select onchange="location = this.value;">
-						<?php foreach ($limits as $limits) { ?>
-							<?php if ($limits['value'] == $limit) { ?>
-								<option value="<?php echo $limits['href']; ?>" selected="selected"><?php echo $limits['text']; ?></option>
-								<?php } else { ?>
-								<option value="<?php echo $limits['href']; ?>"><?php echo $limits['text']; ?></option>
-							<?php } ?>
-						<?php } ?>
-						</select>
-						</div>
-						</div>
-						<div>&nbsp;</div>
-					-->
-					
-				<?php } ?>
 				<?php echo $content_bottom; ?>
 			</div>
 			<div id="actionsList">

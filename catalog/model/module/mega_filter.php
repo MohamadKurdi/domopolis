@@ -9,13 +9,10 @@
 
 class MegaFilterCore {	
 	
-	public static $_specialRoute	= array( 'product/special' );
-	
-	public static $_searchRoute		= array( 'product/search' );
-	
-	public static $_homeRoute		= array( 'common/home' );
-	
-	private static $_cache			= array();
+	public static $_specialRoute	= array( 'product/special' );	
+	public static $_searchRoute		= array( 'product/search' );	
+	public static $_homeRoute		= array( 'common/home' );	
+	private static $_cache			= [];
 	
 	////////////////////////////////////////////////////////////////////////////
 	
@@ -246,6 +243,10 @@ class MegaFilterCore {
 
 		if( ! empty( $ctrl->request->get['filterinstock'] ) ) {
 			$data['filterinstock'] = $ctrl->request->get['filterinstock'];
+		}
+
+		if( ! empty( $ctrl->request->get['filter_in_stock'] ) ) {
+			$data['filter_in_stock'] = $ctrl->request->get['filter_in_stock'];
 		}
 
 		if( ! empty( $ctrl->request->get['filter_not_bad'] ) ) {
