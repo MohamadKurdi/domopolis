@@ -474,7 +474,6 @@ class ModelCheckoutOrder extends Model {
 		return $order_id;
 	}
 
-
 	public function addOrderSimple($data){		
 		$this->load->model('setting/extension');
 		$this->load->model('affiliate/affiliate');
@@ -671,9 +670,7 @@ class ModelCheckoutOrder extends Model {
 		}
 
 		return $order_id;
-
 	}
-
 
 	public function getLastCustomerOrder($customer_id){
 		$query = $this->db->ncquery("SELECT * FROM `order` WHERE customer_id = '" . (int)$customer_id . "' ORDER BY date_added DESC LIMIT 1");

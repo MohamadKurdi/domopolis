@@ -127,12 +127,12 @@ class ControllerPaymentMono extends Controller
                     case 'success':{
                         if($order['order_status_id'] != $this->config->get('mono_order_success_status_id')) {
                             $this->model_checkout_order->confirm($orderID, $this->config->get('mono_order_success_status_id'), $this->language->get('text_status_success'), $notify = true);
+                            $this->Fiscalisation->setOrderPaidBy($orderID, 'mono');
 
                             if ($this->config->get('mono_checkbox_enable')){
                                 $this->load->library('hobotix/CheckBoxUA');
                                 $checkBoxAPI = new hobotix\CheckBoxUA($this->registry);
-                                $checkBoxAPI->setOrderNeedCheckbox($orderID);
-                                $checkBoxAPI->setOrderPaidBy($orderID, 'mono');
+                                $checkBoxAPI->setOrderNeedCheckbox($orderID);                                
                             }
 
                             $this->response->redirect($this->url->link('checkout/success', '', true));
@@ -218,12 +218,12 @@ class ControllerPaymentMono extends Controller
                         }
 
                         $this->model_checkout_order->update($OrderInfo['OrderId'], $this->config->get('mono_order_success_status_id'), $this->language->get('text_status_success'), $notify = true);
+                        $this->Fiscalisation->setOrderPaidBy($OrderInfo['OrderId'], 'mono');
 
                         if ($this->config->get('mono_checkbox_enable')){
                             $this->load->library('hobotix/CheckBoxUA');
                             $checkBoxAPI = new hobotix\CheckBoxUA($this->registry);
-                            $checkBoxAPI->setOrderNeedCheckbox($OrderInfo['OrderId']);
-                            $checkBoxAPI->setOrderPaidBy($OrderInfo['OrderId'], 'mono');
+                            $checkBoxAPI->setOrderNeedCheckbox($OrderInfo['OrderId']);                            
                         }
                         
                         $this->success($OrderInfo['OrderId']);
@@ -348,6 +348,8 @@ class ControllerPaymentMono extends Controller
         $this->load->model('checkout/order');
         $this->load->model('payment/mono');
         $this->load->model('payment/mono_checkout');
+        $this->load->model('account/customer');
+        $this->load->model('tool/simpleapicustom');
 
         $json = $clear_json = file_get_contents("php://input");         
         $json = json_decode($json, true);
@@ -370,7 +372,63 @@ class ControllerPaymentMono extends Controller
             die();
         }
 
-        $result = $this->model_payment_mono_checkout->updateOrder($order_info, $json);       
+        $result = $this->model_payment_mono_checkout->updateOrder($order_info, $json);
+
+        switch($json['generalStatus']){
+            case 'not_authorized':
+            break;
+
+            case 'not_confirmed':
+            break;
+
+            case 'in_process':
+            if ($order_info['order_status_id'] != $this->config->get('mono_order_process_status_id')) {
+                if (!$order['order_status_id']){
+                    $this->model_checkout_order->confirm($order_info['order_id'], $this->config->get('config_order_status_id'), $this->language->get('text_status_processing'), $notify = true);
+                }
+
+                $this->model_checkout_order->update($order_info['order_id'], $this->config->get('mono_order_process_status_id'), $this->language->get('text_status_processing'));
+            }
+            break;            
+
+            case 'payment_on_delivery':
+            if ($order_info['order_status_id'] != $this->config->get('config_order_status_id')) {            
+                if (!$order_info['order_status_id']){
+                    $this->model_checkout_order->confirm($order_info['order_id'], $this->config->get('config_order_status_id'), 'Замовлення оформлене через Mono Checkout', $notify = true);                            
+                }
+
+                $this->model_checkout_order->update($order_info['order_id'], $this->config->get('config_order_status_id'), 'Замовлення оформлене через Mono Checkout', $notify = true); 
+            }
+            break;
+
+            case 'success':
+            if ($order_info['order_status_id'] != $this->config->get('mono_order_success_status_id')) {
+                if (!$order_info['order_status_id']){
+                    $this->model_checkout_order->confirm($order_info['order_id'], $this->config->get('config_order_status_id'), 'Замовлення оформлене через Mono Checkout', $notify = true);                            
+                }
+
+                if ($json['payment_method'] != 'payment_on_delivery' && $json['payment_status'] == 'success'){
+                    $this->model_checkout_order->update($order_info['order_id'], $this->config->get('mono_order_success_status_id'), $this->language->get('text_status_success'), $notify = true);
+                     $this->Fiscalisation->setOrderPaidBy($order_info['order_id'], 'mono');
+                    
+                    if ($this->config->get('mono_checkbox_enable')){
+                        $this->load->library('hobotix/CheckBoxUA');
+                        $checkBoxAPI = new hobotix\CheckBoxUA($this->registry);
+                        $checkBoxAPI->setOrderNeedCheckbox($order_info['order_id']);                       
+                    }
+                }
+                
+            }
+            break;
+
+            case 'fail':
+            if($order_info['order_status_id'] != $this->config->get('mono_order_cancelled_status_id')) {
+                $this->model_checkout_order->confirm($order_info['order_id'], $this->config->get('mono_order_cancelled_status_id'), $this->language->get('text_status_failure'));
+            }
+            break;
+
+            default: exit('undefined order status');
+        }       
 
         if ($result){
             $this->response->setOutput(json_encode($result));
