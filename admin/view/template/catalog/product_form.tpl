@@ -960,9 +960,14 @@
 																	</tr>
 																</table>
 
-
-																<div style="margin-top:10px" id="amazon_offers">
+																<h2 style="margin-top:10px;"><i class="fa fa-amazon"></i> Текущие офферы</h2>
+																<div style="margin-top:10px;" id="amazon_offers">
 																	<?php require_once(DIR_TEMPLATE . 'sale/amazon_offers_list.tpl'); ?>
+																</div>
+
+																<h2 style="margin-top:10px;"><i class="fa fa-clock-o"></i> История ценообразования</h2>
+																<div style="margin-top:10px;" id="amazon_offers_history">
+																	<?php require_once(DIR_TEMPLATE . 'sale/amazon_offers_history.tpl'); ?>
 																</div>
 
 															</div>

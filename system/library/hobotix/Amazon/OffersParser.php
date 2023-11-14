@@ -654,13 +654,10 @@ class OffersParser
 				$amazonBestPrice = (float)$rfOffer->getPriceAmount() + (float)$rfOffer->getDeliveryAmount();
 				$this->db->query("UPDATE product SET amazon_best_price = '" . (float)$amazonBestPrice . "' WHERE asin = '" . $this->db->escape($asin) . "' AND is_markdown = 0");
 
-				//New function, used for checking if best price is below range
 				if ($this->validateProductLowPrice($asin, $amazonBestPrice)){
 					echoLine('[OffersParser] Disabling logic worked, product is disabled or deleted');
 					break;
-				}
-
-				$this->PriceLogic->updateProductPrices($asin, $amazonBestPrice);
+				}				
 			}
 
 			//Lowest Amazon Price
@@ -729,7 +726,14 @@ class OffersParser
 				isNativeOffer 					= '" . (int)$rfOffer->getSellerNative() . "',
 				offer_id 						= '" . $this->db->escape($offer_id) . "',
 				date_added						= NOW()");
-		}
+
+				$lastOfferID = $this->db->getLastId();
+
+				if ($key == $ratingKeys['maxRatingKey']){
+					$query = $this->db->query("SELECT * FROM product_amzn_offers WHERE amazon_offer_id = '" . (int)$lastOfferID . "' LIMIT 1");
+					$this->PriceLogic->updateProductPrices($asin, $amazonBestPrice, false, $rfOffer->getOriginalDataArray(), $query->row);
+				}
+		}		
 
 		if (!empty($rfOffer)){
 			$rating_data = [

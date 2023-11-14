@@ -149,26 +149,20 @@ class ControllerCatalogProduct extends Controller {
 	}
 
 	public function getOptimalPrice () {
-			// Загружаем нужные нам модели
 		$this->load->model('catalog/product');
 		$this->load->model('kp/price');
-
-			// Получаем ID товара
+			
 		$productId = (int)$this->request->get['product_id'];
 
 		$r = $this->model_kp_price->getProductPriceFromSources($productId);
 		$resultArray = [];
-		$resultArray['price'] = $r['price'];
-		$resultArray['special_price'] =  $r['special_price'];
-		$resultArray['suppliers'] = $r['result'];
-		$resultArray['good'] = $r['sellData'];
-
-
+		$resultArray['price'] 			= $r['price'];
+		$resultArray['special_price'] 	=  $r['special_price'];
+		$resultArray['suppliers'] 		= $r['result'];
+		$resultArray['good'] 			= $r['sellData'];
 		$resultArray['local_suppliers'] = [];
-
-
 		$this->data['result'] = $resultArray;
-			// Нужно вывести на экран
+
 		$this->template = 'catalog/product_supplier_optimal_price.tpl';
 		$this->response->setOutput($this->render());	
 	}
@@ -1289,11 +1283,8 @@ class ControllerCatalogProduct extends Controller {
 						'this' => ($_cgrealproduct['product_id'] == $this->request->get['product_id']),
 						'action' => 'index.php?route=catalog/product/update&token=' . $this->session->data['token'].'&product_id='.$_cgrealproduct['product_id']
 					);	
-
 				}
-
 			}
-
 		}
 
 
@@ -1370,40 +1361,32 @@ class ControllerCatalogProduct extends Controller {
 				$this->data['amazon_product_json'] = 'IN DB';
 			}
 
+			$this->data['amazon_offers_history'] = [];
+			$amazon_offers_histories = $this->rainforestAmazon->offersParser->PriceLogic->priceHistory->getOffersHistory($this->data['asin']);
+
+			foreach ($amazon_offers_histories as $amazon_offers_history){
+				$offer = json_decode($amazon_offers_history['offer_data'], true);
+
+				$this->data['amazon_offers_histories'][] = [
+					'asin' 				=> $amazon_offers_history['asin'],
+					'store_id' 			=> $amazon_offers_history['store_id'],
+					'date_added' 		=> date('Y-m-d H:i:s', strtotime($amazon_offers_history['date_added'])),
+					'weight' 			=> $amazon_offers_history['weight'],
+					'amazon_best_price' => $this->currency->format_with_left($amazon_offers_history['amazon_best_price'], $offer['priceCurrency']),
+					'price' 			=> $this->currency->format_with_left($amazon_offers_history['price'], $this->config->get('config_currency'), 1),
+					'costprice' 		=> $this->currency->format_with_left($amazon_offers_history['costprice'], $this->config->get('config_currency'), 1),
+					'profitability' 	=> $amazon_offers_history['profitability'],
+					'offer' 			=> $this->model_kp_product->prepareProductAmazonOffer($offer)
+				];
+			}
+			unset($offer);
+
 			$this->data['offers'] = [];
 			$offers = $this->model_kp_product->getProductAmazonOffers($this->data['asin']);
 
 			foreach ($offers as $offer){
-				if ($offer['conditionIsNew']){
-
-					$supplier = $this->rainforestAmazon->offersParser->Suppliers->getSupplier($offer['sellerName'], $offer['sellerID']);
-
-					$this->data['offers'][] = [					
-						'seller' 				=> $offer['sellerName'],
-						'prime'	 				=> $offer['isPrime'],
-						'buybox_winner'	 		=> $offer['isBuyBoxWinner'],
-						'is_best'				=> $offer['isBestOffer'],
-						'offer_rating'			=> $offer['offerRating'],
-						'edit_supplier' 		=> $supplier?$this->url->link('sale/supplier/update', 'token=' . $this->session->data['token'] . '&supplier_id=' . $supplier['supplier_id']):'',
-						'supplier'				=> $supplier,
-						'price'	 				=> $this->currency->format_with_left($offer['priceAmount'], $offer['priceCurrency'], 1),
-						'delivery'	 			=> $this->currency->format_with_left($offer['deliveryAmount'], $offer['deliveryCurrency'], 1),	
-						'total'					=> $this->currency->format_with_left($offer['priceAmount'] + $offer['deliveryAmount'], $offer['priceCurrency'], 1),
-						'delivery_fba' 			=> $offer['deliveryIsFba'],
-						'delivery_comment' 		=> $offer['deliveryComments'],
-						'min_days' 				=> $offer['minDays'],
-						'delivery_from' 		=> $offer['deliveryFrom'],
-						'delivery_to' 			=> $offer['deliveryTo'],
-						'is_min_price'			=> $offer['is_min_price'],							
-						'reviews'				=> (int)$offer['sellerRatingsTotal'],
-						'rating'				=> (int)$offer['sellerRating50'] / 10,
-						'positive'				=> (int)$offer['sellerPositiveRatings100'],
-						'quality'				=> $offer['sellerQuality'],
-						'country'				=> $offer['offerCountry'],
-						'is_native'				=> $offer['isNativeOffer'],
-						'date_added'			=> date('Y-m-d H:i:s', strtotime($offer['date_added'])),
-						'link'					=> $offer['sellerLink']?$offer['sellerLink']:$this->rainforestAmazon->createLinkToAmazonSearchPage($this->data['asin']),
-					];
+				if ($offer['conditionIsNew']){				
+					$this->data['offers'][] = $this->model_kp_product->prepareProductAmazonOffer($offer);
 				}
 			}
 
@@ -2905,7 +2888,6 @@ class ControllerCatalogProduct extends Controller {
 	}
 
 	public function setHistoricalPriceToPrice(){
-
 		$query = $this->db->query("UPDATE product SET historical_price = price WHERE 1");
 		$query = $this->db->query("UPDATE product SET isbn = 0 WHERE 1");
 		$this->load->model('setting/setting');

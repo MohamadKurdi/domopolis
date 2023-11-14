@@ -3,9 +3,9 @@
 		<thead>
 			<tr>
 				<td width="30px;"></td>
-				<td width="70px;"></td>
-				<td width="70px;"></td>
-				<td width="70px;"></td>
+				<td width="70px;" class="center"><span style="color:#FF6600">BuyBox</span></td>
+				<td width="70px;" class="center"><span style="color:#009fd5">Prime</span></td>
+				<td width="70px;" class="center"><span style="color:#4ea24e">Цена</span></td>
 				<td width="30px;"></td>
 				<td width="20px;"></td>
 				<td width="20px;"></td>
@@ -16,8 +16,7 @@
 				<td>Доставка</td>
 				<td>Инфо</td>
 				<td>Дней</td>
-				<td>От</td>
-				<td>До</td>
+				<td>От-до</td>				
 				<td>Итог</td>
 				<td>Рейтинг</td>
 				<td>Обновлено</td>																	
@@ -30,19 +29,19 @@
 						<span style="color:#FF6600"><i class="fa fa-star" style="color:#FF6600; font-size:18px;"></i></span>
 					<?php } ?>
 				</td>
-				<td width="70px;">
+				<td width="70px;" class="center">
 					<?php if ($offer['buybox_winner']) { ?>
-						<span style="color:#FF6600"><i class="fa fa-star" style="color:#FF6600"></i> BuyBox</span>
+						<span style="color:#FF6600"><i class="fa fa-star" style="color:#FF6600"></i></span>
 					<?php } ?>
 				</td>
-				<td width="70px;">
+				<td width="70px;" class="center">
 					<?php if ($offer['prime']) { ?>
-						<span style="color:#009fd5"><i class="fa fa-star" style="color:#009fd5"></i> Prime</span>
+						<span style="color:#009fd5"><i class="fa fa-star" style="color:#009fd5"></i></span>
 					<?php } ?>
 				</td>
-				<td width="70px;">
+				<td width="70px;" class="center">
 					<?php if ($offer['is_min_price']) { ?>
-						<span style="color:#4ea24e"><i class="fa fa-sort-amount-asc" style="color:#4ea24e" aria-hidden="true"></i> Цена</span>
+						<span style="color:#4ea24e"><i class="fa fa-sort-amount-asc" style="color:#4ea24e"></i></span>
 					<?php } ?>
 				</td>
 				<td class="center" width="30px;">
@@ -134,11 +133,9 @@
 				</td>
 
 				<td class="left">						
-					<small><?php echo !empty($offer['delivery_from'])?$offer['delivery_from']:''; ?></small>		
-				</td>
-
-				<td class="left">						
-					<small><?php echo !empty($offer['delivery_to'])?$offer['delivery_to']:''; ?></small>		
+					<small><?php echo !empty($offer['delivery_from'])?$offer['delivery_from']:''; ?></small>
+					<br />		
+					<small><?php echo !empty($offer['delivery_to'])?$offer['delivery_to']:''; ?></small>
 				</td>
 
 				<td class="left" style="white-space:nowrap;">						
@@ -150,7 +147,9 @@
 				</td>
 
 				<td>		
-					<?php echo $offer['date_added']; ?>
+					<small><?php echo $offer['date_added']; ?></small>
+					<br />
+					<small><?php echo $offer['time_added']; ?></small>
 				</td>
 			</tr>
 		<?php } ?>
@@ -281,5 +280,5 @@
 
 	</table>
 	<? } else { ?>
-		<div style="color:rgb(207, 74, 97); font-size:28px; text-align:center;"><i class="fa fa-exclamation-triangle"></i><br /> Нет офферов на Amazon</div>
+		<div style="color:rgb(207, 74, 97); font-size:18px; text-align:center;"><i class="fa fa-exclamation-triangle"></i>Нет офферов на Amazon</div>
 	<?php } ?>

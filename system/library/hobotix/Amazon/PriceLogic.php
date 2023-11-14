@@ -47,9 +47,7 @@ class PriceLogic
 
 		if (!$registry->get('bypass_rainforest_caches_and_settings')){
 			$this->cacheCategoryDimensions()->cacheCategoryOverloadRules()->cacheCategoryOverPriceRules()->setStoreSettings()->cacheFormulaOverloadData();
-		}		
-
-		$this->log = new \Log('amazon_offers_priceupdate.txt');
+		}				
 	}
 
 	private function cacheFormulaOverloadData(){
@@ -503,7 +501,7 @@ class PriceLogic
 		return false;
 	}
 
-	public function checkIfWeCanUpdateProductOffers($product_id, $warehouse_identifier = 'current'){		
+	public function checkIfWeCanUpdateProductOffers($product_id, $warehouse_identifier = 'current', &$skip_reason = ''){		
 		if (!$this->config->get('config_rainforest_enable_pricing')){
 			return false;
 		}
@@ -524,7 +522,8 @@ class PriceLogic
 				if (($query->row[$warehouse_identifier] + $query->row[$warehouse_identifier . '_onway']) <= 0){			
 					$proceedWithPrice = true;
 				} else {
-					echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Product is in real stock, or is on way, skipping', 'e');						
+					echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Product is in real stock, or is on way, skipping', 'e');
+					$skip_reason = 'IS_ON_STOCK';						
 					$proceedWithPrice = false;
 				}
 			}
@@ -539,6 +538,7 @@ class PriceLogic
 
 						if ($dateWhenWeCanToUpdate >= date('Y-m-d')){
 							echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Last buy ' . $dateWhenWeCanToUpdate . ', skipping', 'e');
+							$skip_reason = 'LAST_PURCHASE_DEADLINE';
 							$proceedWithPrice = false;
 						} else {							
 							$proceedWithPrice = true;
@@ -546,6 +546,7 @@ class PriceLogic
 
 					} else {
 						echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] No purchase deadline, skipping', 'e');
+						$skip_reason = 'LAST_PURCHASE_DEADLINE';
 						$proceedWithPrice = false;
 					}					
 				}
@@ -553,28 +554,33 @@ class PriceLogic
 			
 			if ($proceedWithPrice && $query->row['amzn_ignore']){
 				echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Product must be ignored due of amzn_ignore set, skipping', 'e');
+				$skip_reason = 'AMZN_IGNORE_SET';
 				$proceedWithPrice = false;
 			}
 
 			if ($this->config->get('config_rainforest_enable_offers_for_added_from_amazon')){
 				if ($proceedWithPrice && !$query->row['added_from_amazon']){
 					echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Product must be ignored due of config_rainforest_enable_offers_for_added_from_amazon = ON and is not added from amazon, skipping', 'e');
+					$skip_reason = 'NOT_ADDED_FROM_AMAZON';
 					$proceedWithPrice = false;
 				}
 			}
 
 			if ($proceedWithPrice && $query->row['is_markdown']){
 				echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Product is markdown, skipping', 'e');
+				$skip_reason = 'IS_MARKDOWN';
 				$proceedWithPrice = false;
 			}
 
 			if ($proceedWithPrice && $this->config->get('config_rainforest_disable_offers_use_field_ignore_parse')){
 				if ($query->row['ignore_parse'] && $query->row['ignore_parse_date_to'] == '0000-00-00'){
 					echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Product must be ignored because of ignore_parse set, skipping', 'e');
+					$skip_reason = 'IGNORE_PARSE_SET';
 					$proceedWithPrice = false;
 				} elseif ($query->row['ignore_parse'] && !empty($query->row['ignore_parse_date_to'])){					
 					if (date('Y-m-d') <= $query->row['ignore_parse_date_to']){
 						echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Product must be ignored due of ignore_parse and date set, skipping', 'e');
+						$skip_reason = 'IGNORE_PARSE_SET';
 						$proceedWithPrice = false;
 					}
 				}
@@ -585,9 +591,9 @@ class PriceLogic
 
 				if ($special_query->num_rows){
 					echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Product has actual special, skipping', 'e');
+					$skip_reason = 'HAS_ACTUAL_SPECIAL';
 					$proceedWithPrice = false;
 				}
-
 			}
 		}
 
@@ -731,7 +737,6 @@ class PriceLogic
 
 		foreach ($formulaOverloadData as $key => $formula){
 			if ($amazonBestPrice >= $formula['min'] && $amazonBestPrice < $formula['max']){
-			//	echoLine('[PriceLogic] Price ' . $amazonBestPrice . ' in range ' . $formula['min'] . '-' . $formula['max'] . ', overloaded formula:' . $formula['formula'], 'w');
 				return $formula;
 			}
 		}
@@ -892,7 +897,20 @@ class PriceLogic
 		return $productWeight;
 	}
 
-	public function updateProductPrices($asin, $amazonBestPrice, $explicit = false){		
+	public function updateProductPrices($asin, $amazonBestPrice, $explicit = false, $bestOfferOriginal = [], $bestOffer = []){	
+		$historyData = [
+			'asin' 					=> $asin,
+			'store_id' 				=> 0,
+			'amazon_best_price' 	=> $amazonBestPrice,
+			'original_offer_data' 	=> $bestOfferOriginal,
+			'offer_data' 			=> $bestOffer,
+			'weight' 				=> 0,
+			'price' 				=> 0,
+			'costprice' 			=> 0,
+			'profitability' 		=> 0,
+			'skipped' 				=> ''
+		];
+
 		if ($this->config->get('config_rainforest_enable_pricing')){
 
 			if ($explicit){
@@ -904,14 +922,14 @@ class PriceLogic
 			if ($products){
 				foreach ($products as $product_id => $product){							
 					if (!$product['amzn_ignore']){						
-						//Для всех настроек магазинов проверяем наличие на складе
 						foreach ($this->storesWarehouses as $store_id => $storeWarehouses){
 							$warehouse_identifier = $storeWarehouses['config_warehouse_identifier_local'];
 
 							$productWeight = $this->recalculateProductWeight($product, $store_id);
+							$historyData['weight'] = $productWeight;
 
 							if ($this->config->get('config_rainforest_kg_price_' . $store_id) || $this->config->get('config_rainforest_default_multiplier_' . $store_id)){
-								if ($this->checkIfWeCanUpdateProductOffers($product_id, $warehouse_identifier)){
+								if ($this->checkIfWeCanUpdateProductOffers($product_id, $warehouse_identifier, $skip_reason)){
 									$params = [
 										'PRODUCT_ID'					=> (float)$product['product_id'],
 										'WEIGHT' 						=> (float)$productWeight,
@@ -953,14 +971,28 @@ class PriceLogic
 									echoLine('[PriceLogic::updateProductPrices] PRICE: store ' . $store_id . ' is ' . $newPrice . ' EUR', 'w');							
 									echoLine('[PriceLogic::updateProductPrices] COST: store ' . $store_id . ' is ' . $newCost . ' EUR', 'w');	
 
+									$historyData['price'] 			= $newPrice;
+									$historyData['costprice'] 		= $newCost;
+									if ($newPrice > 0){
+										$historyData['profitability'] 	= ($newPrice - $newCost)/$newPrice*100;
+									} else {
+										$historyData['profitability'] 	= 0;
+									}
+									
 									if ($this->config->get('config_rainforest_default_store_id') != -1 && $store_id == $this->config->get('config_rainforest_default_store_id')){
 										$this->updateProductPriceInDatabase($product_id, $newPrice);
 										$this->updateProductCostPriceInDatabase($product_id, $newCost);
 									} else {
 										$this->updateProductPriceToStoreInDatabase($product_id, $newPrice, $store_id);
 										$this->updateProductCostPriceInDatabase($product_id, $newCost);
+
+										$historyData['store_id'] = $store_id;
 									}
+								} else {
+									$historyData['skipped'] = $skip_reason;
 								}
+
+								$this->priceHistory->addBestOfferHistory($historyData);
 							}
 						}
 					} 

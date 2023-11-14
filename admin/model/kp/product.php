@@ -2,8 +2,6 @@
 class ModelKPProduct extends Model {
 	private $error = array(); 
 
-
-
 	public function parseVariantNames($product_id, $language_id, $name){
 		$this->load->model('catalog/product');
 		$descriptions = $this->model_catalog_product->getProductDescriptions($product_id);
@@ -95,6 +93,38 @@ class ModelKPProduct extends Model {
 		$query = $this->db->query($sql);
 
 		return $query->rows;	
+	}
+
+	public function prepareProductAmazonOffer($offer){
+		$supplier = $this->rainforestAmazon->offersParser->Suppliers->getSupplier($offer['sellerName'], $offer['sellerID']);
+
+		return [					
+			'seller' 				=> $offer['sellerName'],
+			'prime'	 				=> $offer['isPrime'],
+			'buybox_winner'	 		=> $offer['isBuyBoxWinner'],
+			'is_best'				=> $offer['isBestOffer'],
+			'offer_rating'			=> $offer['offerRating'],
+			'edit_supplier' 		=> $supplier?$this->url->link('sale/supplier/update', 'token=' . $this->session->data['token'] . '&supplier_id=' . $supplier['supplier_id']):'',
+			'supplier'				=> $supplier,
+			'price'	 				=> $this->currency->format_with_left($offer['priceAmount'], $offer['priceCurrency'], 1),
+			'delivery'	 			=> $this->currency->format_with_left($offer['deliveryAmount'], $offer['deliveryCurrency'], 1),	
+			'total'					=> $this->currency->format_with_left($offer['priceAmount'] + $offer['deliveryAmount'], $offer['priceCurrency'], 1),
+			'delivery_fba' 			=> $offer['deliveryIsFba'],
+			'delivery_comment' 		=> $offer['deliveryComments'],
+			'min_days' 				=> $offer['minDays'],
+			'delivery_from' 		=> $offer['deliveryFrom'],
+			'delivery_to' 			=> $offer['deliveryTo'],
+			'is_min_price'			=> $offer['is_min_price'],							
+			'reviews'				=> (int)$offer['sellerRatingsTotal'],
+			'rating'				=> (int)$offer['sellerRating50'] / 10,
+			'positive'				=> (int)$offer['sellerPositiveRatings100'],
+			'quality'				=> $offer['sellerQuality'],
+			'country'				=> $offer['offerCountry'],
+			'is_native'				=> $offer['isNativeOffer'],
+			'date_added'			=> date('Y-m-d', strtotime($offer['date_added'])),
+			'time_added'			=> date('H:i:s', strtotime($offer['date_added'])),
+			'link'					=> $offer['sellerLink']?$offer['sellerLink']:$this->rainforestAmazon->createLinkToAmazonSearchPage($this->data['asin']),
+		];
 	}
 
 	public function reindexElastic($product_ids){
