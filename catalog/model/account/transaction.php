@@ -1,6 +1,6 @@
 <?php
 	class ModelAccountTransaction extends Model {	
-		public function getTransactions($data = array()) {
+		public function getTransactions($data = []) {
 			$sql = "SELECT * FROM `customer_transaction` WHERE customer_id = '" . (int)$this->customer->getId() . "'";
 			
 			if (isset($data['order_id']) && $data['order_id'] = $this->request->get['order_id']) {
@@ -64,6 +64,7 @@
 				$this->db->query($query);
 			}
 		}
+		
 		
 		public function getF3Cheques($paykeeper_id){
 			

@@ -98,6 +98,8 @@ class ControllerPaymentMono extends Controller
         $this->language->load('payment/mono');
         $this->load->model('payment/mono');
         $this->load->model('checkout/order');
+        $this->load->model('account/order');
+        $this->load->model('account/transaction');
 
         $orderID = $this->session->data['order_id'];
         $orderInfo = $this->model_checkout_order->getOrder($orderID);
@@ -134,6 +136,17 @@ class ControllerPaymentMono extends Controller
                                 $checkBoxAPI = new hobotix\CheckBoxUA($this->registry);
                                 $checkBoxAPI->setOrderNeedCheckbox($orderID);                                
                             }
+
+                            $this->model_account_transaction->addTransaction(
+                                'Mono: Оплата по замовленню # ' . $orderID, 
+                                $this->model_account_order->getOrderTotal($orderID),
+                                $this->model_account_order->getOrderTotalNational($orderID),
+                                $this->config->get('config_regional_currency'),
+                                $this->order['order_id'],
+                                true,
+                                'mono',
+                                '',
+                                '');
 
                             $this->response->redirect($this->url->link('checkout/success', '', true));
                             break;
@@ -186,7 +199,9 @@ class ControllerPaymentMono extends Controller
     public function callback() {
         $this->language->load('payment/mono');
         $this->load->model('checkout/order');
+        $this->load->model('account/order');
         $this->load->model('payment/mono');
+        $this->load->model('account/transaction');
 
         $json = $clear_json = file_get_contents("php://input");         
         $json = json_decode($json);
@@ -225,6 +240,17 @@ class ControllerPaymentMono extends Controller
                             $checkBoxAPI = new hobotix\CheckBoxUA($this->registry);
                             $checkBoxAPI->setOrderNeedCheckbox($OrderInfo['OrderId']);                            
                         }
+
+                        $this->model_account_transaction->addTransaction(
+                            'Mono: Оплата по замовленню # ' . $OrderInfo['OrderId'], 
+                            $this->model_account_order->getOrderTotal($OrderInfo['OrderId']),
+                            $this->model_account_order->getOrderTotalNational($OrderInfo['OrderId']),
+                            $this->config->get('config_regional_currency'),
+                            $this->order['order_id'],
+                            true,
+                            'mono',
+                            '',
+                            '');
                         
                         $this->success($OrderInfo['OrderId']);
                     }
@@ -252,7 +278,7 @@ class ControllerPaymentMono extends Controller
         $this->load->model('payment/mono');
         $this->load->model('payment/mono_checkout');
         $this->load->model('catalog/product');
-        $this->load->model('checkout/order');
+        $this->load->model('checkout/order');        
 
         $monolog = new Log('monocheckout.txt');
 
@@ -350,6 +376,8 @@ class ControllerPaymentMono extends Controller
         $this->load->model('payment/mono_checkout');
         $this->load->model('account/customer');
         $this->load->model('tool/simpleapicustom');
+        $this->load->model('account/transaction');
+        $this->load->model('account/order');
 
         $json = $clear_json = file_get_contents("php://input");         
         $json = json_decode($json, true);
@@ -416,6 +444,17 @@ class ControllerPaymentMono extends Controller
                         $checkBoxAPI = new hobotix\CheckBoxUA($this->registry);
                         $checkBoxAPI->setOrderNeedCheckbox($order_info['order_id']);                       
                     }
+
+                    $this->model_account_transaction->addTransaction(
+                        'Mono: Оплата по замовленню # ' . $order_info['order_id'], 
+                        $this->model_account_order->getOrderTotal($order_info['order_id']),
+                        $this->model_account_order->getOrderTotalNational($order_info['order_id']),
+                        $this->config->get('config_regional_currency'),
+                        $this->order['order_id'],
+                        true,
+                        'mono',
+                        '',
+                        '');
                 }
                 
             }

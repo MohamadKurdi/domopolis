@@ -717,7 +717,7 @@ class CheckBoxUA {
         }
     }
 
-    private function saveReceiptsRequest($request,$data){
+    private function saveReceiptsRequest($request, $data){
        
         $data['order_id'] = isset($data['order_id']) ? $data['order_id'] : 0;
         $data['type'] = isset($data['type']) ? $data['type'] : '';
@@ -734,6 +734,7 @@ class CheckBoxUA {
             sent_dps_at         = '" . $this->db->escape($request['sent_dps_at']) . "',  
             type                = '" . $this->db->escape($request['type']) . "',  
             all_json_data       = '" . $this->db->escape(json_encode($request)) . "'";
+
         $this->db->ncquery( $sql ); 
     }
 
