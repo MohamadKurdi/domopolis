@@ -3130,8 +3130,7 @@
 																<? if (in_array($currency_code, array('UAH')) && $this->config->get('receipt_login')) { ?>
 																	<tr>
 																		<td class="left">
-																			<b>Фискализация</b><br />
-																			Checkbox.ua API
+																			<b>Фискализация</b><br />																			
 																		</td>
 																		<td class="left">
 																				<input id="needs_checkboxua" class="checkbox onchangeedit_direct" type="checkbox" name="needs_checkboxua" value="1" <?php if ($needs_checkboxua) { ?>checked="checked"<?php } ?>>
@@ -3142,8 +3141,9 @@
 																			<?php if ($receipts) { ?>
 																				<?php foreach ($receipts as $receipt) { ?>
 																					<span style="font-size:10px; line-height:12px; display:inline-block; padding:3px; color:#FFF; background-color:green;">
-																						<i class="fa fa-check"></i> Checkbox <?php echo $receipt['fiscal_code']; ?>
-																					</span>		
+																						<i class="fa fa-check"></i> ПРРО <?php echo $receipt['fiscal_code']; ?>
+																					</span>
+
 																					<?php if ($receipt['is_sent_dps']) { ?>
 																						<span style="font-size:10px; line-height:12px; display:inline-block; padding:3px; color:#FFF; background-color:green;"><i class="fa fa-check"></i> ДФС <?php echo $receipt['fiscal_code']; ?></span>	
 																						<span style="font-size:10px; line-height:12px; display:inline-block; padding:3px; color:#FFF; background-color:green;"><i class="fa fa-check"></i> <?php echo $receipt['sent_dps_at']; ?></span>	
@@ -3159,7 +3159,7 @@
 																				<? } ?>
 																			<?php } else { ?>
 																				<span style="font-size:10px; line-height:12px; display:inline-block; padding:3px; color:#FFF; background-color:red;"><i class="fa fa-refresh"></i> Пока нет фискальных чеков</span>																				
-																				<?php if ($this->user->getIsAV()) { ?>
+																				<?php if ($this->user->getIsAV() && $needs_checkboxua && !$receipts) { ?>
 																					<span onclick="do_checkbox_receipt();" style="cursor:pointer; font-size:10px; line-height:12px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">Сформировать фискальный чек. Только для администратора</span><br />
 
 																					<script>

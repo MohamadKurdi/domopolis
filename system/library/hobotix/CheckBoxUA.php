@@ -709,9 +709,9 @@ class CheckBoxUA {
         return array();        
     }
 
-    private function checkIfOrederReceiptAlreadyExit($data=array()){
+    private function checkIfOrederReceiptAlreadyExit($data = []){
         $sql = " SELECT * FROM order_receipt WHERE order_id = ".(int)$data['order_id'] ;
-        $query =$this->db->ncquery( $sql );       
+        $query = $this->db->ncquery( $sql );       
         if($query->num_rows){
             $this->error['message'] = "Для замовлення <b>".$data['order_id']."</b> вже створено чек. Код чеку: ".$query->row['fiscal_code'];
         }
@@ -733,6 +733,7 @@ class CheckBoxUA {
             is_sent_dps         = '" . (int)$request['is_sent_dps'] . "',  
             sent_dps_at         = '" . $this->db->escape($request['sent_dps_at']) . "',  
             type                = '" . $this->db->escape($request['type']) . "',  
+            api                 = 'checkbox',
             all_json_data       = '" . $this->db->escape(json_encode($request)) . "'";
 
         $this->db->ncquery( $sql ); 
@@ -747,7 +748,6 @@ class CheckBoxUA {
             $request['sent_dps_at'] = $request['fiscal_date'];
         }
 
-
         $sql = "UPDATE order_receipt SET  
             serial                  = '" . (int)$request['serial'] . "',  
             status                  = '" . $this->db->escape($request['status']) . "',  
@@ -755,7 +755,8 @@ class CheckBoxUA {
             fiscal_date             = '" . $this->db->escape($request['fiscal_date']) . "',  
             is_created_offline      = '" . (int)$request['is_created_offline'] . "',  
             is_sent_dps             = '" . (int)$request['is_sent_dps'] . "',  
-            sent_dps_at             = '" . $this->db->escape($request['sent_dps_at']) . "',               
+            sent_dps_at             = '" . $this->db->escape($request['sent_dps_at']) . "',
+            api                     = 'checkbox',               
             all_json_data           = '" . $this->db->escape(json_encode($request)) . "' 
             WHERE receipt_id       = '".$receipt_id."' ";
         $this->db->ncquery( $sql );
@@ -871,15 +872,6 @@ class CheckBoxUA {
         return date($template, strtotime($date_str) );
     } 
 	
-	/*
-        https://stackoverflow.com/questions/16456615/how-to-convert-float-value-to-integer-in-php  
-        I just want to WARN you about:
-        >>> (int) (290.15 * 100); 
-        => 29014
-        >>> (int) round((290.15 * 100), 0);
-        => 29015
-	*/	
-	
     private function convert2intX100($number=0, $data=[]){
         if($number){		
             if($this->config->get('receipt_price_format')){
@@ -899,13 +891,11 @@ if(!function_exists("de")){
         $my_print .= '<div style="border: 2px solid blue;">';
         $my_print .= 'type - <b>'. gettype($var).'</b>';
         $my_print .= '<hr>count element - <b>'. count($var).'</b>';
-    //$my_print .= '<hr>var_dump - <b>'. var_dump($var).'</b>';
         $my_print .= '</div>';
         @header('Content-Type: text/html; charset=utf-8');
         $my_print .= print_r($var, true);
         $my_print .= '</div>';
         echo $my_print;
         if($exit) exit();
-    //return $my_print;
     }
 }

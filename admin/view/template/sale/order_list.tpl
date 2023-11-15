@@ -831,7 +831,7 @@
 													<span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:black;"><i class="fa fa-check"></i> <?php echo $order['paid_by']; ?></span>
 												<?php } ?>
 
-												<?php if ($order['needs_checkboxua']) { ?>
+												<?php if ($order['receipt_id']) { ?>
 													<?php if ($order['receipt_id']) { ?>
 														<span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:green;"><i class="fa fa-check"></i> ДФС <?php echo $order['fiscal_code']; ?></span>	
 													<?php } else { ?>
@@ -839,7 +839,7 @@
 													<?php } ?>	
 
 													<?php if ($order['is_sent_dps']) { ?>
-														<span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:green;"><i class="fa fa-check"></i> <?php $order['sent_dps_at']; ?></span>	
+														<span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:green;"><i class="fa fa-check"></i> <?php $order['sent_dps_at']; ?></span>
 													<?php } ?>												
 												<? } ?>
 											</br>
@@ -851,7 +851,6 @@
          										<a target="_blank" href="<?php echo $order['pdf_link']; ?>"><span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">PDF</span></a>
          										<a target="_blank" href="<?php echo $order['text_link']; ?>"><span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">TXT</span></a>
          										<a target="_blank" href="<?php echo $order['qrcode_link']; ?>"><span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">QR</span></a>
-
          										<br>
 											<?php } ?>
 

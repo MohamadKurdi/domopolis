@@ -9,8 +9,7 @@
 		public function laterpay(){			
 			if (!$this->validateLaterpay()){
 				$this->redirect('account/order');
-			}
-			
+			}			
 			
 			$this->load->model('checkout/order');
 			$this->load->model('account/order');            
@@ -32,8 +31,14 @@
                 $wayforpay_language = 'UA';
             }
             
+            $wayforpay_id = $order_id . WayForPay::ORDER_SEPARATOR . time();
+            $this->insertOrder([
+                'order_id'      => $order_id,
+                'wayforpay_id'  => $wayforpay_id
+            ]);
+
             $fields = [
-                'orderReference'                => $order_id . WayForPay::ORDER_SEPARATOR . time(),
+                'orderReference'                => $wayforpay_id,
                 'merchantAccount'               => $this->config->get('wayforpay_merchant'),
                 'orderDate'                     => strtotime($order['date_added']),
                 'merchantAuthType'              => 'simpleSignature',
@@ -88,6 +93,23 @@
 			
 			$this->response->setOutput($this->render());
 		}
+
+        public function insertOrder($data){
+            $this->db->query("INSERT INTO wayforpay_orders SET 
+                order_id        = '" . (int)$data['order_id'] . "',
+                wayforpay_id    = '" . $this->db->escape($data['wayforpay_id']) . "',
+                status          = '',
+                callback        = '',
+                full_info       = ''");
+        }
+
+        public function updateOrder($wayforpay_id, $data){
+            foreach ($data as $key => $value){
+                $this->db->query("UPDATE wayforpay_orders SET 
+                    `" . $this->db->escape($key) . "` = '" . $this->db->escape($value) . "'
+                    WHERE wayforpay_id    = '" . $this->db->escape($wayforpay_id) . "'");
+            }                    
+        }
 		
 		
 		protected function validateLaterpay() {

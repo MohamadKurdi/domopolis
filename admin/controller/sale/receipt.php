@@ -658,13 +658,17 @@ class ControllerSaleReceipt extends Controller {
 	}
 
 	public function createOne(){
-        $json = array();
+        $json = [];
 		if(isset($this->request->get['order_id'])){
             $order_id = $this->request->get['order_id'];
 
             $order_info = $this->model_sale_receipt->getOrder($order_id);
-            if($order_info){
-                $json = $this->checkBoxUA->receiptsSell($order_info);
+            if ($order_info) {
+            	if ($order_info['needs_checkboxua']){
+            		$json = $this->checkBoxUA->receiptsSell($order_info);
+            	} else {
+            		$json['error'] = 'No need to create receipt via CheckBox.ua service';
+            	}                
             }
 		}
 
@@ -677,69 +681,68 @@ class ControllerSaleReceipt extends Controller {
 	}
 
 	public function createSelected($other_orders=array() ){
-	    $receipt_data = array();
+		$receipt_data = array();
 		$orders = array();
 
 		if (isset($this->request->post['selected']) ) {
-		    $orders  = $this->request->post['selected'];
+			$orders  = $this->request->post['selected'];
 		}elseif(isset($this->request->get['order_ids'])){
 			$orders = $this->request->get['order_ids'];
 		}elseif($other_orders){
-            $orders = $other_orders;
-        }
-
-		if($orders){
-            foreach ($orders as $order_id) {
-                $order_info = $this->model_sale_receipt->getOrder($order_id);
-                if($order_info){
-                    $receipt_data[$order_id] = $this->checkBoxUA->receiptsSell($order_info);
-                }
-            }
+			$orders = $other_orders;
 		}
 
-            if (isset($this->request->post['selected']) && $this->validateCreate()) {
-                $success = '';
-                foreach ($receipt_data as $order_id=>$receipt){
-                    #de($receipt,1);
-                    if(isset($receipt['error']['message'])){
-                        $success .= "<BR>".$receipt['error']['message'];
-                    }
-                    if(isset($receipt['success'])){
-                        $success .= "<BR> <b>NEW</b> ".$receipt['success'];
-                    }
+		if($orders){
+			foreach ($orders as $order_id) {
+				$order_info = $this->model_sale_receipt->getOrder($order_id);
+				if($order_info && $order_info['needs_checkboxua']){
+					$receipt_data[$order_id] = $this->checkBoxUA->receiptsSell($order_info);
+				}
+			}
+		}
 
-                }
-                $this->session->data['success'] = $success;
-                $url = '';
-                if (isset($this->request->get['filter_fiscal_code'])) {
-                    $url .= '&filter_fiscal_code=' . $this->request->get['filter_fiscal_code'];
-                }
-                if (isset($this->request->get['filter_order_id'])) {
-                    $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
-                }
-                if (isset($this->request->get['filter_customer'])) {
-                    $url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
-                }
-                if (isset($this->request->get['filter_product'])) {
-                    $url .= '&filter_product=' . urlencode(html_entity_decode($this->request->get['filter_product'], ENT_QUOTES, 'UTF-8'));
-                }
-                if (isset($this->request->get['filter_date_added'])) {
-                    $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-                }
-                if (isset($this->request->get['sort'])) {
-                    $url .= '&sort=' . $this->request->get['sort'];
-                }
+		if (isset($this->request->post['selected']) && $this->validateCreate()) {
+			$success = '';
+			foreach ($receipt_data as $order_id=>$receipt){
+				if(isset($receipt['error']['message'])){
+					$success .= "<BR>".$receipt['error']['message'];
+				}
+				if(isset($receipt['success'])){
+					$success .= "<BR> <b>NEW</b> ".$receipt['success'];
+				}
 
-                if (isset($this->request->get['order'])) {
-                    $url .= '&order=' . $this->request->get['order'];
-                }
+			}
+			$this->session->data['success'] = $success;
+			$url = '';
+			if (isset($this->request->get['filter_fiscal_code'])) {
+				$url .= '&filter_fiscal_code=' . $this->request->get['filter_fiscal_code'];
+			}
+			if (isset($this->request->get['filter_order_id'])) {
+				$url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
+			}
+			if (isset($this->request->get['filter_customer'])) {
+				$url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+			}
+			if (isset($this->request->get['filter_product'])) {
+				$url .= '&filter_product=' . urlencode(html_entity_decode($this->request->get['filter_product'], ENT_QUOTES, 'UTF-8'));
+			}
+			if (isset($this->request->get['filter_date_added'])) {
+				$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+			}
+			if (isset($this->request->get['sort'])) {
+				$url .= '&sort=' . $this->request->get['sort'];
+			}
 
-                if (isset($this->request->get['page'])) {
-                    $url .= '&page=' . $this->request->get['page'];
-                }
-                $this->redirect($this->url->link('sale/receipt', 'token=' . $this->session->data['token'] . $url, true));
-            }
-            $this->getList();
+			if (isset($this->request->get['order'])) {
+				$url .= '&order=' . $this->request->get['order'];
+			}
+
+			if (isset($this->request->get['page'])) {
+				$url .= '&page=' . $this->request->get['page'];
+			}
+			$this->redirect($this->url->link('sale/receipt', 'token=' . $this->session->data['token'] . $url, true));
+		}
+		$this->getList();
 	}
 
 
