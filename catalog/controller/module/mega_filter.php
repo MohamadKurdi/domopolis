@@ -38,27 +38,15 @@
 			
 			if( empty( $setting['filters'] ) )
 			$setting['filters'] = array();
-			
-			/**
-				* Ustawienia
-			*/
+
 			$settings	= $this->config->get('mega_filter_settings');	
 			
-			$this->data['text_search_placeholder'] = $this->language->get('text_search_placeholder');
-			$this->data['text_price_placeholder_from'] = $this->language->get('text_price_placeholder_from');
-			$this->data['text_price_placeholder_to'] = $this->language->get('text_price_placeholder_to');
+			$this->data['text_search_placeholder'] 		= $this->language->get('text_search_placeholder');
+			$this->data['text_price_placeholder_from'] 	= $this->language->get('text_price_placeholder_from');
+			$this->data['text_price_placeholder_to'] 	= $this->language->get('text_price_placeholder_to');
 			
-			/**
-				* Sprawdź szablon
-			*/
 			if( isset( $setting['layout_id'] ) && is_array( $setting['layout_id'] ) ) {
-				/**
-					* Sprawdź czy zdefiniowano kategorię 
-				*/
 				if( in_array( $settings['layout_c'], $setting['layout_id'] ) && isset( $this->request->get['path'] ) ) {				
-					/**
-						* Pokaż w kategoriach 
-					*/
 					if( ! empty( $setting['category_id'] ) ) {
 						$categories		= explode( '_', $this->request->get['path'] );
 						
@@ -90,9 +78,6 @@
 						}
 					}
 					
-					/**
-						* Ukryj w kategoriach 
-					*/
 					if( ! empty( $setting['hide_category_id'] ) ) {
 						$categories		= explode( '_', $this->request->get['path'] );
 						
@@ -113,16 +98,10 @@
 				}
 			}
 			
-			/**
-				* Sprawdź sklep 
-			*/
 			if( isset( $setting['store_id'] ) && is_array( $setting['store_id'] ) && ! in_array( $this->config->get('config_store_id'), $setting['store_id'] ) ) {
 				return;
 			}
 			
-			/**
-				* Sprawdź grupę
-			*/
 			if( ! empty( $setting['customer_groups'] ) ) {
 				$customer_group_id = $this->customer->isLogged() ? $this->customer->getGroupId() : $this->config->get( 'config_customer_group_id' );
 				
@@ -131,23 +110,15 @@
 				}
 			}
 			
-			/**
-				* Załaduj język 
-			*/
-			$this->data = array_merge($this->data, $this->language->load('module/mega_filter'));
-			
-			/**
-				* Ustaw tytuł 
-			*/
+
+			$this->data = array_merge($this->data, $this->language->load('module/mega_filter'));			
+
 			if( isset( $setting['title'][$this->config->get('config_language_id')] ) ) {
 				$this->data['heading_title'] = $setting['title'][$this->config->get('config_language_id')];
 			}
 			
-			/**
-				* Załaduj modele 
-			*/
+
 			$this->load->model('module/mega_filter');
-			//$t=microtime(true);
 			$core = MegaFilterCore::newInstance( $this, NULL );
 			$cache = NULL;
 			
@@ -155,9 +126,6 @@
 				$cache = 'idx.' . $setting['_idx'] . '.' . $core->cacheName();
 			}
 			
-			/**
-				* Lista atrybutów 
-			*/
 			if( ! $cache || NULL == ( $attributes = $this->_getCache( $cache ) ) ) {
 				$attributes	= $this->model_module_mega_filter->getAttributes( 
 				$core,
@@ -173,25 +141,14 @@
 					$this->_setCache( $cache, $attributes );
 				}
 			}
-			//echo microtime(true)-$t;
-			/**
-				* Pobierz klucze wg nazw 
-			*/
-			$keys		= $this->_keysByAttribs( $attributes );
-			
-			/**
-				* Aktualna trasa 
-			*/
+
+			$keys		= $this->_keysByAttribs( $attributes );			
 			$route		= isset( $this->request->get['route'] ) ? $this->request->get['route'] : NULL;
 			
-			/**
-				* Usuń listę branż dla widoku branż 
-			*/
 			if( in_array( $route, array( 'product/manufacturer', 'product/manufacturer/info' ) ) && isset( $keys['manufacturers'] ) ) {
 				unset( $attributes[$keys['manufacturers']] );
 			}
-			
-			
+						
 			if ($route == 'product/category' && isset($this->request->get['manufacturer_id'])){
 				unset( $attributes[$keys['manufacturers']] );
 			}
@@ -246,10 +203,8 @@
 			);
 			
 			$this->data['_v'] = $this->config->get('mfilter_version') ? $this->config->get('mfilter_version') : '1';
-			
-			
-			$this->template = 'module/mega_filter';
-			
+						
+			$this->template = 'module/mega_filter';			
 			$this->config->set('mfp_is_activated','1');
 			
 			$this->render();
@@ -328,9 +283,6 @@
 			$this->document->setTitle($this->language->get('heading_title'));
 			$this->document->addScript('catalog/view/javascript/jquery/jquery.total-storage.min.js');						
 			
-			/**
-				* Breadcrumb 
-			*/
 			$this->data['breadcrumbs'] = array();
 			$this->data['breadcrumbs'][] = array( 
        		'text'      => $this->language->get('text_home'),
@@ -365,8 +317,8 @@
 				$data['filter_category_id'] = end( $data['filter_category_id'] );
 			}
 			
-			$product_total = $this->model_catalog_product->getTotalProducts($data);								
-			$results = $this->model_catalog_product->getProducts($data);
+			$product_total 	= $this->model_catalog_product->getTotalProducts($data);								
+			$results 		= $this->model_catalog_product->getProducts($data);
 			
 			foreach ($results as $result) {
 				if ($result['image']) {
@@ -536,14 +488,7 @@
 			$this->data['order'] = $order;
 			$this->data['limit'] = $limit;
 			
-			/**
-				* Szablon 
-			*/
-			if( file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/special.tpl') ) {
-				$this->template = $this->config->get('config_template') . '/template/product/special.tpl';
-				} else {
-				$this->template = 'default/template/product/special.tpl';
-			}
+			$this->template = 'product/special.tpl';
 			
 			$this->children = array(
 			'common/column_left',

@@ -76,14 +76,14 @@ class ControllerInformationActions extends Controller {
 			}								
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/column_left',
 			'common/column_right',
 			'common/content_top',
 			'common/content_bottom',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -123,8 +123,8 @@ class ControllerInformationActions extends Controller {
 
 		$this->data['page_type'] = 'category';
 
-		$actions_setting = $this->config->get('actions_setting');	
-		$action_info = $this->model_catalog_actions->getActions($actions_id);
+		$actions_setting 	= $this->config->get('actions_setting');	
+		$action_info 		= $this->model_catalog_actions->getActions($actions_id);
 
 		if (!$action_info) {
 			$this->error['error'] = $this->language->get('text_error');
@@ -239,7 +239,7 @@ class ControllerInformationActions extends Controller {
 		);			
 
 		$this->data['text_relproduct_header'] = $this->language->get('text_relproduct_header');
-		$this->data['text_special'] = $this->language->get('text_special');
+		$this->data['text_special'] 		  = $this->language->get('text_special');
 		$this->data['text_action_sale_ended'] = $this->language->get('text_action_sale_ended');
 
 		$this->data['special'] = $this->url->link('product/special');
@@ -251,7 +251,6 @@ class ControllerInformationActions extends Controller {
 		}
 
 		$this->document->addLink($this->url->link('information/actions','actions_id=' . $actions_id), 'canonical');
-
 		$this->data['this_link'] = $this->url->link('information/actions','actions_id=' . $actions_id);
 
 		if ($action_info['meta_description']) {

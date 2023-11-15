@@ -403,7 +403,11 @@
 					} elseif (isset($this->request->get['actiontemplate_id'])) {
 					$this->request->get['route'] = 'information/actiontemplate';
 					} elseif (isset($this->request->get['actions_id'])) {
-					$this->request->get['route'] = 'information/actions';
+						if(!empty($this->request->get['route']) && $this->request->get['route'] == 'module/mega_filter/ajaxinfo' ) {
+
+						} else {
+							$this->request->get['route'] = 'information/actions';
+						}					
 					} elseif (isset($this->request->get['faq_category_id'])) {
 					$this->request->get['route'] = 'information/faq_system';					
 					} elseif(isset($this->cache_data['queries'][$route_])) {					

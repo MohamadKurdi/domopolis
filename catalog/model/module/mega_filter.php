@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Mega Filter
- * 
- * @license Commercial
- * @author marsilea15@gmail.com 
- */
-
 class MegaFilterCore {	
 	
 	public static $_specialRoute	= array( 'product/special' );	
@@ -28,7 +21,7 @@ class MegaFilterCore {
 	 * 
 	 * @var array 
 	 */
-	private $_data	= array();
+	private $_data	= [];
 	
 	/**
 	 * Aktualny kontroler nadrzędny
@@ -49,49 +42,49 @@ class MegaFilterCore {
 	 * 
 	 * @var array 
 	 */
-	private $_parseParams	= array();
+	private $_parseParams	= [];
 	
 	/**
 	 * Lista atrybutów
 	 * 
 	 * @var array 
 	 */
-	private $_attribs		= array();
+	private $_attribs		= [];
 	
 	/**
 	 * Ustawienia
 	 * 
 	 * @var array 
 	 */
-	public $_settings		= array();
+	public $_settings		= [];
 	
 	/**
 	 * Lista opcji
 	 * 
 	 * @var array 
 	 */
-	private $_options		= array();
+	private $_options		= [];
 	
 	/**
 	 * Lista filtrów
 	 * 
 	 * @var array 
 	 */
-	private $_filters		= array();
+	private $_filters		= [];
 	
 	/**
 	 * Lista kategorii
 	 * 
 	 * @var array 
 	 */
-	private $_categories	= array();
+	private $_categories	= [];
 	
 	/**
 	 * Lista warunków SQL
 	 * 
 	 * @var array 
 	 */
-	private $_conditions	= array();
+	private $_conditions	= [];
 	
 	/**
 	 * @var bool
@@ -122,20 +115,17 @@ class MegaFilterCore {
 	 * @return type 
 	 */
 	public function getJsonData( array $types, $idx = NULL ) {
-		$json		= array();
+		$json		= [];
 		$modules	= $this->_ctrl->config->get('mega_filter_module');
-		//$attribs	= $idx !== NULL && isset( $modules[$idx] ) ? $modules[$idx]['base_attribs'] : $this->_settings['attribs'];
 		
 		foreach( $types as $type ) {
 			if( in_array( $type, array( 'manufacturers', 'stock_status', 'rating', 'price' ) ) ) {
-				//if( ! empty( $attribs[$type]['enabled'] ) ) {
 					switch( $type ) {
 						case 'stock_status'		: $json[$type] = $this->getCountsByStockStatus(); break;
 						case 'manufacturers'	: $json[$type] = $this->getCountsByManufacturers(); break;
 						case 'rating'			: $json[$type] = $this->getCountsByRating(); break;
 						case 'price'			: $json[$type] = $this->getMinMaxPrice(); break;
 					}
-				//}
 			} else {
 				switch( $type ) {
 					case 'attribute'		:
@@ -185,11 +175,8 @@ class MegaFilterCore {
 	}
 	
 	public static function _getData( & $ctrl ) {
-		$data = array();
+		$data = [];
 		
-		/**
-		 * Kategoria 
-		 */
 		if( ! empty( $ctrl->request->get['category_id'] ) ) {
 			$data['filter_category_id'] = (int) $ctrl->request->get['category_id'];
 		} else if( ! empty( $ctrl->request->get['path'] ) ) {
@@ -197,9 +184,6 @@ class MegaFilterCore {
 			$data['filter_category_id'] = (int) array_pop( $parts );
 		}
 		
-		/**
-		 * Wyszukiwanie w podkategoriach 
-		 */
 		if( ! empty( $ctrl->request->get['sub_category'] ) ) {
 			$data['filter_sub_category'] = $ctrl->request->get['sub_category'];
 		} else if( ! in_array( self::_route( $ctrl ), array( 'common/home' ) ) ) {
@@ -208,30 +192,18 @@ class MegaFilterCore {
 			}
 		}
 		
-		/**
-		 * Filtry 
-		 */
 		if( ! empty( $ctrl->request->get['filter'] ) ) {
 			$data['filter_filter'] = $ctrl->request->get['filter'];
 		}
 		
-		/**
-		 * OCFILTER 
-		 */
 		if( ! empty( $ctrl->request->get['filter_ocfilter'] ) ) {
 			$data['filter_ocfilter'] = $ctrl->request->get['filter_ocfilter'];
 		}
 		
-		/**
-		 * Wyszukiwanie w opisach produktów 
-		 */
 		if( ! empty( $ctrl->request->get['description'] ) ) {
 			$data['filter_description'] = $ctrl->request->get['description'];
 		}
 
-		/**
-		 * Other filters
-		 */
 		if( ! empty( $ctrl->request->get['intersection_id'] ) ) {
 			$data['filter_category_id_intersect'] = $ctrl->request->get['intersection_id'];
 			$data['filter_sub_category_intersect'] = true;
@@ -257,9 +229,6 @@ class MegaFilterCore {
 			$data['new'] = $ctrl->request->get['new'];
 		}
 		
-		/**
-		 * Tagi 
-		 */
 		if( ! empty( $ctrl->request->get['filter_tag'] ) ) {
 			$data['filter_tag'] = $ctrl->request->get['filter_tag'];
 		} else if( ! empty( $ctrl->request->get['tag'] ) ) {
@@ -268,16 +237,21 @@ class MegaFilterCore {
 			$data['filter_tag'] = $ctrl->request->get['search'];
 		}
 		
-		/**
-		 * Producent
-		 */
 		if( ! empty( $ctrl->request->get['manufacturer_id'] ) ) {
 			$data['filter_manufacturer_id'] = (int) $ctrl->request->get['manufacturer_id'];
 		}
+
+		if( ! empty( $ctrl->request->get['actions_id'] ) ) {
+			$ctrl->load->model('catalog/actions');
+			$action_info = $ctrl->model_catalog_actions->getActions($ctrl->request->get['actions_id']);
+
+			if (!empty($action_info['ao_group'])){
+				$data['filter_product_additional_offer'] = $action_info['ao_group'];
+			} else {
+				$data['filter_actions_id'] = (int)$ctrl->request->get['actions_id'];
+			}
+		}
 		
-		/**
-		 * Fraza 
-		 */
 		if( ! empty( $ctrl->request->get['search'] ) ) {
 			$data['filter_name'] = (string) $ctrl->request->get['search'];
 		}
@@ -323,11 +297,11 @@ class MegaFilterCore {
 	 * @return array 
 	 */
 	private function _parseParams() {
-		$this->_parseParams = array();
-		$this->_attribs		= array();
-		$this->_options		= array();
-		$this->_filters		= array();
-		$this->_categories	= array();
+		$this->_parseParams = [];
+		$this->_attribs		= [];
+		$this->_options		= [];
+		$this->_filters		= [];
+		$this->_categories	= [];
 		$this->_conditions	= array(
 			'out' => array(),
 			'in' => array()
@@ -345,7 +319,7 @@ class MegaFilterCore {
 					
 					if( empty( $matches[2][$k] ) ) {
 						if( $key == 'stock_status' && ! empty( $this->_settings['in_stock_default_selected'] ) ) {
-							$this->_parseParams[$key] = array();
+							$this->_parseParams[$key] = [];
 						}
 						
 						continue;
@@ -388,7 +362,7 @@ class MegaFilterCore {
 							break;
 						}
 						case 'rating' : {
-							$sql = array();
+							$sql = [];
 							
 							foreach( $this->_parseArrayToInt( $value ) as $rating ) {
 								switch( $rating ) {
@@ -571,10 +545,10 @@ class MegaFilterCore {
 			$conditions = $this->_conditions;
 		
 		if( ! isset( $conditions['in'] ) )
-			$conditions['in'] = array();
+			$conditions['in'] = [];
 		
 		if( ! isset( $conditions['out'] ) )
-			$conditions['out'] = array();
+			$conditions['out'] = [];
 		
 		if( isset( $this->_data['filter_mf_name'] ) && NULL != ( $baseConditions = $this->_baseConditions() ) && isset( $baseConditions['search'] ) )
 			$conditions['in']['search'] = $baseConditions['search'];
@@ -584,7 +558,7 @@ class MegaFilterCore {
 		}
 		
 		$columns = implode( ',', $this->_baseColumns() );		
-		$conditionsOut = array();
+		$conditionsOut = [];
 		
 		if( $columns )
 			$columns = ',' . $columns;
@@ -621,22 +595,22 @@ class MegaFilterCore {
 			}			
 		}
 		
-		if( ! empty( $this->_data['filter_category_id'] ) && strpos( $sql, DB_PREFIX . 'category_path' ) === false && strpos( $sql, DB_PREFIX . 'product_to_category' ) === false ) {
-			$skip = array();
+		if( ! empty( $this->_data['filter_category_id'] ) && strpos( $sql, 'category_path' ) === false && strpos( $sql, 'product_to_category' ) === false ) {
+			$skip = [];
 			
-			if( strpos( $sql, DB_PREFIX . 'product_to_store' ) !== false ) {
+			if( strpos( $sql, 'product_to_store' ) !== false ) {
 				$skip[] = 'p2s';
 			}
 			
-			if( strpos( $sql, DB_PREFIX . 'product_description' ) !== false ) {
+			if( strpos( $sql, 'product_description' ) !== false ) {
 				$skip[] = 'pd';
 			}
 			
-			if( strpos( $sql, DB_PREFIX . 'product_to_category' ) !== false ) {
+			if( strpos( $sql, 'product_to_category' ) !== false ) {
 				$skip[] = 'p2c';
 			}
 			
-			if( strpos( $sql, DB_PREFIX . 'category_path' ) !== false ) {
+			if( strpos( $sql, 'category_path' ) !== false ) {
 				$skip[] = 'cp';
 			}
 			
@@ -681,74 +655,8 @@ class MegaFilterCore {
 			$sql .= ' ' . $limit;
 		}
 		
-		//if( $fn == 'getProductSpecials' )
-		//	die($sql);
-		
-		//if( $fn == 'getProducts' ) {
-		//	print_r($this->_ctrl->db->query($sql)->rows);
-		//	echo '<br><br>';
-		//	die($sql);
-		//}
-		
-		//if( $fn == 'getTotalProducts' ) {
-		//	die($sql);
-		//}
-		
 		return $sql;
 	}
-	
-	/*private function _joinOptions( & $conditions, array $options = NULL ) {
-		if( $options === NULL )
-			$options = $this->_options;
-		
-		if( ! $options )
-			return '';
-		
-		$sql = '';
-		$idx = 1;
-		
-		foreach( $options as $opt ) {
-			$conditions[] = sprintf( '`tmp_opt' . $idx . '`.`option_value_id` IN(%s)', implode( ',', $opt ) );
-			$sql .= "
-				JOIN
-					`product_option_value` AS `tmp_opt" . $idx . "`
-				USING( `product_id` )
-			";
-			
-			$idx++;
-		}
-		
-		return $sql;
-	}
-	
-	private function _joinAttribs( & $conditions, array $attribs = NULL ) {
-		if( $attribs === NULL )
-			$attribs = $this->_attribs;
-		
-		if( ! $attribs )
-			return '';
-		
-		$sql		= '';
-		$idx		= 1;
-			
-		foreach( $attribs as $attr ) {
-			if( ! empty( $this->_settings['attribute_separator'] ) ) {
-				$conditions[] = '(' . implode( ' OR ', $this->_convertAttribs( $attr, '`tmp_attr' . $idx . '`.`text`' ) ) . ')';
-			} else {
-				$conditions[] = sprintf( '`tmp_attr' . $idx . '`.`text` IN(%s)', implode( ',', $attr ) );
-			}
-			
-			$sql .= "
-				JOIN
-					`product_attribute` AS `tmp_attr" . $idx . "`
-				USING( `product_id` )
-			";
-			
-			$idx++;
-		}
-		
-		return $sql;
-	}*/
 	
 	private function _optionsToSQL( $join = ' WHERE ', array $options = NULL, & $conditionsIn = NULL, & $conditionsOut = NULL, $field_id = '`product_id`' ) {
 		if( $options === NULL )
@@ -765,7 +673,7 @@ class MegaFilterCore {
 		}
 		
 		if( $options ) {
-			$sql		= array();
+			$sql		= [];
 			$quantity	= '';			
 		
 			if( ! empty( $this->_settings['in_stock_default_selected'] ) || ( ! empty( $this->_parseParams['stock_status'] ) && in_array( $this->inStockStatus(), $this->_parseParams['stock_status'] ) ) ) {
@@ -816,8 +724,8 @@ class MegaFilterCore {
 			$categories = $this->_categories;
 		
 		if( $categories ) {
-			$ids = array();
-			$sql = array();
+			$ids = [];
+			$sql = [];
 			
 			foreach( $categories as $cat1 ) {
 				foreach( $cat1 as $cat2 ) {
@@ -827,12 +735,7 @@ class MegaFilterCore {
 			
 			$ids = implode( ',', $ids );
 			
-			//if( ! empty( $this->_data['filter_sub_category'] ) ) {
-				$sql[] = '`mf_cp`.`path_id` IN(' . $ids . ')';
-			//} else {
-			//	$sql[] = '`mf_p2c`.`category_id` IN(' . $ids . ')';
-			//}
-			
+			$sql[] = '`mf_cp`.`path_id` IN(' . $ids . ')';
 			$sql = $join . implode( ' AND ', $sql );
 		} else {
 			$sql = '';
@@ -858,7 +761,7 @@ class MegaFilterCore {
 		}
 		
 		if( $filters ) {
-			$sql		= array();
+			$sql		= [];
 			
 			foreach( $filters as $opt ) {
 				if( ! empty( $this->_settings['type_of_condition'] ) && $this->_settings['type_of_condition'] == 'and' ) {
@@ -900,7 +803,7 @@ class MegaFilterCore {
 	}
 	
 	private function _convertAttribs( $attribs, $field = 'text' ) {
-		$tmp		= array();
+		$tmp		= [];
 		
 		foreach( $attribs as $attr ) {
 			foreach( $attr as $att ) {
@@ -944,7 +847,7 @@ class MegaFilterCore {
 		}
 		
 		if( $attribs ) {
-			$sql		= array();
+			$sql		= [];
 			
 			foreach( $attribs as $key => $attr ) {
 				list( $attrib_id ) 	= explode( '-', $key );
@@ -1022,7 +925,7 @@ class MegaFilterCore {
 	}
 	
 	private function _taxConditions() {
-		$conditions	= array();
+		$conditions	= [];
 		
 		$country_id	= $p_country_id = $s_country_id = (int) $this->_ctrl->config->get('config_country_id');
 		$zone_id = $p_zone_id = $s_zone_id = (int) $this->_ctrl->config->get('config_zone_id');
@@ -1142,6 +1045,14 @@ class MegaFilterCore {
 			}		
 		}
 
+		if( ! empty( $this->_data['filter_actions_id'] ) ) {
+			$conditions[] = "p.product_id IN (SELECT product_id FROM actions_to_product a2p WHERE actions_id = '" . (int)$this->_data['filter_actions_id'] . "')";			
+		}
+
+		if( ! empty( $this->_data['filter_product_additional_offer'] ) ) {
+			$conditions[] = "p.product_id IN (SELECT product_id FROM product_additional_offer pao WHERE ao_group LIKE '" . $this->db->escape($this->_data['filter_product_additional_offer']) . "')";			
+		}
+
 		if (!empty($this->_data['filter_category_id']) && $this->_ctrl->config->get('config_special_category_id') && (int)$this->_data['filter_category_id'] == (int)$this->_ctrl->config->get('config_special_category_id')) {
 			$conditions[] = "p.product_id IN (SELECT product_id FROM product_special ps WHERE ps.price < p.price AND ps.price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (store_id = '" . (int)$this->_ctrl->config->get('config_store_id') . "' OR store_id = -1)) AND p.stock_status_id <> '" . (int)$this->_ctrl->config->get('config_not_in_stock_status_id') . "' AND p.quantity > 0";
 		}			
@@ -1169,6 +1080,10 @@ class MegaFilterCore {
 			$conditions[] = "p." . $this->_ctrl->config->get('config_warehouse_identifier') . " > 0";
 		}
 
+		if (!empty($this->_data['filter_in_stock'])) {
+			$conditions[] = "p." . $this->_ctrl->config->get('config_warehouse_identifier') . " > 0";
+		}
+
 		if (!empty($this->_data['filter_not_bad'])) {
 			$conditions[] = "p.stock_status_id NOT IN (" . $this->_ctrl->config->get('config_not_in_stock_status_id') . ',' . $this->_ctrl->config->get('config_partly_in_stock_status_id') . ")";
 		}
@@ -1177,12 +1092,10 @@ class MegaFilterCore {
 			$conditions[] = "p.new = 1 AND (DATE(p.new_date_to) > '". date('Y-m-d') . "' OR DATE(p.date_added) > '" . date('Y-m-d', strtotime('-45 day')) . "')";
 		}
 		
-		// sprawdź branżę
 		if( ! empty( $this->_data['filter_manufacturer_id'] ) ) {
 			$conditions[] = '`p`.`manufacturer_id` = ' . (int) $this->_data['filter_manufacturer_id'];
 		}
 	
-		// sprawdź kategorię
 		if( ! empty( $this->_data['filter_category_id'] ) ) {
 			if( ! empty( $this->_data['filter_sub_category'] ) || $this->_categories ) {
 				$conditions['cat_id'] = "`cp`.`path_id` = '" . (int) $this->_data['filter_category_id'] . "'";
@@ -1197,12 +1110,11 @@ class MegaFilterCore {
 			}
 		}
 		
-		// sprawdź frazę / tagi
 		if( ! empty( $this->_data['filter_name'] ) || ! empty( $this->_data['filter_tag'] ) ) {
-			$sql = array();
+			$sql = [];
 			
 			if( ! empty( $this->_data['filter_name'] ) ) {
-				$implode	= array();
+				$implode	= [];
 				$words		= explode( ' ', trim( preg_replace( '/\s\s+/', ' ', $this->_data['filter_name'] ) ) );
 				
 				foreach( $words as $word ) {
@@ -1233,8 +1145,7 @@ class MegaFilterCore {
 			if( $sql ) {
 				$conditions['search'] = '(' . implode( ' OR ', $sql ) . ')';
 			}
-		}
-		
+		}		
 		
 		if( false != ( $mFilterPlus = $this->mfilterPlus() ) ) {
 			$mFilterPlus->baseConditions( $conditions );
@@ -1320,7 +1231,7 @@ class MegaFilterCore {
 		$conditions	= $this->_baseConditions( $conditions );
 		$group_by	= $group_by ? ' GROUP BY ' . implode( ',', $group_by ) : '';
 		
-		return $this->_createSQLByCategories( str_replace( array( '{COLUMNS}', '{CONDITIONS}', '{GROUP_BY}' ), array( implode( ',', $columns ), implode( ' AND ', $conditions ), $group_by ), sprintf("
+		$sql = $this->_createSQLByCategories( str_replace( array( '{COLUMNS}', '{CONDITIONS}', '{GROUP_BY}' ), array( implode( ',', $columns ), implode( ' AND ', $conditions ), $group_by ), sprintf("
 			SELECT
 				{COLUMNS}
 			FROM
@@ -1334,24 +1245,29 @@ class MegaFilterCore {
 				{CONDITIONS}
 			{GROUP_BY}
 		", $this->_baseJoin( array( 'pd' ) ) ) ) );
+
+		return $sql;
 	}
 	
 	private function _createSQLByCategories( $sql ) {
 		if( ! $this->_categories )
 			return $sql;
 		
-		return sprintf("
+		$sql = sprintf("
 			SELECT
 				`tmp`.*
 			FROM
 				( %s ) AS `tmp`
 			%s %s %s
 		",$sql, $this->_joinProductToCategory( 'mf_p2c', 'tmp' ), $this->_joinCategoryPath(), $this->_categoriesToSQL() );
+
+		return $sql;
 	}
 	
 	private static function _route( & $ctrl ) {
-		if( isset( $ctrl->request->get['mfilterRoute'] ) )
+		if( isset( $ctrl->request->get['mfilterRoute'] ) ){
 			return base64_decode( $ctrl->request->get['mfilterRoute'] );
+		}
 		
 		if( isset( $ctrl->request->get['route'] ) )
 			return $ctrl->request->get['route'];
@@ -1391,15 +1307,10 @@ class MegaFilterCore {
 		if( $this->_attribs || $this->_options || $this->_filters || $this->_categories )
 			$columns[] = '`p`.`product_id`';
 		
-		$conditions		= array();
+		$conditions		= [];
 		
-		// atrybuty
 		$this->_attribsToSQL( '', NULL, $conditionsIn, $conditions );
-		
-		// opcje
 		$this->_optionsToSQL( '', NULL, $conditionsIn, $conditions );
-		
-		// filtry
 		$this->_filtersToSQL( '', NULL, $conditionsIn, $conditions );
 		
 		if( isset( $conditionsOut['mf_rating'] ) ) {
@@ -1413,14 +1324,13 @@ class MegaFilterCore {
 		}		
 		
 		$conditions = $conditions ? ' WHERE ' . implode( ' AND ', $conditions ) : '';
-		
+
+		$createdSQL = $this->_createSQL( $columns, $conditionsIn, [] );
 		$sql = sprintf( 
 			'SELECT MIN(`price`) AS `p_min`, MAX(`price`) AS `p_max` FROM( SELECT ' . $sel . ' AS `price` FROM( %s ) AS `tmp` %s ) AS `tmp` ' . $this->_conditionsToSQL( $conditionsOut ),
-			$this->_createSQL( $columns, $conditionsIn, array() ), $conditions
-		);				
+			$createdSQL, $conditions
+		);		
 
-	//	$this->_ctrl->log->debug($sql);	
-		
 		$query = $this->_ctrl->db->query( $sql );
 		
 		if( ! $query->num_rows )
@@ -1440,7 +1350,7 @@ class MegaFilterCore {
 	public function getTreeCategories() {		
 		$root_cat	= empty( $this->_ctrl->request->get['path'] ) ? array( 0 ) : explode( '_', $this->_ctrl->request->get['path'] );
 		$root_cat	= (int) end( $root_cat );
-		$tree		= array();
+		$tree		= [];
 		$path		= array( $root_cat => $root_cat );
 		
 		foreach( $this->_ctrl->db->query( "SELECT category_id FROM `category_path` WHERE `path_id` = " . (int) $root_cat )->rows as $row ) {
@@ -1613,7 +1523,7 @@ class MegaFilterCore {
 		);
 		
 		$query = $this->_ctrl->db->query( $sql );		
-		$counts = array();
+		$counts = [];
 		
 		foreach( $query->rows as $row ) {
 			$counts[$row['stock_status_id']] = $row['total'];
@@ -1661,7 +1571,7 @@ class MegaFilterCore {
 		);
 		
 		$query = $this->_ctrl->db->query( $sql );
-		$counts = array();
+		$counts = [];
 		
 		foreach( $query->rows as $row ) {
 			$counts[(int)$row['mf_rating']] = $row['total'];
@@ -1709,7 +1619,7 @@ class MegaFilterCore {
 		);
 		
 		$query = $this->_ctrl->db->query( $sql );
-		$counts = array();
+		$counts = [];
 		
 		foreach( $query->rows as $row ) {
 			$counts[$row['manufacturer_id']] = $row['total'];
@@ -1731,7 +1641,7 @@ class MegaFilterCore {
 	// ATRYBUTY ////////////////////////////////////////////////////////////////
 	
 	private function _getCountsByAttributes( array $conditions, array $conditionsIn ) {
-		$counts	= array();
+		$counts	= [];
 		
 		$conditionsOut		= $this->_conditions['out'];
 		$columns			= $this->_baseColumns( '`pa`.`attribute_id`', '`p`.`product_id`', '`pa`.`text`' );
@@ -1800,8 +1710,8 @@ class MegaFilterCore {
 	 */
 	public function getCountsByAttributes() {
 		$attribs	= array_keys( $this->_attribs );
-		$ids		= array();
-		$counts		= array();
+		$ids		= [];
+		$counts		= [];
 		
 		foreach( $attribs as $attrib ) {
 			list( $id ) = explode( '-', $attrib );
@@ -1812,7 +1722,7 @@ class MegaFilterCore {
 				$ids[] = $id;
 		}
 		
-		$conditions = array();
+		$conditions = [];
 		$conditionsIn = $this->_conditions['in'];
 		
 		if( $ids ) {
@@ -1830,7 +1740,7 @@ class MegaFilterCore {
 		
 		$counts = $this->_getCountsByAttributes( $conditions, $conditionsIn );
 		
-		$clearConditions	= array();
+		$clearConditions	= [];
 		$conditionsIn		= $this->_conditions['in'];
 		
 		// opcje
@@ -1843,7 +1753,7 @@ class MegaFilterCore {
 		
 		foreach( $attribs as $key ) {
 			$copy			= $this->_attribs;
-			$conditions		= array();
+			$conditions		= [];
 			$conditionsIn	= $this->_conditions['in'];
 			
 			list( $k ) = explode( '-', $key );
@@ -1880,7 +1790,7 @@ class MegaFilterCore {
 	// OPCJE ///////////////////////////////////////////////////////////////////
 	
 	private function _getCountsByOptions( array $conditions, array $conditionsIn ) {
-		$counts	= array();
+		$counts	= [];
 		
 		$conditionsOut		= $this->_conditions['out'];
 		$columns			= $this->_baseColumns( '`pov`.`option_value_id`', '`pov`.`option_id`', '`p`.`product_id`' );
@@ -1962,8 +1872,8 @@ class MegaFilterCore {
 	 */
 	public function getCountsByOptions() {
 		$options	= array_keys( $this->_options );
-		$ids		= array();
-		$counts		= array();
+		$ids		= [];
+		$counts		= [];
 		
 		foreach( $options as $attrib ) {
 			list( $id ) = explode( '-', $attrib );
@@ -1974,7 +1884,7 @@ class MegaFilterCore {
 				$ids[] = $id;
 		}
 		
-		$conditions = array();
+		$conditions = [];
 		$conditionsIn = $this->_conditions['in'];
 		
 		if( $ids ) {
@@ -1992,7 +1902,7 @@ class MegaFilterCore {
 		
 		$counts = $this->_getCountsByOptions( $conditions, $conditionsIn );
 		
-		$clearConditions	= array();
+		$clearConditions	= [];
 		$conditionsIn		= $this->_conditions['in'];
 		
 		// atrybuty
@@ -2005,7 +1915,7 @@ class MegaFilterCore {
 		
 		foreach( $options as $key ) {
 			$copy			= $this->_options;
-			$conditions		= array();
+			$conditions		= [];
 			$conditionsIn	= $this->_conditions['in'];
 			
 			list( $k ) = explode( '-', $key );
@@ -2042,7 +1952,7 @@ class MegaFilterCore {
 	// FILTRY //////////////////////////////////////////////////////////////////
 	
 	private function _getCountsByFilters( array $conditions, array $conditionsIn ) {
-		$counts	= array();
+		$counts	= [];
 		
 		$conditionsOut		= $this->_conditions['out'];
 		$columns			= $this->_baseColumns( '`f`.`filter_group_id`', '`pf`.`filter_id`', '`p`.`product_id`' );
@@ -2104,8 +2014,8 @@ class MegaFilterCore {
 	 */
 	public function getCountsByFilters() {
 		$filters	= array_keys( $this->_filters );
-		$ids		= array();
-		$counts		= array();
+		$ids		= [];
+		$counts		= [];
 		
 		foreach( $filters as $attrib ) {
 			list( $id ) = explode( '-', $attrib );
@@ -2116,7 +2026,7 @@ class MegaFilterCore {
 				$ids[] = $id;
 		}
 		
-		$conditions = array();
+		$conditions = [];
 		$conditionsIn = $this->_conditions['in'];
 		
 		if( $ids )
@@ -2133,7 +2043,7 @@ class MegaFilterCore {
 		
 		$counts = $this->_getCountsByFilters( $conditions, $conditionsIn );
 		
-		$clearConditions	= array();
+		$clearConditions	= [];
 		$conditionsIn		= $this->_conditions['in'];
 		
 		// atrybuty
@@ -2146,7 +2056,7 @@ class MegaFilterCore {
 		
 		foreach( $filters as $key ) {
 			$copy			= $this->_filters;
-			$conditions		= array();
+			$conditions		= [];
 			$conditionsIn	= $this->_conditions['in'];
 			
 			list( $k ) = explode( '-', $key );
@@ -2213,7 +2123,7 @@ class MegaFilterCore {
 				unset( $params[$k] );
 			} else {
 				if( $like && $like != ',' ) {
-					$params[$k] = array();
+					$params[$k] = [];
 					$params[$k][] = "'" . $this->_ctrl->db->escape( $v ) . "'";
 					$params[$k][] = "'%" . $like . $this->_ctrl->db->escape( $v ) . $like . "%'";
 					$params[$k][] = "'" . $this->_ctrl->db->escape( $v ) . $like . "%'";
@@ -2242,7 +2152,7 @@ class ModelModuleMegaFilter extends Model {
 	 * @return array 
 	 */
 	public function getStockStatuses() {
-		$list = array();
+		$list = [];
 		
 		foreach( $this->db->query("
 			SELECT
@@ -2283,7 +2193,7 @@ class ModelModuleMegaFilter extends Model {
 		$core		= MegaFilterCore::newInstance( $this, NULL );
 		$data		= MegaFilterCore::_getData( $this );
 		$join		= '';
-		$group		= array();
+		$group		= [];
 		$conditions	= $core->_baseConditions();
 		$join		= 'INNER JOIN `product` AS `p` ON `p`.`manufacturer_id` = `m`.`manufacturer_id`';
 		
@@ -2303,7 +2213,7 @@ class ModelModuleMegaFilter extends Model {
 		$conditions	= $conditions ? 'WHERE ' . implode( ' AND ', $conditions ) : '';
 		
 		$sql			= str_replace( array( '{join}', '{conditions}', '{group}' ), array( $join, $conditions, $group ), $sql );
-		$manufacturers	= array();
+		$manufacturers	= [];
 		
 		foreach( $this->db->query( $sql )->rows as $row ) {
 			$manufacturers[] = array(
@@ -2365,7 +2275,7 @@ class ModelModuleMegaFilter extends Model {
 				`f`.`sort_order`, `fd`.`name`
 		";
 		
-		$filter_ids		= array();
+		$filter_ids		= [];
 		
 		if( ! empty( $config['based_on_category'] ) ) {
 			$category_id	= isset( $this->request->get['path'] ) ? explode( '_', (string) $this->request->get['path'] ) : array();
@@ -2384,7 +2294,7 @@ class ModelModuleMegaFilter extends Model {
 		
 		$core			= MegaFilterCore::newInstance( $this, NULL );
 		$conditions		= $core->_baseConditions();
-		$filters		= array();
+		$filters		= [];
 		$join			= $core->_baseJoin(array('p2s','pf'));
 		
 		if( $filter_ids ) {
@@ -2400,7 +2310,7 @@ class ModelModuleMegaFilter extends Model {
 		}
 		
 		$sql	= str_replace( array( '{conditions}', '{join}' ), array( implode( ' AND ', $conditions ), $join ), $sql );
-		$sort	= array();
+		$sort	= [];
 		
 		foreach( $this->db->query( $sql )->rows as $filter ) {
 			if( empty( $config[$filter['filter_group_id']]['enabled'] ) ) continue;
@@ -2490,7 +2400,7 @@ class ModelModuleMegaFilter extends Model {
 		$core			= MegaFilterCore::newInstance( $this, NULL );
 		$conditions		= $core->_baseConditions();
 		$conditions[]	= "`o`.`type` IN('radio','checkbox','select','image')";
-		$options		= array();
+		$options		= [];
 		$join			= $core->_baseJoin(array('p2s'));
 		
 		if( in_array( $core->route(), MegaFilterCore::$_specialRoute ) ) {
@@ -2503,7 +2413,7 @@ class ModelModuleMegaFilter extends Model {
 		}
 		
 		$sql	= str_replace( array( '{conditions}', '{join}' ), array( implode( ' AND ', $conditions ), $join ), $sql );
-		$sort	= array();
+		$sort	= [];
 		
 		foreach( $this->db->query( $sql )->rows as $option ) {
 			if( empty( $opts[$option['option_id']]['enabled'] ) ) continue;
@@ -2615,7 +2525,7 @@ class ModelModuleMegaFilter extends Model {
 		
 		$core		= MegaFilterCore::newInstance( $this, NULL );
 		$conditions	= $core->_baseConditions();
-		$attributes = array();
+		$attributes = [];
 		$join		= $core->_baseJoin(array('p2s'));
 		$settings	= $this->config->get('mega_filter_settings');
 		
@@ -2632,7 +2542,7 @@ class ModelModuleMegaFilter extends Model {
 		}
 		
 		$sql	= str_replace( array( '{conditions}', '{join}' ), array( implode( ' AND ', $conditions ), $join ), $sql );
-		$sort	= array();
+		$sort	= [];
 		
 		foreach( $this->db->query( $sql )->rows as $attribute ) {
 			if( empty( $attribs[$attribute['attribute_group_id']]['items'][$attribute['attribute_id']]['enabled'] ) ) continue;
@@ -2663,7 +2573,7 @@ class ModelModuleMegaFilter extends Model {
 				$attribute['txt'] = array( $attribute['txt'] );
 			}
 			
-			$unique	= array();
+			$unique	= [];
 			foreach( $attribute['txt'] as $text ) {
 				$k = md5( $text );
 				
@@ -2715,7 +2625,7 @@ class ModelModuleMegaFilter extends Model {
 	 * Utwórz listę kategorii 
 	 */
 	public function createCategories( & $core, $idx, $config ) {
-		$categories = array();
+		$categories = [];
 		$params		= $core->getParseParams();
 		
 		foreach( $config as $key => $category ) {
@@ -2752,8 +2662,8 @@ class ModelModuleMegaFilter extends Model {
 					break;
 				}
 				case 'related' : {
-					$row['levels']		= array();
-					$row['labels']		= array();
+					$row['levels']		= [];
+					$row['labels']		= [];
 					$row['auto_levels']	= empty( $category['auto_levels'] ) ? false : true;
 					$root_category_id	= empty( $category['root_category_id'] ) ? NULL : $category['root_category_id'];
 					$start_id			= 0;
@@ -2816,7 +2726,7 @@ class ModelModuleMegaFilter extends Model {
 											if( ! empty( $category['auto_levels'] ) ) {
 												break;
 											} else {
-												$level['options'] = array();
+												$level['options'] = [];
 											}
 										}
 									//}
@@ -2895,7 +2805,7 @@ class ModelModuleMegaFilter extends Model {
 		if( ! self::$_tmp_sort_parameters['type'] && self::$_tmp_sort_parameters['attribute_id'] !== NULL && self::$_tmp_sort_parameters['config'] ) {
 			uasort( $options, array( 'ModelModuleMegaFilter', '_sortItems' ) );
 		} else {
-			$tmp = array();
+			$tmp = [];
 			
 			foreach( $options as $k => $v ) {
 				$tmp['_'.$k] = htmlspecialchars_decode( $v['name'] );
@@ -2907,7 +2817,7 @@ class ModelModuleMegaFilter extends Model {
 				asort( $tmp, $type == 'string' ? SORT_STRING : SORT_NUMERIC );
 			}
 			
-			$tmp2 = array();
+			$tmp2 = [];
 			
 			foreach( $tmp as $k => $v ) {
 				$tmp2[trim($k,'_')] = $options[trim($k,'_')];
@@ -3218,7 +3128,7 @@ class Mobile_Detect_MFP
      * HTTP headers in the PHP-flavor. So HTTP_USER_AGENT and SERVER_SOFTWARE.
      * @var array
      */
-    protected $httpHeaders = array();
+    protected $httpHeaders = [];
 
     /**
      * The detection type, using self::DETECTION_TYPE_MOBILE or self::DETECTION_TYPE_EXTENDED.
@@ -3722,7 +3632,7 @@ class Mobile_Detect_MFP
         }
 
         //clear existing headers
-        $this->httpHeaders = array();
+        $this->httpHeaders = [];
 
         //Only save HTTP headers. In PHP land, that means only _SERVER vars that
         //start with HTTP_.
