@@ -13,6 +13,7 @@ $_['text_retranslate_11'] = 'Хит продаж';
 $_['text_retranslate_12'] = 'Лучшая цена';
 $_['text_retranslate_13'] = 'Новинка';
 $_['text_retranslate_14'] = 'Акция';
+$_['text_retranslate_action'] = 'Акция!';
 $_['text_retranslate_15'] = 'Узнать детали';
 $_['text_retranslate_16'] = 'Москве';
 $_['text_retranslate_17'] = 'Киеве';

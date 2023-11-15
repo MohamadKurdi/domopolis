@@ -14,6 +14,7 @@ $_['text_retranslate_12'] = 'Краща ціна';
 $_['text_retranslate_13'] = 'Новинка';
 $_['text_retranslate_14'] = 'Акція';
 $_['text_retranslate_15'] = 'Дізнатися деталі';
+$_['text_retranslate_action'] = 'Акція!';
 $_['text_retranslate_16'] = 'Москві';
 $_['text_retranslate_17'] = 'Києві';
 $_['text_retranslate_18'] = 'В наявності';
