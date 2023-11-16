@@ -7,13 +7,11 @@ class ControllerApiInfo1C extends Controller
     private function check_key($array)
     {
         $gen_key = false;
-
         return (sha1($array['operation_id']) == mb_strtolower(str_replace(' ', '', $array['key'])));
     }
 
     public function getOrderJSON($order_id = 0)
     {
-
         $query = $this->db->query("SELECT * FROM `order` WHERE order_id = '" . (int)$order_id . "'");
 
         if ($query->num_rows) {
@@ -397,7 +395,20 @@ class ControllerApiInfo1C extends Controller
 
     public function getOrderSales($order_id = false, $delivery_num = false)
     {
+        if (!$order_id) {
+            $order_id = $this->request->get['order_id'];
+        }
 
+        if (!$delivery_num) {
+            $delivery_num = $this->request->get['delivery_num'];
+        }
+
+        $this->load->model('feed/exchange1c');
+        $this->model_feed_exchange1c->makeSalesResultXML($order_id, true, false, false, $delivery_num);
+    }
+
+    public function makeSalesResultXML($order_id = false, $delivery_num = false)
+    {
         if (!$order_id) {
             $order_id = $this->request->get['order_id'];
         }
@@ -412,8 +423,6 @@ class ControllerApiInfo1C extends Controller
 
     public function updateLocalPricesXML()
     {
-
-        //ОТКЛЮЧИТЬ ЦЕНЫ
         if (!$this->config->get('config_odinass_update_local_prices')) {
             echoLine('РРЦ отключено!');
             return;
@@ -1575,7 +1584,6 @@ class ControllerApiInfo1C extends Controller
         $this->response->setOutput(json_encode($result));
     }
 
-
     public function getProductImage($product_id, $width = 150, $height = 150)
     {
 
@@ -1915,9 +1923,7 @@ class ControllerApiInfo1C extends Controller
                         $template->sent();
                     }
 
-                    $this->load->model('feed/exchange1c');
-                    $this->model_feed_exchange1c->addOrderToQueue($order_id);
-                    $this->model_feed_exchange1c->makeSalesResultXML($order_id);
+                    $this->Fiscalisation->addOrderToQueue($order_id);
 
                     $responce['success'] = true;
                     $responce['new_status'] = $order_status_id;
@@ -1936,7 +1942,6 @@ class ControllerApiInfo1C extends Controller
 
         $this->updateStockXML($result, $update, $updateStockGroups);
     }
-
 
     public function getOrderCurrentStatusJSON($orders)
     {
@@ -2004,7 +2009,6 @@ class ControllerApiInfo1C extends Controller
         }
     }
 
-
     public function putOrderTrackingInfo($json_data = '')
     {
         $this->load->model('sale/order');
@@ -2024,7 +2028,6 @@ class ControllerApiInfo1C extends Controller
                 $order_info = $this->model_sale_order->getOrder($order_id);
 
                 if ($order_info) {
-                //check if to send
                     $check_query = $this->db->query("SELECT * FROM order_tracker_sms WHERE tracker_type = 'LeaveMainWarehouse' AND order_id = '" . (int)$order_id . "' AND partie_num = '" . $this->db->escape($json_data['NumPart']) . "'");
 
                     if (!$check_query->num_rows) {                        
@@ -2069,14 +2072,12 @@ class ControllerApiInfo1C extends Controller
         }
     }
 
-
     public function exportOrdersCron()
     {
         $this->load->model('feed/exchange1c');
         $this->load->model('sale/order');
 
         $query = $this->db->query("SELECT order_id FROM order_to_1c_queue ORDER BY RAND() LIMIT 20");
-
 
         foreach ($query->rows as $result) {
             $order_id = $result['order_id'];
@@ -2099,11 +2100,8 @@ class ControllerApiInfo1C extends Controller
 
     public function legalpersonList()
     {
-
-            $query = $this->db->query("SELECT * FROM legalperson WHERE 1");
-
-
-            $this->response->setOutput(json_encode($query->rows));
+        $query = $this->db->query("SELECT * FROM legalperson WHERE 1");
+        $this->response->setOutput(json_encode($query->rows));
     }
 
     public function productPurchaseSet($purchaseData)

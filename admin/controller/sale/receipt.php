@@ -988,6 +988,7 @@ class ControllerSaleReceipt extends Controller {
 
             if(isset($receipt['success'])){
                 $message .= $receipt['success'];
+				$this->Fiscalisation->addOrderToQueue($order_id);
             }
         }
         

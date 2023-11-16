@@ -8,11 +8,20 @@
 
 		private $db		 = null;	
 		private $config	 = null;
+
+		public const formats = ['html', 'pdf', 'text', 'png', 'qrcode'];
+
 		private $api_endpoints = [
 			'checkbox' => 'https://api.checkbox.in.ua/api/v1/receipts/',
 			'cashdesk' => 'https://api.cashdesk.com.ua/check/',
+			'webcheck' => 'https://che.ck.ua/'
 		];
 
+		private $api_supported_formats = [
+			'checkbox' => ['html', 'pdf', 'text', 'png', 'qrcode'],
+			'cashdesk' => ['html', 'pdf', 'text', 'png', 'qrcode'],
+			'webcheck' => ['pdf']
+		];	
 
 		public function __construct($registry){
 			$this->config 	= $registry->get('config');
@@ -22,6 +31,7 @@
 		public function setOrderPaidBy($order_id, $paid_by){
         	$this->db->ncquery("UPDATE `order` SET paid_by = '" . $this->db->escape($paid_by) . "' WHERE order_id = '" . (int)$order_id . "'");
         	$this->db->ncquery("UPDATE `order` SET payment_code = '" . $this->db->escape($paid_by) . "' WHERE order_id = '" . (int)$order_id . "'");
+        	$this->addOrderToQueue($order_id);
     	}
 
     	public function getOrdersPaidByNonFiscalised($paid_by){
@@ -46,6 +56,19 @@
     			all_json_data       = '" . $this->db->escape(json_encode($data['all_json_data'])) . "'";
 
     		$this->db->ncquery( $sql );     
+
+    		$this->addOrderToQueue($data['order_id']);
+    	}
+
+    	public function getOrderReceipt($order_id){
+    		$sql = "SELECT * FROM order_receipt WHERE order_id = '".  (int)$order_id . "' LIMIT 1";
+
+    		$query = $this->db->ncquery( $sql );       
+    		if ($query->num_rows){
+    			return $query->row;
+    		}
+
+    		return false;
     	}
 
     	public function checkIfOrderReceiptAlreadyExits($order_id){
@@ -70,25 +93,61 @@
     		return false;
     	}
 
-    	public function getReceiptLink($receipt_id, $type='html'){
+
+    	public function getReceiptLinks($receipt_id){    	
+    		$result = [];
+
+    		if (empty($receipt_id)){
+    			return $result;
+    		}
+
     		$query = $this->db->query("SELECT * FROM order_receipt WHERE receipt_id = '" . $this->db->escape($receipt_id) . "' LIMIT 1");
 
-    		if (!empty($this->api_endpoints[$query->row['api']])){
-    			$api_url = $this->api_endpoints[$query->row['api']];
+    		foreach (self::formats as $format){
+    			$receipt_link = $this->getReceiptLink($receipt_id, $format, $query->row);
+
+    			if ($receipt_link){
+    				$result[mb_strtoupper($format)] = [
+    					'type' => mb_strtoupper($format),
+    					'link' => $receipt_link
+    				];
+    			}
+    		}
+
+    		return $result;
+    	}
+
+
+    	public function getReceiptLink($receipt_id, $format = 'html', $receipt_data = []){
+    		if (!$receipt_data){
+    			$query = $this->db->query("SELECT * FROM order_receipt WHERE receipt_id = '" . $this->db->escape($receipt_id) . "' LIMIT 1");
+    			$receipt_data = $query->row;
+    		}    		
+
+    		if (!empty($this->api_endpoints[$receipt_data['api']])){
+    			$api_url 				= $this->api_endpoints[$receipt_data['api']];
+    			$api_supported_formats 	= $this->api_supported_formats[$receipt_data['api']];
     		} else {
     			return false;
     		}
 
-    		switch ($type) {
+    		if (!in_array($format, $api_supported_formats)){
+    			return false;
+    		}
+
+    		switch ($format) {
     			case 'pdf':
-    			$url = $api_url . $receipt_id .'/pdf';
+    			$url = $api_url . $receipt_id .'/pdf';	    			
     			break;
+
     			case 'text':
     			$url = $api_url . $receipt_id .'/text';
     			break;
+
     			case 'png':
     			$url = $api_url . $receipt_id .'/png';
     			break;
+
     			case 'qrcode':
     			$url = $api_url . $receipt_id .'/qrcode';
     			break;
@@ -100,4 +159,12 @@
 
     		return $url;
     	}
+
+    	public function addOrderToQueue($order_id){
+			$this->db->query("INSERT IGNORE INTO order_to_1c_queue SET `order_id` = '" . (int)$order_id . "'");
+		}
+		
+		public function removeOrderFromQueue($order_id){
+			$this->db->query("DELETE FROM order_to_1c_queue WHERE `order_id` = '" . (int)$order_id . "'");
+		}
 	}

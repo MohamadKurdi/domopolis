@@ -1467,7 +1467,8 @@
 				if ($result['preorder']){
 					$totals2 = [];
 					$total_discount = false;
-				}				
+				}
+		
 				
 				$this->data['orders'][] = array(
 				'order_id'      			=> $result['order_id'],
@@ -1586,11 +1587,7 @@
 				'receipt_id'      			=> $result['receipt_id'], 
 				'is_sent_dps'      			=> $result['is_sent_dps'], 
 				'sent_dps_at'      			=> date('d.m.Y', strtotime($result['sent_dps_at'])), 
-				'html_link'      			=> $this->Fiscalisation->getReceiptLink($result['receipt_id'],'html'),
-				'pdf_link'      			=> $this->Fiscalisation->getReceiptLink($result['receipt_id'],'pdf'),
-				'text_link'      			=> $this->Fiscalisation->getReceiptLink($result['receipt_id'],'text'),
-				'png_link'      			=> $this->Fiscalisation->getReceiptLink($result['receipt_id'],'png'),
-				'qrcode_link'      			=> $this->Fiscalisation->getReceiptLink($result['receipt_id'],'qrcode'),
+				'receipt_links'				=> $this->Fiscalisation->getReceiptLinks($result['receipt_id']),
 				'newversion'				=> ($result['template'] == 'kp'),
 				'reward'     				=> $this->currency->formatBonus($result['reward'], true),
 				'reward_used'   			=> $result['reward_used']?$this->currency->formatNegativeBonus($result['reward_used'], true):false,
@@ -2777,8 +2774,6 @@
 
 			$this->load->model('sale/receipt');
 
-
-
 			$this->data['receipts'] = [];
 			$receipts = $this->model_sale_receipt->getOrders(['filter_order_id' => $this->request->get['order_id']]);
 			
@@ -2786,17 +2781,14 @@
 
 			if ($receipts){
 				foreach($receipts as $receipt){
-					if ($receipt['receipt_id']){						
+					if ($receipt['receipt_id']){
+
 						$this->data['receipts'][] = [
 							'fiscal_code'      			=> $receipt['fiscal_code'],
 							'receipt_id'      			=> $receipt['receipt_id'], 
 							'is_sent_dps'      			=> $receipt['is_sent_dps'], 
 							'sent_dps_at'      			=> date('d.m.Y', strtotime($receipt['sent_dps_at'])), 
-							'html_link'      			=> $this->Fiscalisation->getReceiptLink($receipt['receipt_id'],'html'),
-							'pdf_link'      			=> $this->Fiscalisation->getReceiptLink($receipt['receipt_id'],'pdf'),
-							'text_link'      			=> $this->Fiscalisation->getReceiptLink($receipt['receipt_id'],'text'),
-							'png_link'      			=> $this->Fiscalisation->getReceiptLink($receipt['receipt_id'],'png'),
-							'qrcode_link'      			=> $this->Fiscalisation->getReceiptLink($receipt['receipt_id'],'qrcode'),
+							'receipt_links' 			=> $this->Fiscalisation->getReceiptLinks($receipt['receipt_id'])
 						];
 					}
 				}

@@ -1367,9 +1367,7 @@
 				$message  = sprintf($this->language->get('text_transaction_received'), $this->currency->format($amount, $this->config->get('config_currency'))) . "\n\n";
 				$message .= sprintf($this->language->get('text_transaction_total'), $this->currency->format($this->getTransactionTotal($customer_id)));
 				
-				$this->load->model('feed/exchange1c');
-				$this->model_feed_exchange1c->addOrderToQueue($order_id);
-				$this->model_feed_exchange1c->getOrderTransactionsXML($order_id);
+				$this->Fiscalisation->addOrderToQueue($order_id);
 				
 				$mail = new Mail($this->registry); 
 				$mail->setTo($customer_info['email']);

@@ -1794,7 +1794,7 @@ public function confirm($order_id, $order_status_id, $comment = '', $notify = fa
 	}
 
 	public function addOrderToQueue($order_id){
-		$this->db->ncquery("INSERT IGNORE INTO order_to_1c_queue SET `order_id` = '" . (int)$order_id . "'");
+		$this->Fiscalisation->addOrderToQueue($order_id);
 	}
 
 	public function getOrderTotals($order_id, $code = false) {
