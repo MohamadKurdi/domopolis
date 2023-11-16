@@ -2927,7 +2927,7 @@
 																									<td class="right">Приор.</td>
 																									<td class="right">Кол-во</td>
 																									<td class="right"><?php echo $entry_name; ?></td>
-																									<td class="right"><?php echo $entry_price; ?>|<?php echo $entry_percent; ?></td>
+																									<td class="right">Скидка</td>
 																									<td class="left">Даты</td>
 																									<td class="left" colspan="2"><?php echo $entry_image; ?></td>
 																								</tr>
@@ -2954,10 +2954,10 @@
 																									<td>
 																										<div class="scrollbox" style="min-height: 100px;">
 																											<?php $class = 'even'; ?>												
-																											<?php foreach ($stores_ao as $store_ao) { ?>
+																											<?php foreach ($stores as $store) { ?>
 																												<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
 																												<div class="<?php echo $class; ?>">
-																													<?php if (in_array($store_ao['store_id'], $product_ao['store_id'])) { ?>
+																													<?php if (in_array($store['store_id'], $product_ao['store_id'])) { ?>
 																														<input id="ao_<?php echo $additional_offer_row; ?>_store_<?php echo $store_ao['store_id']; ?>" class="checkbox" type="checkbox" name="product_additional_offer[<?php echo $additional_offer_row; ?>][store_id][]" value="<?php echo $store_ao['store_id']; ?>" checked="checked" />
 																														<label for="ao_<?php echo $additional_offer_row; ?>_store_<?php echo $store_ao['store_id']; ?>"><?php echo $store_ao['name']; ?></label>
 																													<?php } else { ?>
@@ -2981,9 +2981,16 @@
 																									</td>
 
 																									<td class="right">
-																										<input type="text" name="product_additional_offer[<?php echo $additional_offer_row; ?>][price]" value="<?php echo $product_ao['price']; ?>" />$$
-																										<br /><br />
-																										<input type="text" name="product_additional_offer[<?php echo $additional_offer_row; ?>][percent]" value="<?php echo $product_ao['percent']; ?>" />%</td>
+																										<div>
+																										<input type="text" name="product_additional_offer[<?php echo $additional_offer_row; ?>][price]" value="<?php echo $product_ao['price']; ?>" /> EUR
+																										<small>фикс. цена</small>
+																										</div>
+																										
+																										<div>
+																										<input type="text" name="product_additional_offer[<?php echo $additional_offer_row; ?>][percent]" value="<?php echo $product_ao['percent']; ?>" />%
+																										<small>процент</small>
+																										</div>
+																										</td>
 																										<td class="left" width="120px;">
 
 																											<input type="text" name="product_additional_offer[<?php echo $additional_offer_row; ?>][date_start]" value="<?php echo $product_ao['date_start']; ?>" class="date" /><i class="fa fa-hourglass-start" aria-hidden="true"></i>

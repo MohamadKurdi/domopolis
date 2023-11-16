@@ -1955,16 +1955,11 @@
 			return $query->row;
 		}
 		
-		public function getProductAdditionalOffer($product_id, $active = false) {
-			
-			if (!$active) {
-				
-				$query = $this->db->query("SELECT * FROM product_additional_offer WHERE product_id = '" . (int)$product_id . "' ORDER BY priority, price");
-				
-				} else {
-				
-				$query = $this->db->query("SELECT * FROM product_additional_offer WHERE product_id = '" . (int)$product_id . "' AND date_end >= NOW() ORDER BY priority, price");
-				
+		public function getProductAdditionalOffer($product_id, $active = false) {			
+			if (!$active) {				
+				$query = $this->db->query("SELECT * FROM product_additional_offer WHERE product_id = '" . (int)$product_id . "' ORDER BY priority, price");				
+				} else {				
+				$query = $this->db->query("SELECT * FROM product_additional_offer WHERE product_id = '" . (int)$product_id . "' AND date_end >= NOW() ORDER BY priority, price");				
 			}
 			
 			return $query->rows;

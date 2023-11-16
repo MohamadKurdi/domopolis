@@ -72,7 +72,7 @@ class ControllerApiInfo1C extends Controller
 
         $query = $this->db->query("show full columns from `" . $this->db->escape($table) . "`");
 
-        $result = array();
+        $result = [];
         foreach ($query->rows as $row) {
             $result[] = array(
                 'field' => $row['Field'],
@@ -89,7 +89,7 @@ class ControllerApiInfo1C extends Controller
 
         $query = $this->db->query("show full columns from `product`");
 
-        $result = array();
+        $result = [];
         foreach ($query->rows as $row) {
             $result[] = array(
                 'field'     => $row['Field'],
@@ -103,7 +103,6 @@ class ControllerApiInfo1C extends Controller
 
     public function editProductFields($product_id, $fields)
     {
-
         $prepared   = $this->db->prepareUpdateQuery('product', $fields);
         $result     = $this->db->doUpdateQuery('product', $product_id, 'product_id', $prepared['result']);
 
@@ -115,7 +114,7 @@ class ControllerApiInfo1C extends Controller
 
         $query = $this->db->query("show full columns from `order`");
 
-        $result = array();
+        $result = [];
         foreach ($query->rows as $row) {
             $result[] = array(
                 'field'     => $row['Field'],
@@ -129,7 +128,7 @@ class ControllerApiInfo1C extends Controller
 
     public function editOrderFields($order_id, $fields)
     {
-        $jsonResultFields = array();
+        $jsonResultFields = [];
         foreach ($fields as $field => $value) {
             if (in_array($field, ['order_id', 'ttn'])) {
                 die("You can not change $field in ORDER table");
@@ -246,16 +245,13 @@ class ControllerApiInfo1C extends Controller
     public function getOrdersInCourierServiceJSON()
     {
 
-        $order_data = array();
-
-            //На пвз
+        $order_data = [];
         $query = $this->db->query("SELECT order_id FROM `order` WHERE order_status_id = '" . $this->config->get('config_in_pickup_status_id') . "'");
 
         foreach ($query->rows as $row) {
             $order_data[] = $row['order_id'];
         }
 
-            //Доставляется по москве
         $query = $this->db->query("SELECT order_id FROM `order` WHERE shipping_country_id = 176 AND 
 			(shipping_city LIKE '%Москва%'
 				OR shipping_city LIKE '%Moscow%'
@@ -276,7 +272,7 @@ class ControllerApiInfo1C extends Controller
     public function getOrdersInCourierService()
     {
 
-        $order_data = array();
+        $order_data = [];
         $query = $this->db->query("SELECT order_id FROM `order` WHERE order_status_id = 25");
 
         foreach ($query->rows as $row) {
@@ -313,7 +309,7 @@ class ControllerApiInfo1C extends Controller
             return;
         }
 
-        $stockwaits = array();
+        $stockwaits = [];
 
         foreach (json_decode($stockwaits1c, true)['items'] as $stockwait) {
             $idx = $stockwait['product_id'].':'.$stockwait['quantity_stock'];
@@ -547,10 +543,10 @@ class ControllerApiInfo1C extends Controller
 
         $results = $this->model_sale_voucher->getVouchers($data);
 
-        $return = array();
+        $return = [];
         foreach ($results as $result) {
             $voucher_histories = $this->model_sale_voucher->getVoucherHistories($result['voucher_id']);
-            $voucher_history = array();
+            $voucher_history = [];
 
             foreach ($voucher_histories as $history) {
                 $voucher_history[] = array(
@@ -587,7 +583,7 @@ class ControllerApiInfo1C extends Controller
 
         $results = $this->model_catalog_product->getProductsWaitList($data);
 
-        $return = array();
+        $return = [];
         foreach ($results as $result) {
             $return[] = array(
                 'waitlist_id'   => $result['order_product_id'],
@@ -633,7 +629,7 @@ class ControllerApiInfo1C extends Controller
         $this->load->model('sale/order');
         $this->load->model('localisation/order_status');
 
-        $attach = array();
+        $attach = [];
         $this->load->model('sale/order');
         $this->load->model('user/user');
 
@@ -651,7 +647,7 @@ class ControllerApiInfo1C extends Controller
             $reply .= "Ответственный: [USER=$order_manager_bitrix_id]" . $this->model_user_user->getRealUserNameById($order['manager_id']) . "[/USER]";
         }
 
-        $grid = array();
+        $grid = [];
 
         if (isset($order1c['ОбщееСостояниеЗаказа']['Товар']['Наименование'])) {
             $_tmp = $order1c['ОбщееСостояниеЗаказа']['Товар'];
@@ -677,7 +673,7 @@ class ControllerApiInfo1C extends Controller
                 $msg .= ":idea: " . $product['ОжидаютОтгрузкиПокупателю'] . " шт. ждет доставки покупателю";
 
                 if (isset($product['ОжидаютОтгрузкиПокупателюДетально'])) {
-                    $_mmsg = array();
+                    $_mmsg = [];
                     $free_counter = 0;
                     foreach ($product['ОжидаютОтгрузкиПокупателюДетально'] as $partie) {
                         echo '<pre>';
@@ -733,7 +729,7 @@ class ControllerApiInfo1C extends Controller
         if ($input['mode'] == 'products') {
             if ($this->check_key($input)) {
                 $this->load->model('localisation/country');
-                $stocks = array();
+                $stocks = [];
 
                 $countries = $this->model_localisation_country->getCountries();
                 foreach ($countries as $country) {
@@ -759,7 +755,7 @@ class ControllerApiInfo1C extends Controller
                     $total_q_on_stocks[$k] = 0;
                 }                
 
-                $unique_products = array();
+                $unique_products = [];
                 foreach ($input['products']['product'] as $value) {    
 
                     if (!isset($unique_products[(int)($value['product_id'])])) {
@@ -1246,7 +1242,7 @@ class ControllerApiInfo1C extends Controller
         $this->load->model('kp/priceva');
 
         $result = $this->model_catalog_product->getProduct($product_id);
-        $product = array();
+        $product = [];
 
         if ($result) {
             $product['product_id'] = $result['product_id'];
@@ -1254,7 +1250,7 @@ class ControllerApiInfo1C extends Controller
             $product['sku']     = $result['sku'];
             $product['ean']     = $result['ean'];
 
-            $product['prices']  = array();
+            $product['prices']  = [];
             $product['prices']['main_price'] =
             array(
                 'name'      => 'Основная цена товара',
@@ -1311,7 +1307,7 @@ class ControllerApiInfo1C extends Controller
             $query = $this->db->query("SELECT * FROM product_price_national_to_yam WHERE product_id = '" . (int)$product_id . "'");
 
             if ($query->num_rows) {
-                $product['prices']['yandex_market']['product_price_national_to_yam']['prices'] = array();
+                $product['prices']['yandex_market']['product_price_national_to_yam']['prices'] = [];
                 foreach ($query->rows as $row) {
                     $product['prices']['yandex_market']['product_price_national_to_yam']['prices'][$row['store_id']] = array(
                         'price'                 => $row['price'],
@@ -1338,7 +1334,7 @@ class ControllerApiInfo1C extends Controller
             $query = $this->db->query("SELECT * FROM product_price_to_store WHERE product_id = '" . (int)$product_id . "'");
 
             if ($query->num_rows) {
-                $product['prices']['product_price_to_store']['prices'] = array();
+                $product['prices']['product_price_to_store']['prices'] = [];
                 foreach ($query->rows as $row) {
                     $product['prices']['product_price_to_store']['prices'][$row['store_id']] = array(
                         'price'     => $row['price'],
@@ -1358,7 +1354,7 @@ class ControllerApiInfo1C extends Controller
             $query = $this->db->query("SELECT * FROM product_price_national_to_store WHERE product_id = '" . (int)$product_id . "'");
 
             if ($query->num_rows) {
-                $product['prices']['product_price_national_to_store']['prices'] = array();
+                $product['prices']['product_price_national_to_store']['prices'] = [];
                 foreach ($query->rows as $row) {
                     $product['prices']['product_price_national_to_store']['prices'][$row['store_id']] = array(
                         'price'                 => $row['price'],
@@ -1470,7 +1466,7 @@ class ControllerApiInfo1C extends Controller
         $this->load->model('kp/product');
 
         $result = $this->model_catalog_product->getProduct($product_id);
-        $product = array();
+        $product = [];
         if ($result) {
             foreach ($result as $key => $value) {
                 $product[$key] = $value;
@@ -1493,7 +1489,7 @@ class ControllerApiInfo1C extends Controller
             }
             $product['image'] = $this->model_tool_image->resize($product['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height'));
 
-            $product['images'] = array();
+            $product['images'] = [];
             foreach ($this->model_catalog_product->getProductImages($product_id) as $image) {
                 $product['images'][] = $this->model_tool_image->resize($image['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height'));
             }
@@ -1530,7 +1526,7 @@ class ControllerApiInfo1C extends Controller
         }
 
         $str = $user . ' изменил товар ' . $product_id . ' ('. $result['name'] .')';
-        $json = array();
+        $json = [];
 
         if ($ean && mb_strlen(trim($ean)) > 1) {
             $this->db->query("UPDATE product SET ean = '" . $this->db->escape($ean) . "' WHERE product_id = '" . (int)$product_id . "'");
@@ -1566,14 +1562,14 @@ class ControllerApiInfo1C extends Controller
     public function getFullProductsBySKU($sku_list = array())
     {
 
-        $result = array();
+        $result = [];
 
         if ($sku_list) {
             $this->load->model('catalog/product');
             foreach ($sku_list as $sku) {
                 $products = $this->model_catalog_product->getProductsBySKU($sku);
 
-                $result[trim($sku)] = array();
+                $result[trim($sku)] = [];
 
                 foreach ($products as $product) {
                     $result[trim($sku)][] = $this->getFullProduct($product['product_id'], true);
@@ -1614,7 +1610,7 @@ class ControllerApiInfo1C extends Controller
         $this->load->model('setting/setting');
         $order_info = $this->model_sale_order->getOrder($order_id);
 
-        $responce = array();
+        $responce = [];
 
         if (!$order_info) {
             $responce['error'] = "true";
@@ -1707,7 +1703,7 @@ class ControllerApiInfo1C extends Controller
                             $template->data['shipping_address'] = $template->data['payment_address'];
                         }
 
-                        $template->data['products'] = array();
+                        $template->data['products'] = [];
                         if (isset($data['show_products'])) {
                             $this->load->model('tool/image');
                             $this->load->model('catalog/product');
@@ -1717,7 +1713,7 @@ class ControllerApiInfo1C extends Controller
                                 $product = array_merge($this->model_catalog_product->getProduct($product['product_id']), $product);
 
                             // Product Options
-                                $option_data = array();
+                                $option_data = [];
                                 $options = $this->model_sale_order->getOrderOptions($this->request->get['order_id'], $product['order_product_id']);
                                 foreach ($options as $option) {
                                     if ($option['type'] != 'file') {
@@ -1776,7 +1772,7 @@ class ControllerApiInfo1C extends Controller
                             }
                         }
 
-                        $template->data['vouchers'] = array();
+                        $template->data['vouchers'] = [];
                         if (isset($data['show_vouchers'])) {
                             $vouchers = $this->model_sale_order->getOrderVouchers($order_id);
                             foreach ($vouchers as $voucher) {
@@ -1788,12 +1784,12 @@ class ControllerApiInfo1C extends Controller
                             }
                         }
 
-                        $template->data['totals'] = array();
+                        $template->data['totals'] = [];
                         if (isset($data['show_totals'])) {
                             $template->data['totals'] = $this->model_sale_order->getOrderTotals($order_id);
                         }
 
-                        $template->data['downloads'] = array();
+                        $template->data['downloads'] = [];
                         if (isset($data['show_downloads'])) {
                             foreach ($products as $product) {
                                 $results = $this->model_sale_order->getOrderDownloads($order_id, $product['order_product_id']);
@@ -1807,7 +1803,7 @@ class ControllerApiInfo1C extends Controller
                             }
                         }
 
-                        $attachments = array();
+                        $attachments = [];
                         if (isset($data['attach_invoice_pdf'])) {
                             $this->load->model('module/emailtemplate/invoice');
                             $template->data['emailtemplate_invoice_pdf'] = $this->model_module_emailtemplate_invoice->getInvoice($this->request->get['order_id'], true);
@@ -1970,7 +1966,7 @@ class ControllerApiInfo1C extends Controller
 
         $orders = explode(',', $orders);
 
-        $responce = array();
+        $responce = [];
 
         foreach ($orders as $order_id) {
             $order_info = $this->db->query("SELECT o.order_id, os.name, os.order_status_id FROM `order` o LEFT JOIN order_status os ON (o.order_status_id = os.order_status_id AND os.language_id = 2) WHERE o.order_id = '" . (int)$order_id . "' LIMIT 1");
@@ -2014,10 +2010,10 @@ class ControllerApiInfo1C extends Controller
         $this->load->model('sale/order');
         $this->load->model('setting/setting');
 
-        $return = array();
+        $return = [];
 
         if ($json_data['trackerType'] && $json_data['trackerType'] == 'LeaveMainWarehouse' && $json_data['NumPart']) {
-            $orders = array();
+            $orders = [];
             foreach ($json_data['items'] as $item) {
                 $orders[] = $item['idOrder'];
             }
@@ -2203,7 +2199,7 @@ class ControllerApiInfo1C extends Controller
     {
             $this->load->model('sale/customer');
             $this->load->model('sale/order');
-            $transactions = array();
+            $transactions = [];
 
         if (!empty($transactionData['order_id'])) {
             $order = $this->model_sale_order->getOrder($transactionData['order_id']);
