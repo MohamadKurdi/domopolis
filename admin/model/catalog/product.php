@@ -350,14 +350,24 @@
 					$this->db->query("INSERT INTO product_filter SET product_id = '" . (int)$product_id . "', filter_id = '" . (int)$filter_id . "'");
 				}
 			}
-			
-			/*Additional offer*/
+
 			if (isset($data['product_additional_offer'])) {
 				foreach ($data['product_additional_offer'] as $product_additional_offer) {
-					$this->db->query("INSERT INTO product_additional_offer SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$product_additional_offer['customer_group_id'] . "', priority = '" . (int)$product_additional_offer['priority'] . "', quantity = '" . (int)$product_additional_offer['quantity'] . "', ao_product_id = '" . (int)$product_additional_offer['ao_product_id'] . "', price = '" . (float)$product_additional_offer['price'] . "', percent = '" . (int)$product_additional_offer['percent'] . "', date_start = '" . $this->db->escape($product_additional_offer['date_start']) . "', date_end = '" . $this->db->escape($product_additional_offer['date_end']) . "', image = '" . $this->db->escape($product_additional_offer['image']) . "', ao_group = '" . $this->db->escape($product_additional_offer['ao_group']) . "', description = '" . $this->db->escape($product_additional_offer['description']) . "'");
+					$this->db->query("INSERT INTO product_additional_offer SET 
+						product_id 			= '" . (int)$product_id . "', 
+						customer_group_id 	= '" . (int)$product_additional_offer['customer_group_id'] . "', 
+						priority 			= '" . (int)$product_additional_offer['priority'] . "', 
+						quantity 			= '" . (int)$product_additional_offer['quantity'] . "', 
+						ao_product_id 		= '" . (int)$product_additional_offer['ao_product_id'] . "', 
+						price 				= '" . (float)$product_additional_offer['price'] . "', 
+						percent 			= '" . (int)$product_additional_offer['percent'] . "', 
+						date_start 			= '" . $this->db->escape($product_additional_offer['date_start']) . "', 
+						date_end 			= '" . $this->db->escape($product_additional_offer['date_end']) . "', 
+						image 				= '" . $this->db->escape($product_additional_offer['image']) . "', 
+						ao_group 			= '" . $this->db->escape($product_additional_offer['ao_group']) . "', 
+						description 		= '" . $this->db->escape($product_additional_offer['description']) . "'");
 				}
 			}
-			/*Additional offer*/
 			
 			if (isset($data['product_related'])) {
 				foreach ($data['product_related'] as $related_id) {
@@ -971,54 +981,56 @@
 			$this->db->query("DELETE FROM product_additional_offer WHERE product_id = '" . (int)$product_id . "'");
 			
 			if (isset($data['product_additional_offer'])) {
-				foreach ($data['product_additional_offer'] as $product_additional_offer) {
-					
+				foreach ($data['product_additional_offer'] as $product_additional_offer) {					
 					if (isset($product_additional_offer['product_additional_offer_id']) && $product_additional_offer['product_additional_offer_id']) {
 						
 						$this->db->query("INSERT INTO product_additional_offer SET 
-						product_additional_offer_id = '" . (int)$product_additional_offer['product_additional_offer_id'] . "',
-						product_id = '" . (int)$product_id . "', 
-						customer_group_id = '" . (int)$product_additional_offer['customer_group_id'] . "',
-						priority = '" . (int)$product_additional_offer['priority'] . "', 
-						quantity = '" . (int)$product_additional_offer['quantity'] . "', 
-						ao_product_id = '" . (int)$product_additional_offer['ao_product_id'] . "', 
-						price = '" . (float)$product_additional_offer['price'] . "', 
-						percent = '" . (int)$product_additional_offer['percent'] . "', 
-						date_start = '" . $this->db->escape($product_additional_offer['date_start']) . "',
-						date_end = '" . $this->db->escape($product_additional_offer['date_end']) . "', 
-						image = '" . $this->db->escape($product_additional_offer['image']) . "',
-						ao_group = '" . $this->db->escape($product_additional_offer['ao_group']) . "',
-						description = '" . $this->db->escape($product_additional_offer['description']) . "'");
+							product_additional_offer_id 	= '" . (int)$product_additional_offer['product_additional_offer_id'] . "',
+							product_id 						= '" . (int)$product_id . "', 
+							customer_group_id 				= '" . (int)$product_additional_offer['customer_group_id'] . "',
+							priority 						= '" . (int)$product_additional_offer['priority'] . "', 
+							quantity 						= '" . (int)$product_additional_offer['quantity'] . "', 
+							ao_product_id 					= '" . (int)$product_additional_offer['ao_product_id'] . "', 
+							price 							= '" . (float)$product_additional_offer['price'] . "', 
+							percent 						= '" . (int)$product_additional_offer['percent'] . "', 
+							date_start 						= '" . $this->db->escape($product_additional_offer['date_start']) . "',
+							date_end 						= '" . $this->db->escape($product_additional_offer['date_end']) . "', 
+							image 							= '" . $this->db->escape($product_additional_offer['image']) . "',
+							ao_group 						= '" . $this->db->escape($product_additional_offer['ao_group']) . "',
+							description 					= '" . $this->db->escape($product_additional_offer['description']) . "'");
 						
 						$this->db->query("DELETE FROM product_additional_offer_to_store WHERE product_additional_offer_id = '" . (int)$product_additional_offer['product_additional_offer_id'] . "'");
 						
 						foreach ($product_additional_offer['store_id'] as $product_additional_offer_store_id){
-							$this->db->query("INSERT INTO product_additional_offer_to_store SET product_additional_offer_id = '" . (int)$product_additional_offer['product_additional_offer_id'] . "', store_id = '" . $product_additional_offer_store_id . "'");
+							$this->db->query("INSERT INTO product_additional_offer_to_store SET 
+								product_additional_offer_id = '" . (int)$product_additional_offer['product_additional_offer_id'] . "', 
+								store_id = '" . $product_additional_offer_store_id . "'");
 						}
 						
 						} else {
 						
-						$this->db->query("INSERT INTO product_additional_offer SET 
-						product_id = '" . (int)$product_id . "', 
-						customer_group_id = '" . (int)$product_additional_offer['customer_group_id'] . "',
-						priority = '" . (int)$product_additional_offer['priority'] . "', 
-						quantity = '" . (int)$product_additional_offer['quantity'] . "', 
-						ao_product_id = '" . (int)$product_additional_offer['ao_product_id'] . "', 
-						price = '" . (float)$product_additional_offer['price'] . "', 
-						percent = '" . (int)$product_additional_offer['percent'] . "', 
-						date_start = '" . $this->db->escape($product_additional_offer['date_start']) . "',
-						date_end = '" . $this->db->escape($product_additional_offer['date_end']) . "', 
-						image = '" . $this->db->escape($product_additional_offer['image']) . "', 
-						description = '" . $this->db->escape($product_additional_offer['description']) . "'");
+							$this->db->query("INSERT INTO product_additional_offer SET 
+								product_id 				= '" . (int)$product_id . "', 
+								customer_group_id 		= '" . (int)$product_additional_offer['customer_group_id'] . "',
+								priority 				= '" . (int)$product_additional_offer['priority'] . "', 
+								quantity 				= '" . (int)$product_additional_offer['quantity'] . "', 
+								ao_product_id 			= '" . (int)$product_additional_offer['ao_product_id'] . "', 
+								price 					= '" . (float)$product_additional_offer['price'] . "', 
+								percent 				= '" . (int)$product_additional_offer['percent'] . "', 
+								date_start 				= '" . $this->db->escape($product_additional_offer['date_start']) . "',
+								date_end 				= '" . $this->db->escape($product_additional_offer['date_end']) . "', 
+								image 					= '" . $this->db->escape($product_additional_offer['image']) . "', 
+								description 			= '" . $this->db->escape($product_additional_offer['description']) . "'");
 						
 						$product_additional_offer_id = $this->db->getLastId();
 						
 						$this->db->query("DELETE FROM product_additional_offer_to_store WHERE product_additional_offer_id = '" . (int)$product_additional_offer_id . "'");
 						
 						foreach ($product_additional_offer['store_id'] as $product_additional_offer_store_id){
-							$this->db->query("INSERT INTO product_additional_offer_to_store SET product_additional_offer_id = '" . (int)$product_additional_offer_id . "', store_id = '" . $product_additional_offer_store_id . "'");
-						}
-						
+							$this->db->query("INSERT INTO product_additional_offer_to_store SET 
+								product_additional_offer_id = '" . (int)$product_additional_offer_id . "', 
+								store_id = '" . $product_additional_offer_store_id . "'");
+						}						
 					}
 				}
 			}
@@ -1027,12 +1039,13 @@
 				$this->load->model('catalog/faproduct');
 				$this->model_catalog_faproduct->setFAproductCats((int)$product_id, $data['faproduct_facategory']);
 			}
+
 			if (isset($data['facategory_show'])) {
 				$this->db->query("DELETE FROM facategory_to_faproduct WHERE product_id = '" . (int)$product_id . "'");
 				if ($data['facategory_show'] != 0) {
 					$this->db->query("INSERT INTO facategory_to_faproduct SET 
-					product_id = '" . (int)$product_id . "', 
-					facategory_id = '" . (int)$data['facategory_show'] . "'"
+					product_id 		= '" . (int)$product_id . "', 
+					facategory_id 	= '" . (int)$data['facategory_show'] . "'"
 					);
 				}
 			} 

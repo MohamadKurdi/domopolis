@@ -1623,12 +1623,14 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['product_additional_offer'][$key]['date_start'] 	= $product_ao['date_start'];
 			$this->data['product_additional_offer'][$key]['date_end'] 		= $product_ao['date_end'];
 			$this->data['product_additional_offer'][$key]['ao_group'] 		= $product_ao['ao_group'];
-			$this->data['product_additional_offer'][$key]['store_id'] 		= $product_ao['store_id'];
+			$this->data['product_additional_offer'][$key]['store_id'] 		= $this->model_catalog_product->getProductAdditionalOfferStoresByAOID($product_ao['product_additional_offer_id']);
 			$this->data['product_additional_offer'][$key]['description'] 	= $product_ao['description'];
 			$this->data['product_additional_offer'][$key]['image'] 			= $product_ao['image'] ? $product_ao['image'] : 'no_image.jpg';
 
-			if (!$product_ao['image']){
+			if ($product_ao['image']){
 				$this->data['product_additional_offer'][$key]['thumb'] = $this->model_tool_image->resize($product_ao['image'], 100, 100);
+			} elseif (!empty($ao_product)){
+				$this->data['product_additional_offer'][$key]['thumb'] = $this->model_tool_image->resize($ao_product['image'], 100, 100);
 			} else {
 				$this->data['product_additional_offer'][$key]['thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
 			}							
