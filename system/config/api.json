@@ -39,7 +39,9 @@
 		"api/info1c/editOrderFields",
 		"api/info1c/transactionSyncGet",
 		"api/info1c/transactionSyncSet",
-		"api/info1c/productPurchaseSet"		
+		"api/info1c/productPurchaseSet",
+		"api/info1c/getFiscalReceipt",
+		"api/info1c/addFiscalReceipt"	
 	],
 	"configs":[
 		{
@@ -81,7 +83,9 @@
 			"api/info1c/editOrderFields":				"/admin/config.php",
 			"api/info1c/transactionSyncGet":			"/admin/config.php",
 			"api/info1c/transactionSyncSet":			"/admin/config.php",
-			"api/info1c/productPurchaseSet":			"/admin/config.php"			
+			"api/info1c/productPurchaseSet":			"/admin/config.php",
+			"api/info1c/getFiscalReceipt":				"/admin/config.php",
+			"api/info1c/addFiscalReceipt":				"/admin/config.php"
 		}
 	],
 	"params":[
@@ -112,7 +116,9 @@
 			"api/info1c/describeTableFields":					["table:string"],
 			"api/info1c/transactionSyncGet":					["transaction_data:json"],
 			"api/info1c/transactionSyncSet":					["transaction_data:json"],
-			"api/info1c/productPurchaseSet":					["purchase_data:json"]		
+			"api/info1c/productPurchaseSet":					["purchase_data:json"],
+			"api/info1c/getFiscalReceipt":						["order_id:int"],		
+			"api/info1c/addFiscalReceipt":						["order_id:int", "receipt_data:json"]
 		}
 	],
 	"additional":[
@@ -176,7 +182,9 @@
 			"api/info1c/editOrderFields":					"Обновить произвольное поле в табличке заказов. При обновлении выполняется контроль типов данных. Описание таблички можно получить в api/info1c/describeTableFields?table=order",
 			"api/info1c/transactionSyncGet":				"Синхронизация финансовых транзакций - получение данных от сайта. Либо по заказу либо по покупателю",
 			"api/info1c/transactionSyncSet":				"Синхронизация финансовых транзакций - запись данных в БД сайта, либо обновление информации о транзакции",
-			"api/info1c/productPurchaseSet":				"Добавление информации о закупке товара в БД сайта"			
+			"api/info1c/productPurchaseSet":				"Добавление информации о закупке товара в БД сайта",
+			"api/info1c/getFiscalReceipt":					"Получение информации о фискальном чеке заказа",
+			"api/info1c/addFiscalReceipt":					"Добавление информации фискальном чеке заказа в БД сайта"
 		}
 	],
 	"whitelist": [

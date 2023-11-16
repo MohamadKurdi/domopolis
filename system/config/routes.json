@@ -48,5 +48,7 @@
 	"api/info1c/transactionSyncGet":					"api/info1c/transactionSyncGet",
 	"api/info1c/transactionSyncSet":					"api/info1c/transactionSyncSet",
 	"api/info1c/productPurchaseSet":					"api/info1c/productPurchaseSet",
+	"api/info1c/addFiscalReceipt":						"api/info1c/addFiscalReceipt",
+	"api/info1c/getFiscalReceipt":						"api/info1c/getFiscalReceipt",
 	"api/rainforest/amazonPriceFormulaTest":			"setting/rnf/calculate"
 }
