@@ -37,6 +37,9 @@ $_['tab_inprocess'] = 'В обробці';
 $_['tab_cancelled'] = 'Скасовані';
 $_['tab_completed'] = 'Виконані';
 
+$_['text_receipt'] = 'Фіскальний чек:';
+$_['text_view_receipt'] = 'подивитись';
+
 
 $_['column_name'] = 'Назва товару';
 $_['column_model'] = 'Артикул';
