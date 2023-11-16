@@ -12,17 +12,25 @@
 		public const formats = ['html', 'pdf', 'text', 'png', 'qrcode'];
 
 		private $api_endpoints = [
-			'checkbox' => 'https://api.checkbox.in.ua/api/v1/receipts/',
-			'cashdesk' => 'https://api.cashdesk.com.ua/check/',
-			'webcheck' => 'https://che.ck.ua/'
+			'checkbox' => [
+				'url' 		=> 'https://api.checkbox.in.ua/api/v1/receipts/',
+				'formats' 	=> ['html', 'pdf', 'text', 'png', 'qrcode'],
+				'delimiter' => '/'
+			],
+
+			'cashdesk' => [
+				'url' 		=> 'https://api.cashdesk.com.ua/check/',
+				'formats' 	=> ['html', 'pdf', 'text', 'png', 'qrcode'],
+				'delimiter' => '/'
+			],
+
+			'webcheck' => [
+				'url' 		=> 'https://che.ck.ua/',
+				'formats' 	=> ['pdf'],
+				'delimiter' => '.'
+			],
 		];
-
-		private $api_supported_formats = [
-			'checkbox' => ['html', 'pdf', 'text', 'png', 'qrcode'],
-			'cashdesk' => ['html', 'pdf', 'text', 'png', 'qrcode'],
-			'webcheck' => ['pdf']
-		];	
-
+		
 		public function __construct($registry){
 			$this->config 	= $registry->get('config');
 			$this->db 		= $registry->get('db');
@@ -55,13 +63,34 @@
     			api                	= '" . $this->db->escape($data['api']) . "',
     			all_json_data       = '" . $this->db->escape(json_encode($data['all_json_data'])) . "'";
 
-    		$this->db->ncquery( $sql );     
+    		$this->db->ncquery( $sql );   
+    		$receipt_id = $this->db->getLastId();
 
     		$this->addOrderToQueue($data['order_id']);
+
+    		return $receipt_id;
+    	}
+
+    	public function prepareReceiptForApi($receipt){
+    		unset($receipt['all_json_data']);
+    		$receipt['links'] = $this->getReceiptLinks($receipt['receipt_id']);
+
+    		return $receipt;
     	}
 
     	public function getOrderReceipt($order_id){
     		$sql = "SELECT * FROM order_receipt WHERE order_id = '".  (int)$order_id . "' LIMIT 1";
+
+    		$query = $this->db->ncquery( $sql );       
+    		if ($query->num_rows){
+    			return $query->row;
+    		}
+
+    		return false;
+    	}
+
+    	public function getReceipt($receipt_id){
+    		$sql = "SELECT * FROM order_receipt WHERE receipt_id = '".  $this->db->escape($receipt_id) . "' LIMIT 1";
 
     		$query = $this->db->ncquery( $sql );       
     		if ($query->num_rows){
@@ -124,36 +153,33 @@
     			$receipt_data = $query->row;
     		}    		
 
-    		if (!empty($this->api_endpoints[$receipt_data['api']])){
-    			$api_url 				= $this->api_endpoints[$receipt_data['api']];
-    			$api_supported_formats 	= $this->api_supported_formats[$receipt_data['api']];
-    		} else {
+    		if (empty($this->api_endpoints[$receipt_data['api']])){    			
     			return false;
     		}
 
-    		if (!in_array($format, $api_supported_formats)){
+    		if (!in_array($format, $this->api_endpoints[$receipt_data['api']]['formats'])){
     			return false;
     		}
 
     		switch ($format) {
     			case 'pdf':
-    			$url = $api_url . $receipt_id .'/pdf';	    			
+    			$url = $this->api_endpoints[$receipt_data['api']]['url'] . $receipt_id . $this->api_endpoints[$receipt_data['api']]['delimiter'] . 'pdf';	    			
     			break;
 
     			case 'text':
-    			$url = $api_url . $receipt_id .'/text';
+    			$url = $this->api_endpoints[$receipt_data['api']]['url'] . $receipt_id . $this->api_endpoints[$receipt_data['api']]['delimiter'] . 'text';
     			break;
 
     			case 'png':
-    			$url = $api_url . $receipt_id .'/png';
+    			$url = $this->api_endpoints[$receipt_data['api']]['url'] . $receipt_id . $this->api_endpoints[$receipt_data['api']]['delimiter'] . 'png';
     			break;
 
     			case 'qrcode':
-    			$url = $api_url . $receipt_id .'/qrcode';
+    			$url = $this->api_endpoints[$receipt_data['api']]['url'] . $receipt_id . $this->api_endpoints[$receipt_data['api']]['delimiter'] . 'qrcode';
     			break;
 
     			default:
-    			$url = $api_url . $receipt_id .'/html';
+    			$url = $this->api_endpoints[$receipt_data['api']]['url'] . $receipt_id . $this->api_endpoints[$receipt_data['api']]['delimiter'] . 'html';
     			break;
     		}
 

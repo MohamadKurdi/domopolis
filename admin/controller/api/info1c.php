@@ -55,6 +55,84 @@ class ControllerApiInfo1C extends Controller
         }
     }
 
+    public function addFiscalReceipt($order_id, $receipt_data = [])
+    {
+        $result = [];
+
+        if (empty($receipt_data['receipt_id']) || empty($receipt_data['api'])){
+
+             $result = [
+                'success' => false,
+                'message' => 'Missing fields receipt_id or api'
+            ];
+
+        } elseif ($this->Fiscalisation->checkIfOrderReceiptAlreadyExits($order_id)){
+            $receipt = $this->Fiscalisation->getOrderReceipt($order_id);
+
+            $result = [
+                'success' => false,
+                'message' => 'Order already has receipt',
+                'receipt' => $this->Fiscalisation->prepareReceiptForApi($receipt)
+            ];
+        } elseif ($this->Fiscalisation->checkIfReceiptAlreadyExits($receipt_data['receipt_id'])){
+            $receipt = $this->Fiscalisation->getReceipt($receipt_data['receipt_id']);
+            $result = [
+                'success' => false,
+                'message' => 'Receipt already exists',
+                'receipt' => $this->Fiscalisation->prepareReceiptForApi($receipt)
+            ];
+
+        } else {            
+            $receipt_id = $this->Fiscalisation->addReceipt([
+                'order_id'      => $order_id,
+                'receipt_id'    => $receipt_data['receipt_id'],
+                'serial'        => !empty($receipt_data['serial'])?$receipt_data['serial']:$order_id,
+                'status'                => !empty($receipt_data['status'])?$receipt_data['status']:'DONE',
+                'fiscal_code'           => !empty($receipt_data['fiscal_code'])?$receipt_data['fiscal_code']:$receipt_data['receipt_id'],
+                'fiscal_date'           => !empty($receipt_data['fiscal_date'])?$receipt_data['fiscal_date']:date('Y-m-d H:i:s'),
+                'is_created_offline'    => isset($receipt_data['is_created_offline'])?$receipt_data['is_created_offline']:0,
+                'is_sent_dps'           => isset($receipt_data['is_sent_dps'])?$receipt_data['is_sent_dps']:1,
+                'sent_dps_at'           => !empty($receipt_data['sent_dps_at'])?$receipt_data['sent_dps_at']:date('Y-m-d H:i:s'),
+                'type'                  => !empty($receipt_data['type'])?$receipt_data['type']:'SELL',
+                'all_json_data'         => $receipt_data,
+                'api'                   => $receipt_data['api'],
+            ]);
+
+
+            if ($receipt_id){
+                 $receipt = $this->Fiscalisation->getReceipt($receipt_data['receipt_id']);
+
+                $result = [
+                    'success' => true,   
+                    'message' => 'Successfully added receipt',            
+                    'receipt' => $this->Fiscalisation->prepareReceiptForApi($receipt)
+                ];
+            }
+        }
+
+         $this->response->setOutput(json_encode($result));
+    }
+
+    public function getFiscalReceipt($order_id){ 
+        $result = [];
+
+        $receipt = $this->Fiscalisation->getOrderReceipt($order_id);
+
+        if ($receipt){
+            $result = [
+                'success' => true,
+                'receipt' => $this->Fiscalisation->prepareReceiptForApi($receipt)
+            ];
+        } else {
+            $result = [
+                'success' => false,
+                'message' => 'Order has no receipts'
+            ];
+        }
+
+        $this->response->setOutput(json_encode($result));
+    }
+
     public function ping1CToUpdateProducts()
     {
         $this->load->model('kp/info1c');

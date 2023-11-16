@@ -1,9 +1,9 @@
 <?php
-define('VERSION', '1.5.6.4');
-define('IS_HTTPS', true);
+define('VERSION',               '1.5.6.4');
+define('IS_HTTPS',              true);
 define('APPLICATION_DIRECTORY', dirname(__FILE__));
-define('CONFIG_FILE', 'config.api.php');
-define('API_SESSION', true);
+define('CONFIG_FILE',           'config.api.php');
+define('API_SESSION',           true);
 header('X-ENGINE-ENTRANCE: API');
 
 require_once(dirname(__FILE__) . '/system/jsonconfig.php');
@@ -68,7 +68,6 @@ if (empty($configFiles[$httpHOST])) {
     }
 }
 
-    //Редиректы доменов, из конфига domainredirect
 if (isset($domainRedirects[$httpHOST])) {
     $newLocation = 'https://' . $domainRedirects[$httpHOST] . $_SERVER['REQUEST_URI'];
     header("HTTP/1.1 301 Moved Permanently");
@@ -93,7 +92,6 @@ if ($configFilesPrefix) {
     $currentConfigFile = str_replace('config.', 'config.' . $configFilesPrefix . '.', $currentConfigFile);
 }
 
-    //FALLBACK TO MAIN FILE
 if (!file_exists(APPLICATION_DIRECTORY . '/' . $currentConfigFile)) {
     $currentConfigFile = $configFiles[$httpHOST];
 }
@@ -116,25 +114,24 @@ if (!empty($loaderConfig['startup'])) {
     }
 }
 
-    //Из директории library, с уже определенной константой DIR_SYSTEM
 if (!empty($loaderConfig['libraries'])) {
     foreach ($loaderConfig['libraries'] as $libraryFile) {
         require_once(DIR_SYSTEM . 'library/' . $libraryFile . '.php');
     }
 }
 
-
 $registry = new Registry();
 $registry->set('load', new Loader($registry));
 $registry->set('config', new Config());
 $config = $registry->get('config');
-$registry->set('db', new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE));
-$registry->set('cache', new Cache(CACHE_DRIVER));
-$registry->set('request', new Request());
-$registry->set('session', new Session($registry));
-$session = $registry->get('session');
-$registry->set('log', new Log('php-errors-api.log'));
 
+$registry->set('db',        new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE));
+$registry->set('cache',     new Cache(CACHE_DRIVER));
+$registry->set('request',   new Request());
+$registry->set('session',   new Session($registry));
+$session = $registry->get('session');
+
+$registry->set('log',       new Log('php-errors-api.log'));
 
 $registry->get('config')->set('config_store_id', $store_id);
 $settings = $registry->get('cache')->get('settings.structure'.(int)$registry->get('config')->get('config_store_id'));
@@ -152,7 +149,6 @@ foreach ($settings as $setting) {
     }
 }
 
-
 if (!$store_id) {
     $registry->get('config')->set('config_url', HTTP_SERVER);
     $registry->get('config')->set('config_ssl', HTTPS_SERVER);
@@ -164,25 +160,23 @@ if (!$store_id) {
     $registry->get('config')->set('config_static_subdomain', HTTPS_STATIC_SUBDOMAIN);
 }
 
-//Very fast seo-url logic
-    if ($registry->get('config')->get('config_seo_url_from_id')){
-        $short_url_mapping = loadJsonConfig('shorturlmap');
-        $short_uri_queries = $short_uri_keywords = [];
+if ($registry->get('config')->get('config_seo_url_from_id')){
+    $short_url_mapping = loadJsonConfig('shorturlmap');
+    $short_uri_queries = $short_uri_keywords = [];
 
-        if (is_array($short_url_mapping)){
-            foreach ($short_url_mapping as $query => $keyword){
-                $short_uri_queries[$query] = $keyword;
-                $short_uri_keywords[$keyword] = $query;
-            }
+    if (is_array($short_url_mapping)){
+        foreach ($short_url_mapping as $query => $keyword){
+            $short_uri_queries[$query] = $keyword;
+            $short_uri_keywords[$keyword] = $query;
         }
-
-        $registry->set('short_uri_queries', $short_uri_queries);
-        $registry->set('short_uri_keywords', $short_uri_keywords);
     }
+
+    $registry->set('short_uri_queries', $short_uri_queries);
+    $registry->set('short_uri_keywords', $short_uri_keywords);
+}
 
 $registry->set('url', new Url($registry->get('config')->get('config_ssl'), $registry));
 
-    //Stores main language config to registry (need for ElasticSearch and some other)
 $stores_to_main_language_mapping = [];
 $query = $registry->get('db')->query("SELECT store_id, value FROM `setting` WHERE `key` = 'config_language'");
 foreach ($query->rows as $result) {
@@ -191,7 +185,6 @@ foreach ($query->rows as $result) {
 
 $registry->set('stores_to_main_language_mapping', $stores_to_main_language_mapping);
 
- //Определение языка
 $languages = $languages_front = $languages_all = $languages_id_mapping = $languages_id_code_mapping = $languages_all_id_code_mapping = [];
 $languages_id_code_mapping = [];
 $query = $registry->get('db')->query("SELECT * FROM `language` WHERE status = '1'"); 
@@ -208,7 +201,6 @@ foreach ($query->rows as $result) {
     }
 }
 
-    //ALL LANGUAGES TO REGISTRY
 $registry->set('languages',                     $languages);
 $registry->set('languages_all',                 $languages_all);
 $registry->set('languages_id_mapping',          $languages_id_mapping);
@@ -217,7 +209,6 @@ $registry->set('languages_all_id_code_mapping', $languages_all_id_code_mapping);
 $registry->get('config')->set('config_supported_languages', [$registry->get('config')->get('config_language'), $registry->get('config')->get('config_second_language')]);
 $registry->get('config')->set('config_rainforest_source_language_id', $languages_all[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);   
 
-    //FROM URL
 if ($registry->get('config')->get('config_second_language')) {
     $language_from_url = explode("/", $registry->get('request')->server['REQUEST_URI']);
     
@@ -307,12 +298,10 @@ if (!($registry->get('config')->get('config_warehouse_identifier'))) {
 
 $registry->set('shippingmethods', loadJsonConfig('shippingmethods'));
 
-    //Язык
 $language = new Language($languages[$code]['directory'], $registry);
 $language->load($languages[$code]['filename']);
 $registry->set('language', $language);
 
-    //Сортировки
 $sorts = loadJsonConfig('sorts');
 
 if (!empty($sorts['sorts'])) {
@@ -335,14 +324,11 @@ if ($registry->get('config')->get('config_order_default')) {
     $registry->get('config')->set('order_default', $sorts['order_default']);
 }
 
-    //Библиотека респонса
 $response = new Response($registry);
 $response->addHeader('Content-Type: text/html; charset=utf-8');
 $response->setCompression($registry->get('config')->get('config_compression'));
 $registry->set('response', $response);
 
-
-    //Остальные библиотеки
 $registry->set('document',          new Document());                            
 $registry->set('customer',          new Customer($registry));
 $registry->set('affiliate',         new Affiliate($registry));
@@ -372,7 +358,6 @@ $registry->set('checkBoxUA',        new hobotix\CheckBoxUA($registry));
 $registry->set('Fiscalisation',     new hobotix\Fiscalisation($registry));
 $registry->set('encryption',        new Encryption($registry->get('config')->get('config_encryption')));
 
-
 if ($registry->get('customer')->getTracking()) {
     setcookie('tracking', $registry->get('customer')->getTracking(), time() + 3600 * 24 * 1000, '/');
 } elseif (isset($registry->get('request')->get['tracking'])) {
@@ -391,7 +376,6 @@ if (isset($registry->get('request')->get['coupon']) && $registry->get('request')
     }
 }
 
-    // Front Controller
 $controller = new Front($registry);
 
 $routes = loadJsonConfig('routes');
@@ -407,7 +391,6 @@ if (strpos($currentConfigFile, 'admin') === false) {
 $inputData = array_merge($registry->get('request')->post, $registry->get('request')->get);
 $inputData = array_map("trim", $inputData);
 
-    //Обязательные параметры
 $requiredParams = false;
 if (!empty($apisConfig['params']) && !empty($apisConfig['params'][0])) {
     foreach ($apisConfig['params'][0] as $apiRoute => $apiParams) {
@@ -517,8 +500,6 @@ if (!empty($additionalParams)) {
     }
 }
 
-
-    // Router
 if (isset($registry->get('request')->get['route'])) {
     if ($apiParams) {
         $action = new Action($registry->get('request')->get['route'], $apiParams);
@@ -529,12 +510,9 @@ if (isset($registry->get('request')->get['route'])) {
     $action = new Action('common/home');
 }
 
-    // Dispatch
 $controller->dispatch($action, new Action('error/not_found'));
-
 
 header('X-FPC-MODE: FALSE');
 header('X-NO-FPC-TIME: ' . $FPCTimer->getTime());
 
-    // Output
 $response->output();
