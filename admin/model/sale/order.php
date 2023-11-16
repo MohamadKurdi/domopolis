@@ -12,7 +12,7 @@
 		}
 					
 		public function generatePaymentQR($order_id, $code = 'concardis', $currency = false){
-			$paymentLink = $this->generatePaymentLink($order_id, $code = 'concardis', $currency);
+			$paymentLink = $this->generatePaymentLink($order_id, $code, $currency);
 
 			$_dir = DIR_EXPORT . 'payment_qr/' . date('Y') . '/' . date('m') . '/' . date('d') . '/';
 
