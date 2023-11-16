@@ -7,6 +7,26 @@ function removeEOLS($s){
 	return $s;
 }
 
+function reparseEOLSToSlash($st){			
+	$ste = explode(PHP_EOL, $st);
+
+	foreach ($ste as &$smste){
+		$smste = trim($smste);
+	}
+
+	return implode(' / ', $ste);			
+}
+
+function normalizeSKU($sku){
+	return preg_replace("([^0-9])", "", $sku);
+}
+
+function removeSpaces($st){
+	$st = str_replace(' ','',$st);
+
+	return html_entity_decode($st, ENT_COMPAT, 'UTF-8');
+}
+
 function normalizeForGoogleV2($text){
 	$text = html_entity_decode($text);
 	$text = str_replace('&nbsp;', ' ', $text);
@@ -84,6 +104,57 @@ function simple_rm1($st){
 
 	return $st;	
 }	
+
+function rms($st, $uuml = false, $rmspace = false){
+	$st = str_replace('&Auml;','Ä',$st);
+	$st = str_replace('&auml;','ä',$st);
+	$st = str_replace('&Uuml;','Ü',$st);
+	$st = str_replace('&uuml;','ü',$st);
+	$st = str_replace('&Ouml;','Ö',$st);
+	$st = str_replace('&ouml;','ö',$st);
+	$st = str_replace('&szlig;','ß',$st);
+	$st = str_replace('&Oslash;','Ø',$st);
+
+	if ($uuml){
+		return $st;
+	}
+
+	$st = str_replace(',','',$st);
+	$st = str_replace('’','',$st);
+	$st = str_replace('"','',$st);
+	$st = str_replace(')','',$st);
+	$st = str_replace('(','',$st);
+	$st = str_replace('.','',$st);
+	$st = str_replace('+','',$st);
+	$st = str_replace('*','',$st);
+	$st = str_replace('“','',$st);
+	$st = str_replace('”','',$st);
+	$st = str_replace('&#13;','',$st);
+	$st = str_replace('\r\n','',$st);
+	$st = str_replace("\x13",'', $st);			
+	$st = str_replace('&quot;','-',$st);
+	$st = str_replace('&nbsp;',' ',$st);
+	$st = str_replace('&amp;','and',$st);
+	$st = str_replace('&deg;','°',$st);
+	$st = str_replace('&','',$st);
+	$st = str_replace('«','',$st);
+	$st = str_replace('»','',$st);
+	$st = str_replace('.','',$st);
+	$st = str_replace('/','-',$st);
+	$st = str_replace('\\','-',$st);
+	$st = str_replace('%','-',$st);
+	$st = str_replace('№','-',$st);
+	$st = str_replace('#','-',$st);
+	$st = str_replace('_','-',$st);
+	$st = str_replace('–','-',$st);
+	$st = str_replace('---','-',$st);
+	$st = str_replace('--','-',$st);
+	$st = str_replace('\'','',$st);
+	$st = str_replace('!','',$st);
+
+	return html_entity_decode($st, ENT_COMPAT, 'UTF-8');
+}
+
 
 function simple_rms($st){
 	$st = str_replace(',','',$st);

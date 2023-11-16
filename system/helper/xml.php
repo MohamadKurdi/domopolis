@@ -1,23 +1,44 @@
 <?php
 
+if (!function_exists('array_to_xml')) {
+	function array_to_xml($data, &$xml) {			
+		foreach($data as $key => $value) {
+			if (is_array($value)) {
+				if (!is_numeric($key)) {
+					$subnode = $xml->addChild(preg_replace('/\d/', '', $key));
+					array_to_xml($value, $subnode);
+				}
+			}
+			else {
+				$xml->addChild($key, $value);
+			}
+		}
+
+		return $xml;
+	}		
+}
+
+if (!function_exists('array2xml')) {
+	function array2xml($data, &$xml) {
+		return array_to_xml($data, $xml);
+	}
+}
 
 if (!function_exists('xml2array')) {
 	function xml2array($contents, $get_attributes=1, $priority = 'tag') {
 		if(!$contents) return array();
 		
-		if(!function_exists('xml_parser_create')) {
-				//print "'xml_parser_create()' function not found!";
+		if(!function_exists('xml_parser_create')) {				
 			return array();
 		}
-		
-			//Get the XML parser of PHP - PHP must have this module for the parser to work
+
 		$parser = xml_parser_create('');
-			xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, "UTF-8"); # http://minutillo.com/steve/weblog/2004/6/17/php-xml-and-character-encodings-a-tale-of-sadness-rage-and-data-loss
-			xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
-			xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
-			xml_parse_into_struct($parser, trim($contents), $xml_values);
-			xml_parser_free($parser);
-			
+		xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, "UTF-8");
+		xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
+		xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
+		xml_parse_into_struct($parser, trim($contents), $xml_values);
+		xml_parser_free($parser);
+
 			if(!$xml_values) return;//Hmm...
 			
 			//Initializations

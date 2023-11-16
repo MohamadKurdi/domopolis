@@ -1,6 +1,6 @@
 <?
 	class ModelFeedExchange1c extends Model {
-		private $error = array(); 
+		private $error = []; 
 		
 		private $stocks = array(
 		'quantity_stock' => 'Германия',
@@ -10,16 +10,8 @@
 		'quantity_stockAS' => 'Казахстан',
 		);
 		
-		private function bool_real_stripos($haystack, $needle){
-			return !(stripos($haystack, $needle) === false);
-		}
-		
-		private function normalizeSKU($sku){
-			return preg_replace("([^0-9])", "", $sku);
-		}
-		
 		private function parseDaDataFullJSON($json){
-			$result = array();
+			$result = [];
 			
 			if ($decoded = json_decode(html_entity_decode($json), true)){
 				
@@ -67,73 +59,6 @@
 			return 'Ложь';
 		}
 		
-		private function rms($st, $uuml = false, $rmspace = false){
-			$st = str_replace('&Auml;','Ä',$st);
-			$st = str_replace('&auml;','ä',$st);
-			$st = str_replace('&Uuml;','Ü',$st);
-			$st = str_replace('&uuml;','ü',$st);
-			$st = str_replace('&Ouml;','Ö',$st);
-			$st = str_replace('&ouml;','ö',$st);
-			$st = str_replace('&szlig;','ß',$st);
-			$st = str_replace('&Oslash;','Ø',$st);
-			
-			if ($uuml){
-				return $st;
-			}
-			
-			$st = str_replace(',','',$st);
-			$st = str_replace('’','',$st);
-			$st = str_replace('"','',$st);
-			$st = str_replace(')','',$st);
-			$st = str_replace('(','',$st);
-			$st = str_replace('.','',$st);
-			$st = str_replace('+','',$st);
-			$st = str_replace('*','',$st);
-			$st = str_replace('“','',$st);
-			$st = str_replace('”','',$st);
-			$st = str_replace('&#13;','',$st);
-			$st = str_replace('\r\n','',$st);
-			$st = str_replace("\x13",'', $st);			
-			$st = str_replace('&quot;','-',$st);
-			$st = str_replace('&nbsp;',' ',$st);
-			$st = str_replace('&amp;','and',$st);
-			$st = str_replace('&deg;','°',$st);
-			$st = str_replace('&','',$st);
-			$st = str_replace('«','',$st);
-			$st = str_replace('»','',$st);
-			$st = str_replace('.','',$st);
-			$st = str_replace('/','-',$st);
-			$st = str_replace('\\','-',$st);
-			$st = str_replace('%','-',$st);
-			$st = str_replace('№','-',$st);
-			$st = str_replace('#','-',$st);
-			$st = str_replace('_','-',$st);
-			$st = str_replace('–','-',$st);
-			$st = str_replace('---','-',$st);
-			$st = str_replace('--','-',$st);
-			$st = str_replace('\'','',$st);
-			$st = str_replace('!','',$st);
-			
-			return html_entity_decode($st, ENT_COMPAT, 'UTF-8');
-		}
-		
-		public function reparseEOLS($st){
-			
-			$ste = explode(PHP_EOL, $st);
-			
-			foreach ($ste as &$smste){
-				$smste = trim($smste);
-			}
-			
-			return implode(' / ', $ste);			
-		}
-		
-		public function removeSpaces($st){
-			$st = str_replace(' ','',$st);
-			
-			return html_entity_decode($st, ENT_COMPAT, 'UTF-8');
-		}
-		
 		public function index() {
 		}
 		
@@ -174,11 +99,11 @@
 		}		
 		
 		public function addOrderToQueue($order_id){
-			$this->db->query("INSERT IGNORE INTO order_to_1c_queue SET `order_id` = '" . (int)$order_id . "'");
+			$this->Fiscalisation->addOrderToQueue($order_id);
 		}
 		
 		public function removeOrderFromQueue($order_id){
-			$this->db->query("DELETE FROM order_to_1c_queue WHERE `order_id` = '" . (int)$order_id . "'");
+			$this->Fiscalisation->addOrderToQueue($order_id);
 		}
 		
 		public function getCategoriesTree($do_echo = false){
@@ -205,12 +130,11 @@
 			
 			$root = '<?xml version="1.0" encoding="utf-8"?><КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . date('Y-m-d', time()) . '" />';
 			$oXML = new SimpleXMLElement($root);
-			$xml = $this->array_to_xml($document, $oXML);
+			$xml = array_to_xml($document, $oXML);
 			
 			$content = $xml->asXML();
 			
 			if ($do_echo) {
-//				header("Content-Type: text/xml");
 				print_r($content);
 			}
 			
@@ -261,7 +185,7 @@
 			
 			$root = '<?xml version="1.0" encoding="utf-8"?><КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . date('Y-m-d', time()) . '" />';
 			$oXML = new SimpleXMLElement($root);
-			$xml = $this->array_to_xml($document, $oXML);
+			$xml = array_to_xml($document, $oXML);
 			
 			$content = $xml->asXML();
 			
@@ -272,8 +196,7 @@
 			
 			file_put_contents(DIR_EXPORT . 'odinass/structures/dimensions.xml', $content);
 		}
-		
-		
+				
 		public function getCurrencies($do_echo){
 			$this->load->model('localisation/currency');
 			
@@ -304,7 +227,7 @@
 			
 			$root = '<?xml version="1.0" encoding="utf-8"?><КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . date('Y-m-d', time()) . '" />';
 			$oXML = new SimpleXMLElement($root);
-			$xml = $this->array_to_xml($document, $oXML);
+			$xml = array_to_xml($document, $oXML);
 			
 			$content = $xml->asXML();
 			
@@ -322,7 +245,7 @@
 			$this->load->model('localisation/zone');
 			$this->load->model('setting/extension');
 			
-			$document = array();
+			$document = [];
 			$document['Документ'] = array(
 			'Роль'  => 'Справочник'
 			,'ТипИнформации'  => 'ВозможныеCпособыДоставкиИОплаты'
@@ -331,9 +254,6 @@
 			$dp = $this->config->get('dostavkaplus_module');
 			$i = 1;
 			foreach ($dp as $mdd){
-				
-				//	print_r($mdd);
-				
 				$shippings[] = array(
 				'code' =>  'dostavkaplus.sh'.$i,	
 				'title' =>  $mdd['title'][$this->config->get('config_language_id')]	
@@ -406,7 +326,7 @@
 			
 			$root = '<?xml version="1.0" encoding="utf-8"?><КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . date('Y-m-d', time()) . '" />';
 			$oXML = new SimpleXMLElement($root);
-			$xml = $this->array_to_xml($document, $oXML);
+			$xml = array_to_xml($document, $oXML);
 			
 			$content = $xml->asXML();
 			
@@ -427,7 +347,7 @@
 			);
 			$order_statuses = $this->model_localisation_order_status->getOrderStatuses($data);								
 			
-			$document = array();
+			$document = [];
 			$document['Документ'] = array(
 			'Роль'  => 'Справочник'
 			,'ТипИнформации'  => 'Статусы заказа'
@@ -451,7 +371,7 @@
 			
 			$root = '<?xml version="1.0" encoding="utf-8"?><КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . date('Y-m-d', time()) . '" />';
 			$oXML = new SimpleXMLElement($root);
-			$xml = $this->array_to_xml($document, $oXML);
+			$xml = array_to_xml($document, $oXML);
 			
 			$content = $xml->asXML();
 			
@@ -461,18 +381,15 @@
 			}
 			
 			file_put_contents(DIR_EXPORT . 'odinass/structures/order_status_list.xml', $content);		
-		}
-		
+		}	
 		
 		public function initiateOrdersFromDateToDateXML(){
 			if (isset($this->request->get['date_from'])){
 				$date_from = date('' ,strtotime($this->request->get['date_from']));
 			}			
 		}
-		
-		
-		public function getOrderSuppliesXML($order_id = 0, $do_echo = false, $dir = false){
-			
+				
+		public function getOrderSuppliesXML($order_id = 0, $do_echo = false, $dir = false){			
 			$this->load->model('sale/order');
 			$this->load->model('sale/customer');
 			$this->load->model('sale/return');		
@@ -493,7 +410,7 @@
 			
 			$query = $this->db->query("SELECT order_id FROM `" . DB_PREFIX . "order` WHERE `order_id` = '" . (int)$order_id . "'");
 			
-			$document = array();
+			$document = [];
 			$document_counter = 0;
 			
 			if ($query->num_rows) {
@@ -543,7 +460,7 @@
 							'ИДЗаписиЗаказТовар'   	 	=> $product_supply['order_product_id'],
 							'ЭтоТоварВходящийВНабор' 	=> 'Ложь',
 							'ПоставщикИД'    			=> $product_supply['supplier_id'],
-							'ПоставщикНаименование' 	=> $this->rms($real_supplier['supplier_name']),
+							'ПоставщикНаименование' 	=> rms($real_supplier['supplier_name']),
 							'ПоставщикТип' 				=> $real_supplier['supplier_type'],
 							'Количество' 		    	=> $product_supply['amount'],
 							'ЦенаЗаЕдиницу'		    	=> $product_supply['price'],
@@ -577,7 +494,7 @@
 									'ИДЗаписиЗаказНабор'    	=> $set_supply['order_set_id'],
 									'ЭтоТоварВходящийВНабор' 	=> 'Истина',
 									'ПоставщикИД'    			=> $set_supply['supplier_id'],
-									'ПоставщикНаименование' 	=> $this->rms($real_supplier['supplier_name']),
+									'ПоставщикНаименование' 	=> rms($real_supplier['supplier_name']),
 									'ПоставщикТип' 				=> $real_supplier['supplier_type'],
 									'Количество' 		    	=> $set_supply['amount'],
 									'ЦенаЗаЕдиницу'		    	=> $set_supply['price'],
@@ -598,7 +515,7 @@
 						
 						$root = '<?xml version="1.0" encoding="utf-8"?><КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . date('Y-m-d', time()) . '" />';
 						$oXML = new SimpleXMLElement($root);
-						$xml = $this->array_to_xml($document, $oXML);
+						$xml = array_to_xml($document, $oXML);
 						
 						$content = $xml->asXML();
 						
@@ -643,7 +560,7 @@
 			
 			$query = $this->db->query("SELECT order_id FROM `" . DB_PREFIX . "order` WHERE `order_id` = '" . (int)$order_id . "'");
 			
-			$document = array();
+			$document = [];
 			$document_counter = 0;
 			
 			if ($query->num_rows) {
@@ -676,24 +593,24 @@
 							'ИД'                   					=> $legalperson['legalperson_id']
 							,'Наименование'                			=> $legalperson['legalperson_name']
 							,'ЭтоЮрЛицоДляВыставленияСчетов'    	=> $legalperson['legalperson_legal']?'Истина':'Ложь'
-							,'РеквизитыПолучателя'  	         	=> $this->rms($this->reparseEOLS($legalperson['legalperson_desc']))
-							,'РеквизитыПолучателя2'  	         	=> $this->rms($this->reparseEOLS($legalperson['legalperson_additional']))
+							,'РеквизитыПолучателя'  	         	=> rms(reparseEOLSToSlash($legalperson['legalperson_desc']))
+							,'РеквизитыПолучателя2'  	         	=> rms(reparseEOLSToSlash($legalperson['legalperson_additional']))
 							,'ПривязкаКСтранеИД' 				    => $legalperson['legalperson_country_id']
 							,'ПривязкаКСтранеИмя' 				    => $country_name = $this->model_localisation_country->getCountryName($legalperson['legalperson_country_id'])
 							);
 							
 							if ($legalperson['legalperson_additional']){
-								$unpacked_struct = array();
+								$unpacked_struct = [];
 								$info = explode(PHP_EOL, $legalperson['legalperson_additional']);
 								foreach ($info as $string){
 									$line = explode(':', $string);
 									if (isset($line[0]) && isset($line[1])){
-										$unpacked_struct[$this->removeSpaces($line[0])] = trim($line[1]);
+										$unpacked_struct[removeSpaces($line[0])] = trim($line[1]);
 									}
 								}
 								
 								foreach ($unpacked_struct as $uns => $unsval){
-									$document['Документ' . $document_counter]['ЮридическоеЛицо']['РеквизитыСтруктурa'][$this->rms($uns)] = $this->rms($unsval);								
+									$document['Документ' . $document_counter]['ЮридическоеЛицо']['РеквизитыСтруктурa'][rms($uns)] = rms($unsval);								
 								}
 								
 							}
@@ -706,24 +623,24 @@
 							'ИД'                   					=> $legalperson['legalperson_id']
 							,'Наименование'                			=> $legalperson['legalperson_name']
 							,'ЭтоЮрЛицоДляВыставленияСчетов'    	=> $legalperson['legalperson_legal']?'Истина':'Ложь'
-							,'РеквизитыПолучателя'  	         	=> $this->rms($this->reparseEOLS($legalperson['legalperson_desc']))
-							,'РеквизитыПолучателя2'  	         	=> $this->rms($this->reparseEOLS($legalperson['legalperson_additional']))
+							,'РеквизитыПолучателя'  	         	=> rms(reparseEOLSToSlash($legalperson['legalperson_desc']))
+							,'РеквизитыПолучателя2'  	         	=> rms(reparseEOLSToSlash($legalperson['legalperson_additional']))
 							,'ПривязкаКСтранеИД' 				    => $legalperson['legalperson_country_id']
 							,'ПривязкаКСтранеИмя' 				    => $country_name = $this->model_localisation_country->getCountryName($legalperson['legalperson_country_id'])
 							);
 							
 							if ($legalperson['legalperson_additional']){
-								$unpacked_struct = array();
+								$unpacked_struct = [];
 								$info = explode(PHP_EOL, $legalperson['legalperson_additional']);
 								foreach ($info as $string){
 									$line = explode(':', $string);
 									if (isset($line[0]) && isset($line[1])){
-										$unpacked_struct[$this->removeSpaces($line[0])] = trim($line[1]);
+										$unpacked_struct[removeSpaces($line[0])] = trim($line[1]);
 									}																
 								}
 								
 								foreach ($unpacked_struct as $uns => $unsval){
-									$document['Документ' . $document_counter]['КартаДляОплаты']['РеквизитыСтруктурa'][$this->rms($uns)] = $this->rms($unsval);								
+									$document['Документ' . $document_counter]['КартаДляОплаты']['РеквизитыСтруктурa'][rms($uns)] = rms($unsval);								
 								}
 								
 							}
@@ -776,7 +693,7 @@
 					
 					$root = '<?xml version="1.0" encoding="utf-8"?><КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . date('Y-m-d', time()) . '" />';
 					$oXML = new SimpleXMLElement($root);
-					$xml = $this->array_to_xml($document, $oXML);
+					$xml = array_to_xml($document, $oXML);
 					
 					$content = $xml->asXML();
 					
@@ -798,8 +715,7 @@
 			}
 		}
 		
-		public function getOrderReturnsXML($order_id = 0, $do_echo = false, $dir = false){
-			
+		public function getOrderReturnsXML($order_id = 0, $do_echo = false, $dir = false){			
 			$this->load->model('sale/order');
 			$this->load->model('sale/customer');
 			$this->load->model('sale/return');		
@@ -820,7 +736,7 @@
 			
 			$query = $this->db->query("SELECT order_id FROM `" . DB_PREFIX . "order` WHERE `order_id` = '" . (int)$order_id . "'");
 			
-			$document = array();
+			$document = [];
 			$document_counter = 0;
 			
 			if ($query->num_rows) {
@@ -866,7 +782,7 @@
 						,'Время'			             	=> (isset($ot_time))?$ot_time:$time
 						,'ТоварИД'							=> $order_return['product_id']
 						,'ТоварАртикул'						=> $order_return['model']							
-						,'ТоварАртикулНормализованный'		=> $this->normalizeSKU($order_return['model'])
+						,'ТоварАртикулНормализованный'		=> normalizeSKU($order_return['model'])
 						,'Описание'             			=> $order_return['comment']						
 						,'Валюта'              				=> $order['currency_code']
 						,'ЦенаЗаЕдиницу'  					=> $order_return['price_national']
@@ -893,7 +809,7 @@
 					
 					$root = '<?xml version="1.0" encoding="utf-8"?><КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . date('Y-m-d', time()) . '" />';
 					$oXML = new SimpleXMLElement($root);
-					$xml = $this->array_to_xml($document, $oXML);
+					$xml = array_to_xml($document, $oXML);
 					
 					$content = $xml->asXML();
 					
@@ -911,8 +827,7 @@
 				
 			}
 		}
-		
-		
+				
 		public function makeSalesResultXML($order_id = 0, $do_echo = false, $dir = false, $do_iconv = false, $explicit_delivery_num = false){
 			$this->load->model('sale/order');
 			$this->load->model('catalog/product');
@@ -973,9 +888,9 @@
 						'ИД'            						=> $product['product_id']
 						,'ИДЗаписиЗаказТовар'					=> $product['order_product_id']
 						,'Артикул'		 						=> $product['model']
-						,'АртикулНормализованный'				=> $this->normalizeSKU($product['model'])
-						,'Наименование'   						=> $this->rms($product['name'])	
-						,'НаименованиеУКР'   					=> !empty($product['ua_name'])?$this->rms($product['ua_name']):''
+						,'АртикулНормализованный'				=> normalizeSKU($product['model'])
+						,'Наименование'   						=> rms($product['name'])	
+						,'НаименованиеУКР'   					=> !empty($product['ua_name'])?rms($product['ua_name']):''
 						,'ЦенаЗаЕдиницу'  						=> $product['price_national']
 						,'ЦенаЗаЕдиницуВОсновнойВалюте'  		=> $product['price']						
 						,'ЦенаЗаЕдиницуВОсновнойВалюте'  		=> $product['price']
@@ -1006,9 +921,9 @@
 						'ИД'            						=> $product['product_id']
 						,'ИДЗаписиЗаказТовар'					=> $product['order_product_id']
 						,'Артикул'		 						=> $product['model']
-						,'АртикулНормализованный'				=> $this->normalizeSKU($product['model'])
-						,'Наименование'   						=> $this->rms($product['name'])	
-						,'НаименованиеУКР'   					=> $this->rms($product['ua_name'])
+						,'АртикулНормализованный'				=> normalizeSKU($product['model'])
+						,'Наименование'   						=> rms($product['name'])	
+						,'НаименованиеУКР'   					=> rms($product['ua_name'])
 						,'ЦенаЗаЕдиницу'  						=> $product['price_national']
 						,'ЦенаЗаЕдиницуВОсновнойВалюте'  		=> $product['price']						
 						,'ЦенаЗаЕдиницуВОсновнойВалюте'  		=> $product['price']
@@ -1029,10 +944,33 @@
 						$product_counter++;
 					}					
 				}
+
+				$receipt = $this->Fiscalisation->getOrderReceipt($order['order_id']);
+
+				if ($receipt){
+					$receipt_links = $this->Fiscalisation->getReceiptLinks($receipt['receipt_id']);
+
+					$document['Документ']['ПолнаяРеализация']['ФискальныеЧеки']['Чек0'] = array(
+						'КодЧекаФискальный'         => $receipt['fiscal_code']
+						,'КодЧекаАпи'				=> $receipt['receipt_id']
+						,'СистемаАпи'		 		=> $receipt['api']
+						,'Статус'	 				=> $receipt['status']
+						,'ДатаФискализации'	 		=> $receipt['fiscal_date']
+						,'СозданОффлайн'	 		=> $receipt['is_created_offline']?'Истина':'Ложь'
+						,'ОтправленВФС'	 			=> $receipt['is_sent_dps']?'Истина':'Ложь'
+						,'ДатаОтправкиВФС'	 		=> $receipt['sent_dps_at']?'Истина':'Ложь'
+						,'ТипЧека'	 				=> $receipt['type']
+						,'СсылкаАпиHTML'      		=> !empty($receipt_links['HTML'])?$receipt_links['HTML']['link']:'Ложь'
+						,'СсылкаАпиPDF'      		=> !empty($receipt_links['PDF'])?$receipt_links['PDF']['link']:'Ложь'
+						,'СсылкаАпиText'      		=> !empty($receipt_links['TEXT'])?$receipt_links['TEXT']['link']:'Ложь'
+						,'СсылкаАпиPNG'      		=> !empty($receipt_links['PNG'])?$receipt_links['PNG']['link']:'Ложь'
+						,'СсылкаАпиQRCODE'     		=> !empty($receipt_links['QRCODE'])?$receipt_links['QRCODE']['link']:'Ложь'
+					);
+				}
 				
 				$root = '<?xml version="1.0" encoding="utf-8"?><КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . date('Y-m-d', time()) . '" />';
 				$oXML = new SimpleXMLElement($root);
-				$xml = $this->array_to_xml($document, $oXML);
+				$xml = array_to_xml($document, $oXML);
 				
 				$content = $xml->asXML();
 				
@@ -1050,8 +988,7 @@
 				$_fname = (int)$order_id.'-'.$current_delivery; 
 				
 				file_put_contents(DIR_EXPORT . 'odinass/sales/' . $_fname . '.xml', $content);
-				chmod(DIR_EXPORT . 'odinass/sales/' . $_fname . '.xml', 0777);
-				
+				chmod(DIR_EXPORT . 'odinass/sales/' . $_fname . '.xml', 0777);				
 			}
 		}
 		
@@ -1059,10 +996,8 @@
 			$this->load->model('sale/customer');
 			$this->load->model('sale/order');
 		}
-		
-		
+				
 		public function getOrderXML($order_id = 0, $do_echo = false, $dir = false, $order_array = false, $do_iconv = false) {
-			
 			$this->load->model('sale/order');
 			$this->load->model('sale/customer');
 			$this->load->model('sale/return');		
@@ -1092,7 +1027,7 @@
 			}
 			
 			
-			$document = array();
+			$document = [];
 			$document_counter = 0;
 			
 			if ($query->num_rows) {
@@ -1207,7 +1142,7 @@
 					);
 					
 					//Логика отдачи ссылок на оплату
-					$document['Документ' . $document_counter]['СсылкиДляQRНаОплату'] = array();
+					$document['Документ' . $document_counter]['СсылкиДляQRНаОплату'] = [];
 					$payment_links_counter = 0;
 					
 					//Пейкипер если 'RUB', 'BYN', 'KZT'
@@ -1280,24 +1215,24 @@
 							'ИД'                   					=> $legalperson['legalperson_id']
 							,'Наименование'                			=> $legalperson['legalperson_name']
 							,'ЭтоЮрЛицоДляВыставленияСчетов'    	=> $legalperson['legalperson_legal']?'Истина':'Ложь'
-							,'РеквизитыПолучателя'  	         	=> $this->rms($this->reparseEOLS($legalperson['legalperson_desc']))
-							,'РеквизитыПолучателя2'  	         	=> $this->rms($this->reparseEOLS($legalperson['legalperson_additional']))
+							,'РеквизитыПолучателя'  	         	=> rms(reparseEOLSToSlash($legalperson['legalperson_desc']))
+							,'РеквизитыПолучателя2'  	         	=> rms(reparseEOLSToSlash($legalperson['legalperson_additional']))
 							,'ПривязкаКСтранеИД' 				    => $legalperson['legalperson_country_id']
 							,'ПривязкаКСтранеИмя' 				    => $country_name = $this->model_localisation_country->getCountryName($legalperson['legalperson_country_id'])
 							);
 							
 							if ($legalperson['legalperson_additional']){
-								$unpacked_struct = array();
+								$unpacked_struct = [];
 								$info = explode(PHP_EOL, $legalperson['legalperson_additional']);
 								foreach ($info as $string){
 									$line = explode(':', $string);
 									if (isset($line[0]) && isset($line[1])){
-										$unpacked_struct[$this->removeSpaces($line[0])] = trim($line[1]);
+										$unpacked_struct[removeSpaces($line[0])] = trim($line[1]);
 									}
 								}
 								
 								foreach ($unpacked_struct as $uns => $unsval){
-									$document['Документ' . $document_counter]['ЮридическоеЛицо']['РеквизитыСтруктурa'][$this->rms($uns)] = $this->rms($unsval);						
+									$document['Документ' . $document_counter]['ЮридическоеЛицо']['РеквизитыСтруктурa'][rms($uns)] = rms($unsval);						
 								}
 								
 							}
@@ -1310,24 +1245,24 @@
 							'ИД'                   					=> $legalperson['legalperson_id']
 							,'Наименование'                			=> $legalperson['legalperson_name']
 							,'ЭтоЮрЛицоДляВыставленияСчетов'    	=> $legalperson['legalperson_legal']?'Истина':'Ложь'
-							,'РеквизитыПолучателя'  	         	=> $this->rms($this->reparseEOLS($legalperson['legalperson_desc']))
-							,'РеквизитыПолучателя2'  	         	=> $this->rms($this->reparseEOLS($legalperson['legalperson_additional']))
+							,'РеквизитыПолучателя'  	         	=> rms(reparseEOLSToSlash($legalperson['legalperson_desc']))
+							,'РеквизитыПолучателя2'  	         	=> rms(reparseEOLSToSlash($legalperson['legalperson_additional']))
 							,'ПривязкаКСтранеИД' 				    => $legalperson['legalperson_country_id']
 							,'ПривязкаКСтранеИмя' 				    => $country_name = $this->model_localisation_country->getCountryName($legalperson['legalperson_country_id'])
 							);
 							
 							if ($legalperson['legalperson_additional']){
-								$unpacked_struct = array();
+								$unpacked_struct = [];
 								$info = explode(PHP_EOL, $legalperson['legalperson_additional']);
 								foreach ($info as $string){
 									$line = explode(':', $string);
 									if (isset($line[0]) && isset($line[1])){
-										$unpacked_struct[$this->removeSpaces($line[0])] = trim($line[1]);
+										$unpacked_struct[removeSpaces($line[0])] = trim($line[1]);
 									}
 								}
 								
 								foreach ($unpacked_struct as $uns => $unsval){
-									$document['Документ' . $document_counter]['КартаДляОплаты']['РеквизитыСтруктурa'][$this->rms($uns)] = $this->rms($unsval);						
+									$document['Документ' . $document_counter]['КартаДляОплаты']['РеквизитыСтруктурa'][rms($uns)] = rms($unsval);						
 								}
 								
 							}
@@ -1348,8 +1283,7 @@
 					}
 					
 					//ТТНКИ
-					if ($ttns = $this->model_sale_order->getOrderTtnHistory($order['order_id'])){
-						
+					if ($ttns = $this->model_sale_order->getOrderTtnHistory($order['order_id'])){						
 						$ttn_counter = 0;
 						foreach ($ttns as $ttn){
 							$document['Документ' . $document_counter]['ТоварноТранспортныеНакладные']['ТТН'.$ttn_counter] = array(
@@ -1360,9 +1294,7 @@
 							);
 							
 							$ttn_counter++;
-						}
-						
-						
+						}												
 					}
 					
 					
@@ -1372,7 +1304,7 @@
 					$totals_counter = 0;
 					foreach ($order_totals as $order_total){
 						
-						$voucher = ($this->bool_real_stripos($order_total['title'], 'сертификат') || $order_total['code'] == 'voucher');
+						$voucher = (bool_real_stripos($order_total['title'], 'сертификат') || $order_total['code'] == 'voucher');
 						
 						$document['Документ' . $document_counter]['ИтогиЗаказа']['Итог'.$totals_counter] = array(
 						'ИД'                    	=> $order_total['order_total_id']
@@ -1385,8 +1317,8 @@
 						,'ЭтоСкидка'             	=> ($order_total['value_national'] < 0)?'Истина':'Ложь'
 						,'ЭтоСертификат'    		=> $voucher?'Истина':'Ложь'
 						,'КодСертификатаБезПробелов'=> $voucher?(preg_replace('/\D/', '', $order_total['title'])?preg_replace('/\D/', '', $order_total['title']):'Ложь'):'Ложь'
-						,'ЭтоСтоимостьДоставки'    	=> ($this->bool_real_stripos($order_total['title'], 'Доставка') || $order_total['code'] == 'shipping')?'Истина':'Ложь'
-						,'ЭтоСуммаПредоплаты'		=> ($this->bool_real_stripos($order_total['title'], 'Предоплата') || $order_total['code'] == 'transfer_plus_prepayment')?'Истина':'Ложь'
+						,'ЭтоСтоимостьДоставки'    	=> (bool_real_stripos($order_total['title'], 'Доставка') || $order_total['code'] == 'shipping')?'Истина':'Ложь'
+						,'ЭтоСуммаПредоплаты'		=> (bool_real_stripos($order_total['title'], 'Предоплата') || $order_total['code'] == 'transfer_plus_prepayment')?'Истина':'Ложь'
 						,'ЭтоСуммаПолнойПредоплаты'	=>	'Ложь'
 						//	,'ЭтоПроцентнаяСкидка'      => ($order_total['value_national'] < 0)?'Истина':'Ложь'
 						,'ЭтоПодИтог'            	=> ($order_total['code'] == 'sub_total')?'Истина':'Ложь'
@@ -1439,10 +1371,7 @@
 						);
 						
 						$order_histories_counter++;
-					}
-					
-					
-					
+					}															
 					
 					$order_transactions = $this->model_sale_customer->getTransactions($order['customer_id'], 0, 10000, $orders_data['order_id']);	
 					
@@ -1499,7 +1428,7 @@
 						,'Время'			             	=> (isset($ot_time))?$ot_time:$time
 						,'ТоварИД'							=> $order_return['product_id']
 						,'ТоварАртикул'						=> $order_return['model']
-						,'ТоварАртикулНормализованный'		=> $this->normalizeSKU($order_return['model'])
+						,'ТоварАртикулНормализованный'		=> normalizeSKU($order_return['model'])
 						,'Описание'             			=> $order_return['comment']						
 						,'Валюта'              				=> $order['currency_code']
 						,'ЦенаЗаЕдиницу'  					=> $order_return['price_national']
@@ -1535,53 +1464,53 @@
 					}
 					
 					$document['Документ' . $document_counter]['Контрагенты']['Контрагент'] = array(
-					'ИД'                 => $order['customer_id']
-					,'Роль'               => 'Покупатель'
-					,'Наименование'		  => $order['lastname'] . ' ' . $order['firstname']
-					,'ПолноеНаименование' => $order['lastname'] . ' ' . $order['firstname']
-					,'Имя'			      => $order['firstname']
-					,'Фамилия'            => $order['lastname']
-					,'ДисконтнаяКарта'    => $customer['discount_card']
-					,'Контакты' => array(
-					'Контакт1' => array(
-					'Тип' => 'ТелефонРабочий'
-					,'Значение'	=> $order['telephone']
-					)
-					,'Контакт2' => array(
-					'Тип' => 'ТелефонДополнительный'
-					,'Значение'	=> $order['fax']
-					)
-					,'Контакт2'	=> array(
-					'Тип' => 'Почта'
-					,'Значение'	=> $order['email']
-					)
+					'ИД'                 	=> $order['customer_id']
+					,'Роль'               	=> 'Покупатель'
+					,'Наименование'		  	=> $order['lastname'] . ' ' . $order['firstname']
+					,'ПолноеНаименование' 	=> $order['lastname'] . ' ' . $order['firstname']
+					,'Имя'			      	=> $order['firstname']
+					,'Фамилия'            	=> $order['lastname']
+					,'ДисконтнаяКарта'    	=> $customer['discount_card']
+					,'Контакты' 			=> array(
+						'Контакт1' 	=> array(
+						'Тип' 		=> 'ТелефонРабочий'
+						,'Значение'	=> $order['telephone']
+						)
+					,'Контакт2' 			=> array(
+						'Тип' 		=> 'ТелефонДополнительный'
+						,'Значение'	=> $order['fax']
+						)
+					,'Контакт2'				=> array(
+						'Тип' => 'Почта'
+						,'Значение'	=> $order['email']
+						)
 					)										
 					
 					
-					,'ИмяОплаты'		  => $order['payment_firstname']
-					,'ФамилияОплаты'      => $order['payment_lastname']
-					,'ТелефонОплаты' => $order['telephone']
-					,'АдресОплаты' => array(
-					'Представление'	=> (($order['payment_address_1'])?$order['payment_address_1'].', ':'') . (($order['payment_address_2'])?$order['payment_address_2'].', ':'') . $order['payment_city'] . ', ' . (($order['payment_postcode'])?$order['payment_postcode'].', ':'') . (($order['payment_zone'])?$order['payment_zone'].', ':'') .$order['payment_country']
-					,'АдресДетально'   => $this->parseDaDataFullJSON($order['payment_address_struct'])
-					,'АдреснаяСтрока1' => $order['payment_address_1']
-					,'АдреснаяСтрока2' => $order['payment_address_2']
-					,'Город' => $order['payment_city']
-					,'Страна' => $order['payment_country']	
-					,'Область' => $order['payment_zone']
+					,'ИмяОплаты'		=> $order['payment_firstname']
+					,'ФамилияОплаты'    => $order['payment_lastname']
+					,'ТелефонОплаты' 	=> $order['telephone']
+					,'АдресОплаты' 		=> array(
+					'Представление'		=> (($order['payment_address_1'])?$order['payment_address_1'].', ':'') . (($order['payment_address_2'])?$order['payment_address_2'].', ':'') . $order['payment_city'] . ', ' . (($order['payment_postcode'])?$order['payment_postcode'].', ':'') . (($order['payment_zone'])?$order['payment_zone'].', ':'') .$order['payment_country']
+					,'АдресДетально'   	=> $this->parseDaDataFullJSON($order['payment_address_struct'])
+					,'АдреснаяСтрока1' 	=> $order['payment_address_1']
+					,'АдреснаяСтрока2' 	=> $order['payment_address_2']
+					,'Город' 			=> $order['payment_city']
+					,'Страна' 			=> $order['payment_country']	
+					,'Область' 			=> $order['payment_zone']
 					)
 					
-					,'ИмяДоставки'		  => $order['shipping_firstname']
-					,'ФамилияДоставки'    => $order['shipping_lastname']
-					,'ТелефонДоставки' 	  => $order['fax']
-					,'АдресДоставки' => array(
-					'Представление'	=> (($order['shipping_address_1'])?$order['shipping_address_1'].', ':'') . (($order['shipping_address_2'])?$order['shipping_address_2'].', ':'') . $order['shipping_city'].', '. (($order['shipping_postcode'])?$order['shipping_postcode'].', ':'') . (($order['shipping_zone'])?$order['shipping_zone'].', ':'') . $order['shipping_country']
-					,'АдресДетально'   => $this->parseDaDataFullJSON($order['shipping_address_struct'])
-					,'АдреснаяСтрока1' => $order['shipping_address_1']
-					,'АдреснаяСтрока2' => $order['shipping_address_2']
-					,'Город' => $order['shipping_city']
-					,'Страна' => $order['shipping_country']
-					,'Область' => $order['shipping_zone']
+					,'ИмяДоставки'		  	=> $order['shipping_firstname']
+					,'ФамилияДоставки'    	=> $order['shipping_lastname']
+					,'ТелефонДоставки' 	  	=> $order['fax']
+					,'АдресДоставки' 		=> array(
+					'Представление'			=> (($order['shipping_address_1'])?$order['shipping_address_1'].', ':'') . (($order['shipping_address_2'])?$order['shipping_address_2'].', ':'') . $order['shipping_city'].', '. (($order['shipping_postcode'])?$order['shipping_postcode'].', ':'') . (($order['shipping_zone'])?$order['shipping_zone'].', ':'') . $order['shipping_country']
+					,'АдресДетально'   	=> $this->parseDaDataFullJSON($order['shipping_address_struct'])
+					,'АдреснаяСтрока1' 	=> $order['shipping_address_1']
+					,'АдреснаяСтрока2' 	=> $order['shipping_address_2']
+					,'Город' 			=> $order['shipping_city']
+					,'Страна' 			=> $order['shipping_country']
+					,'Область' 			=> $order['shipping_zone']
 					)
 					
 					);
@@ -1722,9 +1651,9 @@
 						'ИД'            						=> $product['product_id']
 						,'ИДЗаписиЗаказТовар'					=> $product['order_product_id']
 						,'Артикул'		 						=> $product['model']
-						,'АртикулНормализованный'				=> $this->normalizeSKU($product['model'])
-						,'Наименование'   						=> $this->rms($product['name'])	
-						,'НаименованиеУКР'   					=> !empty($product['ua_name'])?$this->rms($product['ua_name']):''
+						,'АртикулНормализованный'				=> normalizeSKU($product['model'])
+						,'Наименование'   						=> rms($product['name'])	
+						,'НаименованиеУКР'   					=> !empty($product['ua_name'])?rms($product['ua_name']):''
 						,'ВесТовара'							=> $real_product['weight']
 						,'ВесТовараВКилограммах'				=> $this->weight->convert($real_product['weight'], $real_product['weight_class_id'], 1)
 						,'ВесТовараЕдиницаИД'   				=> $real_product['weight_class_id']
@@ -1735,15 +1664,15 @@
 						,'ВесТовараПолныйЕдиницаИД'   			=> $real_product['pack_weight_class_id']
 						,'ВесТовараПолныйЕдиницаНаименование'	=> isset($weight_full_class['title'])?$weight_full_class['title']:'Ложь'
 						,'ВесТовараПолныйЕдиницаОбозначение'	=> isset($weight_full_class['unit'])?$weight_full_class['unit']:'Ложь'
-						,'НаименованиеКороткое'   				=> $this->rms($short_name)
-						,'НаименованиеНаЯзыкеБренда'			=> $this->rms($product['de_name'])
-						,'НаименованиеКороткоеНаЯзыкеБренда'	=> $this->rms($short_name_de)
+						,'НаименованиеКороткое'   				=> rms($short_name)
+						,'НаименованиеНаЯзыкеБренда'			=> rms($product['de_name'])
+						,'НаименованиеКороткоеНаЯзыкеБренда'	=> rms($short_name_de)
 						,'МинимумКЗаказу'  						=> $real_product['minimum']
 						,'КоличествоВУпаковке'					=> $real_product['package']
 						,'БрендИД'       						=> $real_product['manufacturer_id']
-						,'БрендНаименование'        			=> $this->rms($manufacturer['name'])
+						,'БрендНаименование'        			=> rms($manufacturer['name'])
 						,'БрендНаименованиеMD5Хэш' 				=> md5($manufacturer['name'])
-						,'БрендНаименованиеНормализованноеMD5Хэш' => md5($this->rms($manufacturer['name']))
+						,'БрендНаименованиеНормализованноеMD5Хэш' => md5(rms($manufacturer['name']))
 						,'ЦенаЗаЕдиницу'  						=> $product['price_national']
 						,'ЦенаЗаЕдиницуВОсновнойВалюте'  		=> $product['price']											
 						,'Количество'     						=> $product['quantity']
@@ -1766,7 +1695,7 @@
 						,'ЭтотТоварБылВозвращенПолностью'		=> ($product['is_returned'])?'Истина':'Ложь'
 						,'ЭтотТоварСоСклада'				    => ($product['from_stock'])?'Истина':'Ложь'
 						,'КоличествоТовараСоСклада'				=> (int)$product['quantity_from_stock']
-						,'ИсточникПокупкиУказанныйЗакупщиком'   => $this->rms(htmlentities($product['source']))
+						,'ИсточникПокупкиУказанныйЗакупщиком'   => rms(htmlentities($product['source']))
 						,'МониторингЦенВключен'    		    	=> $real_product['priceva_enable']?'Истина':'Ложь'
 						,'МониторингЦенВыключен'    		    => $real_product['priceva_disable']?'Истина':'Ложь'
 						,'ЯМаркетТоварВФиде'    		    	=> $real_product['yam_in_feed']?'Истина':'Ложь'		
@@ -1787,13 +1716,13 @@
 						if ($product['totals_json'] && json_decode($product['totals_json']) && is_array(json_decode($product['totals_json'], true))){
 							
 							$discount_counter = 0;							
-							$document['Документ' . $document_counter]['Товары']['Товар' . $product_counter]['СкидкиДействующиеНаТовар'] = array();
+							$document['Документ' . $document_counter]['Товары']['Товар' . $product_counter]['СкидкиДействующиеНаТовар'] = [];
 							
 							
 							$discounts_array = json_decode($product['totals_json'], true);
 							
-							$discount_sums_array = array();
-							$discount_total_sums_array = array();
+							$discount_sums_array = [];
+							$discount_total_sums_array = [];
 							
 							foreach ($discounts_array as $discount_field){															
 								
@@ -1851,7 +1780,7 @@
 									'СостояниеЭтоНовыйТовар'=> $amazon_offer['conditionIsNew']?'Истина':'Ложь',
 									'СостояниеЗаголовок'	=> $amazon_offer['conditionTitle'],
 									'СостояниеКомментарий'	=> $amazon_offer['conditionComments'],
-									'ПродавецНаименование'	=> $this->rms($amazon_offer['sellerName']),
+									'ПродавецНаименование'	=> rms($amazon_offer['sellerName']),
 									//	'ПродавецСсылка'			=> $amazon_offer['sellerLink'],
 									'ПродавецРейтинг'				=> $amazon_offer['sellerRating50'],
 									'ПродавецПозитивныхОтзывов'		=> $amazon_offer['sellerPositiveRatings100'],
@@ -1873,7 +1802,7 @@
 								$document['Документ' . $document_counter]['Товары']['Товар' . $product_counter]['ИсточникиПокупки']['ИсточникПокупки' . $source_counter] = array(
 								'type'    => 'AmazonAsinListing',
 								'explain' => 'Листинг товаров с ASIN в Amazon.de',
-								'link'    => $this->rms(htmlentities("https://www.amazon.de/gp/offer-listing/".$real_product['asin']."/ref=olp_f_primeEligible&f_primeEligible=true&f_new=true"), true)
+								'link'    => rms(htmlentities("https://www.amazon.de/gp/offer-listing/".$real_product['asin']."/ref=olp_f_primeEligible&f_primeEligible=true&f_new=true"), true)
 								
 								);
 								$source_counter++;
@@ -1881,7 +1810,7 @@
 								$document['Документ' . $document_counter]['Товары']['Товар' . $product_counter]['ИсточникиПокупки']['ИсточникПокупки' . $source_counter] = array(
 								'type'    => 'AmazonDirectAsinLink',
 								'explain' => 'Прямая ссылка на ASIN на Amazon',
-								'link'    => $this->rms(htmlentities("https://www.amazon.de/dp/".$real_product['asin']), true)
+								'link'    => rms(htmlentities("https://www.amazon.de/dp/".$real_product['asin']), true)
 								
 								);
 								$source_counter++;
@@ -1904,7 +1833,7 @@
 									$document['Документ' . $document_counter]['Товары']['Товар' . $product_counter]['ИсточникиПокупки']['ИсточникПокупки' . $source_counter] = array(
 									'type'    => $_source_type,
 									'explain' => 'Ссылка на товар на сайте поставщика',
-									'link'    => $this->rms(htmlentities(trim($_s)))
+									'link'    => rms(htmlentities(trim($_s)))
 									
 									);
 									$source_counter++;	
@@ -1925,9 +1854,6 @@
 								);
 							}
 						}
-						
-						
-						
 						
 						$collection = $this->model_catalog_collection->getCollection($real_product['collection_id']);
 						if ($collection){							
@@ -1962,8 +1888,8 @@
 						$attribute_counter = 1;
 						foreach ($attributes as $attribute){
 							$document['Документ' . $document_counter]['Товары']['Товар' . $product_counter]['Характеристики']['Характеристика' . $attribute_counter] = array(
-							'ХарактеристикаНаименование' =>  $this->rms($attribute['name']),
-							'ХарактеристикаЗначение'     =>	 $this->rms($attribute['text'])
+							'ХарактеристикаНаименование' =>  rms($attribute['name']),
+							'ХарактеристикаЗначение'     =>	 rms($attribute['text'])
 							);
 							
 							$attribute_counter++;
@@ -1977,7 +1903,7 @@
 						
 						//EAN 13
 						$ean_counter = 0;
-						$ean_array = array();											
+						$ean_array = [];											
 						$suppliers_eans = $this->model_sale_supplier->getSupplierEANCodes($product['product_id']);						
 						if ($suppliers_eans) {
 							foreach ($suppliers_eans as $_ean){																							
@@ -2020,9 +1946,7 @@
 							
 							$product_supplies_counter++;
 						}
-						
-						
-						
+																		
 						if ($is_set){
 							$set_id = (int)$is_set['set_id'];
 							$set_products_results = $this->model_sale_order->getOrderProductsBySet($order_id, $set_id);
@@ -2046,8 +1970,8 @@
 								$document['Документ' . $document_counter]['Товары']['Товар' . $product_counter]['ТоварыВходящиеВНабор']['ТоварВходящийВНабор' . $set_products_counter] = array(
 								'ИД' 								=> $set_product['product_id']
 								,'Артикул'		 					=> $set_product['model']
-								,'АртикулНормализованный'			=> $this->normalizeSKU($set_product['model'])
-								,'Наименование'   					=> $this->rms($set_product['name'])							
+								,'АртикулНормализованный'			=> normalizeSKU($set_product['model'])
+								,'Наименование'   					=> rms($set_product['name'])							
 								,'ВесТовара'						=> $real_set_product['weight']								
 								,'ВесТовараЕдиницаИД'   			=> $real_set_product['weight_class_id']
 								,'ВесТовараЕдиницаНаименование'		=> isset($weight_class['title'])?$weight_class['title']:'Ложь'
@@ -2058,9 +1982,9 @@
 								,'ВесТовараПолныйЕдиницаОбозначение'	=> isset($weight_full_class['unit'])?$weight_full_class['unit']:'Ложь'
 								,'БрендИД'       					=> $real_set_product['manufacturer_id']
 								,'ИзображениеСсылка'				=> $this->model_tool_image->resize($real_set_product['image'], 150, 150)
-								,'БрендНаименование'        		=> $this->rms($manufacturer['name'])
+								,'БрендНаименование'        		=> rms($manufacturer['name'])
 								,'БрендНаименованиеMD5Хэш' 			=> md5($manufacturer['name'])
-								,'БрендНаименованиеНормализованноеMD5Хэш' => md5($this->rms($manufacturer['name']))
+								,'БрендНаименованиеНормализованноеMD5Хэш' => md5(rms($manufacturer['name']))
 								,'ОбычнаяЦенаЗаЕдиницу'				=> $this->currency->convert($real_set_product['price'], $this->config->get('config_currency'), $order['currency_code'])
 								,'ОбычнаяЦенаЗаЕдиницуВОсновнойВалюте'	=> $real_set_product['price']
 								,'ЦенаЗаЕдиницу'  					=> $set_product['price_national']
@@ -2102,7 +2026,7 @@
 								
 								//EAN 13
 								$ean_counter = 0;
-								$ean_array = array();											
+								$ean_array = [];											
 								$suppliers_eans = $this->model_sale_supplier->getSupplierEANCodes($set_product['product_id']);						
 								if ($suppliers_eans) {
 									foreach ($suppliers_eans as $_ean){																							
@@ -2174,11 +2098,7 @@
 									
 									$set_categorie_counter++;
 								}
-								
-								
-								
-								
-								
+
 								$set_products_counter++;
 							}
 							
@@ -2216,54 +2136,11 @@
 						}
 						
 						$product_counter++;
-					}
-					
-					/*
-						//Дублирование возвратов в ветку товаров
-						$return_filter_data = array(
-						'filter_order_id' => $orders_data['order_id']
-						);
-						$order_returns = $this->model_sale_return->getReturns($return_filter_data);
-						
-						foreach ($order_returns as $order_return){
-						$or_date = date('Y-m-d', strtotime($order_return['date_added']));
-						$or_time = date('H:i:s', strtotime($order_return['date_added']));
-						
-						$document['Документ' . $document_counter]['Товары']['Товар' . $product_counter] = array(
-						'ИД'            					=> $order_return['product_id']
-						,'ИДОперацииВозврата'           	=> $order_return['return_id']							
-						,'Дата'             				=> (isset($ot_date))?$ot_date:$date
-						,'Время'			             	=> (isset($ot_time))?$ot_time:$time
-						,'ТоварИД'							=> $order_return['product_id']
-						,'ЭтоВозвратТовара'					=> 'Истина'
-						,'ТоварАртикул'						=> $order_return['model']
-						,'ТоварАртикулНормализованный'		=> $this->normalizeSKU($order_return['model'])
-						,'Описание'             			=> $order_return['comment']						
-						,'Валюта'              				=> $order['currency_code']
-						,'ЦенаЗаЕдиницу'  					=> $order_return['price_national']
-						,'ЦенаЗаЕдиницуВОсновнойВалюте'  	=> $order_return['price']
-						,'Количество'     					=> $order_return['quantity']
-						,'Сумма'          					=> $order_return['total_national']
-						,'СуммаВОсновнойВалюте' 			=> $order_return['total']
-						,'СтатусВозвратаИД'  				=> $order_return['return_status_id']
-						,'ПричинаВозвратаИД'				=> $order_return['return_reason_id']
-						,'СтатусВозврата'   				=> $order_return['status']
-						,'ПричинаВозврата'					=> $order_return['reason']
-						,'ЭтоВозвратПоставщику'  			=> ($order_return['to_supplier']==1)?'Истина':'Ложь'
-						,'ЭтоВозвратКлиенту'  			    => ($order_return['to_supplier']==0)?'Истина':'Ложь'
-						,'ЭтоОтказДоОтгрузки'  			    => ($order_return['to_supplier']==2)?'Истина':'Ложь'
-						
-						);
-						
-						
-						$product_counter++;
-						}
-					*/
-					
+					}					
 					
 					//Товары, которые не_в_наличии_и_вейтлисте
-					$products = array();
-					$categories = array();
+					$products = [];
+					$categories = [];
 					$product_counter = 0;
 					$categorie_counter = 0;
 					
@@ -2288,9 +2165,9 @@
 							$document['Документ' . $document_counter]['ТоварыНетУПоставщикаИВЛистеОжидания']['Товар' . $product_counter] = array(
 							'ИД'            					=> $product['product_id']
 							,'Артикул'		 					=> $product['model']
-							,'АртикулНормализованный'			=> $this->normalizeSKU($product['model'])
-							,'Наименование'   					=> $this->rms($product['name'])
-							,'НаименованиеУКР'   				=> !empty($product['ua_name'])?$this->rms($product['ua_name']):''
+							,'АртикулНормализованный'			=> normalizeSKU($product['model'])
+							,'Наименование'   					=> rms($product['name'])
+							,'НаименованиеУКР'   				=> !empty($product['ua_name'])?rms($product['ua_name']):''
 							,'ВесТовара'						=> isset($real_product['weight'])?$real_product['weight']:'Ложь'
 							,'ВесТовараЕдиницаИД'   			=> isset($real_product['weight_class_id'])?$real_product['weight_class_id']:'Ложь'
 							,'ВесТовараЕдиницаНаименование'		=> isset($weight_class['title'])?$weight_class['title']:'Ложь'
@@ -2302,9 +2179,9 @@
 							,'МинимумКЗаказу'  						=> $real_product['minimum']
 							,'КоличествоВУпаковке'					=> $real_product['package']
 							,'БрендИД'       					=> isset($real_product['manufacturer_id'])?$real_product['manufacturer_id']:'Ложь'
-							,'БрендНаименование'        		=> $this->rms($manufacturer['name'])
+							,'БрендНаименование'        		=> rms($manufacturer['name'])
 							,'БрендНаименованиеMD5Хэш' 			=> md5($manufacturer['name'])
-							,'БрендНаименованиеНормализованноеMD5Хэш' => md5($this->rms($manufacturer['name']))
+							,'БрендНаименованиеНормализованноеMD5Хэш' => md5(rms($manufacturer['name']))
 							,'ЦенаЗаЕдиницу'  					=> $product['price_national']
 							,'ЦенаЗаЕдиницуВОсновнойВалюте'  	=> $product['price']
 							,'Количество'     					=> $product['quantity']
@@ -2342,8 +2219,8 @@
 							$attribute_counter = 1;
 							foreach ($attributes as $attribute){
 								$document['Документ' . $document_counter]['ТоварыНетУПоставщикаИВЛистеОжидания']['Товар' . $product_counter]['Характеристики']['Характеристика' . $attribute_counter] = array(
-								'ХарактеристикаНаименование' =>  $this->rms($attribute['name']),
-								'ХарактеристикаЗначение'     =>	 $this->rms($attribute['text'])
+								'ХарактеристикаНаименование' =>  rms($attribute['name']),
+								'ХарактеристикаЗначение'     =>	 rms($attribute['text'])
 								);
 								
 								$attribute_counter++;
@@ -2357,7 +2234,7 @@
 							
 							//EAN 13
 							$ean_counter = 0;
-							$ean_array = array();											
+							$ean_array = [];											
 							$suppliers_eans = $this->model_sale_supplier->getSupplierEANCodes($product['product_id']);						
 							if ($suppliers_eans) {
 								foreach ($suppliers_eans as $_ean){																							
@@ -2396,9 +2273,9 @@
 							$document['Документ' . $document_counter]['ТоварыНетУПоставщикаИНеВЛистеОжидания']['Товар' . $product_counter] = array(
 							'ИД'            					=> $product['product_id']
 							,'Артикул'		 					=> $product['model']
-							,'АртикулНормализованный'			=> $this->normalizeSKU($product['model'])
-							,'Наименование'   					=> $this->rms($product['name'])
-							,'НаименованиеУКР'   				=> !empty($product['ua_name'])?$this->rms($product['ua_name']):''
+							,'АртикулНормализованный'			=> normalizeSKU($product['model'])
+							,'Наименование'   					=> rms($product['name'])
+							,'НаименованиеУКР'   				=> !empty($product['ua_name'])?rms($product['ua_name']):''
 							,'ASIN'   							=> isset($real_product['asin'])?$real_product['asin']:'Ложь'
 							,'EAN'   							=> isset($real_product['ean'])?$real_product['ean']:'Ложь'
 							,'ТНВЭД'   							=> isset($real_product['tnved'])?$real_product['tnved']:'Ложь'
@@ -2413,9 +2290,9 @@
 							,'МинимумКЗаказу'  						=> $real_product['minimum']
 							,'КоличествоВУпаковке'					=> $real_product['package']
 							,'БрендИД'       					=> isset($real_product['manufacturer_id'])?$real_product['manufacturer_id']:'Ложь'
-							,'БрендНаименование'        		=> $this->rms($manufacturer['name'])
+							,'БрендНаименование'        		=> rms($manufacturer['name'])
 							,'БрендНаименованиеMD5Хэш' 			=> md5($manufacturer['name'])
-							,'БрендНаименованиеНормализованноеMD5Хэш' => md5($this->rms($manufacturer['name']))
+							,'БрендНаименованиеНормализованноеMD5Хэш' => md5(rms($manufacturer['name']))
 							,'ЦенаЗаЕдиницу'  					=> $product['price_national']
 							,'ЦенаЗаЕдиницуВОсновнойВалюте'  	=> $product['price']
 							,'Количество'     					=> $product['quantity']
@@ -2453,8 +2330,8 @@
 							$attribute_counter = 1;
 							foreach ($attributes as $attribute){
 								$document['Документ' . $document_counter]['ТоварыНетУПоставщикаИНеВЛистеОжидания']['Товар' . $product_counter]['Характеристики']['Характеристика' . $attribute_counter] = array(
-								'ХарактеристикаНаименование' =>  $this->rms($attribute['name']),
-								'ХарактеристикаЗначение'     =>	 $this->rms($attribute['text'])
+								'ХарактеристикаНаименование' =>  rms($attribute['name']),
+								'ХарактеристикаЗначение'     =>	 rms($attribute['text'])
 								);
 								
 								$attribute_counter++;
@@ -2502,11 +2379,32 @@
 							}
 							
 						}
-						
-						
+												
 						$product_counter++;
 					}
 					
+					$receipt = $this->Fiscalisation->getOrderReceipt($order['order_id']);
+
+					if ($receipt){
+						$receipt_links = $this->Fiscalisation->getReceiptLinks($receipt['receipt_id']);
+
+						$document['Документ']['ПолнаяРеализация']['ФискальныеЧеки']['Чек0'] = array(
+							'КодЧекаФискальный'         => $receipt['fiscal_code']
+							,'КодЧекаАпи'				=> $receipt['receipt_id']
+							,'СистемаАпи'		 		=> $receipt['api']
+							,'Статус'	 				=> $receipt['status']
+							,'ДатаФискализации'	 		=> $receipt['fiscal_date']
+							,'СозданОффлайн'	 		=> $receipt['is_created_offline']?'Истина':'Ложь'
+							,'ОтправленВФС'	 			=> $receipt['is_sent_dps']?'Истина':'Ложь'
+							,'ДатаОтправкиВФС'	 		=> $receipt['sent_dps_at']?'Истина':'Ложь'
+							,'ТипЧека'	 				=> $receipt['type']
+							,'СсылкаАпиHTML'      		=> !empty($receipt_links['HTML'])?$receipt_links['HTML']['link']:'Ложь'
+							,'СсылкаАпиPDF'      		=> !empty($receipt_links['PDF'])?$receipt_links['PDF']['link']:'Ложь'
+							,'СсылкаАпиText'      		=> !empty($receipt_links['TEXT'])?$receipt_links['TEXT']['link']:'Ложь'
+							,'СсылкаАпиPNG'      		=> !empty($receipt_links['PNG'])?$receipt_links['PNG']['link']:'Ложь'
+							,'СсылкаАпиQRCODE'     		=> !empty($receipt_links['QRCODE'])?$receipt_links['QRCODE']['link']:'Ложь'
+						);
+					}
 					
 					
 					$document_counter++;
@@ -2517,7 +2415,7 @@
 			
 			$root = '<?xml version="1.0" encoding="utf-8"?><КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . date('Y-m-d', time()) . '" />';
 			$oXML = new SimpleXMLElement($root);
-			$xml = $this->array_to_xml($document, $oXML);
+			$xml = array_to_xml($document, $oXML);
 			
 			$content = $xml->asXML();
 			
@@ -2592,7 +2490,7 @@
 			
 			$root = '<?xml version="1.0" encoding="utf-8"?><КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . date('Y-m-d', time()) . '" />';
 			$oXML = new SimpleXMLElement($root);
-			$xml = $this->array_to_xml($document, $oXML);
+			$xml = array_to_xml($document, $oXML);
 			
 			$content = $xml->asXML();
 			
@@ -2608,11 +2506,9 @@
 			}
 			
 			file_put_contents(DIR_EXPORT . 'odinass/catalog/collections.xml', $content);
-			chmod(DIR_EXPORT . 'odinass/catalog/collections.xml', 0777);
-			
+			chmod(DIR_EXPORT . 'odinass/catalog/collections.xml', 0777);			
 		}
-		
-		
+				
 		public function exportCategoriesXML($do_echo = false){
 			$this->load->model('catalog/category');
 			
@@ -2635,7 +2531,7 @@
 			
 			$root = '<?xml version="1.0" encoding="utf-8"?><КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . date('Y-m-d', time()) . '" />';
 			$oXML = new SimpleXMLElement($root);
-			$xml = $this->array_to_xml($document, $oXML);
+			$xml = array_to_xml($document, $oXML);
 			
 			$content = $xml->asXML();
 			
@@ -2651,8 +2547,7 @@
 			}
 			
 			file_put_contents(DIR_EXPORT . 'odinass/catalog/categories.xml', $content);
-			chmod(DIR_EXPORT . 'odinass/catalog/categories.xml', 0777);
-			
+			chmod(DIR_EXPORT . 'odinass/catalog/categories.xml', 0777);			
 		}
 		
 		public function exportManufacturersXML($do_echo = false){
@@ -2666,9 +2561,9 @@
 				
 				$document['Каталог']['Бренды']['Бренд' . $manufacturer_counter] = array(
 				'ИД'             => $real_manufacturer['manufacturer_id']		
-				,'Наименование'   => $this->rms($real_manufacturer['name'])
+				,'Наименование'   => rms($real_manufacturer['name'])
 				,'НаименованиеMD5Хэш' => md5($real_manufacturer['name'])
-				,'НаименованиеНормализованноеMD5Хэш' => md5($this->rms($real_manufacturer['name']))
+				,'НаименованиеНормализованноеMD5Хэш' => md5(rms($real_manufacturer['name']))
 				);			
 				
 				$manufacturer_counter++;
@@ -2676,7 +2571,7 @@
 			
 			$root = '<?xml version="1.0" encoding="utf-8"?><КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . date('Y-m-d', time()) . '" />';
 			$oXML = new SimpleXMLElement($root);
-			$xml = $this->array_to_xml($document, $oXML);
+			$xml = array_to_xml($document, $oXML);
 			
 			$content = $xml->asXML();
 			
@@ -2692,32 +2587,6 @@
 			}
 			
 			file_put_contents(DIR_EXPORT . 'odinass/catalog/manufacturers.xml', $content);
-			chmod(DIR_EXPORT . 'odinass/catalog/manufacturers.xml', 0777);
-			
-		}
-		
-		
-		function array_to_xml($data, &$xml) {			
-			foreach($data as $key => $value) {
-				if (is_array($value)) {
-					if (!is_numeric($key)) {
-						$subnode = $xml->addChild(preg_replace('/\d/', '', $key));
-						$this->array_to_xml($value, $subnode);
-					}
-				}
-				else {
-					$xml->addChild($key, $value);
-				}
-			}
-			
-			return $xml;
-		}
-		
-		function format($var){
-			return preg_replace_callback(
-			'/\\\u([0-9a-fA-F]{4})/',
-			create_function('$match', 'return mb_convert_encoding("&#" . intval($match[1], 16) . ";", "UTF-8", "HTML-ENTITIES");'),
-			json_encode($var)
-			);
-		}
+			chmod(DIR_EXPORT . 'odinass/catalog/manufacturers.xml', 0777);			
+		}		
 	}										
