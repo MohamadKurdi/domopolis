@@ -527,15 +527,15 @@ class ControllerPaymentPayKeeper extends Controller {
 		$this->load->model('payment/shoputils_psb');
 		$this->load->model('payment/paykeeper');
 		
-		$this->model_checkout_order->addOrderToQueue($this->order['order_id']);
-		
 		if (!isset($this->session->data['order_id'])) {
-				$this->session->data['order_id'] = $this->order['order_id']; //Добавляем в сессию номер заказа на случай, если в checkout/success на экран пользователю выводится номер заказа
+				$this->session->data['order_id'] = $this->order['order_id'];
 			}
 			
 			if ($this->order['order_status_id'] != $this->config->get('shoputils_psb_order_status_id')) {
+
+				$this->Fiscalisation->setOrderPaidBy($this->order['order_id'], 'paykeeper');   
+
 				if ($this->order['order_status_id']){
-					//Reverse $this->config->get('shoputils_psb_notify_customer_success')
 					$notify = !$this->config->get('shoputils_psb_notify_customer_success');
 					
 					if ($this->isPayingPrepay($this->order['order_id']) == 1) {
@@ -543,7 +543,7 @@ class ControllerPaymentPayKeeper extends Controller {
 							$this->config->get('config_prepayment_paid_order_status_id'),
 							'Внесение предоплаты через ПромСвязьБанк Эквайринг / PayKeeper',
 							$notify);
-						//добавляем транзакцию
+
 						$this->model_account_transaction->addTransaction(
 							'ПромСвязьБанк / PayKeeper: Предоплата по заказу # '.$this->order['order_id'], 
 							$this->model_account_order->getOrderPrepay($this->order['order_id']),
@@ -659,10 +659,8 @@ class ControllerPaymentPayKeeper extends Controller {
 						
 					}
 					$this->logWrite('SuccessURL: Payment Success', self::$LOG_SHORT);
-					//$this->redirect($this->url->link('checkout/success', '', 'SSL'));
 				} else {
 					$this->logWrite('SuccessURL: Payment Fail', self::$LOG_SHORT);
-					//$this->redirect($this->url->link('common/home', '', 'SSL'));
 				}
 			}
 		}		

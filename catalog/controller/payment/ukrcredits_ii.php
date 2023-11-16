@@ -412,7 +412,7 @@ class ControllerPaymentUkrcreditsIi extends Controller {
 				$this->model_checkout_order->update($order_id, $order_status_id, $comment, $notify = true);
 
 				if ($order_status_id == $setting['completed_status_id']){
-					$this->model_checkout_order->addOrderToQueue($order_id);            
+					$this->Fiscalisation->setOrderPaidBy($order_id, 'ukrcredits_ii');            
 				}				
                 
             } else {

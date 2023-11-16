@@ -252,8 +252,6 @@ class ControllerPaymentWayforpay extends Controller
         $this->load->model('checkout/order');
         $this->load->model('payment/shoputils_psb');                            
 
-        $this->model_checkout_order->addOrderToQueue($this->order['order_id']);
-
         if (!isset($this->session->data['order_id'])) {
             $this->session->data['order_id'] = $this->order['order_id'];
         }
@@ -273,7 +271,7 @@ class ControllerPaymentWayforpay extends Controller
         );
 
         $this->smsAdaptor->sendPayment($this->order, ['amount' => $data['amount'], 'order_status_id' => $this->config->get('wayforpay_order_status_id')]);
-        $this->Fiscalisation->setOrderPaidBy($this->order['order_id'], 'wayforpay');
+        $this->Fiscalisation->setOrderPaidBy($this->order['order_id'], 'wayforpay');        
 
         if ($this->order['currency_code'] == 'UAH'){
             $actual_amount = number_format($this->model_account_order->getOrderTotalNational($this->order['order_id']), 2, '.', '');			
@@ -341,7 +339,7 @@ class ControllerPaymentWayforpay extends Controller
                            $this->updateOrder($query->row['wayforpay_id'], ['full_info' => $httpResponseBodyContent]);
 
                            if (!empty($httpResponseBodyContentDecoded['prroLink'])){
-                                $receipt_id = str_replace(['https://api.cashdesk.com.ua/check/', '/html'], '', $httpResponseBodyContentDecoded['prroLink']);
+                                $receipt_id = str_replace(['https://api.cashdesk.com.ua/check/', 'https://web.cashdesk.com.ua/check/', '/html'], '', $httpResponseBodyContentDecoded['prroLink']);
 
                                 if (!$this->Fiscalisation->checkIfReceiptAlreadyExits($receipt_id)){
                                     echoLine('[ControllerPaymentWayforpay::updatedata] Order has no fiscal code, adding: ' . $receipt_id, 's');
