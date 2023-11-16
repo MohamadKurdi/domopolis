@@ -1,6 +1,6 @@
 <?php 
 	class ControllerAccountOrder extends Controller {
-		private $error = array();
+		private $error = [];
 		
 		public function tracking_info(){
 			$tracking_code = $this->request->post['tracking_code'];
@@ -17,7 +17,7 @@
 			$this->load->model('kp/info1c');
 			$this->load->model('tool/image');			
 			
-			$orders = array();
+			$orders = [];
 			
 			foreach ($results as $result) {			
 				$order_info 		= $this->model_account_order->getOrder($result['order_id']);
@@ -29,7 +29,7 @@
 					$order_products = $this->model_account_order->getOrderProductsListNoGood($result['order_id']);
 				}
 				
-				$products = array();
+				$products = [];
 				
 				foreach ($order_products as $product){
 					if ($product['price_national'] > 0){
@@ -76,7 +76,9 @@
 					} else {
 					$total_national = false;
 				}
-				
+
+				$receipt = $this->Fiscalisation->getOrderReceipt($result['order_id']);
+
 				$orders[] = array(
 				'order_id'   			=> $result['order_id'],
 				'order_status_id'		=> $result['order_status_id'],
@@ -99,7 +101,8 @@
 				'payment_code' 		=> $order_info['payment_code'], 
 				'payment_method' 	=> $order_info['payment_method'],
 				'shipping_method' 	=> $order_info['shipping_method'],	
-				'shipping_code' 	=> $order_info['shipping_code'],		
+				'shipping_code' 	=> $order_info['shipping_code'],
+				'receipt_links'		=> $this->Fiscalisation->getReceiptLinks($receipt['receipt_id']),
 				'total_national'	=> $total_national
 				);
 			}
@@ -151,7 +154,7 @@
 			
 			$this->document->setTitle($this->data['heading_title']);
 			
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -230,7 +233,7 @@
 			
 			$this->document->setTitle($this->data['heading_title']);
 			
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -308,7 +311,7 @@
 			
 			$this->document->setTitle($this->data['heading_title']);
 			
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -395,7 +398,7 @@
 					$order_products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
 					
 					foreach ($order_products as $order_product) {
-						$option_data = array();
+						$option_data = [];
 						
 						$order_options = $this->model_account_order->getOrderOptions($this->request->get['order_id'], $order_product['order_product_id']);
 						
@@ -422,7 +425,7 @@
 			
 			$this->document->setTitle($this->data['heading_title']);
 			
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -542,7 +545,7 @@
 				
 				$this->data['full_order_info'] = $order_info;
 				
-				$this->data['breadcrumbs'] = array();
+				$this->data['breadcrumbs'] = [];
 				
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_home'),
@@ -686,14 +689,14 @@
 				
 				$this->data['shipping_method'] = $order_info['shipping_method'];
 				
-				$this->data['products'] = array();
+				$this->data['products'] = [];
 				
 				$products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
 				
 				$this->load->model('kp/info1c');
 				$order1c = $this->model_kp_info1c->getOrderTrackerXML($this->request->get['order_id']);
 				
-				$products1c = array();
+				$products1c = [];
 				
 				if (isset($order1c["Документ"])) {
 					$order1c = $order1c["Документ"];
@@ -705,7 +708,7 @@
 					$products1c = $order1c['ОбщееСостояниеЗаказа']['Товар'];
 				}
 				
-				$general_tracker_status = array();
+				$general_tracker_status = [];
 				
 				if ($order_info['order_status_id'] == $this->config->get('config_treated_status_id')){					
 					$general_tracker_status[] = 'first_step';
@@ -730,7 +733,7 @@
 					$is_on_seventh_step = false;				
 				}
 				foreach ($products as $product) {					
-					$tracker_status = array();					
+					$tracker_status = [];					
 					
 					foreach ($products1c as $p1c){
 						if ($p1c['Код'] == $product['product_id']){
@@ -810,7 +813,7 @@
 						$tracker_status = false;
 					}
 					
-					$option_data = array();
+					$option_data = [];
 					
 					$options = $this->model_account_order->getOrderOptions($this->request->get['order_id'], $product['order_product_id']);
 					
@@ -921,7 +924,7 @@
 				//переход на платеж по QR
 				if (isset($this->request->get['do_payment']) && $this->request->get['do_payment'] == 'explicit' && isset($this->request->get['pay_by'])){					
 					if ($this->request->get['pay_by'] == 'concardis'){																	
-						$this->children = array();
+						$this->children = [];
 						if (isset($this->request->get['cc_code']) && in_array($this->request->get['cc_code'], array('EUR', 'RUB', 'UAH'))){
 							$this->data['url'] = $this->url->link('payment/concardis_laterpay/laterpay', sprintf('cc_code=%s&order_id=%s&order_tt=%s&order_fl=%s', $this->request->get['cc_code'], $order_info['order_id'], $order_info['total_national'], md5($order_info['firstname'] . $order_info['lastname'])));
 							} else {
@@ -982,7 +985,7 @@
 				}
 				
 				// Voucher
-				$this->data['vouchers'] = array();
+				$this->data['vouchers'] = [];
 				
 				$vouchers = $this->model_account_order->getOrderVouchers($this->request->get['order_id']);
 				
@@ -1081,7 +1084,7 @@
 				
 				$this->data['comment'] = nl2br($order_info['comment']);
 				
-				$this->data['histories'] = array();
+				$this->data['histories'] = [];
 				
 				$results = $this->model_account_order->getOrderHistories($this->request->get['order_id']);
 				
@@ -1117,7 +1120,7 @@
 				
 				$results = $this->model_account_order->getOrderTtnHistory($this->request->get['order_id']);
 				
-				$this->data['ttns'] = array();
+				$this->data['ttns'] = [];
 				foreach ($results as $result) {
 
 					$shippingMethod = '';
@@ -1139,7 +1142,7 @@
 				$this->data['column_description'] = $this->language->get('column_description');
 				$this->data['column_amount'] = sprintf($this->language->get('column_amount'), $this->config->get('config_regional_currency'));
 				
-				$this->data['transactions'] = array();
+				$this->data['transactions'] = [];
 				
 				$data = array(				  
 				'sort'  => 'date_added',
@@ -1178,7 +1181,7 @@
 				
 				$this->data['button_continue'] = $this->language->get('button_continue');
 				
-				$this->data['breadcrumbs'] = array();
+				$this->data['breadcrumbs'] = [];
 				
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_home'),

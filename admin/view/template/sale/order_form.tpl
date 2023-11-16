@@ -2900,7 +2900,7 @@
 			
 			<div class="clr"></div>
 			<div id="tab-payment">
-				<table class="orderadress" style="float:left; width:45%!important;">
+				<table class="orderadress" style="float:left; width:47%!important;">
 					<th colspan="2"><?php echo $tab_payment; ?></th>
 					<tr>
 						<td><?php echo $entry_address; ?></td>
@@ -3150,11 +3150,8 @@
 																					<?php } ?>	
 
 
-																					<?php if ($receipt['receipt_id']) { ?>											
-																							<a target="_blank" href="<?php echo $receipt['html_link']; ?>"><span style="font-size:10px; line-height:12px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">HTML</span></a>
-         																					<a target="_blank" href="<?php echo $receipt['pdf_link']; ?>"><span style="font-size:10px; line-height:12px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">PDF</span></a>
-         																					<a target="_blank" href="<?php echo $receipt['text_link']; ?>"><span style="font-size:10px; line-height:12px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">TXT</span></a>
-         																					<a target="_blank" href="<?php echo $receipt['qrcode_link']; ?>"><span style="font-size:10px; line-height:12px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">QR</span></a>
+																					<?php foreach ($receipt['receipt_links'] as $receipt_link) { ?>
+																							<a target="_blank" href="<?php echo $receipt_link['link']; ?>"><span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:grey;"><?php echo $receipt_link['type']; ?></span></a>
 																					<?php } ?>
 																				<? } ?>
 																			<?php } else { ?>
@@ -3613,7 +3610,7 @@
 					</div>
 					
 					<div id="tab-shipping">												
-						<table class="orderadress" style="float:right; max-width:45%!important">
+						<table class="orderadress" style="float:right; max-width:47%!important">
 							<th colspan="2"><?php echo $tab_shipping; ?></th>
 							<? if ($need_to_have_passport_data && (empty($shipping_passport_given) || empty($shipping_passport_serie))) { ?>
 								<tr>
@@ -4012,7 +4009,11 @@
 																			</table>
 																		</div>
 																	<?php } else { ?>
+																		<div class="clr"></div>																		
+																		<div id="tab-bottom-text" style="display:none;">
 																		<input id="bottom_text" name="bottom_text" value="" />
+																		</div>
+																		</div>
 																	<?php } ?>
 																		
 																		<div id="mailpreview" style="display:none;"></div>

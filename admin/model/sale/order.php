@@ -1995,21 +1995,11 @@
 			$this->registry->get('rainforestAmazon')->offersParser->PriceLogic->countOrderProfitablility($order_id);
 			
 			//saving orderxml for odinass
-			if (in_array((int)$data['order_status_id'], $this->config->get('config_odinass_order_status_id')) /* && $total_national > 0 */){
-				
+			if (in_array((int)$data['order_status_id'], $this->config->get('config_odinass_order_status_id'))){				
 				$check_date_query = $this->db->query("SELECT date_added FROM `order` WHERE `order_id` = '" . (int)$order_id . "' AND (DATE(date_added) >= '2017-01-01')");								
 				
 				if (count($check_date_query->row)){
-					$this->load->model('feed/exchange1c');
-					$this->model_feed_exchange1c->addOrderToQueue($order_id);
-					$this->model_feed_exchange1c->makeSalesResultXML($order_id);
-					
-					/*					
-						$this->model_feed_exchange1c->getOrderXML($order_id);
-						$this->model_feed_exchange1c->getOrderReturnsXML($order_id);
-						$this->model_feed_exchange1c->getOrderTransactionsXML($order_id);
-						$this->model_feed_exchange1c->getOrderSuppliesXML($order_id);
-					*/
+					$this->Fiscalisation->addOrderToQueue($order_id);
 				}
 			}			
 		}
@@ -3924,9 +3914,7 @@
 				$check_date_query = $this->db->query("SELECT date_added FROM `order` WHERE `order_id` = '" . (int)$order_id . "' AND DATE(date_added) >= '2017-01-01'");
 				
 				if (count($check_date_query->row)){										
-					$this->load->model('feed/exchange1c');
-					$this->model_feed_exchange1c->addOrderToQueue($order_id);
-					$this->model_feed_exchange1c->makeSalesResultXML($order_id);
+					$this->Fiscalisation->addOrderToQueue($order_id);
 				}
 			}
 			

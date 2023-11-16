@@ -844,13 +844,12 @@
 												<? } ?>
 											</br>
 											<?php } ?>		
-											<?php if ($order['receipt_id']) { ?>
+											<?php if ($order['receipt_links']) { ?>
 												<span style="font-size:11px; line-height:14px; display:inline-block;">Фискальный чек:</span>
 
-												<a target="_blank" href="<?php echo $order['html_link']; ?>"><span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">HTML</span></a>
-         										<a target="_blank" href="<?php echo $order['pdf_link']; ?>"><span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">PDF</span></a>
-         										<a target="_blank" href="<?php echo $order['text_link']; ?>"><span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">TXT</span></a>
-         										<a target="_blank" href="<?php echo $order['qrcode_link']; ?>"><span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">QR</span></a>
+												<?php foreach ($order['receipt_links'] as $receipt_link) { ?>
+													<a target="_blank" href="<?php echo $receipt_link['link']; ?>"><span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:grey;"><?php echo $receipt_link['type']; ?></span></a>
+												<?php } ?>
          										<br>
 											<?php } ?>
 
