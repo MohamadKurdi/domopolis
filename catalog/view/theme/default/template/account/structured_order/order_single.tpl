@@ -68,6 +68,18 @@
 			<div>
 				<p class="text"><?php echo $text_customer; ?></p> <p class="value"><?php echo $order['name']; ?></p>
 			</div>
+
+			<?php if ($order['receipt_links']) { ?>
+				<div>
+					<p class="text"><?php echo $text_receipt; ?></p> 
+						<p class="value">
+							<?php if (!empty($order['receipt_links']['PDF'])) { ?>
+								<a target="_blank" href="<?php echo $order['receipt_links']['PDF']['link']; ?>"><i class="fa fa-file-pdf"></i> <?php echo $text_view_receipt; ?></a>
+							<?php } ?>
+						</p>
+				</div>
+			<?php } ?>
+			
 			<div class="order-info" style="display: none;">						
 				<a class="button btn btn-acaunt" style="text-transform:none; font-weight:400;" href="<?php echo $order['href']; ?>">
 					<i class="fas fa-external-link-alt" title="<?php echo $button_view; ?>"></i><?php echo $button_view; ?>
