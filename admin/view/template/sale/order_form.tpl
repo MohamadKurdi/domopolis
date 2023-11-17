@@ -4010,10 +4010,7 @@
 																		</div>
 																	<?php } else { ?>
 																		<div class="clr"></div>																		
-																		<div id="tab-bottom-text" style="display:none;">
-																		<input id="bottom_text" name="bottom_text" value="" />
-																		</div>
-																		</div>
+																		<div id="tab-bottom-text" style="display:none;"><input id="bottom_text" name="bottom_text" value="" /></div>													
 																	<?php } ?>
 																		
 																		<div id="mailpreview" style="display:none;"></div>
