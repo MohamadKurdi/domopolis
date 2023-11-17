@@ -2168,7 +2168,7 @@ class ControllerApiInfo1C extends Controller
                 echo $order_id . PHP_EOL;                
             }
 
-            $this->model_feed_exchange1c->removeOrderFromQueue($order_id);
+            $this->Fiscalisation->removeOrderFromQueue($order_id);
         }
     }
 
