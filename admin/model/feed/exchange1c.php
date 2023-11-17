@@ -2388,7 +2388,7 @@
 					if ($receipt){
 						$receipt_links = $this->Fiscalisation->getReceiptLinks($receipt['receipt_id']);
 
-						$document['Документ']['ПолнаяРеализация']['ФискальныеЧеки']['Чек0'] = array(
+						$document['Документ' . $document_counter]['ФискальныеЧеки']['Чек0'] = array(
 							'КодЧекаФискальный'         => $receipt['fiscal_code']
 							,'КодЧекаАпи'				=> $receipt['receipt_id']
 							,'СистемаАпи'		 		=> $receipt['api']
