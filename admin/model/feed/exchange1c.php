@@ -923,7 +923,7 @@
 						,'Артикул'		 						=> $product['model']
 						,'АртикулНормализованный'				=> normalizeSKU($product['model'])
 						,'Наименование'   						=> rms($product['name'])	
-						,'НаименованиеУКР'   					=> rms($product['ua_name'])
+						,'НаименованиеУКР'   					=> !empty($product['ua_name'])?rms($product['ua_name']):''
 						,'ЦенаЗаЕдиницу'  						=> $product['price_national']
 						,'ЦенаЗаЕдиницуВОсновнойВалюте'  		=> $product['price']						
 						,'ЦенаЗаЕдиницуВОсновнойВалюте'  		=> $product['price']
