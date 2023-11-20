@@ -150,7 +150,9 @@
 			}
 						
 			if ($route == 'product/category' && isset($this->request->get['manufacturer_id'])){
-				unset( $attributes[$keys['manufacturers']] );
+				if (isset($keys['manufacturers']) && !empty($attributes[$keys['manufacturers']])){
+					unset( $attributes[$keys['manufacturers']] );
+				}				
 			}
 			
 			

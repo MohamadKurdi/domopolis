@@ -20,7 +20,7 @@
             
             $error = false;
             
-            if (!empty($this->request->post['coupon'])) {
+            if (isset($this->request->post['coupon'])) {
                 if ($version < 210) {
                     $coupon_info = $this->model_checkout_coupon->getCoupon($this->request->post['coupon']);
                     } else {
@@ -47,7 +47,7 @@
             
             $error = false;
             
-            if (!empty($this->request->post['voucher'])) {
+            if (isset($this->request->post['voucher'])) {
                 if ($version < 210) {
                     $voucher_info = $this->model_checkout_voucher->getVoucher($this->request->post['voucher']);
                     } else {
@@ -432,12 +432,11 @@
 				}				
 			}
             
-            $this->_templateData['reward']  = isset($this->session->data['reward']) ? $this->session->data['reward'] : '';
-            $this->_templateData['voucher'] = isset($this->session->data['voucher']) ? $this->session->data['voucher'] : '';
-            $this->_templateData['coupon']  = isset($this->session->data['coupon']) ? $this->session->data['coupon'] : '';
+            $this->_templateData['reward']  = !empty($this->session->data['reward']) ? $this->session->data['reward'] : '';
+            $this->_templateData['voucher'] = !empty($this->session->data['voucher']) ? $this->session->data['voucher'] : '';
+            $this->_templateData['coupon']  = !empty($this->session->data['coupon']) ? $this->session->data['coupon'] : '';
 			
-			//FUCK COUPON
-			if (!empty($this->session->data['coupon']) && ($this->cart->hasAdditionalOffer() || $this->cart->isUsingCreditPayments())){
+			if (isset($this->session->data['coupon']) && ($this->cart->hasAdditionalOffer() || $this->cart->isUsingCreditPayments())){
 				unset($this->session->data['coupon']);
 			}
 			
