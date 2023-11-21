@@ -628,7 +628,6 @@ class ModelCheckoutOrder extends Model {
 			foreach ($product['option'] as $option) {
 				$this->db->ncquery("INSERT INTO order_option SET order_id = '" . (int)$order_id . "', order_product_id = '" . (int)$order_product_id . "', product_option_id = '" . (int)$option['product_option_id'] . "', product_option_value_id = '" . (int)$option['product_option_value_id'] . "', name = '" . $this->db->escape($option['name']) . "', `value` = '" . $this->db->escape($option['value']) . "', `type` = '" . $this->db->escape($option['type']) . "'");
 			}
-
 		}
 
 		$total_data = [];

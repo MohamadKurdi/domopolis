@@ -278,7 +278,10 @@ class ControllerPaymentMono extends Controller
         $this->load->model('payment/mono');
         $this->load->model('payment/mono_checkout');
         $this->load->model('catalog/product');
-        $this->load->model('checkout/order');        
+        $this->load->model('checkout/order');
+        $this->load->model('total/paymentmethoddiscounts');   
+
+        $this->load->language('payment/mono');
 
         $monolog = new Log('monocheckout.txt');
 
@@ -318,11 +321,30 @@ class ControllerPaymentMono extends Controller
                     unset($this->session->data['cart']);
                 }
                 
-                 if (!empty($this->session->data['shipping_method'])){
+                if (!empty($this->session->data['shipping_method'])){
                     $temp_shipping_method = $this->session->data['shipping_method'];
                     unset($this->session->data['shipping_method']);
                 }
-                
+
+                if (!empty($this->session->data['payment_method'])){
+                    $temp_payment_method = $this->session->data['payment_method'];
+                    unset($this->session->data['payment_method']);
+                }
+
+                $tmp = []; 
+                $tmp2 = 0; 
+
+                $tmp_discount_price = [
+                    'price'             => ($product_info['special']) ? $product_info['special'] : $product_info['price'],
+                    'price_national'    => ($product_info['special']) ? $this->currency->format($product_info['special'], '','',false) : $this->currency->format($product_info['price'], '', '', false)
+                ];
+
+                if ($this->model_total_paymentmethoddiscounts->getTotal($tmp, $tmp2, $tmp, 'mono', $tmp_discount_price)){
+                   $this->session->data['payment_method'] = [
+                        'title' => $this->language->get('text_title'),
+                        'code'  => 'mono'
+                    ];
+                }           
 
                 $this->cart->add($product_id, $quantity, $option, $profile_id);
                 $cart_key = $this->cart->makeCartKey($product_id, $option, $profile_id, false, false);      
@@ -331,7 +353,6 @@ class ControllerPaymentMono extends Controller
                 $this->session->data['order_id'] = $order_id;
 
                 $secretKey = $this->model_payment_mono_checkout->addOrderKey($order_id);
-
                 $monolog->write('[ControllerPaymentMono::checkoutorder] Added Order: ' . $order_id);                
 
                 $this->cart->remove($cart_key);
@@ -342,7 +363,11 @@ class ControllerPaymentMono extends Controller
 
                 if (!empty($temp_shipping_method)){
                     $this->session->data['shipping_method'] = $temp_shipping_method;    
-                }                
+                }      
+
+                if (!empty($temp_payment_method)){
+                    $this->session->data['payment_method'] = $temp_payment_method;    
+                }           
 
                 try {
                     $result = $this->model_payment_mono_checkout->sendToAPI(['order_id' => $order_id, 'order_key' => $secretKey]);

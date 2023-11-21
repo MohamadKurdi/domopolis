@@ -1,7 +1,7 @@
 <?php
 
 class ModelTotalPaymentMethodDiscounts extends Model {
-	public function getTotal(&$total_data, &$total, &$taxes, $check_this_method = false) {
+	public function getTotal(&$total_data, &$total, &$taxes, $check_this_method = false, $product_price = []) {
 		$current_payment_method 			= false;
 		$current_secondary_payment_method 	= false;
 
@@ -35,8 +35,13 @@ class ModelTotalPaymentMethodDiscounts extends Model {
 				$payment_method = $current_secondary_payment_method['title'];
 			}
 
-			$sub_total 			= $this->cart->getSubTotal();
-			$sub_total_national = $this->cart->getSubTotalInNationalCurrency();
+			if ($check_this_method && $product_price){
+				$sub_total 			= $product_price['price'];
+				$sub_total_national = $product_price['price_national'];
+			} else {
+				$sub_total 			= $this->cart->getSubTotal();
+				$sub_total_national = $this->cart->getSubTotalInNationalCurrency();
+			}
 
 			foreach ($discounts as $discount){
 				$status = true;
@@ -77,14 +82,16 @@ class ModelTotalPaymentMethodDiscounts extends Model {
 					$text = '';
 					$text .= ($discount['znak']?sprintf($this->language->get('text_skidka'), $discount['number'] . '%'):sprintf($this->language->get('text_nacenka'), $discount['number'] . '%'));
 
-					$coupon_exists = false;
-					if (isset($this->session->data['coupon']) AND mb_strlen($this->session->data['coupon'])>0){
-						$coupon_exists = true;
-					}
+					if (!$check_this_method){
+						$coupon_exists = false;
+						if (!isset($this->session->data['coupon']) AND mb_strlen($this->session->data['coupon']) > 0){
+							$coupon_exists = true;
+						}
 
-					if ($coupon_exists && $number_national < 0){
-						$status = false;			
-					}						
+						if ($coupon_exists && $number_national < 0){
+							$status = false;			
+						}							
+					}										
 
 					if ($status){							
 						$total_data[] = [

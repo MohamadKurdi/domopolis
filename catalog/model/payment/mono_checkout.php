@@ -158,6 +158,7 @@ class ModelPaymentMonoCheckout extends Model
         $this->load->model('tool/simpleapicustom');
         $this->load->model('catalog/product');
         $this->load->model('module/ukrcredits');
+        $this->load->model('total/paymentmethoddiscounts');  
 
         $monolog = new Log('monocheckout.txt');
 
@@ -194,7 +195,7 @@ class ModelPaymentMonoCheckout extends Model
                 'name'          => $product['name'],
                 'code_product'  => $product['product_id'],
                 'cnt'           => $product['quantity'],
-                'price'         => $product['price_national']
+                'price'         => (count($order_products) == 1)?$order_info['total_national']:$product['price_national']
             ];            
         }
 
@@ -205,14 +206,35 @@ class ModelPaymentMonoCheckout extends Model
                 'ccy'                   => (int)$currencyDecode,
                 'count'                 => (int)count($order_products),
                 'products'              => $products,
-                'payment_method_list'   => [
-                    'card',
-                    'payment_on_delivery'
-                ],
                 'dlv_method_list'       => [
                     'np_brnm'
                 ]
             ];
+
+            $data['payment_method_list'] = [
+                    'card',
+                    'payment_on_delivery'
+                ];
+
+            $tmp = []; 
+            $tmp2 = 0; 
+            if ($this->config->get('paymentmethoddiscounts_status') && $this->config->get('paymentmethoddiscounts_display_in_description')){
+               $tmp_discount_price = [
+                'price'             => $this->currency->convert($product['price_national'], $this->config->get('config_regional_currency'), $this->config->get('config_currency')),
+                'price_national'    => $product['price_national']
+                ];
+
+                if ($this->model_total_paymentmethoddiscounts->getTotal($tmp, $tmp2, $tmp, 'mono', $tmp_discount_price)){
+                    $data['payment_method_list'] = [
+                        'card'
+                    ];
+                } else {
+                    $data['payment_method_list'] = [
+                        'card',
+                        'payment_on_delivery'
+                    ];
+                }
+            }
 
             $credit_settings = $this->config->get('ukrcredits_settings');        
             if (!empty($credit_settings['mb_status']) && $can_use_credit){

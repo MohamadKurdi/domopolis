@@ -1203,24 +1203,8 @@ public function index($product_id = false, $just_price = false)
                     }
 
                     if ((float)$product_info['special']) {
-                        $this->data['special'] = $this->currency->format($this->tax->calculate(
-                            $product_info['special'],
-                            $product_info['tax_class_id'],
-                            $this->config->get('config_tax')
-                        ));
-                        $this->data['saving'] = round(((preg_replace(
-                            "([^0-9])",
-                            "",
-                            $this->data['price']
-                        ) - preg_replace(
-                            "([^0-9])",
-                            "",
-                            $this->data['special']
-                        )) / (preg_replace(
-                            "([^0-9])",
-                            "",
-                            $this->data['price']
-                        ) + 0.01)) * 100, 0);
+                        $this->data['special'] = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax') ));
+                        $this->data['saving'] = round(((preg_replace("([^0-9])", "", $this->data['price']) - preg_replace("([^0-9])", "", $this->data['special'])) / (preg_replace("([^0-9])", "", $this->data['price']) + 0.01)) * 100, 0);
                     } else {
                         $this->data['special'] = false;
                         $this->data['saving'] = false;
@@ -1239,11 +1223,7 @@ public function index($product_id = false, $just_price = false)
                     foreach ($discounts as $discount) {
                         $this->data['discounts'][] = array(
                             'quantity' => $discount['quantity'],
-                            'price'    => $this->currency->format($this->tax->calculate(
-                                $discount['price'],
-                                $product_info['tax_class_id'],
-                                $this->config->get('config_tax')
-                            ))
+                            'price'    => $this->currency->format($this->tax->calculate($discount['price'], $product_info['tax_class_id'], $this->config->get('config_tax')))
                         );
                     }
 
@@ -1286,9 +1266,7 @@ public function index($product_id = false, $just_price = false)
 
                     $this->data['free_delivery'] = $free_delivery;
 
-                    /* Варианты */
                     $this->data['variants'] = [];
-
                     if ($product_info['variants_count']){
                         $variants = $this->model_catalog_product->getProductVariants($this->request->get['product_id'], $this->request->get['product_id']);
                         $this->data['variants'] = $this->model_catalog_product->prepareProductToArray($variants);
@@ -1297,9 +1275,8 @@ public function index($product_id = false, $just_price = false)
                         $this->data['variants'] = $this->model_catalog_product->prepareProductToArray($variants);
                     }
 
-                    /*Additional offer*/
-                    $additional_offers_results = $this->model_catalog_product->getProductAdditionalOffer($this->request->get['product_id']);
 
+                    $additional_offers_results = $this->model_catalog_product->getProductAdditionalOffer($this->request->get['product_id']);
                     $this->data['additional_offers'] = [];
 
                     if (count($additional_offers_results) > 0) {
@@ -1312,7 +1289,6 @@ public function index($product_id = false, $just_price = false)
                         $ao_product = $this->model_catalog_product->getProduct($additional_offer['ao_product_id']);
                         $ao_product_parent = $this->model_catalog_product->getProduct($additional_offer['product_id']);
 
-                    //Если есть картинка фиксированная, то используем ее
                         if ($additional_offer['image'] && $additional_offer['image'] != 'no_image.jpg') {
                             $ao_image = $this->model_tool_image->resize($additional_offer['image'], 100, 100);
                         } else {
@@ -1323,7 +1299,6 @@ public function index($product_id = false, $just_price = false)
                             }
                         }
 
-                    //Цена. Если есть фиксированная цена, то мы берем процент
                         if ($additional_offer['price'] && $additional_offer['price'] > 0) {
                             $ao_price = $this->currency->format($additional_offer['price'] * $additional_offer['quantity']);
                             $ao_price_numeric = ($additional_offer['price'] * $additional_offer['quantity']);
@@ -1348,8 +1323,6 @@ public function index($product_id = false, $just_price = false)
                             $ao_real_price_numeric = ($ao_product['price'] * $additional_offer['quantity']);
                         }
 
-                    //Цена товара - спецпредложения $ao_real_price_numeric
-
                         if ($ao_product_parent['special'] && $ao_product_parent['special'] > 0) {
                             $product_real_price = $this->currency->format($ao_product_parent['special']);
                             $product_real_price_numeric = $ao_product_parent['special'];
@@ -1358,16 +1331,10 @@ public function index($product_id = false, $just_price = false)
                             $product_real_price_numeric = $ao_product_parent['price'];
                         }
 
-                    //Сумма покупки без учета спецпредложения
-                        $total_price_without_offer = $ao_real_price_numeric + $product_real_price_numeric;
+                        $total_price_without_offer  = $ao_real_price_numeric + $product_real_price_numeric;
+                        $total_price_with_offer     = $product_real_price_numeric + $ao_price_numeric;
+                        $absolute_diff              = ($total_price_without_offer - $total_price_with_offer);
 
-                    //Сумма покупки c учетом спецпредложения
-                        $total_price_with_offer = $product_real_price_numeric + $ao_price_numeric;
-
-                    //Абсолютная разница
-                        $absolute_diff = ($total_price_without_offer - $total_price_with_offer);
-
-                    //процентная экономия
                         if ($total_price_without_offer == 0) {
                             $percent_diff = 0;
                         } else {
@@ -1451,13 +1418,10 @@ public function index($product_id = false, $just_price = false)
                     $this->load->language('product/pds');
 
                     if (!isset($this->data['display_add_to_cart'])) {
-                        $is_master = $this->model_catalog_product_master->isMaster(
-                            $this->request->get['product_id'],
-                            '2'
-                        );
-                        $pds_allow_buying_series = $this->getData('pds_allow_buying_series', 0);
-                        $this->data['display_add_to_cart'] = !$is_master || $pds_allow_buying_series;
-                        $this->data['no_add_to_cart_message'] = $this->language->get('text_select_series_item');
+                        $is_master                              = $this->model_catalog_product_master->isMaster($this->request->get['product_id'], '2');
+                        $pds_allow_buying_series                = $this->getData('pds_allow_buying_series', 0);
+                        $this->data['display_add_to_cart']      = !$is_master || $pds_allow_buying_series;
+                        $this->data['no_add_to_cart_message']   = $this->language->get('text_select_series_item');
                     }
 
                     $this->data['text_in_the_same_series'] = $this->language->get('text_in_the_same_series');
@@ -1643,7 +1607,29 @@ public function index($product_id = false, $just_price = false)
                         }
                     }
                 }
-                
+
+                $this->data['config_mono_monocheckout_enable'] = $this->config->get('mono_monocheckout_enable');
+
+                if ($this->config->get('mono_monocheckout_enable')){
+                   if ($this->config->get('paymentmethoddiscounts_status') && $this->config->get('paymentmethoddiscounts_display_in_description')){
+                    $this->load->model('total/paymentmethoddiscounts');
+                    $this->load->language('total/paymentmethoddiscounts');
+
+                    $tmp    = []; 
+                    $tmp2   = 0;          
+
+                    $tmp_discount_price = [
+                        'price'             => ($product_info['special']) ? $product_info['special'] : $product_info['price'],
+                        'price_national'    => ($product_info['special']) ? $this->currency->format($product_info['special'], '','',false) : $this->currency->format($product_info['price'], '', '', false)
+                    ];
+
+                    $paymentmethoddiscounts_discount = $this->model_total_paymentmethoddiscounts->getTotal($tmp, $tmp2, $tmp, 'mono', $tmp_discount_price);
+                    if ($paymentmethoddiscounts_discount){
+                        $this->data['monocheckout_pmd_discount'] = sprintf($this->language->get('monocheckout_pmd_discount'), $paymentmethoddiscounts_discount);
+                    }                
+                }
+            }
+                               
                 $this->data['current_in_stock'] = (int)$product_info['current_in_stock_q'];
 
                 if ((int)$this->data['current_in_stock'] <= 1) {
