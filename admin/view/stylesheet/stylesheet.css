@@ -97,7 +97,7 @@ table.form > tbody > tr > td{padding:10px}
 .scrollbox img{float:right;cursor:pointer}
 #languages a{max-width:70px;overflow:hidden}
 .htabs_new{float:right}
-.htabs a{padding:3px 5px;font-size:12px;font-weight:100;text-align:center;text-decoration:none;color:#404040;margin-right:6px;display:none;float:left}
+.htabs a{padding:3px 5px;font-size:12px;font-weight:100;text-align:center;text-decoration:none;color:#404040;margin-right:3px;display:none;float:left}
 .htabs a.selected,.tabs a.selected{color:#fff;font-weight:700;text-shadow:0 4px 3px rgba(0,0,0,0.4),0px 8px 13px rgba(0,0,0,0.1),0px 18px 23px rgba(0,0,0,0.1)}
 .vtabs{width:190px;padding:10px 0;min-height:300px;float:left;display:block;border-right:1px solid #aaa}
 .vtabs a{display:none}

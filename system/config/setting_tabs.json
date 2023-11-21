@@ -49,10 +49,17 @@
     }
   },
   {
+    "tab-upsale": {
+      "text": "Апсейл",
+      "icon": "fa-star",
+      "color": "FF7815"
+    }
+  },
+  {
     "tab-kpi": {
       "text": "KPI",
       "icon": "fa-eur",
-      "color": ""
+      "color": "00AD07"
     }
   },
   {
