@@ -416,7 +416,7 @@ class CheckBoxUA {
         $result = [];
 
         if ($order_info['paid_by'] == 'mono'){
-            loadAndRenameCatalogModels('model/payment/mono.php', 'ModelPaymentMono');
+            loadAndRenameCatalogModels('model/payment/mono.php', 'ModelPaymentMono', 'ModelPaymentMono');
             $this->model_payment_mono = new \ModelPaymentMono($this->registry);
 
             $monoPaymentInfo = $this->model_payment_mono->getPaymentDataByOrderId($order_info['order_id']);

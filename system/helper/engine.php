@@ -1,7 +1,7 @@
 <?php
 
 function loadAndRenameCatalogModels($path, $className = '', $classNameTo = ''){
-	if ($className && !class_exists($className)){
+	if ($classNameTo && !class_exists($classNameTo)){
 		$modelCatalogModelContents = file_get_contents(DIR_CATALOG . $path);
 
 		if ($className && $classNameTo){
