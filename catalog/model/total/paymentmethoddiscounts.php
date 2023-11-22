@@ -82,16 +82,14 @@ class ModelTotalPaymentMethodDiscounts extends Model {
 					$text = '';
 					$text .= ($discount['znak']?sprintf($this->language->get('text_skidka'), $discount['number'] . '%'):sprintf($this->language->get('text_nacenka'), $discount['number'] . '%'));
 
-					if (!$check_this_method){
-						$coupon_exists = false;
-						if (!isset($this->session->data['coupon']) AND mb_strlen($this->session->data['coupon']) > 0){
-							$coupon_exists = true;
-						}
+					$coupon_exists = false;
+					if (isset($this->session->data['coupon']) AND mb_strlen($this->session->data['coupon']) > 0){
+						$coupon_exists = true;
+					}
 
-						if ($coupon_exists && $number_national < 0){
-							$status = false;			
-						}							
-					}										
+					if ($coupon_exists){
+						$status = false;			
+					}																
 
 					if ($status){							
 						$total_data[] = [
