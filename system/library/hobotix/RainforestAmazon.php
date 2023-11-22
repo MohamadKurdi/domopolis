@@ -120,8 +120,8 @@ class RainforestAmazon
 		$this->simpleProductParser = new Amazon\SimpleProductParser($registry, $this->rfClient);	
 
 		if ($this->config->get('config_telegram_bot_enable_alerts') && $this->config->get('config_telegram_bot_token') && $this->config->get('config_rainforest_tg_alert_group_id')){
-			$this->telegramBot = new \Longman\TelegramBot\Telegram($this->config->get('config_telegram_bot_token'), $this->config->get('config_telegram_bot_name'));
-			$this->tgAlertChatID = $this->config->get('config_rainforest_tg_alert_group_id');
+			$this->telegramBot 		= new \Longman\TelegramBot\Telegram($this->config->get('config_telegram_bot_token'), $this->config->get('config_telegram_bot_name'));
+			$this->tgAlertChatID 	= $this->config->get('config_rainforest_tg_alert_group_id');
 		}
 	}
 
@@ -187,7 +187,6 @@ class RainforestAmazon
 		$httpcode 	= curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		curl_close($ch);
 
-		//В том случае, если не 200, то всё плохо и хуево
 		if ($httpcode != 200){
 			$error = 'CODE_NOT_200_MAYBE_PAYMENT_FAIL';
 			$answer .= ' HTTPCODE: ' . $httpcode;
@@ -238,7 +237,6 @@ class RainforestAmazon
 		$error 		= false;	
 		$warning 	= false;	
 
-		//В том случае, если не 200, то всё плохо и хуево
 		if ($httpcode != 200){
 			$error = 'CODE_NOT_200_MAYBE_PAYMENT_FAIL';
 			$answer .= ' HTTPCODE: ' . $httpcode;
@@ -282,12 +280,12 @@ class RainforestAmazon
 			if ($this->config->get('config_telegram_bot_enable_alerts')){
 				$text = '😂 <b>Хьюстон, у нас проблема!</b>' . PHP_EOL . PHP_EOL;
 				$text .= 'Проблемы с Rainforest API. Скорее всего не оплачен тариф.' . PHP_EOL . PHP_EOL;
-				$text .= 'Сервер отвечает: ' . $answer . PHP_EOL;
+				$text .= 'Сервер отвечает: ' . json_encode($answer) . PHP_EOL;
 				$this->sendAlertToTelegram($text);
 			}
 
 			if ($return){
-				return ['status' => false, 'message' => $error, 'answer' => $answer, 'debug' => $debug_info];
+				return ['status' => false, 'message' => $error, 'answer' => json_encode($answer), 'debug' => $debug_info];
 			} else {
 				throw new \Exception($error);			
 				die($error);			
