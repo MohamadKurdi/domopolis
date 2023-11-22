@@ -189,15 +189,13 @@ class ModelSaleReceipt extends Model {
 		$query = $this->db->query("SELECT * FROM order_product WHERE order_id = '" . (int)$order_id . "'");
 		
 		$products = $query->rows;
-		//receipt_config_language
 		if($this->config->get('receipt_config_language')){
-			$receipt_config_language_id = 0;		
-			// Language		
+			$receipt_config_language_id = 0;					
 			$query_language = $this->db->query("SELECT * FROM `language` WHERE code = '" . $this->db->escape($this->config->get('receipt_config_language')) . "'");		
 			if ($query_language->num_rows) {
 				$receipt_config_language_id = $query_language->row['language_id'];
 			} 
-			#de($receipt_config_language_id);
+			
 			foreach($products as $key=> $product){
 				$products[$key]['name'] = $this->getProductNameByLanguageId($product['product_id'],$receipt_config_language_id,$product['name'] );
 			}			
@@ -234,7 +232,10 @@ class ModelSaleReceipt extends Model {
 	}
 	
 	public function getOrder($order_id) {
-		$order_query = $this->db->query("SELECT *, (SELECT CONCAT(c.firstname, ' ', c.lastname) FROM customer c WHERE c.customer_id = o.customer_id) AS customer, (SELECT os.name FROM order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS order_status FROM `order` o WHERE o.order_id = '" . (int)$order_id . "'");
+		$order_query = $this->db->query("SELECT *, 
+			(SELECT CONCAT(c.firstname, ' ', c.lastname) FROM customer c WHERE c.customer_id = o.customer_id) AS customer, 
+			(SELECT os.name FROM order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS order_status 
+				FROM `order` o WHERE o.order_id = '" . (int)$order_id . "'");
 
 		if ($order_query->num_rows) {
 			$country_query = $this->db->query("SELECT * FROM `country` WHERE country_id = '" . (int)$order_query->row['payment_country_id'] . "'");
@@ -317,7 +318,7 @@ class ModelSaleReceipt extends Model {
 				'email'                   => $order_query->row['email'],
 				'telephone'               => $order_query->row['telephone'],
 				'fax'                     => $order_query->row['fax'],
-				'custom_field'            => '',//json_decode($order_query->row['custom_field'], true),
+				'custom_field'            => '',
 				'payment_firstname'       => $order_query->row['payment_firstname'],
 				'payment_lastname'        => $order_query->row['payment_lastname'],
 				'payment_company'         => $order_query->row['payment_company'],
@@ -333,9 +334,20 @@ class ModelSaleReceipt extends Model {
 				'payment_iso_code_2'      => $payment_iso_code_2,
 				'payment_iso_code_3'      => $payment_iso_code_3,
 				'payment_address_format'  => $order_query->row['payment_address_format'],
-				'payment_custom_field'    => '',//json_decode($order_query->row['payment_custom_field'], true),
+				'payment_custom_field'    => '',
 				'payment_method'          => $order_query->row['payment_method'],
 				'payment_code'            => $order_query->row['payment_code'],
+				'payment_secondary_method'  => $order_query->row['payment_secondary_method'],
+				'payment_secondary_code'    => $order_query->row['payment_secondary_code'],
+				'needs_checkboxua'      	=> $order_query->row['needs_checkboxua'],				
+				'paid_by'      				=> $order_query->row['paid_by'],
+				'pay_equire'			 => $order_query->row['pay_equire'],
+				'pay_equire2'			 => $order_query->row['pay_equire2'],
+				'pay_equirePP'			 => $order_query->row['pay_equirePP'],
+				'pay_equireLQP'			 => $order_query->row['pay_equireLQP'],
+				'pay_equireWPP'			 => $order_query->row['pay_equireWPP'],
+				'pay_equireMono'		 => $order_query->row['pay_equireMono'],
+				'pay_equireCP'			 => $order_query->row['pay_equireCP'],
 				'shipping_firstname'      => $order_query->row['shipping_firstname'],
 				'shipping_lastname'       => $order_query->row['shipping_lastname'],
 				'shipping_company'        => $order_query->row['shipping_company'],
@@ -351,7 +363,7 @@ class ModelSaleReceipt extends Model {
 				'shipping_iso_code_2'     => $shipping_iso_code_2,
 				'shipping_iso_code_3'     => $shipping_iso_code_3,
 				'shipping_address_format' => $order_query->row['shipping_address_format'],
-				'shipping_custom_field'   => '',//json_decode($order_query->row['shipping_custom_field'], true),
+				'shipping_custom_field'   => '',
 				'shipping_method'         => $order_query->row['shipping_method'],
 				'shipping_code'           => $order_query->row['shipping_code'],
 				'comment'                 => $order_query->row['comment'],

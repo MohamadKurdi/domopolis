@@ -20,6 +20,9 @@ class CheckBoxUA {
     private $cache      = null;
     private $config     = null;
     private $currency   = null;
+    private $registry   = null;
+
+    private $model_payment_mono = null;
 
     public $method = "POST";
     private $error = [];    
@@ -30,6 +33,7 @@ class CheckBoxUA {
         $this->config   = $registry->get('config');
         $this->db       = $registry->get('db');
         $this->currency = $registry->get('currency');
+        $this->registry = $registry;
     }
 
     /**
@@ -177,7 +181,7 @@ class CheckBoxUA {
     #########
     ### RECEIPT
     ###
-    public function receiptsSell($data=array()){
+    public function receiptsSell($data = []){
         $return_data = $this->error = [];
         $this->checkIfOrederReceiptAlreadyExit($data);
          
@@ -197,7 +201,7 @@ class CheckBoxUA {
         if(!$this->error){
             $this->method = "POST";
             $request = $this->getCurl($url, $request_body);
-            sleep(1); // після створення запиту на чек - чекаємо 1 сек
+            sleep(1);
 
             if(isset($request['message']) ){
 				$this->nLog('[CheckBoxUA::receiptsSell] Answer for request: '.json_encode($request)); 
@@ -230,11 +234,13 @@ class CheckBoxUA {
 
     public function getReceipt($receipt_id){        
         $return_data = [];
-        $url = $this->base_url . 'receipts/' . $receipt_id . '';
-        $this->method = "GET";
-        $request = $this->getCurl($url);
+
+        $url            = $this->base_url . 'receipts/' . $receipt_id . '';
+        $this->method   = "GET";
+        $request        = $this->getCurl($url);
 
         echoLine('[CheckBoxUA::getReceipt] Started getting ' . $receipt_id . ' from CheckBox', 'i');
+        echoLine('[CheckBoxUA::getReceipt] Got Data: ' . json_encode($request), 'i');
 
         if(isset($request['status']) && $request['status'] == 'DONE'){
             $this->updateReceiptsRequest($request, $receipt_id);
@@ -254,7 +260,6 @@ class CheckBoxUA {
     }
 
     public function getReceiptLink($receipt_id, $type='html'){
-
         switch ($type) {
             case 'pdf':
                 $url = $this->base_url .'receipts/'.$receipt_id .'/pdf';
@@ -276,7 +281,7 @@ class CheckBoxUA {
         return $url;
     }
 
-    public function receiptsService($data=array()){
+    public function receiptsService($data = []){
         $return_data = [];
         $url = $this->base_url .'receipts/service';
 
@@ -312,7 +317,7 @@ class CheckBoxUA {
          return $return_data;
     }
 
-    public function checkReceipt($data=array()){
+    public function checkReceipt($data = []){
 
         $request_body = array(      
             'goods'     => $this->getProductsForReceipt($data),
@@ -407,57 +412,40 @@ class CheckBoxUA {
         return $checkbox_current_organization;
     }
 
-    public function getLiqpayInfo($data,$payment_type=''){
-        $return_data = [];
-        /*
-            ### card_mask ###    
-                sender_card_type => visa
-                sender_card_mask2 => 414962*37
+    public function getExtendedPaymentInfo($order_info, $payment_type = ''){
+        $result = [];
 
-            ### auth_code ###
-                authcode_credit => ''
-                authcode_debit => 063564
-            
-            ### rrn ###
-                rrn_credit => ''
-                rrn_debit => 048937084933
-        */
+        if ($order_info['paid_by'] == 'mono'){
+            loadAndRenameCatalogModels('model/payment/mono.php');
+            $modelPaymentMono = new \ModelPaymentMono($this->registry);
 
-        if(isset($data['payment_info']) && $data['payment_info'] && $payment_type != 'CASH'){
-            $payment_data = json_decode(base64_decode($data['payment_info']), true);
+            $monoPaymentInfo = $modelPaymentMono->getPaymentDataByOrderId($order_info['order_id']);
 
-            ### card_mask ### 
-            if($payment_data['sender_card_type'] && $payment_data['sender_card_mask2']){
-                $return_data['card_mask'] = $payment_data['sender_card_type'] . ' ' . $payment_data['sender_card_mask2'];
-            }
-            
-            ### auth_code ###
-            if(!empty($payment_data['authcode_credit'])){
-                $return_data['auth_code'] = $payment_data['authcode_credit'];  
-            }
-            if(!empty($payment_data['authcode_debit'])){
-                $return_data['auth_code'] = $payment_data['authcode_debit'];
+            if ($monoPaymentInfo){
+                if (empty($monoPaymentInfo['payment_data'])){
+                    $payment_data = $this->model_payment_mono->getInvoicePaymentInfo($json['invoiceId']);
+
+                    if ($payment_data){
+                        $this->model_payment_mono->updatePaymentData($json['invoiceId'], $payment_data);               
+                    }
+                } else {
+                    $payment_data = json_decode($monoPaymentInfo['payment_data'], true);
+                }
             }
 
-            ### rrn ###
-            if(!empty($payment_data['rrn_credit'])){
-                $return_data['rrn'] = $payment_data['rrn_credit'];  
+            if ($payment_data){
+                $result['card_mask']        = $payment_data['maskedPan'];
+                $result['auth_code']        = $payment_data['approvalCode'];
+                $result['rrn']              = $payment_data['rrn'];
+                $result['terminal']         = $payment_data['terminal'];
+                $result['payment_system']   = $payment_data['paymentMethod'];
             }
-            if(!empty($payment_data['rrn_debit'])){
-                $return_data['rrn'] = $payment_data['rrn_debit'];
-            }   
+        }
 
-            if($payment_data['sender_card_bank']){
-                $return_data['sender_card_bank'] = $payment_data['sender_card_bank'];
-            }           
-
-            return $return_data; 
-        }       
-        return false;
+        return $result;
     }
 
     private function getFullBankName($sender_card_bank){
-
         switch ($sender_card_bank) {
             case 'pb':
                 $bank_name = "ПриватБанк";
@@ -489,7 +477,7 @@ class CheckBoxUA {
         $this->db->ncquery("UPDATE `order` SET needs_checkboxua = '0' WHERE order_id = '" . (int)$order_id . "'");
     } 
 
-    private function getProductsForReceipt($data=array()){
+    private function getProductsForReceipt($data = []){
         if(!isset($data['products'])){
             $this->error['message'] = "Не можу отримати товари";
         }
@@ -548,13 +536,10 @@ class CheckBoxUA {
         return array();        
     }
 
-    private function getPayments($data=array()){
-        
-        $payments = [];
-        $payment_item = [];
-
-        #1 перевірка, чи сума товарів = сумі замовленню
-        $product_sum = 0;
+    private function getPayments($data = []){     
+        $payments       = [];
+        $payment_item   = [];
+        $product_sum    = 0;
         
         foreach ($data['products'] as $product) {
             $product_sum += $product['total_national'];
@@ -584,15 +569,7 @@ class CheckBoxUA {
 		
         $payment_item['value'] = $this->convert2intX100($product_sum ,$data);
 
-
-        /*
-        Card - любой безнал. Скоро переименуем его в Cashless
-        1.1 - безнал (деньги поступают вам безналичным переводом)
-
-        Завджи по замовчанню робимо оплату Карткою, але якщо є задані виключення
-        receipt_cash_payments - тоді підставляємо оплату готівкою
-        */
-        $payment_item['type'] = $this->config->get('receipt_payment_type'); //Cashless
+        $payment_item['type'] = $this->config->get('receipt_payment_type');
         
         if($this->config->get('receipt_cash_payment_condition') && $this->config->get('receipt_cash_payment_condition') == 'AND'){
                 
@@ -621,40 +598,46 @@ class CheckBoxUA {
             
         }
 
-        ### Fill Online Payment data
-        $addition_payment_info = $this->getLiqpayInfo($data,$payment_item['type']);
+        $addition_payment_info = $this->getExtendedPaymentInfo($data, $payment_item['type']);
         if($addition_payment_info){ 
-
-            if($addition_payment_info['card_mask']){
-                $payment_item['card_mask'] = $addition_payment_info['card_mask']; #414962*37
-            }
-            if($addition_payment_info['sender_card_bank']){
-                $payment_item['bank_name'] = $this->getFullBankName($addition_payment_info['sender_card_bank']);#'ПриватБанк';
-            }
-            if($addition_payment_info['auth_code']){
-                $payment_item['auth_code'] = $addition_payment_info['auth_code']; #063564
-            }
-            if($addition_payment_info['rrn']){
-                $payment_item['rrn'] = $addition_payment_info['rrn']; #048937084933
+            if(!empty($addition_payment_info['card_mask'])){
+                $payment_item['card_mask'] = $addition_payment_info['card_mask'];
             }
 
+            if(!empty($addition_payment_info['sender_card_bank'])){
+                $payment_item['bank_name'] = $this->getFullBankName($addition_payment_info['sender_card_bank']);
+            }
+
+            if(!empty($addition_payment_info['auth_code'])){
+                $payment_item['auth_code'] = $addition_payment_info['auth_code'];
+            }
+
+            if(!empty($addition_payment_info['rrn'])){
+                $payment_item['rrn'] = $addition_payment_info['rrn'];
+            }
+
+            if(!empty($addition_payment_info['terminal'])){
+                $payment_item['terminal'] = $addition_payment_info['terminal'];
+            }
+
+            if(!empty($addition_payment_info['payment_system'])){
+                $payment_item['payment_system'] = $addition_payment_info['payment_system'];
+            }
 
             if($this->config->get('receipt_payment_label_text')){
-                $payment_item['label'] = $this->config->get('receipt_payment_label_text'); #из БД
+                $payment_item['label'] = $this->config->get('receipt_payment_label_text');
             }
             
             if($this->config->get('receipt_payment_system_text')){
-                $payment_item['payment_system'] = $this->config->get('receipt_payment_system_text'); #из БД
+                $payment_item['payment_system'] = $this->config->get('receipt_payment_system_text');
             }
-
         } 
-         
+
         $payments[] = $payment_item;
         return $payments;
     }
 
-    private function getDiscounts($data=array()){
-       
+    private function getDiscounts($data = []){      
         $discounts = [];
         $discount_item = [];
 
@@ -683,7 +666,7 @@ class CheckBoxUA {
         return $discounts;
     }
     
-    private function getExtraProductSum($data=array()){      
+    private function getExtraProductSum($data = []){      
         $extra_sum = 0;
         $extra_total = 0;
         $quantity = 0;
@@ -693,7 +676,6 @@ class CheckBoxUA {
                 $extra_sum += $total['value'];
             }
         }
-        #de($extra_product_sum);
          
         foreach ($data['products'] as $key => $product) {
             if($extra_sum){             
@@ -702,7 +684,7 @@ class CheckBoxUA {
                 $quantity += $product['quantity'];               
             }          
         }
-        #de($quantity);
+
         if($extra_sum && $extra_total){
                 return array('extra_sum'=>$extra_sum, 'extra_total'=>$extra_total, 'quantity'=>$quantity );
         }
@@ -719,8 +701,8 @@ class CheckBoxUA {
 
     private function saveReceiptsRequest($request, $data){
        
-        $data['order_id'] = isset($data['order_id']) ? $data['order_id'] : 0;
-        $data['type'] = isset($data['type']) ? $data['type'] : '';
+        $data['order_id']   = isset($data['order_id']) ? $data['order_id'] : 0;
+        $data['type']       = isset($data['type']) ? $data['type'] : '';
 
         $sql = "INSERT INTO order_receipt SET         
             order_id            = '" . (int)$data['order_id'] . "', 
@@ -762,11 +744,10 @@ class CheckBoxUA {
         $this->db->ncquery( $sql );
     }
 
-    private function saveShiftRequest($request){
-       
-        $request['id'] = isset($request['id']) ? $request['id'] : '-';
-        $request['serial'] = isset($request['serial']) ? $request['serial'] : 0;
-        $request['status'] = isset($request['status']) ? $request['status'] : 'error';
+    private function saveShiftRequest($request){       
+        $request['id']             = isset($request['id']) ? $request['id'] : '-';
+        $request['serial']         = isset($request['serial']) ? $request['serial'] : 0;
+        $request['status']         = isset($request['status']) ? $request['status'] : 'error';
         $request['z_report']['id'] = isset($request['z_report']['id']) ? $request['z_report']['id'] : '';
 
         $sql = "INSERT INTO shift SET     
@@ -801,7 +782,6 @@ class CheckBoxUA {
         return $request_headers;
     }
 
-    ###
     private function getCurl($url, $request_body = []){   
 
         if(isset($request_body['meta']) && http_build_query($request_body['meta'])){
@@ -831,9 +811,6 @@ class CheckBoxUA {
         $res = curl_exec($c);
         $curl_getinfo = curl_getinfo($c);
         curl_close($c);  
-
-    //    echoLine('[CheckBoxUA::getCurl] Got answer: ' . $res, 'i');
-
         return $this->readResult($res,  $url, $request_body,  $curl_getinfo); 
     }
 
@@ -868,11 +845,11 @@ class CheckBoxUA {
     }
 
 
-    public function parse_date($date_str,$template = "Y-m-d H:i:s"){
+    public function parse_date($date_str, $template = "Y-m-d H:i:s"){
         return date($template, strtotime($date_str) );
     } 
 	
-    private function convert2intX100($number=0, $data=[]){
+    private function convert2intX100($number = 0, $data = []){
         if($number){		
             if($this->config->get('receipt_price_format')){
                 $number = $this->currency->format($number, $data['currency_code'], $data['currency_value'], false);
