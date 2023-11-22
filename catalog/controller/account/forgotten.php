@@ -22,7 +22,7 @@ class ControllerAccountForgotten extends Controller {
 
 			$subject = sprintf($this->language->get('text_subject'), $this->config->get('config_name'));
 
-			$message  = sprintf($this->language->get('text_greeting'), $this->config->get('config_name')) . "\n\n";
+			$message  = $this->language->get('text_greeting') . "\n\n";
 			$message .= $this->language->get('text_password') . "\n\n";
 			$message .= $password;
 			
@@ -30,14 +30,17 @@ class ControllerAccountForgotten extends Controller {
 					
 			$template->addData($this->request->post);
 
-			$template->data['password'] = $password;
-			$template->data['account_login'] = $this->url->link('account/login', '');
-			$template->data['account_login_tracking'] = $template->getTracking($template->data['account_login']);
+			$template->data['password'] 				= $password;
+			$template->data['account_login'] 			= $this->url->link('account/login', '');
+			$template->data['account_login_tracking'] 	= $template->getTracking($template->data['account_login']);
 
 			$mail = new Mail($this->registry); 		
 			$mail->setTo($this->request->post['email']);
+			$mail->setFrom($this->config->get('config_display_email'));
 			$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
 			$mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
+			$mail->setHtml(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
+
 			$template->load('customer.forgotten');
 			$mail = $template->hook($mail);
 			$mail->send();
@@ -63,16 +66,14 @@ class ControllerAccountForgotten extends Controller {
 		);
 
 
-		$this->data['heading_title'] = $this->language->get('heading_title');
-
-		$this->data['text_your_email'] = $this->language->get('text_your_email');
-		$this->data['text_email'] = $this->language->get('text_email');
-
-		$this->data['entry_by_email'] = $this->language->get('entry_by_email');
-		$this->data['entry_by_telephone'] = $this->language->get('entry_by_telephone');
-		$this->data['entry_email'] = $this->language->get('entry_email');
-		$this->data['button_continue'] = $this->language->get('button_continue');
-		$this->data['button_back'] = $this->language->get('button_back');
+		$this->data['heading_title'] 		= $this->language->get('heading_title');
+		$this->data['text_your_email'] 		= $this->language->get('text_your_email');
+		$this->data['text_email'] 			= $this->language->get('text_email');
+		$this->data['entry_by_email'] 		= $this->language->get('entry_by_email');
+		$this->data['entry_by_telephone'] 	= $this->language->get('entry_by_telephone');
+		$this->data['entry_email'] 			= $this->language->get('entry_email');
+		$this->data['button_continue'] 		= $this->language->get('button_continue');
+		$this->data['button_back'] 			= $this->language->get('button_back');
 
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
@@ -80,8 +81,8 @@ class ControllerAccountForgotten extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-		$this->data['action'] = $this->url->link('account/forgotten', '');
-		$this->data['back'] = $this->url->link('account/login', '');
+		$this->data['action'] 	= $this->url->link('account/forgotten', '');
+		$this->data['back'] 	= $this->url->link('account/login', '');
 
 		$this->template = 'account/forgotten.tpl';
 
