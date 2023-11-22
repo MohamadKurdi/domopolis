@@ -1,101 +1,51 @@
 <?php
-	class ModelAccountOrder extends Model {
-	
-		public function getYamOrder($yam_id) {
-		
-			$order_query = $this->db->non_cached_query("SELECT * FROM `order` WHERE yam_id = '" . (int)$yam_id . "'");
-			
-			if ($order_query->num_rows){
-				return $order_query->row['order_id'];			
+class ModelAccountOrder extends Model {					
+	public function getOrder($order_id, $no_customer = false) {
+
+		if ($no_customer) {
+			$order_query = $this->db->non_cached_query("SELECT * FROM `order` WHERE order_id = '" . (int)$order_id . "' AND order_status_id > '0'");		
+		} else {
+			$order_query = $this->db->non_cached_query("SELECT * FROM `order` WHERE order_id = '" . (int)$order_id . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND order_status_id > '0'");
+		}
+
+		if ($order_query->num_rows) {
+			$country_query = $this->db->non_cached_query("SELECT * FROM `country` WHERE country_id = '" . (int)$order_query->row['payment_country_id'] . "'");
+
+			if ($country_query->num_rows) {
+				$payment_iso_code_2 = $country_query->row['iso_code_2'];
+				$payment_iso_code_3 = $country_query->row['iso_code_3'];
 			} else {
-				return false;
+				$payment_iso_code_2 = '';
+				$payment_iso_code_3 = '';				
 			}
-		}
-		
-		public function getYamOrdersByShipmentID($yam_shipment_id) {
-		
-			$order_query = $this->db->non_cached_query("SELECT * FROM `order` WHERE yam_shipment_id = '" . (int)$yam_shipment_id . "'");
-			
-			if ($order_query->num_rows){
-				return $order_query->rows;			
+
+			$zone_query = $this->db->non_cached_query("SELECT * FROM `zone` WHERE zone_id = '" . (int)$order_query->row['payment_zone_id'] . "'");
+
+			if ($zone_query->num_rows) {
+				$payment_zone_code = $zone_query->row['code'];
 			} else {
-				return false;
+				$payment_zone_code = '';
 			}
-		}
-		
-		public function getOrderByBoxID($yam_box_id) {
-		
-			$order_query = $this->db->non_cached_query("SELECT * FROM `order` WHERE yam_box_id = '" . (int)$yam_box_id . "' ORDER BY date_added DESC LIMIT 1");
-			
-			if ($order_query->num_rows){
-				return $order_query->row;			
+
+			$country_query = $this->db->non_cached_query("SELECT * FROM `country` WHERE country_id = '" . (int)$order_query->row['shipping_country_id'] . "'");
+
+			if ($country_query->num_rows) {
+				$shipping_iso_code_2 = $country_query->row['iso_code_2'];
+				$shipping_iso_code_3 = $country_query->row['iso_code_3'];
 			} else {
-				return false;
+				$shipping_iso_code_2 = '';
+				$shipping_iso_code_3 = '';				
 			}
-		}
-		
-		public function getOrderYam($order_id) {
-		
-			$order_query = $this->db->non_cached_query("SELECT * FROM `order` WHERE order_id = '" . (int)$order_id . "'");
-			
-			if ($order_query->num_rows && $order_query->row['yam_id']){
-				return $order_query->row['yam_id'];			
+
+			$zone_query = $this->db->non_cached_query("SELECT * FROM `zone` WHERE zone_id = '" . (int)$order_query->row['shipping_zone_id'] . "'");
+
+			if ($zone_query->num_rows) {
+				$shipping_zone_code = $zone_query->row['code'];
 			} else {
-				return false;
+				$shipping_zone_code = '';
 			}
-		}
-		
-		public function updateYamBox($yam_id, $yam_box_id) {
-		
-			$this->db->non_cached_query("UPDATE `order` SET yam_box_id = '" . (int)$yam_box_id . "' WHERE yam_id = '" . (int)$yam_id . "'");
-		}
-		
-		public function getOrder($order_id, $no_customer = false) {
-			
-			if ($no_customer) {
-				$order_query = $this->db->non_cached_query("SELECT * FROM `order` WHERE order_id = '" . (int)$order_id . "' AND order_status_id > '0'");		
-				} else {
-				$order_query = $this->db->non_cached_query("SELECT * FROM `order` WHERE order_id = '" . (int)$order_id . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND order_status_id > '0'");
-			}
-			
-			if ($order_query->num_rows) {
-				$country_query = $this->db->non_cached_query("SELECT * FROM `country` WHERE country_id = '" . (int)$order_query->row['payment_country_id'] . "'");
-				
-				if ($country_query->num_rows) {
-					$payment_iso_code_2 = $country_query->row['iso_code_2'];
-					$payment_iso_code_3 = $country_query->row['iso_code_3'];
-					} else {
-					$payment_iso_code_2 = '';
-					$payment_iso_code_3 = '';				
-				}
-				
-				$zone_query = $this->db->non_cached_query("SELECT * FROM `zone` WHERE zone_id = '" . (int)$order_query->row['payment_zone_id'] . "'");
-				
-				if ($zone_query->num_rows) {
-					$payment_zone_code = $zone_query->row['code'];
-					} else {
-					$payment_zone_code = '';
-				}
-				
-				$country_query = $this->db->non_cached_query("SELECT * FROM `country` WHERE country_id = '" . (int)$order_query->row['shipping_country_id'] . "'");
-				
-				if ($country_query->num_rows) {
-					$shipping_iso_code_2 = $country_query->row['iso_code_2'];
-					$shipping_iso_code_3 = $country_query->row['iso_code_3'];
-					} else {
-					$shipping_iso_code_2 = '';
-					$shipping_iso_code_3 = '';				
-				}
-				
-				$zone_query = $this->db->non_cached_query("SELECT * FROM `zone` WHERE zone_id = '" . (int)$order_query->row['shipping_zone_id'] . "'");
-				
-				if ($zone_query->num_rows) {
-					$shipping_zone_code = $zone_query->row['code'];
-					} else {
-					$shipping_zone_code = '';
-				}
-				
-				return array(
+
+			return array(
 				'order_id'                => $order_query->row['order_id'],
 				'invoice_no'              => $order_query->row['invoice_no'],
 				'invoice_prefix'          => $order_query->row['invoice_prefix'],
@@ -171,242 +121,286 @@
 				'pay_equireLQP'			 => $order_query->row['pay_equireLQP'],
 				'pay_equireCP'			 => $order_query->row['pay_equireCP'],
 				'preorder'			 	 => $order_query->row['preorder']
-				);
-				} else {
-				return false;	
-			}
+			);
+} else {
+	return false;	
+}
+}
+
+public function getOrderProductsNoGood($order_id) {
+	$this->load->model('localisation/language');
+	$de_language_id = $this->model_localisation_language->getLanguageByCode($this->config->get('config_de_language'));
+
+	$query = $this->db->query("SELECT op.*,p.image, p.short_name, p.product_id, p.stock_status_id, (SELECT name FROM " . DB_PREFIX . "product_description WHERE product_id = op.product_id AND language_id = '" . (int)$de_language_id . "' LIMIT 1) as de_name FROM " . DB_PREFIX . "order_product_nogood op LEFT JOIN " . DB_PREFIX . "product p ON op.product_id = p.product_id WHERE order_id = '" . (int)$order_id . "' ORDER BY op.name");
+
+		return $query->rows;
+	}
+
+	public function getFilterOrders($data = array()) {		
+		if ($data['start'] < 0) {
+			$data['start'] = 0;
 		}
-		
-		public function getOrderProductsNoGood($order_id) {
-			$this->load->model('localisation/language');
-			$de_language_id = $this->model_localisation_language->getLanguageByCode($this->config->get('config_de_language'));
-			
-			$query = $this->db->query("SELECT op.*,p.image, p.short_name, p.product_id, p.stock_status_id, (SELECT name FROM " . DB_PREFIX . "product_description WHERE product_id = op.product_id AND language_id = '" . (int)$de_language_id . "' LIMIT 1) as de_name FROM " . DB_PREFIX . "order_product_nogood op LEFT JOIN " . DB_PREFIX . "product p ON op.product_id = p.product_id WHERE order_id = '" . (int)$order_id . "' ORDER BY op.name");
-			
-			return $query->rows;
+
+		if ($data['limit'] < 1) {
+			$data['limit'] = 1;
+		}	
+
+		$sql = "SELECT o.order_id, 
+		o.firstname, 
+		o.lastname, 
+		os.name as status, 
+		os.status_txt_color as status_txt_color, 
+		os.status_bg_color as status_bg_color, 
+		os.front_bg_color as front_bg_color, 
+		o.date_added, 
+		o.preorder, 
+		o.total, 
+		o.manager_id, 
+		o.total_national, 
+		o.currency_code, 
+		o.currency_value, 
+		o.payment_method, 
+		o.payment_code 
+		FROM `order` o LEFT JOIN order_status os ON (o.order_status_id = os.order_status_id) 
+		WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0'";
+
+		if ($data['filter'] == 'cancelled'){
+			$sql .= " AND o.order_status_id = '" . $this->config->get('config_cancelled_status_id') . "'";
 		}
-		
-		public function getFilterOrders($data = array()) {		
-			if ($data['start'] < 0) {
-				$data['start'] = 0;
-			}
-			
-			if ($data['limit'] < 1) {
-				$data['limit'] = 1;
-			}	
-			
-			$sql = "SELECT o.order_id, 
-				o.firstname, 
-				o.lastname, 
-				os.name as status, 
-				os.status_txt_color as status_txt_color, 
-				os.status_bg_color as status_bg_color, 
-				os.front_bg_color as front_bg_color, 
-				o.date_added, 
-				o.preorder, 
-				o.total, 
-				o.manager_id, 
-				o.total_national, 
-				o.currency_code, 
-				o.currency_value, 
-				o.payment_method, 
-				o.payment_code 
-				FROM `order` o LEFT JOIN order_status os ON (o.order_status_id = os.order_status_id) 
-				WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0'";
-			
-			if ($data['filter'] == 'cancelled'){
-				$sql .= " AND o.order_status_id = '" . $this->config->get('config_cancelled_status_id') . "'";
-			}
-			
-			if ($data['filter'] == 'completed'){
-				$sql .= " AND o.order_status_id = '" . $this->config->get('config_complete_status_id') . "'";
-			}
-			
-			if ($data['filter'] == 'inprocess'){
-				$sql .= " AND o.order_status_id NOT IN (". implode(',', [$this->config->get('config_complete_status_id'), $this->config->get('config_cancelled_status_id')]) .")";
-			}
-			
-			$sql .= "AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];	
-		
-			$query = $this->db->non_cached_query($sql);
-		
-			return $query->rows;				
+
+		if ($data['filter'] == 'completed'){
+			$sql .= " AND o.order_status_id = '" . $this->config->get('config_complete_status_id') . "'";
 		}
-		
-		public function getTotalFilterOrders($data = array()) {
-			$sql =  "SELECT COUNT(*) AS total FROM `order` WHERE customer_id = '" . (int)$this->customer->getId() . "' AND order_status_id > '0' ";
-						
-			if ($data['filter'] == 'cancelled'){
-				$sql .= " AND order_status_id = '" . $this->config->get('config_cancelled_status_id') . "'";
-			}
-			
-			if ($data['filter'] == 'completed'){
-				$sql .= " AND order_status_id = '" . $this->config->get('config_complete_status_id') . "'";
-			}
-			
-			if ($data['filter'] == 'inprocess'){
-				$sql .= " AND order_status_id NOT IN (". implode(',', [$this->config->get('config_complete_status_id'), $this->config->get('config_cancelled_status_id')]) .")";
-			}
-			
-			$query = $this->db->non_cached_query($sql);
-			
-			return $query->row['total'];
+
+		if ($data['filter'] == 'inprocess'){
+			$sql .= " AND o.order_status_id NOT IN (". implode(',', [$this->config->get('config_complete_status_id'), $this->config->get('config_cancelled_status_id')]) .")";
 		}
+
+		$sql .= "AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];	
 		
-		public function getOrders($start = 0, $limit = 20) {
-			if ($start < 0) {
-				$start = 0;
-			}
-			
-			if ($limit < 1) {
-				$limit = 1;
-			}	
-			
-			$query = $this->db->non_cached_query("SELECT 
-				o.order_id, 
-				o.firstname, 
-				o.lastname, 
-				o.order_status_id, 
-				o.ttn,
-				os.name as status, 
-				os.status_txt_color as status_txt_color, 
-				os.status_bg_color as status_bg_color, 
-				os.front_bg_color as front_bg_color, 
-				o.date_added, 
-				o.preorder, 
-				o.total, 
-				o.manager_id, 
-				o.total_national, 
-				o.currency_code, 
-				o.currency_value, 
-				o.payment_method, 
-				o.payment_code FROM `order` o 
-				LEFT JOIN order_status os ON (o.order_status_id = os.order_status_id) 
-				WHERE o.customer_id = '" . (int)$this->customer->getId() . "' 
-				AND o.order_status_id > '0' 
-				AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' 
-				ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);							
-			
-			return $query->rows;
+		$query = $this->db->non_cached_query($sql);
+		
+		return $query->rows;				
+	}
+
+	public function getTotalFilterOrders($data = array()) {
+		$sql =  "SELECT COUNT(*) AS total FROM `order` WHERE customer_id = '" . (int)$this->customer->getId() . "' AND order_status_id > '0' ";
+
+		if ($data['filter'] == 'cancelled'){
+			$sql .= " AND order_status_id = '" . $this->config->get('config_cancelled_status_id') . "'";
 		}
-		
-		public function getOrderProducts($order_id) {
-			$query = $this->db->non_cached_query("SELECT * FROM order_product WHERE order_id = '" . (int)$order_id . "'");
-			
-			return $query->rows;
+
+		if ($data['filter'] == 'completed'){
+			$sql .= " AND order_status_id = '" . $this->config->get('config_complete_status_id') . "'";
 		}
-		
-		public function getOrderProductsListNoGood($order_id) {
-			$query = $this->db->non_cached_query("SELECT * FROM order_product_nogood WHERE order_id = '" . (int)$order_id . "'");
-			
-			return $query->rows;
+
+		if ($data['filter'] == 'inprocess'){
+			$sql .= " AND order_status_id NOT IN (". implode(',', [$this->config->get('config_complete_status_id'), $this->config->get('config_cancelled_status_id')]) .")";
 		}
-		
-		public function getProductImage($product_id) {
-			$query = $this->db->non_cached_query("SELECT image FROM product WHERE product_id = '" . (int)$product_id . "'");
-			
-			return isset($query->row['image'])?$query->row['image']:'';
+
+		$query = $this->db->non_cached_query($sql);
+
+		return $query->row['total'];
+	}
+
+	public function getOrders($start = 0, $limit = 20) {
+		if ($start < 0) {
+			$start = 0;
 		}
-		
-		public function getOrderOptions($order_id, $order_product_id) {
-			$query = $this->db->non_cached_query("SELECT * FROM order_option WHERE order_id = '" . (int)$order_id . "' AND order_product_id = '" . (int)$order_product_id . "'");
-			
-			return $query->rows;
+
+		if ($limit < 1) {
+			$limit = 1;
+		}	
+
+		$query = $this->db->non_cached_query("SELECT 
+			o.order_id, 
+			o.firstname, 
+			o.lastname, 
+			o.order_status_id, 
+			o.ttn,
+			os.name as status, 
+			os.status_txt_color as status_txt_color, 
+			os.status_bg_color as status_bg_color, 
+			os.front_bg_color as front_bg_color, 
+			o.date_added, 
+			o.preorder, 
+			o.total, 
+			o.manager_id, 
+			o.total_national, 
+			o.currency_code, 
+			o.currency_value, 
+			o.payment_method, 
+			o.payment_code FROM `order` o 
+			LEFT JOIN order_status os ON (o.order_status_id = os.order_status_id) 
+			WHERE o.customer_id = '" . (int)$this->customer->getId() . "' 
+			AND o.order_status_id > '0' 
+			AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+			ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);							
+
+		return $query->rows;
+	}
+
+	public function getOrderProducts($order_id) {
+		$query = $this->db->non_cached_query("SELECT * FROM order_product WHERE order_id = '" . (int)$order_id . "'");
+
+		return $query->rows;
+	}
+
+	public function getOrderProductsListNoGood($order_id) {
+		$query = $this->db->non_cached_query("SELECT * FROM order_product_nogood WHERE order_id = '" . (int)$order_id . "'");
+
+		return $query->rows;
+	}
+
+	public function getProductImage($product_id) {
+		$query = $this->db->non_cached_query("SELECT image FROM product WHERE product_id = '" . (int)$product_id . "'");
+
+		return isset($query->row['image'])?$query->row['image']:'';
+	}
+
+	public function getOrderOptions($order_id, $order_product_id) {
+		$query = $this->db->non_cached_query("SELECT * FROM order_option WHERE order_id = '" . (int)$order_id . "' AND order_product_id = '" . (int)$order_product_id . "'");
+
+		return $query->rows;
+	}
+
+	public function getOrderVouchers($order_id) {
+		$query = $this->db->non_cached_query("SELECT * FROM `order_voucher` WHERE order_id = '" . (int)$order_id . "'");
+
+		return $query->rows;
+	}
+
+	public function getOrderTotals($order_id, $code = false) {
+
+		if ($code){
+			$query = $this->db->query("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' AND code = '" . $this->db->escape(trim($code)) . "' ORDER BY sort_order");
+
+			return $query->row;
 		}
-		
-		public function getOrderVouchers($order_id) {
-			$query = $this->db->non_cached_query("SELECT * FROM `order_voucher` WHERE order_id = '" . (int)$order_id . "'");
-			
-			return $query->rows;
+
+		$query = $this->db->query("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");			
+
+		return $query->rows;
+	}
+
+	public function getOrderTotalNational($order_id){
+		$query = $this->db->non_cached_query("SELECT * FROM `order` WHERE order_id = '" . (int)$order_id . "'");
+
+		return $query->row['total_national'];	
+	}
+
+	public function getOrderTotal($order_id){
+		$query = $this->db->non_cached_query("SELECT * FROM `order` WHERE order_id = '" . (int)$order_id . "'");
+
+		return $query->row['total'];	
+	}
+
+	public function getOrderPrepay($order_id){
+		$query = $this->db->non_cached_query("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
+
+		foreach ($query->rows as $row){
+			if ($row['code'] == 'transfer_plus_prepayment'){
+				return $row['value'];				
+			}			
 		}
-		
-		public function getOrderTotals($order_id, $code = false) {
-			
-			if ($code){
-				$query = $this->db->query("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' AND code = '" . $this->db->escape(trim($code)) . "' ORDER BY sort_order");
-				
-				return $query->row;
-			}
-			
-			$query = $this->db->query("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");			
-			
-			return $query->rows;
+		return false;
+	}
+
+	public function getOrderPrepayNational($order_id){
+		$query = $this->db->non_cached_query("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
+
+		foreach ($query->rows as $row){
+			if ($row['code'] == 'transfer_plus_prepayment'){
+				return $row['value_national'];				
+			}			
 		}
-		
-		public function getOrderTotalNational($order_id){
-			$query = $this->db->non_cached_query("SELECT * FROM `order` WHERE order_id = '" . (int)$order_id . "'");
-			
-			return $query->row['total_national'];	
-		}
-		
-		public function getOrderTotal($order_id){
-			$query = $this->db->non_cached_query("SELECT * FROM `order` WHERE order_id = '" . (int)$order_id . "'");
-			
-			return $query->row['total'];	
-		}
-		
-		public function getOrderPrepay($order_id){
-			$query = $this->db->non_cached_query("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
-			
-			foreach ($query->rows as $row){
-				if ($row['code'] == 'transfer_plus_prepayment'){
-					return $row['value'];				
-				}			
-			}
+		return false;
+	}
+
+	public function getOrderTtnHistory($order_id){
+		$query = $this->db->non_cached_query("SELECT * FROM `order_ttns` WHERE `order_id` = '" . (int)$order_id."'");
+
+		return $query->rows;		
+	}
+
+	public function getOrderHistories($order_id) {
+		$query = $this->db->non_cached_query("SELECT date_added, os.name AS status, oh.order_status_id, oh.comment, oh.notify FROM order_history oh LEFT JOIN order_status os ON oh.order_status_id = os.order_status_id WHERE oh.order_id = '" . (int)$order_id . "' AND oh.notify = '1' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY oh.date_added");
+
+		return $query->rows;
+	}	
+
+	public function getOrderHistoriesFull($order_id) {
+		$query = $this->db->non_cached_query("SELECT date_added, os.name AS status, oh.order_status_id, oh.comment, oh.notify FROM order_history oh LEFT JOIN order_status os ON oh.order_status_id = os.order_status_id WHERE oh.order_id = '" . (int)$order_id . "' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY oh.date_added");
+
+		return $query->rows;
+	}	
+
+
+	public function getOrderDownloads($order_id) {
+		$query = $this->db->non_cached_query("SELECT * FROM order_download WHERE order_id = '" . (int)$order_id . "' ORDER BY name");
+
+		return $query->rows; 
+	}	
+
+	public function getTotalOrders() {
+		$query = $this->db->non_cached_query("SELECT COUNT(*) AS total FROM `order` WHERE customer_id = '" . (int)$this->customer->getId() . "' AND order_status_id > '0'");
+
+		return $query->row['total'];
+	}
+
+	public function getTotalOrderProductsByOrderId($order_id) {
+		$query = $this->db->non_cached_query("SELECT COUNT(*) AS total FROM order_product WHERE order_id = '" . (int)$order_id . "'");
+
+		return $query->row['total'];
+	}
+
+	public function getTotalOrderVouchersByOrderId($order_id) {
+		$query = $this->db->non_cached_query("SELECT COUNT(*) AS total FROM `order_voucher` WHERE order_id = '" . (int)$order_id . "'");
+
+		return $query->row['total'];
+	}
+
+	public function getYamOrder($yam_id) {		
+		$order_query = $this->db->non_cached_query("SELECT * FROM `order` WHERE yam_id = '" . (int)$yam_id . "'");
+
+		if ($order_query->num_rows){
+			return $order_query->row;			
+		} else {
 			return false;
-		}
-		
-		public function getOrderPrepayNational($order_id){
-			$query = $this->db->non_cached_query("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
-			
-			foreach ($query->rows as $row){
-				if ($row['code'] == 'transfer_plus_prepayment'){
-					return $row['value_national'];				
-				}			
-			}
-			return false;
-		}
-		
-		public function getOrderTtnHistory($order_id){
-			$query = $this->db->non_cached_query("SELECT * FROM `order_ttns` WHERE `order_id` = '" . (int)$order_id."'");
-			
-			return $query->rows;		
-		}
-		
-		public function getOrderHistories($order_id) {
-			$query = $this->db->non_cached_query("SELECT date_added, os.name AS status, oh.order_status_id, oh.comment, oh.notify FROM order_history oh LEFT JOIN order_status os ON oh.order_status_id = os.order_status_id WHERE oh.order_id = '" . (int)$order_id . "' AND oh.notify = '1' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY oh.date_added");
-			
-			return $query->rows;
-		}	
-		
-		public function getOrderHistoriesFull($order_id) {
-			$query = $this->db->non_cached_query("SELECT date_added, os.name AS status, oh.order_status_id, oh.comment, oh.notify FROM order_history oh LEFT JOIN order_status os ON oh.order_status_id = os.order_status_id WHERE oh.order_id = '" . (int)$order_id . "' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY oh.date_added");
-			
-			return $query->rows;
-		}	
-		
-		
-		public function getOrderDownloads($order_id) {
-			$query = $this->db->non_cached_query("SELECT * FROM order_download WHERE order_id = '" . (int)$order_id . "' ORDER BY name");
-			
-			return $query->rows; 
-		}	
-		
-		public function getTotalOrders() {
-			$query = $this->db->non_cached_query("SELECT COUNT(*) AS total FROM `order` WHERE customer_id = '" . (int)$this->customer->getId() . "' AND order_status_id > '0'");
-			
-			return $query->row['total'];
-		}
-		
-		public function getTotalOrderProductsByOrderId($order_id) {
-			$query = $this->db->non_cached_query("SELECT COUNT(*) AS total FROM order_product WHERE order_id = '" . (int)$order_id . "'");
-			
-			return $query->row['total'];
-		}
-		
-		public function getTotalOrderVouchersByOrderId($order_id) {
-			$query = $this->db->non_cached_query("SELECT COUNT(*) AS total FROM `order_voucher` WHERE order_id = '" . (int)$order_id . "'");
-			
-			return $query->row['total'];
 		}
 	}
+
+	public function getYamOrdersByShipmentID($yam_shipment_id) {		
+		$order_query = $this->db->non_cached_query("SELECT * FROM `order` WHERE yam_shipment_id = '" . (int)$yam_shipment_id . "'");
+
+		if ($order_query->num_rows){
+			return $order_query->rows;			
+		} else {
+			return false;
+		}
+	}
+
+	public function getOrderByBoxID($yam_box_id) {		
+		$order_query = $this->db->non_cached_query("SELECT * FROM `order` WHERE yam_box_id = '" . (int)$yam_box_id . "' ORDER BY date_added DESC LIMIT 1");
+
+		if ($order_query->num_rows){
+			return $order_query->row;			
+		} else {
+			return false;
+		}
+	}
+
+	public function getOrderYam($order_id) {		
+		$order_query = $this->db->non_cached_query("SELECT * FROM `order` WHERE order_id = '" . (int)$order_id . "'");
+
+		if ($order_query->num_rows && $order_query->row['yam_id']){
+			return $order_query->row;			
+		} else {
+			return false;
+		}
+	}
+
+	public function updateYamBox($yam_id, $yam_box_id) {		
+		$this->db->non_cached_query("UPDATE `order` SET yam_box_id = '" . (int)$yam_box_id . "' WHERE yam_id = '" . (int)$yam_id . "'");
+	}
+}

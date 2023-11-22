@@ -290,12 +290,19 @@
 				if (isset($this->request->get['filter_yam_id'])) {
 					$url .= '&filter_yam_id=' . $this->request->get['filter_yam_id'];
 				}
+
+				if (isset($this->request->get['filter_yam_express'])) {
+					$url .= '&filter_yam_express=' . $this->request->get['filter_yam_express'];
+				}
+
+				if (isset($this->request->get['filter_yam_campaign_id'])) {
+					$url .= '&filter_yam_campaign_id=' . $this->request->get['filter_yam_campaign_id'];
+				}
 				
 				if (isset($this->request->get['filter_urgent'])) {
 					$url .= '&filter_urgent=' . $this->request->get['filter_urgent'];
 				}
-				
-				
+								
 				if (isset($this->request->get['filter_preorder'])) {
 					$url .= '&filter_preorder=' . $this->request->get['filter_preorder'];
 				}
@@ -500,6 +507,14 @@
 					if (isset($this->request->get['filter_yam_id'])) {
 						$url .= '&filter_yam_id=' . $this->request->get['filter_yam_id'];
 					}
+
+					if (isset($this->request->get['filter_yam_express'])) {
+						$url .= '&filter_yam_express=' . $this->request->get['filter_yam_express'];
+					}
+
+					if (isset($this->request->get['filter_yam_campaign_id'])) {
+						$url .= '&filter_yam_campaign_id=' . $this->request->get['filter_yam_campaign_id'];
+					}
 					
 					if (isset($this->request->get['filter_preorder'])) {
 						$url .= '&filter_preorder=' . $this->request->get['filter_preorder'];
@@ -644,6 +659,14 @@
 				if (isset($this->request->get['filter_yam_id'])) {
 					$url .= '&filter_yam_id=' . $this->request->get['filter_yam_id'];
 				}
+
+				if (isset($this->request->get['filter_yam_express'])) {
+					$url .= '&filter_yam_express=' . $this->request->get['filter_yam_express'];
+				}
+
+				if (isset($this->request->get['filter_yam_campaign_id'])) {
+						$url .= '&filter_yam_campaign_id=' . $this->request->get['filter_yam_campaign_id'];
+					}
 				
 				if (isset($this->request->get['filter_preorder'])) {
 					$url .= '&filter_preorder=' . $this->request->get['filter_preorder'];
@@ -778,6 +801,14 @@
 				if (isset($this->request->get['filter_yam_id'])) {
 					$url .= '&filter_yam_id=' . $this->request->get['filter_yam_id'];
 				}
+
+				if (isset($this->request->get['filter_yam_express'])) {
+					$url .= '&filter_yam_express=' . $this->request->get['filter_yam_express'];
+				}
+
+				if (isset($this->request->get['filter_yam_campaign_id'])) {
+						$url .= '&filter_yam_campaign_id=' . $this->request->get['filter_yam_campaign_id'];
+					}
 				
 				if (isset($this->request->get['filter_preorder'])) {
 					$url .= '&filter_preorder=' . $this->request->get['filter_preorder'];
@@ -995,6 +1026,18 @@
 				} else {
 				$filter_yam_id = null;
 			}
+
+			if (isset($this->request->get['filter_yam_express'])) {
+				$filter_yam_express = $this->request->get['filter_yam_express'];
+				} else {
+				$filter_yam_express = null;
+			}
+
+			if (isset($this->request->get['filter_yam_campaign_id'])) {
+				$filter_yam_campaign_id = $this->request->get['filter_yam_campaign_id'];
+				} else {
+				$filter_yam_campaign_id = null;
+			}
 			
 			if (isset($this->request->get['filter_preorder'])) {
 				$filter_preorder = $this->request->get['filter_preorder'];
@@ -1141,6 +1184,14 @@
 			if (isset($this->request->get['filter_yam_id'])) {
 				$url .= '&filter_yam_id=' . $this->request->get['filter_yam_id'];
 			}
+
+			if (isset($this->request->get['filter_yam_express'])) {
+					$url .= '&filter_yam_express=' . $this->request->get['filter_yam_express'];
+				}
+
+			if (isset($this->request->get['filter_yam_campaign_id'])) {
+						$url .= '&filter_yam_campaign_id=' . $this->request->get['filter_yam_campaign_id'];
+					}
 			
 			if (isset($this->request->get['filter_preorder'])) {
 				$url .= '&filter_preorder=' . $this->request->get['filter_preorder'];
@@ -1232,6 +1283,8 @@
 			'filter_is_credit_order' => $filter_is_credit_order,
 			'filter_yam'    		 => $filter_yam,
 			'filter_yam_id'    		 => $filter_yam_id,
+			'filter_yam_express'     => $filter_yam_express,
+			'filter_yam_campaign_id' => $filter_yam_campaign_id,
 			'filter_preorder'    	 => $filter_preorder,
 			'filter_urgent_buy'      => $filter_urgent_buy,
 			'filter_wait_full'       => $filter_wait_full,
@@ -1476,6 +1529,8 @@
 				'monocheckout'      		=> $result['monocheckout'],
 				'yam'      					=> $result['yam'],
 				'yam_id'      				=> $result['yam_id'],
+				'yam_campaign_id'      		=> $result['yam_campaign_id'],
+				'yam_express'      			=> $result['yam_express'],
 				'yam_shipment_date'      	=> $result['yam_shipment_date'],
 				'yam_shipment_id'      		=> $result['yam_shipment_id'],
 				'yam_box_id'      			=> $result['yam_box_id'],
@@ -1727,6 +1782,14 @@
 			if (isset($this->request->get['filter_yam_id'])) {
 				$url .= '&filter_yam_id=' . $this->request->get['filter_yam_id'];
 			}
+
+			if (isset($this->request->get['filter_yam_express'])) {
+				$url .= '&filter_yam_express=' . $this->request->get['filter_yam_express'];
+			}
+
+			if (isset($this->request->get['filter_yam_campaign_id'])) {
+				$url .= '&filter_yam_campaign_id=' . $this->request->get['filter_yam_campaign_id'];
+			}
 			
 			if (isset($this->request->get['filter_preorder'])) {
 				$url .= '&filter_preorder=' . $this->request->get['filter_preorder'];
@@ -1880,6 +1943,14 @@
 			if (isset($this->request->get['filter_yam_id'])) {
 				$url .= '&filter_yam_id=' . $this->request->get['filter_yam_id'];
 			}
+
+			if (isset($this->request->get['filter_yam_express'])) {
+				$url .= '&filter_yam_express=' . $this->request->get['filter_yam_express'];
+			}
+
+			if (isset($this->request->get['filter_yam_campaign_id'])) {
+				$url .= '&filter_yam_campaign_id=' . $this->request->get['filter_yam_campaign_id'];
+			}
 			
 			if (isset($this->request->get['filter_preorder'])) {
 				$url .= '&filter_preorder=' . $this->request->get['filter_preorder'];
@@ -1943,6 +2014,8 @@
 			$this->data['filter_is_credit_order'] 	= $filter_is_credit_order;
 			$this->data['filter_yam'] 				= $filter_yam;
 			$this->data['filter_yam_id'] 			= $filter_yam_id;
+			$this->data['filter_yam_express'] 		= $filter_yam_express;
+			$this->data['filter_yam_campaign_id'] 	= $filter_yam_campaign_id;
 			$this->data['filter_preorder'] 			= $filter_preorder;
 			$this->data['filter_urgent_buy'] 		= $filter_urgent_buy;
 			$this->data['filter_wait_full'] 		= $filter_wait_full;
@@ -2879,6 +2952,8 @@
 			$this->data['pwa'] 					= $order_info['pwa'];
 			$this->data['yam'] 					= $order_info['yam'];
 			$this->data['yam_id'] 				= $order_info['yam_id'];
+			$this->data['yam_campaign_id'] 		= $order_info['yam_campaign_id'];
+			$this->data['yam_express'] 			= $order_info['yam_express'];
 			$this->data['yam_shipment_date'] 	= $order_info['yam_shipment_date'];
 			$this->data['yam_shipment_id'] 		= $order_info['yam_shipment_id'];
 			$this->data['yam_box_id'] 			= $order_info['yam_box_id'];

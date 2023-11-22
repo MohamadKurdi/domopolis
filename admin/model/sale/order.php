@@ -280,20 +280,13 @@
 		
 		public function getMaxExistentPartie($country_id){
 			
-			$prefixes = array(
-			220 => 'U',
-			176 => 'R',
-			109 => 'R',
-			20  => 'B'
-			
-			);
+			$prefixes = [220 => 'U', 176 => 'R', 109 => 'R', 20  => 'B'];
 			
 			$prefix = $prefixes[$country_id];
 			
 			$query = $this->db->query("SELECT MAX(part_num) as maxpartnum FROM order_product WHERE part_num LIKE('" . $this->db->escape($prefix) . "%')");
 			
-			return $query->row['maxpartnum'];
-			
+			return $query->row['maxpartnum'];			
 		}
 		
 		public function getOrderProductLine($order_product_id){
@@ -304,12 +297,10 @@
 				return $query->row;
 				} else {
 				return false;
-			}
-			
+			}			
 		}
 		
-		public function tryToFindProductLine($data){
-			
+		public function tryToFindProductLine($data){			
 			$query = $this->db->query("SELECT order_product_id FROM `order_product` WHERE order_id = '" . (int)$data['order_id'] . "' AND product_id = '" . (int)$data['product_id'] . "' LIMIT 1");
 			
 			if ($query->row && isset($query->row['order_product_id']) && $query->row['order_product_id']){
@@ -317,11 +308,9 @@
 				} else {
 				return false;
 			}
-			
 		}
 		
-		public function tryToFindProductLineExact($data){
-			
+		public function tryToFindProductLineExact($data){	
 			$query = $this->db->query("SELECT order_product_id FROM `order_product` WHERE order_id = '" . (int)$data['order_id'] . "' AND product_id = '" . (int)$data['product_id'] . "' AND quantity = '" . (int)$data['quantity'] . "' LIMIT 1");
 			
 			if ($query->row && isset($query->row['order_product_id']) && $query->row['order_product_id']){
@@ -329,15 +318,12 @@
 				} else {
 				return false;
 			}
-			
 		}
 		
 		public function setPartiNumForProductLine($data){
-			
 			$partie = str_replace('-', $data['partie']);
 			
 			$this->db->query("UPDATE `order_product` SET part_num = '" . $this->db->escape($partie) . "' WHERE order_product_id = '" . (int)$data['order_product_id'] . "'");
-			
 		}
 		
 		public function addOrder($data) {
@@ -562,15 +548,13 @@
 			return (int)$order_id;
 		}
 		
-		public function getIfOrderClosed($order_id){
-			
+		public function getIfOrderClosed($order_id){			
 			$check = $this->db->query("SELECT closed FROM `order` WHERE order_id = '" . (int)$order_id . "'");
 			if ($check->row['closed']){
 				return true;
 				} else {
 				return false;
 			}
-			
 		}
 		
 		public function editOrder($order_id, $data, $do_not_check_closed = false) {
@@ -2207,6 +2191,8 @@
 				'pwa'               	  => $order_query->row['pwa'],	
 				'yam'               	  => $order_query->row['yam'],
 				'yam_id'               	  => $order_query->row['yam_id'],
+				'yam_campaign_id'      	  => $order_query->row['yam_campaign_id'],
+				'yam_express'      		  => $order_query->row['yam_express'],
 				'yam_shipment_date'       => $order_query->row['yam_shipment_date'],
 				'yam_shipment_id'         => $order_query->row['yam_shipment_id'],
 				'yam_box_id'         	  => $order_query->row['yam_box_id'],
@@ -2388,7 +2374,7 @@
 		}
 		
 		public function getOrders($data = array()) {
-			$sql = "SELECT DISTINCT o.order_id, o.preorder, o.do_not_call, o.pwa, o.monocheckout, o.yam, o.yam_id, o.yam_shipment_date, o.yam_shipment_id, o.yam_box_id, o.yam_fake, o.yam_status, o.yam_substatus, o.template, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.customer_id, o.tracker_xml, o.shipping_code, o.needs_checkboxua, o.paid_by, o.costprice, o.profitability, o.amazon_offers_type, ";
+			$sql = "SELECT DISTINCT o.order_id, o.preorder, o.do_not_call, o.pwa, o.monocheckout, o.yam, o.yam_id, o.yam_campaign_id, o.yam_express, o.yam_shipment_date, o.yam_shipment_id, o.yam_box_id, o.yam_fake, o.yam_status, o.yam_substatus, o.template, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.customer_id, o.tracker_xml, o.shipping_code, o.needs_checkboxua, o.paid_by, o.costprice, o.profitability, o.amazon_offers_type, ";
 
 			if ($this->config->get('ukrcredits_status')){
 				$sql .= " ouc.ukrcredits_order_status, ouc.ukrcredits_order_substatus, ";
@@ -2517,6 +2503,14 @@
 			
 			if (!empty($data['filter_yam_id'])){
 				$sql .= " AND o.yam_id = '" . $this->db->escape($data['filter_yam_id']) . "'";
+			}
+
+			if (!empty($data['filter_yam_campaign_id'])){
+				$sql .= " AND o.yam_campaign_id = '" . (int)$data['filter_yam_campaign_id'] . "'";
+			}
+
+			if (!empty($data['filter_yam_express'])){
+				$sql .= " AND o.yam_express = '" . (int)$data['filter_yam_express'] . "'";
 			}
 			
 			if (!empty($data['filter_order_status_notnull'])){
@@ -3268,6 +3262,14 @@
 			
 			if (!empty($data['filter_yam_id'])){
 				$sql .= " AND o.yam_id = '" . $this->db->escape($data['filter_yam_id']) . "'";
+			}
+
+			if (!empty($data['filter_yam_express'])){
+				$sql .= " AND o.yam_express = '" . (int)$data['filter_yam_express'] . "'";
+			}
+
+			if (!empty($data['filter_yam_campaign_id'])){
+				$sql .= " AND o.yam_campaign_id = '" . (int)$data['filter_yam_campaign_id'] . "'";
 			}
 			
 			if (!empty($data['filter_order_status_notnull'])){

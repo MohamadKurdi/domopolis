@@ -5,7 +5,9 @@
 			<?php if ($orders) { ?>
 				<?php foreach ($orders as $order) { ?>
 					<tr>
-						<td  class="right" style="text-align: left;"><?php echo $order['order_id']; ?></td>
+						<td  class="right" style="text-align: left; <?php if ($order['yam_express']) { ?>background-color:#cf4a61; color:white;<? } ?>">
+							<?php echo $order['order_id']; ?>
+						</td>
 						<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
 							<td  class="center" style="width:20px;">
 								<?php if ($order['amazon_offers_type']) { ?>
@@ -24,7 +26,8 @@
 							<?php } ?>
 
 							<div style="clear:both;"></div>
-							<span style="font-size:10px; line-height:13px; <?php if ($order['email_bad']) { ?>color:#ff5656<?php } else { ?>color:#02760e<? } ?>">
+							<span style="font-size:10px; line-height:13px; 
+							<?php if ($order['email_bad']) { ?>color:#ff5656<?php } else { ?>color:#02760e<? } ?>">
 											<? echo $order['email']; ?>
 											<?php if ($order['email_bad']) { ?><i class="fa fa-exclamation-triangle" style="color:#ff5656"></i><?php } ?>
 											<?php if (!$order['email_bad']) { ?><i class="fa fa-check-circle" style="color:#02760e"></i><?php } ?>
@@ -52,20 +55,27 @@
 							
 							<? if ($order['yam']) { ?>		
 								<div style="clear:both;"></div>
-								<div style="display:inline-block; padding:2px 3px; font-size:9px; margin:3px; background:#ff0000; color:#FFF;" >
+								<div style="display:inline-block; padding:2px 3px; font-size:9px; margin:3px; background:#cf4a61; color:#FFF;" >
 									<i class="fa fa-yoast" aria-hidden="true"></i> Я.Маркет
 								</div>																						
 							<? } ?>
+
+							<? if ($order['yam_express']) { ?>		
+								<div style="clear:both;"></div>
+								<div style="display:inline-block; padding:2px 3px; font-size:9px; margin:3px; background:#cf4a61; color:#FFF;" >
+									<i class="fa fa-yoast" aria-hidden="true"></i> Экспресс
+								</div>																						
+							<? } ?>
 							
-							<? if ($order['customer_segments']) { ?>
+							<? if ($order['customersegments']) { ?>
 								<div style="clear:both;"></div>																						
-								<? foreach ($order['customer_segments'] as $_segment) { ?>
-									<? if (strpos($_segment['name'], 'Источник') !== false) { ?>
-										<span style="display:inline-block; padding:2px 3px; font-size:9px; margin:3px; background:#<? if ($_segment['bg_color']) { ?><? echo $_segment['bg_color'] ?><? } else { ?>e6e9f3<? } ?>; color:#<? if ($_segment['txt_color']) { ?><? echo $_segment['txt_color'] ?><? } else { ?>696969<? } ?>">
-											<? if ($_segment['fa_icon']) { ?>
-												<i class="fa <? echo $_segment['fa_icon']; ?>" aria-hidden="true"></i>&nbsp;
-											<? } ?><?php echo $_segment['name']; ?>
-											<? if ($_segment['is_new']) { ?>
+								<? foreach ($order['customersegments'] as $segment) { ?>
+									<? if (strpos($segment['name'], 'Источник') !== false) { ?>
+										<span style="display:inline-block; padding:2px 3px; font-size:9px; margin:3px; background:#<? if ($segment['bg_color']) { ?><? echo $segment['bg_color'] ?><? } else { ?>e6e9f3<? } ?>; color:#<? if ($segment['txt_color']) { ?><? echo $segment['txt_color'] ?><? } else { ?>696969<? } ?>">
+											<? if ($segment['fa_icon']) { ?>
+												<i class="fa <? echo $segment['fa_icon']; ?>" aria-hidden="true"></i>&nbsp;
+											<? } ?><?php echo $segment['name']; ?>
+											<? if ($segment['is_new']) { ?>
 												<sup style="color:#ef5e67; font-size:10px;">new</sup>
 											<? } ?>&nbsp;
 										</span>

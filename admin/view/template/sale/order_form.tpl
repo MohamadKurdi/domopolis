@@ -35,7 +35,7 @@
 				<?php echo $heading_title; ?> 
 				
 				<?php if ($yam && $yam_id) { ?>
-					<span style="color:red;padding-left:10px;padding-right:10px;"><i class="fa fa-yoast" aria-hidden="true"></i> <?php echo $yam_id; ?></span>
+					<span style="color:red;padding-left:10px;padding-right:10px;"><i class="fa fa-hacker-news" aria-hidden="true"></i> <?php echo $yam_id; ?></span>
 				<?php } ?>
 				
 				<span class="add2ticket" style="font-size:36px;" data-query="object=order&object_value=<?php echo $order_id; ?>"></span>&nbsp;
@@ -629,7 +629,7 @@
 																							
 																							<?php if ($yam) { ?>
 																								<div style="display:inline-block; padding:2px 3px; font-size:10px; margin:3px; background:#cf4a61; color:#FFF;" >
-																									<i class="fa fa-yoast" aria-hidden="true"></i> Я.Маркет
+																									<i class="fa fa-hacker-news" aria-hidden="true"></i> Я.Маркет
 																								</div>	
 																							<? } ?>
 																							
@@ -661,26 +661,38 @@
 																						
 																						<td class="left" width="40%">
 																							<? if ($yam) { ?>	
-																								<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#cf4a61; color:#FFF;" >
-																									<i class="fa fa-yoast" aria-hidden="true"></i> Заказ Маркета <?php echo $yam_id; ?>
+																								<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#00AD07; color:#FFF;" >
+																									<i class="fa fa-hacker-news" aria-hidden="true"></i> Заказ Маркета <?php echo $yam_id; ?>
+																								</div>	
+																							<?php } ?>
+
+																							<? if ($yam_campaign_id) { ?>	
+																								<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#00AD07; color:#FFF;" >
+																									<i class="fa fa-hacker-news" aria-hidden="true"></i> Кампания <?php echo $yam_campaign_id; ?>
+																								</div>	
+																							<?php } ?>
+
+																							<? if ($yam_express) { ?>	
+																								<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#F96E64; color:#FFF;" >
+																									<i class="fa fa-hacker-news" aria-hidden="true"></i> Экспресс
 																								</div>	
 																							<?php } ?>
 																							
 																							<? if ($yam_fake) { ?>	
 																								<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#F96E64; color:#FFF;" >
-																									<i class="fa fa-yoast" aria-hidden="true"></i> Тестовый
+																									<i class="fa fa-hacker-news" aria-hidden="true"></i> Тестовый
 																								</div>	
 																							<?php } ?>
 																							
 																							<? if ($yam_status) { ?>	
 																								<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#cf4a61; color:#FFF;" >
-																									<i class="fa fa-yoast" aria-hidden="true"></i> Статус Маркета <?php echo $yam_status; ?>
+																									<i class="fa fa-hacker-news" aria-hidden="true"></i> Статус Маркета <?php echo $yam_status; ?>
 																								</div>	
 																							<?php } ?>
 																							
 																							<? if ($yam_substatus) { ?>	
 																								<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#ff7815; color:#FFF;" >
-																									<i class="fa fa-yoast" aria-hidden="true"></i> Подстатус Маркета <?php echo $yam_substatus; ?>
+																									<i class="fa fa-hacker-news" aria-hidden="true"></i> Подстатус Маркета <?php echo $yam_substatus; ?>
 																								</div>	
 																							<?php } ?>
 																							
@@ -688,11 +700,11 @@
 																							<? if ($yam) { ?>	
 																								<?php if ($yam_shipment_date && $yam_shipment_date != '0000-00-00') { ?>
 																									<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#7F00FF; color:#FFF;" >
-																										<i class="fa fa-yoast" aria-hidden="true"></i> Дата отгрузки <?php echo $yam_shipment_date; ?>
+																										<i class="fa fa-hacker-news" aria-hidden="true"></i> Дата отгрузки <?php echo $yam_shipment_date; ?>
 																									</div>	
 																								<?php } else { ?>
 																									<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#cf4a61; color:#FFF;" >
-																										<i class="fa fa-yoast" aria-hidden="true"></i> Не задана дата отгрузки
+																										<i class="fa fa-hacker-news" aria-hidden="true"></i> Не задана дата отгрузки
 																									</div>	
 																								<?php } ?>
 																							<?php } ?>
@@ -700,7 +712,7 @@
 																							<? if ($yam) { ?>	
 																								<?php if ($yam_shipment_id) { ?>
 																									<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#7F00FF; color:#FFF;" >
-																										<i class="fa fa-yoast" aria-hidden="true"></i> Поставка <?php echo $yam_shipment_id; ?>
+																										<i class="fa fa-hacker-news" aria-hidden="true"></i> Поставка <?php echo $yam_shipment_id; ?>
 																									</div>	
 																									
 																									<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#00ad07; color:#FFF;">
@@ -709,7 +721,7 @@
 																									
 																								<?php } else { ?>
 																									<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#cf4a61; color:#FFF;" >
-																										<i class="fa fa-yoast" aria-hidden="true"></i> Не задана поставка
+																										<i class="fa fa-hacker-news" aria-hidden="true"></i> Не задана поставка
 																									</div>	
 																								<?php } ?>
 																							<?php } ?>
@@ -717,7 +729,7 @@
 																							<? if ($yam && $yam_shipment_date && $yam_shipment_id) { ?>	
 																								<?php if ($yam_box_id) { ?>
 																									<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#7F00FF; color:#FFF;" >
-																										<i class="fa fa-yoast" aria-hidden="true"></i> Коробка <?php echo $yam_box_id; ?>
+																										<i class="fa fa-hacker-news" aria-hidden="true"></i> Коробка <?php echo $yam_box_id; ?>
 																									</div>		
 																									
 																									<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#00ad07; color:#FFF;">
@@ -730,7 +742,7 @@
 																									
 																								<?php } else { ?>
 																									<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#cf4a61; color:#FFF;" >
-																										<i class="fa fa-yoast" aria-hidden="true"></i> Не задана коробка
+																										<i class="fa fa-hacker-news" aria-hidden="true"></i> Не задана коробка
 																									</div>	
 																								<?php } ?>
 																							<?php } ?>
@@ -1441,7 +1453,7 @@
 														<textarea rows="3" name="order_product[<?php echo $product_row; ?>][name]" style="width:97%; height:40px;" ><?php echo $order_product['name']; ?></textarea><br />
 														
 														<?php if ($yam && $this->config->get('config_yam_offer_id_prefix') && $this->config->get('config_yam_offer_id_prefix_enable')) { ?>
-															<span style="font-size:11px; display:inline-block; float:right; padding:3px; color:#FFF; background-color:#cf4a61;"><i class="fa fa-yoast" aria-hidden="true"></i> <?php echo $this->config->get('config_yam_offer_id_prefix') . $order_product['product_id']; ?></span>	
+															<span style="font-size:11px; display:inline-block; float:right; padding:3px; color:#FFF; background-color:#cf4a61;"><i class="fa fa-hacker-news" aria-hidden="true"></i> <?php echo $this->config->get('config_yam_offer_id_prefix') . $order_product['product_id']; ?></span>	
 														<? } ?>
 														
 														<?php if ($order_product['ean']) { ?>

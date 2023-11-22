@@ -244,6 +244,7 @@
 				'ukrcredits_order_status'      => !empty($result['ukrcredits_order_status'])?$result['ukrcredits_order_status']:false,
 				'ukrcredits_order_substatus'   => !empty($result['ukrcredits_order_status'])?$result['ukrcredits_order_substatus']:false,
 				'yam'     			=> $result['yam'],				
+				'yam_express'     	=> $result['yam_express'],
 				'yam_comission'		=> ($result['yam'])?$this->currency->format(-1 * ($sub_total/100*12), $result['currency_code'], '1'):false,
 				'reward'     		=> $this->currency->formatBonus($result['reward'], true),
 				'reward_used'   	=> $result['reward_used']?$this->currency->formatNegativeBonus($result['reward_used'], true):false,

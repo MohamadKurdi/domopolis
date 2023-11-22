@@ -123,7 +123,7 @@ class ModelKPProduct extends Model {
 			'is_native'				=> $offer['isNativeOffer'],
 			'date_added'			=> date('Y-m-d', strtotime($offer['date_added'])),
 			'time_added'			=> date('H:i:s', strtotime($offer['date_added'])),
-			'link'					=> $offer['sellerLink']?$offer['sellerLink']:$this->rainforestAmazon->createLinkToAmazonSearchPage($this->data['asin']),
+			'link'					=> $offer['sellerLink']?$offer['sellerLink']:$this->rainforestAmazon->createLinkToAmazonSearchPage($offer['asin']),
 		];
 	}
 

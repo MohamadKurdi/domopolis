@@ -1,7 +1,8 @@
 {
 	"yamarket-partner-api/stocks" : 					"yamarket/api/stocks",
 	"yamarket-partner-api/cart" : 						"yamarket/api/cart",
-	"yamarket-partner-api/acts/receptiontransferact" : 	"yamarket/api/receptiontransferact",
+	"yamarket-partner-api/acts/receptiontransferact" 		: 	"yamarket/api/receptiontransferact",
+	"yamarket-partner-api/acts/receptiontransferact_express" 	: 	"yamarket/api/receptiontransferact_express",
 	"yamarket-partner-api/box/label" : 					"yamarket/api/boxlabel",
 	"yamarket-partner-api/shipment/label" : 			"yamarket/api/shipmentlabel",
 	"yamarket-partner-api/order/label" : 				"yamarket/api/orderlabel",	

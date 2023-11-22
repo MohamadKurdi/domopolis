@@ -120,7 +120,7 @@
 						</td>
 						<td width="25%" class="center" style="padding:10px 5px;">
 
-							<a style="border:2px solid #7F00FF; color:#7F00FF" href="<?php echo HTTPS_CATALOG . 'yamarket-partner-api/acts/receptiontransferact'?>" target="_blank" class="button"><i class="fa fa-yoast"></i> Маркет АКТ Приема-передачи</a>
+							<a style="border:2px solid #7F00FF; color:#7F00FF" href="<?php echo HTTPS_CATALOG . 'yamarket-partner-api/acts/receptiontransferact'?>" target="_blank" class="button"><i class="fa fa-hacker-news"></i> Маркет АКТ Приема-передачи</a>
 
 						</td>
 					</tr>
@@ -358,7 +358,7 @@
 							
 							<div>
 								<input type="hidden" id="filter_product_id" name="filter_product_id" value="<?php echo $filter_product_id; ?>" />
-								<input type="text" id="filter_product_product" name="product" value="<?php echo $filtered_product['name']; ?>" style="width:350px;" />
+								<input type="text" id="filter_product_product" name="product" value="<?php echo $filtered_product['name']; ?>" style="width:350px;" placeholder="Поиск по товару" />
 								<br /><b>ID</b>&nbsp;<span id="filter_product_id_id"><?php echo $filtered_product['product_id']; ?></span>&nbsp;&nbsp;
 								<b>SKU</b>&nbsp;<span id="filter_product_model"><?php echo $filtered_product['model']; ?></span>&nbsp;&nbsp;
 								<b>EAN</b>&nbsp;<span id="filter_product_ean"><?php echo $filtered_product['ean']; ?></span>&nbsp;&nbsp;
@@ -468,9 +468,7 @@
 								<label for="checkbox_12" style="color:#005BBB;"><i class="fa fa-bus" style="padding: 3px 5px;background-color: #005BBB;color: #FFF;"></i>&nbsp;Специальная логистика</label>
 							</div>
 							<?php } ?>
-						</td>
-						<td class="input_aling">	
-							
+
 							<div style="margin-top:5px;">
 								<input id="checkbox_14" class="checkbox" type="checkbox" name="filter_pwa" <? if ($filter_pwa) { ?>checked="checked"<? } ?> value="1" /> 
 								<label for="checkbox_14" style="color:#7F00FF;"><i class="fa fa-download" style="padding: 3px 3px;background-color: #7F00FF;color: #FFF;"></i>&nbsp;PWA/APP Заказы</label>								
@@ -482,25 +480,33 @@
 									<label for="checkbox_149" style="color:#00AD07;"><i class="fa fa-percent" style="padding: 3px 3px;background-color: #00AD07;color: #FFF;"></i>&nbsp;Кредитные Заказы</label>								
 								</div>
 							<?php } ?>
-							
-							<?php if ($this->config->get('config_country_id') == 176) { ?>
+
+						</td>
+						<?php if ($this->config->get('config_country_id') == 176) { ?>
+							<td class="input_aling">	
 								<div style="margin-top:5px;">
 									<input id="checkbox_22" class="checkbox" type="checkbox" name="filter_yam" <? if ($filter_yam) { ?>checked="checked"<? } ?> value="1" /> 
-									<label for="checkbox_22" style="color:#cf4a61"><i class="fa fa-yoast" style="padding: 3px 3px;background-color: #cf4a61;color: #FFF;"></i>&nbsp;Я.Маркет заказы</label>								
+									<label for="checkbox_22" style="color:#cf4a61"><i class="fa fa-hacker-news" style="padding: 3px 3px;background-color: #cf4a61;color: #FFF;"></i>&nbsp;Я.Маркет</label>								
+									<a style="margin-left:5px;" href="<?php echo HTTPS_CATALOG . 'yamarket-partner-api/acts/receptiontransferact'?>" target="_blank"><i class="fa fa-hacker-news"></i> Акт ПП FBS</a>	
 								</div>
 
 								<div style="margin-top:5px;">
-									<a style="display:inline-block; float:left; margin-right:5px;" href="<?php echo HTTPS_CATALOG . 'yamarket-partner-api/acts/receptiontransferact'?>" target="_blank" class="button"><i class="fa fa-yoast"></i> АКТ ПП</a>
-
-
-									<input type="text" name="filter_yam_id" placeholder="Ya.Market ID" value="<?php echo $filter_yam_id; ?>" size="25" style="text-align: left; width:120px; display:inline-block; float:left;" />
+									<input id="checkbox_224" class="checkbox" type="checkbox" name="filter_yam" <? if ($filter_yam_express) { ?>checked="checked"<? } ?> value="1" /> 
+									<label for="checkbox_224" style="color:#cf4a61"><i class="fa fa-hacker-news" style="padding: 3px 3px;background-color: #cf4a61;color: #FFF;"></i>&nbsp;Я.Маркет Express</label>								
 								</div>
-							<?php } ?>
-							
-						</td>
+
+								<div style="margin-top:10px;">
+									<input type="text" name="filter_yam_id" placeholder="ID заказа" value="<?php echo $filter_yam_id; ?>" size="25" style="text-align: left; width:120px;" />
+									<input type="text" name="filter_yam_campaign_id" placeholder="ID кампании" value="<?php echo $filter_yam_campaign_id; ?>" size="25" style="text-align: left; width:120px;" />
+								</div>						
+							</td>
+						<?php } else { ?>
+							<td class="input_aling">
+							</td>
+						<?php } ?>
 					</tr>
 					<tr>
-						<td colspan="7" align="right" style="padding-right:10px;"><a onclick="filter(false);" class="button"><?php echo $button_filter; ?></a>&nbsp;<a onclick="filter(true);" class="button">CSV</a></td>
+						<td colspan="7" align="right" style="padding-right:10px; padding-top:5px;"><a onclick="filter(false);" class="button"><?php echo $button_filter; ?></a>&nbsp;<a onclick="filter(true);" class="button">CSV</a></td>
 					</tr>
 				</table>
 				<div class="filter_bord"></div>
@@ -588,17 +594,23 @@
 										<div style="margin-bottom:5px; padding:4px 7px; font-weight:400; font-size:18px;">
 											<?php echo $order['order_id']; ?>&nbsp;<span style="font-size:12px;" class="add2ticket" data-query="object=order&object_value=<?php echo $order['order_id']; ?>"></span>
 										</div>
+
+										<? if ($order['yam'] && $order['yam_express']) { ?>	
+											<div style="margin-bottom:5px; margin-top:5px; padding:4px 7px; font-weight:400; font-size:14px; padding:3px; background-color:#cf4a61; color:#fff;" >
+												<i class="fa fa-hacker-news" aria-hidden="true"></i> Экспресс
+											</div>											
+										<?php } ?>
 																				
 										<? if ($order['yam'] && $order['yam_id']) { ?>	
 											<div style="margin-bottom:5px; margin-top:5px; padding:4px 7px; font-weight:400; font-size:16px; color:#cf4a61;" >
-												<?php echo $order['yam_id']; ?> <i class="fa fa-yoast" aria-hidden="true"></i> 
+												 <i class="fa fa-hacker-news" aria-hidden="true"></i> <?php echo $order['yam_id']; ?>
 											</div>											
-										<?php } ?>
+										<?php } ?>									
 										
 										<? if ($order['preorder']) { ?>
 											<div><div style="white-space: nowrap; font-size:10px; display:inline-block; margin-top:4px; padding:3px; background-color:#000; color:#fff;"><b>
 											<i class="fa fa-question-circle" aria-hidden="true"></i></b> уточнить цену</b></div></div>
-									<? } ?>
+										<? } ?>
 									
 									<? if ($order['first_referrer']) { ?>											
 										<div style="display:inline-block; padding:2px 3px; font-size:10px; margin:3px; <? if ($order['is_marketplace']) { ?>background:#ff5656; color:#FFF;<? } else { ?>background:#e6e9f3; color:#696969;<? } ?>" >
@@ -632,7 +644,7 @@
 									
 									<? if ($order['yam']) { ?>											
 										<div style="display:inline-block; padding:2px 3px; font-size:10px; margin:3px; background:#cf4a61; color:#FFF;" >
-											<i class="fa fa-yoast" aria-hidden="true"></i> Я.Маркет
+											<i class="fa fa-hacker-news" aria-hidden="true"></i> Я.Маркет
 										</div>	
 										
 									<? } ?>
@@ -690,7 +702,17 @@
 								<? if ($order['is_mudak']) { ?>
 									<span style="background:white; color:red; padding:3px;"><i class='fa fa-ambulance' style='color:red; font-size:16px;'></i>&nbsp;&nbsp;
 									<? } ?>	
-									<a href="<? echo $order['customer_href']; ?>" style="font-size:16px;" target="_blank"><?php echo $order['customer']; ?></a>&nbsp;<span class="add2ticket" data-query="object=order&object_value=<?php echo $order['order_id']; ?>"></span>&nbsp;<span><a href="<? echo $order['customer_pl']; ?>" target="_blank"><i class="fa fa-envelope" aria-hidden="true"></i></a></span>									
+									<a href="<? echo $order['customer_href']; ?>" style="font-size:16px;" target="_blank">
+										<?php echo $order['customer']; ?>											
+									</a>&nbsp;<span class="add2ticket" data-query="object=order&object_value=<?php echo $order['order_id']; ?>"></span>
+									&nbsp;<span>
+										<a href="<? echo $order['customer_pl']; ?>" target="_blank"><i class="fa fa-envelope" aria-hidden="true"></i></a>
+									</span>	
+
+									<? if ($order['yam'] && $order['yam_campaign_id']) { ?>
+										<br />											
+										<span style="display:inline-block;padding:2px 3px; background:#F96E64; color:#fff; font-size:14px; margin:3px;"><i class="fa fa-hacker-news" aria-hidden="true"></i> <?php echo $order['yam_campaign_id']; ?></span>										
+									<?php } ?>								
 									
 									<?php if ($order['yam'] && $order['yam_fake']) { ?>
 										<br />
@@ -876,11 +898,11 @@
 												<br />
 												<?php if ($order['yam_shipment_date'] && $order['yam_shipment_date'] != '0000-00-00') { ?>
 													<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#7F00FF; color:#FFF;" >
-														<i class="fa fa-yoast" aria-hidden="true"></i> Дата отгрузки <?php echo $order['yam_shipment_date']; ?>
+														<i class="fa fa-hacker-news" aria-hidden="true"></i> Дата отгрузки <?php echo $order['yam_shipment_date']; ?>
 													</div>	
 													<?php } else { ?>
 													<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#cf4a61; color:#FFF;" >
-														<i class="fa fa-yoast" aria-hidden="true"></i> Не задана дата отгрузки
+														<i class="fa fa-hacker-news" aria-hidden="true"></i> Не задана дата отгрузки
 													</div>	
 												<?php } ?>
 											<?php } ?>
@@ -889,7 +911,7 @@
 												<br />
 												<?php if ($order['yam_shipment_id']) { ?>
 													<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#7F00FF; color:#FFF;" >
-														<i class="fa fa-yoast" aria-hidden="true"></i> Отгрузка <?php echo $order['yam_shipment_id']; ?>
+														<i class="fa fa-hacker-news" aria-hidden="true"></i> Отгрузка <?php echo $order['yam_shipment_id']; ?>
 													</div>	
 													
 													<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#00ad07; color:#FFF;">
@@ -898,7 +920,7 @@
 													
 													<?php } else { ?>
 													<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#cf4a61; color:#FFF;" >
-														<i class="fa fa-yoast" aria-hidden="true"></i> Не задана поставка
+														<i class="fa fa-hacker-news" aria-hidden="true"></i> Не задана поставка
 													</div>	
 												<?php } ?>
 											<?php } ?>
@@ -907,7 +929,7 @@
 												<br />
 												<?php if ($order['yam_box_id']) { ?>
 													<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#7F00FF; color:#FFF;" >
-														<i class="fa fa-yoast" aria-hidden="true"></i> Коробка <?php echo $order['yam_box_id']; ?>
+														<i class="fa fa-hacker-news" aria-hidden="true"></i> Коробка <?php echo $order['yam_box_id']; ?>
 													</div>		
 													
 													<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#00ad07; color:#FFF;">
@@ -917,7 +939,7 @@
 													
 													<?php } else { ?>
 													<div style="display:inline-block; padding:2px 3px; font-size:14px; margin:3px; background:#cf4a61; color:#FFF;" >
-														<i class="fa fa-yoast" aria-hidden="true"></i> Не задана коробка
+														<i class="fa fa-hacker-news" aria-hidden="true"></i> Не задана коробка
 													</div>	
 												<?php } ?>
 											<?php } ?>
@@ -1033,14 +1055,14 @@
 											<?php if ($order['yam'] && $order['yam_status']) { ?>
 												<br />
 												<span class="status_color" style="font-size:12px; margin-top:5px; display:inline-block; padding:5px 4px; background: #cf4a61; color:#FFFFFF">
-													<i class="fa fa-yoast" aria-hidden="true"></i> <?php echo $order['yam_status']; ?>
+													<i class="fa fa-hacker-news" aria-hidden="true"></i> <?php echo $order['yam_status']; ?>
 												</span>
 											<?php } ?>
 											
 											<?php if ($order['yam'] && $order['yam_substatus']) { ?>
 												<br />
 												<span class="status_color" style="font-size:12px;  margin-top:5px; display:inline-block; padding:5px 4px; background: #ff7815; color:#FFFFFF">
-													<i class="fa fa-yoast" aria-hidden="true"></i> <?php echo $order['yam_substatus']; ?>
+													<i class="fa fa-hacker-news" aria-hidden="true"></i> <?php echo $order['yam_substatus']; ?>
 												</span>
 											<?php } ?>
 											
@@ -1433,6 +1455,18 @@
 
 			if (filter_yam_id) {
 				url += '&filter_yam_id=' + encodeURIComponent(filter_yam_id);
+			}
+
+			var filter_yam_campaign_id = $('input[name=\'filter_yam_campaign_id\']').attr('value');
+
+			if (filter_yam_campaign_id) {
+				url += '&filter_yam_campaign_id=' + encodeURIComponent(filter_yam_campaign_id);
+			}
+
+			var filter_yam_express = $('input[name=\'filter_yam_express\']:checked').val();
+		
+			if (filter_yam_express !== undefined) {
+				url += '&filter_yam_express=1';
 			}
 		<?php } ?>	
 

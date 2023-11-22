@@ -341,6 +341,14 @@ class ModelCheckoutOrder extends Model {
 			$this->db->ncquery("UPDATE `order` SET yam_id = '" . (int)$data['yam_id'] . "' WHERE order_id = '" . (int)$order_id . "'");
 		}
 
+		if (!empty($data['yam_express'])){
+			$this->db->ncquery("UPDATE `order` SET yam_express = '" . (int)$data['yam_express'] . "' WHERE order_id = '" . (int)$order_id . "'");
+		}
+
+		if (!empty($data['yam_campaign_id'])){
+			$this->db->ncquery("UPDATE `order` SET yam_campaign_id = '" . (int)$data['yam_campaign_id'] . "' WHERE order_id = '" . (int)$order_id . "'");
+		}
+
 		if (!empty($data['yam_fake'])){
 			$this->db->ncquery("UPDATE `order` SET yam_fake = '" . (int)$data['yam_fake'] . "' WHERE order_id = '" . (int)$order_id . "'");
 		}
