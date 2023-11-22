@@ -243,8 +243,7 @@ class PriceLogic
 			$this->db->query("UPDATE `order` SET profitability = '0' WHERE order_id = '" . (int)$order_id . "'");
 			$this->db->query("UPDATE `order` SET costprice = '0' WHERE order_id = '" . (int)$order_id . "'");
 			echoLine('[PriceLogic::countOrderProfitablility] Order ' . $order_id . ' has no products', 'e');			
-		}
-	
+		}	
 	}	
 
 	public function getProductDimensions($product){
