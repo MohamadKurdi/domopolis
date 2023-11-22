@@ -35,8 +35,8 @@ class ModelPaymentMonoCheckout extends Model
         return $secretKey;
     }
 
-    public function updateOrderInvoiceId($order_id, $invoiceId){
-        $this->db->query("UPDATE mono_orders SET InvoiceId = '" . $this->db->escape($InvoiceId) . "' WHERE order_id = '" . $this->db->escape($order_id) . "'");
+    public function updateOrderInvoiceId($order_id, $InvoiceId){
+        $this->db->query("UPDATE mono_orders SET InvoiceId = '" . $this->db->escape($InvoiceId) . "' WHERE OrderId = '" . $this->db->escape($order_id) . "'");
     }
 
     public function addOrder($order_id, $mono_order_id){
@@ -90,15 +90,15 @@ class ModelPaymentMonoCheckout extends Model
         $this->load->model('tool/simpleapicustom');
 
         $this->db->query("UPDATE `order` SET
-                firstname           = '" . $this->db->escape($json['mainClientInfo']['first_name']) . "',
-                lastname            = '". $this->db->escape($json['mainClientInfo']['last_name']) ."',
-                payment_firstname   = '" . $this->db->escape($json['mainClientInfo']['first_name']) . "',
-                payment_lastname    = '" . $this->db->escape($json['mainClientInfo']['last_name']) . "',                
-                shipping_firstname     = '" . $this->db->escape($json['deliveryRecipientInfo']['first_name']) . "',
-                shipping_lastname      = '" . $this->db->escape($json['deliveryRecipientInfo']['last_name']) . "',
-                lastname    = '". $this->db->escape($json['mainClientInfo']['last_name']) ."',
-                telephone   = '". $this->db->escape($json['mainClientInfo']['phoneNumber']) ."',
-                email       = '". $this->db->escape($json['mainClientInfo']['email']) ."'
+                firstname               = '" . $this->db->escape($json['mainClientInfo']['first_name']) . "',
+                lastname                = '". $this->db->escape($json['mainClientInfo']['last_name']) ."',
+                payment_firstname       = '" . $this->db->escape($json['mainClientInfo']['first_name']) . "',
+                payment_lastname        = '" . $this->db->escape($json['mainClientInfo']['last_name']) . "',                
+                shipping_firstname      = '" . $this->db->escape($json['deliveryRecipientInfo']['first_name']) . "',
+                shipping_lastname       = '" . $this->db->escape($json['deliveryRecipientInfo']['last_name']) . "',
+                lastname                = '". $this->db->escape($json['mainClientInfo']['last_name']) ."',
+                telephone               = '". $this->db->escape($json['mainClientInfo']['phoneNumber']) ."',
+                email                   = '". $this->db->escape($json['mainClientInfo']['email']) ."'
             WHERE order_id = '" . $order_info['order_id'] . "'");
 
 
@@ -189,7 +189,7 @@ class ModelPaymentMonoCheckout extends Model
         $can_use_credit = true;
         foreach ($order_products as $product){
             $product_info = $this->model_catalog_product->getProduct($product['product_id'], false);
-            $credit_data  = $this->model_module_ukrcredits->checkproduct($product_info);
+            $credit_data  = $this->model_module_ukrcredits->checkproduct($product_info);            
 
             if (empty($credit_data['mb'])){
                 $can_use_credit = false;

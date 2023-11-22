@@ -933,9 +933,10 @@
 			
 			foreach ($this->getProducts() as $product) {
 				if (isset($product['total_national'])){
-					$total_national += $product['total_national'];	
-					//$total_national += $product['price'] *  $product['quantity']
-					} else {
+					$total_national += $product['total_national'];						
+				} elseif (isset($product['price_national'])){
+					$total_national += $product['price_national'] *  $product['quantity'];
+				} else {
 					$total_national += $this->currency->convert($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'), $this->config->get('config_regional_currency')) * $product['quantity'];
 				}
 			}

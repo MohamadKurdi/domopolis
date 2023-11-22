@@ -39,7 +39,7 @@ class ModelPaymentMono extends Model
         if($query->num_rows) {
             $this->db->ncquery("UPDATE `mono_orders` SET SecretKey = '" . $this->db->escape($args['randKey']) . "', InvoiceId = '" . $this->db->escape($args['InvoiceId']) . "' WHERE OrderId = '" . (int)$args['order_id'] . "'");
         } else {
-            $this->db->ncquery("INSERT INTO `mono_orders` (InvoiceId, OrderId, SecretKey) VALUES('".$args['InvoiceId']."',".$args['order_id'].",'".$args['randKey']."')");
+            $this->db->ncquery("INSERT INTO `mono_orders` (InvoiceId, OrderId, SecretKey) VALUES('".$args['InvoiceId']."', ".$args['order_id'].", '".$args['randKey']."')");
         }
     }
 
@@ -47,6 +47,20 @@ class ModelPaymentMono extends Model
         $q = $this->db->ncquery("SELECT * FROM `mono_orders` WHERE OrderId = '". (int)$OrderId . "'");
 
         return $q->num_rows ? $q->row : false;
+    }
+
+    public function updateInvoiceStatus($InvoiceId, $status){
+        $this->db->query("UPDATE mono_orders SET status = '" . $this->db->escape($status) . "' WHERE InvoiceId = '" . $this->db->escape($InvoiceId) . "'");
+    }
+
+    public function getPaymentDataByOrderId($order_id){
+        $q = $this->db->query("SELECT * FROM mono_orders WHERE OrderId = '" . (int)$order_id . "' AND status = '" . 'success' . "' LIMIT 1");
+
+        return $q->num_rows ? $q->row : false;
+    }
+
+    public function updatePaymentData($InvoiceId, $payment_data){
+        $this->db->query("UPDATE mono_orders SET payment_data = '" . $this->db->escape($payment_data) . "' WHERE InvoiceId = '" . $this->db->escape($InvoiceId) . "'");
     }
 
     public function getOrderInfo($InvoiceId){
@@ -151,6 +165,46 @@ class ModelPaymentMono extends Model
         return $products;
     }
 
+    public function getInvoicePaymentInfo($InvoiceId){
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.monobank.ua/api/merchant/invoice/payment-info?invoiceId='. $InvoiceId . '',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'X-Token: '.$this->config->get('mono_merchant').''
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        return $response;
+    }
+
+    public function getInvoiceStatus($InvoiceId) {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.monobank.ua/api/merchant/invoice/status?invoiceId=' . $InvoiceId . '',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'X-Token: '.$this->config->get('mono_merchant').''
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        return json_decode($response)->status;
+    }
+
     public function sendToAPI($requestData){
         $basketOrder    =  $this->getEncodedProducts($requestData['order_id']);
 
@@ -239,5 +293,5 @@ class ModelPaymentMono extends Model
 
         $this->addOrder($requestData);
         return $response;
-    }
+    }    
 }

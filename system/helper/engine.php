@@ -1,16 +1,18 @@
 <?php
 
 function loadAndRenameCatalogModels($path, $className = '', $classNameTo = ''){
-	$modelCatalogModelContents = file_get_contents(DIR_CATALOG . $path);
+	if ($className && !class_exists($className)){
+		$modelCatalogModelContents = file_get_contents(DIR_CATALOG . $path);
 
-	if ($className && $classNameTo){
-		$modelCatalogModelContents = str_replace($className, $classNameTo, $modelCatalogModelContents);
+		if ($className && $classNameTo){
+			$modelCatalogModelContents = str_replace($className, $classNameTo, $modelCatalogModelContents);
+		}
+
+		$modelCatalogModelContents = str_replace('<?php', '', $modelCatalogModelContents);
+		$modelCatalogModelContents = str_replace('<?', '', $modelCatalogModelContents);
+
+		eval($modelCatalogModelContents);
 	}
-	
-	$modelCatalogModelContents = str_replace('<?php', '', $modelCatalogModelContents);
-	$modelCatalogModelContents = str_replace('<?', '', $modelCatalogModelContents);
-
-	eval($modelCatalogModelContents);
 }
 
 function loadAndRenameAnyModels($path, $className, $classNameTo){

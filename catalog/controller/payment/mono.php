@@ -73,207 +73,6 @@ class ControllerPaymentMono extends Controller
         $this->response->setOutput($this->render());
     }
 
-    public function laterpay(){
-        if (!$this->validateLaterpay()){
-            $this->redirect('account/order');
-        }
-
-        $this->index($this->request->get['order_id'], true);
-    }
-
-    protected function validateLaterpay() {
-        if ((!isset($this->request->get['order_id'])) || (!isset($this->request->get['order_tt'])) || (!isset($this->request->get['order_fl']))) {
-            return false;
-        } else {
-            $this->load->model('checkout/order');
-            $order_info = $this->model_checkout_order->getOrder($this->request->get['order_id']);
-            if ((!$order_info) || ($this->request->get['order_id'] != $order_info['order_id']) || ($this->request->get['order_tt'] != $order_info['total_national']) || ($this->request->get['order_fl']) != md5($order_info['firstname'] . $order_info['lastname'])) {
-                return false;
-            }
-        }
-        return true;
-    }       
-
-    public function response(){
-        $this->language->load('payment/mono');
-        $this->load->model('payment/mono');
-        $this->load->model('checkout/order');
-        $this->load->model('account/order');
-        $this->load->model('account/transaction');
-
-        $orderID = $this->session->data['order_id'];
-        $orderInfo = $this->model_checkout_order->getOrder($orderID);
-
-        if ($orderInfo['order_status_id'] == 0){
-            $this->model_checkout_order->confirm($orderID, $this->config->get('config_order_status_id'), '', $notify = true);
-        }
-
-        switch($orderInfo['order_status_id']){
-            case $this->config->get('mono_order_success_status_id'):{
-                $this->response->redirect($this->url->link('checkout/success', '', true));
-                break;
-            }
-            case $this->config->get('mono_order_cancelled_status_id'):{
-                $this->response->redirect($this->url->link('checkout/success', '', true));
-                break;
-            }
-            case 'created':
-            case $this->config->get('mono_order_process_status_id'):{
-                break;
-            }
-
-            case '0':{
-                $invoiceId  = $this->model_payment_mono->getInvoiceId($orderID);
-                $status     = $this->getStatus($invoiceId['InvoiceId']);
-                switch ($status) {
-                    case 'success':{
-                        if($order['order_status_id'] != $this->config->get('mono_order_success_status_id')) {
-                            $this->model_checkout_order->confirm($orderID, $this->config->get('mono_order_success_status_id'), $this->language->get('text_status_success'), $notify = true);
-                            $this->Fiscalisation->setOrderPaidBy($orderID, 'mono');
-
-                            if ($this->config->get('mono_checkbox_enable')){
-                                $this->load->library('hobotix/CheckBoxUA');
-                                $checkBoxAPI = new hobotix\CheckBoxUA($this->registry);
-                                $checkBoxAPI->setOrderNeedCheckbox($orderID);                                
-                            }
-
-                            $this->model_account_transaction->addTransaction(
-                                'Mono: Оплата по замовленню # ' . $orderID, 
-                                $this->model_account_order->getOrderTotal($orderID),
-                                $this->model_account_order->getOrderTotalNational($orderID),
-                                $this->config->get('config_regional_currency'),
-                                $this->order['order_id'],
-                                true,
-                                'mono',
-                                '',
-                                '');
-
-                            $this->response->redirect($this->url->link('checkout/success', '', true));
-                            break;
-                        }
-                    }
-                    case 'failure':{
-                        if($order['order_status_id'] != $this->config->get('mono_order_cancelled_status_id')) {
-                            $this->model_checkout_order->confirm($orderID, $this->config->get('mono_order_cancelled_status_id'), $this->language->get('text_status_failure'));
-                            $this->response->redirect($this->url->link('checkout/success', '', true));
-                            break;
-                        }
-                    }
-                    case 'processing':{
-                        if($order['order_status_id'] != $this->config->get('mono_order_process_status_id')) {
-                            $this->model_checkout_order->confirm($orderID, $this->config->get('mono_order_process_status_id'), $this->language->get('text_status_processing'));
-                            break;
-                        }
-                    }
-                    default:
-                       exit('Undefined order status');
-                }
-                break;
-            }
-            default:{
-                exit('Undefined order status');
-            }
-        }    
-    }
-
-    public function getStatus($InvoiceId) {
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.monobank.ua/api/merchant/invoice/status?invoiceId='.$InvoiceId.'',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
-                'X-Token: '.$this->config->get('mono_merchant').''
-            ),
-        ));
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        return json_decode($response)->status;
-    }
-
-    public function callback() {
-        $this->language->load('payment/mono');
-        $this->load->model('checkout/order');
-        $this->load->model('account/order');
-        $this->load->model('payment/mono');
-        $this->load->model('account/transaction');
-
-        $json = $clear_json = file_get_contents("php://input");         
-        $json = json_decode($json);
-
-        $status     = $json->status;
-        $InvoiceID  = $json->invoiceId;
-
-        $monolog = new Log('monopay.txt');        
-        $monolog->write('[ControllerPaymentMono::callback] ' . $clear_json);
-
-        switch ($status){
-            case 'success':
-                sleep(2); break;
-        }
-
-        $OrderInfo      = $this->model_payment_mono->getOrderInfo($InvoiceID);
-        $order          = $this->model_checkout_order->getOrder($OrderInfo['OrderId']);
-        $this->order    = $order;
-
-        $monolog->write('[ControllerPaymentMono::callback] ORDER STATUS: ' . $order['order_status_id']);
-
-        if(isset($this->request->get['key']) && trim($this->request->get['key']) === trim($OrderInfo['SecretKey']))
-        {
-            switch ($status){
-                case 'success':
-                    if($order['order_status_id'] != $this->config->get('mono_order_success_status_id')) {
-                        if (!$order['order_status_id']){
-                             $this->model_checkout_order->confirm($OrderInfo['OrderId'], $this->config->get('config_order_status_id'), $this->language->get('text_status_started'), $notify = true);                            
-                        }
-
-                        $this->model_checkout_order->update($OrderInfo['OrderId'], $this->config->get('mono_order_success_status_id'), $this->language->get('text_status_success'), $notify = true);
-                        $this->Fiscalisation->setOrderPaidBy($OrderInfo['OrderId'], 'mono');
-
-                        if ($this->config->get('mono_checkbox_enable')){
-                            $this->load->library('hobotix/CheckBoxUA');
-                            $checkBoxAPI = new hobotix\CheckBoxUA($this->registry);
-                            $checkBoxAPI->setOrderNeedCheckbox($OrderInfo['OrderId']);                            
-                        }
-
-                        $this->model_account_transaction->addTransaction(
-                            'Mono: Оплата по замовленню # ' . $OrderInfo['OrderId'], 
-                            $this->model_account_order->getOrderTotal($OrderInfo['OrderId']),
-                            $this->model_account_order->getOrderTotalNational($OrderInfo['OrderId']),
-                            $this->config->get('config_regional_currency'),
-                            $this->order['order_id'],
-                            true,
-                            'mono',
-                            '',
-                            '');
-                        
-                        $this->success($OrderInfo['OrderId']);
-                    }
-                    break;
-                case 'processing':
-                    if($order['order_status_id'] != $this->config->get('mono_order_process_status_id')) {
-                        if (!$order['order_status_id']){
-                            $this->model_checkout_order->confirm($OrderInfo['OrderId'], $this->config->get('config_order_status_id'), $this->language->get('text_status_processing'), $notify = true);
-                        }
-
-                        $this->model_checkout_order->update($OrderInfo['OrderId'], $this->config->get('mono_order_process_status_id'), $this->language->get('text_status_processing'));
-                    }
-                    break;
-                case 'failure':
-                    if($order['order_status_id'] != $this->config->get('mono_order_cancelled_status_id')) {
-                        $this->model_checkout_order->confirm($OrderInfo['OrderId'], $this->config->get('mono_order_cancelled_status_id'), $this->language->get('text_status_failure'));
-                    }
-                    break;
-                default: exit('undefined order status');
-            }
-        }
-    }
-
     public function checkoutorder(){
         $this->load->model('payment/mono');
         $this->load->model('payment/mono_checkout');
@@ -331,6 +130,11 @@ class ControllerPaymentMono extends Controller
                     unset($this->session->data['payment_method']);
                 }
 
+                if (!empty($this->session->data['coupon'])){
+                    $temp_coupon = $this->session->data['coupon'];
+                    unset($this->session->data['coupon']);
+                }
+
                 $tmp = []; 
                 $tmp2 = 0; 
 
@@ -367,7 +171,11 @@ class ControllerPaymentMono extends Controller
 
                 if (!empty($temp_payment_method)){
                     $this->session->data['payment_method'] = $temp_payment_method;    
-                }           
+                }   
+
+                if (!empty($temp_coupon)){
+                    $this->session->data['coupon'] = $temp_coupon;    
+                }         
 
                 try {
                     $result = $this->model_payment_mono_checkout->sendToAPI(['order_id' => $order_id, 'order_key' => $secretKey]);
@@ -393,6 +201,227 @@ class ControllerPaymentMono extends Controller
 
         $this->response->setOutput(json_encode($json));
     }
+
+    public function laterpay(){
+        if (!$this->validateLaterpay()){
+            $this->redirect('account/order');
+        }
+
+        $this->index($this->request->get['order_id'], true);
+    }
+
+    public function cron(){
+        if (!is_cli()){
+            die('CLI ONLY');
+        }
+
+        $this->load->model('payment/mono');
+
+        $query = $this->db->query("SELECT * FROM mono_orders WHERE ISNULL(status) OR status = '' AND NOT ISNULL(InvoiceId)");
+        foreach ($query->rows as $row){
+            $status = $this->model_payment_mono->getInvoiceStatus($row['InvoiceId']);
+
+            echoLine('[ControllerPaymentMono::cron] Got status for InvoiceID ' . $row['InvoiceId'] . ': ' . $status, 's');
+            $this->model_payment_mono->updateInvoiceStatus($row['InvoiceId'], $status);
+        }
+
+        $query = $this->db->query("SELECT * FROM mono_orders WHERE ISNULL(payment_data) OR payment_data = '' AND NOT ISNULL(InvoiceId)");
+        foreach ($query->rows as $row){
+            $payment_data = $this->model_payment_mono->getInvoicePaymentInfo($row['InvoiceId']);
+
+            echoLine('[ControllerPaymentMono::cron] Got status for InvoiceID ' . $row['InvoiceId'] . ': ' . $payment_data, 's');
+            $this->model_payment_mono->updatePaymentData($row['InvoiceId'], $payment_data);
+        }
+    }
+
+    protected function validateLaterpay(){
+        if ((!isset($this->request->get['order_id'])) || (!isset($this->request->get['order_tt'])) || (!isset($this->request->get['order_fl']))) {
+            return false;
+        } else {
+            $this->load->model('checkout/order');
+            $order_info = $this->model_checkout_order->getOrder($this->request->get['order_id']);
+            if ((!$order_info) || ($this->request->get['order_id'] != $order_info['order_id']) || ($this->request->get['order_tt'] != $order_info['total_national']) || ($this->request->get['order_fl']) != md5($order_info['firstname'] . $order_info['lastname'])) {
+                return false;
+            }
+        }
+        return true;
+    }       
+
+    public function response(){
+        $this->language->load('payment/mono');
+        $this->load->model('payment/mono');
+        $this->load->model('checkout/order');
+        $this->load->model('account/order');
+        $this->load->model('account/transaction');
+
+        $orderID = $this->session->data['order_id'];
+        $orderInfo = $this->model_checkout_order->getOrder($orderID);
+
+        if ($orderInfo['order_status_id'] == 0){
+            $this->model_checkout_order->confirm($orderID, $this->config->get('config_order_status_id'), '', $notify = true);
+        }
+
+        switch($orderInfo['order_status_id']){
+            case $this->config->get('mono_order_success_status_id'):{
+                $this->response->redirect($this->url->link('checkout/success', '', true));
+                break;
+            }
+            case $this->config->get('mono_order_cancelled_status_id'):{
+                $this->response->redirect($this->url->link('checkout/success', '', true));
+                break;
+            }
+            case 'created':
+            case $this->config->get('mono_order_process_status_id'):{
+                break;
+            }
+
+            case '0':{
+                $invoiceId  = $this->model_payment_mono->getInvoiceId($orderID);
+                $status     = $this->model_payment_mono->getInvoiceStatus($invoiceId['InvoiceId']);
+
+                $this->model_payment_mono->updateInvoiceStatus($invoiceId['InvoiceId'], $status);
+
+                $payment_data = $this->model_payment_mono->getInvoicePaymentInfo($invoiceId['InvoiceId']);
+                if ($payment_data){
+                    $this->model_payment_mono->updatePaymentData($invoiceId['InvoiceId'], $payment_data);               
+                }
+
+                switch ($status) {
+                    case 'success':{
+                        if($order['order_status_id'] != $this->config->get('mono_order_success_status_id')) {
+                            $this->model_checkout_order->confirm($orderID, $this->config->get('mono_order_success_status_id'), $this->language->get('text_status_success'), $notify = true);
+                            $this->Fiscalisation->setOrderPaidBy($orderID, 'mono');
+
+                            if ($this->config->get('mono_checkbox_enable')){
+                                $this->load->library('hobotix/CheckBoxUA');
+                                $checkBoxAPI = new hobotix\CheckBoxUA($this->registry);
+                                $checkBoxAPI->setOrderNeedCheckbox($orderID);                                
+                            }
+
+                            $this->model_account_transaction->addTransaction(
+                                'Mono: Оплата по замовленню # ' . $orderID, 
+                                $this->model_account_order->getOrderTotal($orderID),
+                                $this->model_account_order->getOrderTotalNational($orderID),
+                                $this->config->get('config_regional_currency'),
+                                $this->order['order_id'],
+                                true,
+                                'mono',
+                                '',
+                                '');
+
+                            $this->response->redirect($this->url->link('checkout/success', '', true));
+                            break;
+                        }
+                    }
+                    case 'failure':{
+                        if($order['order_status_id'] != $this->config->get('mono_order_cancelled_status_id')) {
+                            $this->model_checkout_order->confirm($orderID, $this->config->get('mono_order_cancelled_status_id'), $this->language->get('text_status_failure'));
+                            $this->response->redirect($this->url->link('checkout/success', '', true));
+                            break;
+                        }
+                    }
+                    case 'processing':{
+                        if($order['order_status_id'] != $this->config->get('mono_order_process_status_id')) {
+                            $this->model_checkout_order->confirm($orderID, $this->config->get('mono_order_process_status_id'), $this->language->get('text_status_processing'));
+                            break;
+                        }
+                    }
+                    default:
+                       exit('Undefined order status');
+                }
+                break;
+            }
+            default:{
+                exit('Undefined order status');
+            }
+        }    
+    }
+
+    public function callback(){
+        $this->language->load('payment/mono');
+        $this->load->model('checkout/order');
+        $this->load->model('account/order');
+        $this->load->model('payment/mono');
+        $this->load->model('account/transaction');
+
+        $json = $clear_json = file_get_contents("php://input");         
+        $json = json_decode($json);
+
+        $status     = $json->status;
+        $InvoiceID  = $json->invoiceId;        
+
+        $monolog = new Log('monopay.txt');        
+        $monolog->write('[ControllerPaymentMono::callback] ' . $clear_json);
+
+        switch ($status){
+            case 'success':
+                sleep(2); break;
+        }
+
+        $OrderInfo      = $this->model_payment_mono->getOrderInfo($InvoiceID);
+        $order          = $this->model_checkout_order->getOrder($OrderInfo['OrderId']);
+        $this->order    = $order;
+
+        $monolog->write('[ControllerPaymentMono::callback] ORDER STATUS: ' . $order['order_status_id']);
+
+        if(isset($this->request->get['key']) && trim($this->request->get['key']) === trim($OrderInfo['SecretKey']))
+        {
+            $this->model_payment_mono->updateInvoiceStatus($InvoiceID, $status);
+            $payment_data = $this->model_payment_mono->getInvoicePaymentInfo($InvoiceID);
+
+            if ($payment_data){
+                $this->model_payment_mono->updatePaymentData($InvoiceID, $payment_data);               
+            }
+
+            switch ($status){
+                case 'success':
+                    $this->Fiscalisation->setOrderPaidBy($OrderInfo['OrderId'], 'mono');                   
+
+                    if($order['order_status_id'] != $this->config->get('mono_order_success_status_id')) {
+                        if (!$order['order_status_id']){
+                             $this->model_checkout_order->confirm($OrderInfo['OrderId'], $this->config->get('config_order_status_id'), $this->language->get('text_status_started'), $notify = true);                            
+                        }
+
+                        $this->model_checkout_order->update($OrderInfo['OrderId'], $this->config->get('mono_order_success_status_id'), $this->language->get('text_status_success'), $notify = true);
+
+                        if ($this->config->get('mono_checkbox_enable')){
+                            $this->load->library('hobotix/CheckBoxUA');
+                            $checkBoxAPI = new hobotix\CheckBoxUA($this->registry);
+                            $checkBoxAPI->setOrderNeedCheckbox($OrderInfo['OrderId']);                            
+                        }
+
+                        $this->model_account_transaction->addTransaction(
+                            'Mono: Оплата по замовленню # ' . $OrderInfo['OrderId'], 
+                            $this->model_account_order->getOrderTotal($OrderInfo['OrderId']),
+                            $this->model_account_order->getOrderTotalNational($OrderInfo['OrderId']),
+                            $this->config->get('config_regional_currency'),
+                            $this->order['order_id'],
+                            true,
+                            'mono',
+                            '',
+                            '');
+                        
+                        $this->success($OrderInfo['OrderId']);
+                    }
+                    break;
+                case 'processing':
+                    if($order['order_status_id'] != $this->config->get('mono_order_process_status_id')) {
+                        if (!$order['order_status_id']){
+                            $this->model_checkout_order->confirm($OrderInfo['OrderId'], $this->config->get('config_order_status_id'), $this->language->get('text_status_processing'), $notify = true);
+                        }
+
+                        $this->model_checkout_order->update($OrderInfo['OrderId'], $this->config->get('mono_order_process_status_id'), $this->language->get('text_status_processing'));
+                    }
+                    break;
+                case 'failure':
+                    if($order['order_status_id'] != $this->config->get('mono_order_cancelled_status_id')) {
+                        $this->model_checkout_order->confirm($OrderInfo['OrderId'], $this->config->get('mono_order_cancelled_status_id'), $this->language->get('text_status_failure'));
+                    }
+                    break;
+                default: exit('undefined order status');
+            }
+        }
+    }   
 
     public function checkoutcallback(){
         $this->language->load('payment/mono');
@@ -426,6 +455,17 @@ class ControllerPaymentMono extends Controller
         }
 
         $result = $this->model_payment_mono_checkout->updateOrder($order_info, $json);
+
+        if (!empty($json['invoiceId'])){
+            $this->model_payment_mono_checkout->updateOrderInvoiceId($order_info['order_id'], $json['invoiceId']);
+            $this->model_payment_mono->updateInvoiceStatus($json['invoiceId'], $json['generalStatus']);
+
+            $payment_data = $this->model_payment_mono->getInvoicePaymentInfo($json['invoiceId']);
+
+            if ($payment_data){
+                $this->model_payment_mono->updatePaymentData($json['invoiceId'], $payment_data);               
+            }
+        }
 
         switch($json['generalStatus']){
             case 'not_authorized':
@@ -475,7 +515,7 @@ class ControllerPaymentMono extends Controller
                         $this->model_account_order->getOrderTotal($order_info['order_id']),
                         $this->model_account_order->getOrderTotalNational($order_info['order_id']),
                         $this->config->get('config_regional_currency'),
-                        $this->order['order_id'],
+                        $order_info['order_id'],
                         true,
                         'mono',
                         '',
@@ -500,10 +540,9 @@ class ControllerPaymentMono extends Controller
             header("HTTP/1.1 500 Server Error");
             die();
         }
-
     }
 
-    private function success(){
+    private function success($order_id){
         $this->load->model('account/transaction');
         $this->load->model('account/order');
         $this->load->model('checkout/order');
@@ -511,12 +550,14 @@ class ControllerPaymentMono extends Controller
         $this->load->model('payment/mono');
         $this->language->load('payment/mono');
 
+        $order_info = $this->model_account_order->getOrder($order_id);
+
         $this->model_account_transaction->addTransaction(
-            'Mono: Оплата по замовленню # '. $this->order['order_id'], 
-            $this->model_account_order->getOrderTotal($this->order['order_id']),
-            $this->model_account_order->getOrderTotalNational($this->order['order_id']),
+            'Mono: Оплата по замовленню # '. $order_info['order_id'], 
+            $this->model_account_order->getOrderTotal($order_info['order_id']),
+            $this->model_account_order->getOrderTotalNational($order_info['order_id']),
             $this->config->get('config_regional_currency'),
-            $this->order['order_id'],
+            $order_info['order_id'],
             true,
             'mono',
             '',
