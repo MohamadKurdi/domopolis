@@ -226,40 +226,69 @@
 				
 			</tr>								
 		</table>
-		
-		<h2>Yandex Market НАСТРОЙКИ</h2>
+
+		<h2>Yandex Market Express НАСТРОЙКИ</h2>
 		<table class="form">
 			<tr>		
+				<td width="25%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Yandex Market Express Идентификатор кампании</span></p>
+					<input type="text" name="config_yam_express_campaign_id" value="<?php echo $config_yam_express_campaign_id; ?>" size="30" style="width:150px;" />
+				</td>
+
+				<td width="25%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Yandex Market Express Бизнес Идентификатор</span></p>
+					<input type="text" name="config_yam_express_business_id" value="<?php echo $config_yam_express_business_id; ?>" size="30" style="width:150px;" />
+				</td>
 				
-				<td width="33%">
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Yandex Market Идентификатор FBS кампании</span></p>
+				<td width="25%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Yandex Market Express Идентификатор основного склада</span></p>
+					<input type="text" name="config_yam_express_warehouse_id" value="<?php echo $config_yam_express_warehouse_id; ?>" size="30" style="width:150px;" />
+				</td>
+
+				<td width="25%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Yandex Market Express Токен</span></p>
+					<input type="text" name="config_yam_express_yaMarketToken" value="<?php echo $config_yam_express_yaMarketToken; ?>" size="30" style="width:250px;" />	
+				</td>		
+			</tr>		
+		</table>
+		
+		<h2>Yandex Market FBS НАСТРОЙКИ</h2>
+		<table class="form">
+			<tr>		
+				<td width="25%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Yandex Market FBS Идентификатор кампании</span></p>
 					<input type="text" name="config_yam_fbs_campaign_id" value="<?php echo $config_yam_fbs_campaign_id; ?>" size="30" style="width:150px;" />
 				</td>
+
+				<td width="25%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Yandex Market FBS Бизнес Идентификатор</span></p>
+					<input type="text" name="config_yam_fbs_business_id" value="<?php echo $config_yam_fbs_business_id; ?>" size="30" style="width:150px;" />
+				</td>
 				
-				<td width="33%">
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Yandex Market Идентификатор основного склада</span></p>
+				<td width="25%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Yandex Market FBS Идентификатор основного склада</span></p>
 					<input type="text" name="config_yam_fbs_warehouse_id" value="<?php echo $config_yam_fbs_warehouse_id; ?>" size="30" style="width:150px;" />
 				</td>
-				
-				<td width="33%">
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Yandex Market поле для синхронизации количества</span></p>
-					<input type="text" name="config_yam_stock_field" value="<?php echo $config_yam_stock_field; ?>" size="30" style="width:150px;" />
-				</td>
-				
-			</tr>
-			
+
+				<td width="25%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Yandex Market FBS Токен</span></p>
+					<input type="text" name="config_yam_fbs_yaMarketToken" value="<?php echo $config_yam_fbs_yaMarketToken; ?>" size="30" style="width:250px;" />	
+				</td>		
+			</tr>		
+		</table>
+
+		<h2>Yandex Market Общие НАСТРОЙКИ</h2>
+		<table class="form">			
 			<tr>		
-				
-				
-				<td width="33%">
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Yandex Market yaMarketToken</span></p>
-					<input type="text" name="config_yam_yaMarketToken" value="<?php echo $config_yam_yaMarketToken; ?>" size="30" style="width:250px;" />
+				<td width="25%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Telegram группа уведомлений</span></p>
+					<input type="text" name="config_yam_tg_alert_group_id" value="<?php echo $config_yam_tg_alert_group_id; ?>" size="30" style="width:250px;" />
 					
 					<br />
-					<span class="help">Нужно получать токены каждый раз при сбое авторизации, потому как их сбрасывает Яндекс</span>	
+					<span class="help">новые заказы, изменения</span>	
 				</td>
-				
-				<td width="33%">
+
+				<td width="25%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Yandex Market yandexOauthID</span></p>
 					<input type="text" name="config_yam_yandexOauthID" value="<?php echo $config_yam_yandexOauthID; ?>" size="30" style="width:250px;" />
 					
@@ -267,35 +296,39 @@
 					<span class="help">Нужно получать токены каждый раз при сбое авторизации, потому как их сбрасывает Яндекс</span>	
 				</td>
 				
-				<td width="33%">
+				<td width="25%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Yandex Market yandexOauthSecret</span></p>
 					<input type="text" name="config_yam_yandexOauthSecret" value="<?php echo $config_yam_yandexOauthSecret; ?>" size="30" style="width:250px;" />
 					
 					<br />
 					<span class="help">Нужно получать токены каждый раз при сбое авторизации, потому как их сбрасывает Яндекс</span>	
 				</td>
-			</tr>
-			
-			<tr>		
-				<td width="33%">
+
+				<td width="25%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Yandex Market yandexAccessToken</span></p>
 					<input type="text" name="config_yam_yandexAccessToken" value="<?php echo $config_yam_yandexAccessToken; ?>" size="30" style="width:250px;" />
 					
 					<br />
 					<span class="help">Нужно получать токены каждый раз при сбое авторизации, потому как их сбрасывает Яндекс</span>	
 				</td>
-				
 			</tr>
-			
-			<tr>		
-				<td width="33%">
+			</table>
+			<table class="form">	
+			<tr>	
+				<td width="25%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Yandex Market поле для синхронизации количества</span></p>
+					<input type="text" name="config_yam_stock_field" value="<?php echo $config_yam_stock_field; ?>" size="30" style="width:150px;" />
+				</td>
+
+
+				<td width="25%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Yandex Market шаблон названия фида</span></p>
 					<input type="text" name="config_yam_offer_feed_template" value="<?php echo $config_yam_offer_feed_template; ?>" size="40" style="width:300px;" />
 					<br />
 					<span class="help">используй шорткод {store_id} для подстановки идентификатора магазина, {yam_prefix} для подстановки префикса</span>
 				</td>
 				
-				<td width="33%">
+				<td width="25%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Yandex Market включить свои идентификаторы</span></p>
 					<select name="config_yam_offer_id_prefix_enable">
 						<?php if ($config_yam_offer_id_prefix_enable) { ?>
@@ -310,7 +343,7 @@
 					<span class="help">товары в фиде маркета будут подаваться с идентификаторами вида <?php echo $config_yam_offer_id_prefix; ?>КОД_ТОВАРА</span>
 				</td>
 				
-				<td width="33%">
+				<td width="25%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Yandex Market префикс</span></p>
 					<input type="text" name="config_yam_offer_id_prefix" value="<?php echo $config_yam_offer_id_prefix; ?>" size="30" style="width:250px;" />
 					
@@ -318,9 +351,9 @@
 					<span class="help">товары в фиде маркета будут подаваться с идентификаторами вида <?php echo $config_yam_offer_id_prefix; ?>КОД_ТОВАРА</span>	
 				</td>
 			</tr>
-			
+	
 			<tr>		
-				<td width="33%">
+				<td width="25%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Yandex Market использовать категории Яндекса</span></p>
 					<select name="config_yam_enable_category_tree">
 						<?php if ($config_yam_enable_category_tree) { ?>
@@ -336,7 +369,7 @@
 				</td>
 				
 				
-				<td width="33%">
+				<td width="25%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Не включать ссылку на товар в маркете</span></p>
 					<select name="config_yam_offer_id_link_disable">
 						<?php if ($config_yam_offer_id_link_disable) { ?>
@@ -350,17 +383,19 @@
 					<br />
 					<span class="help">товары в фиде маркета будут подаваться без ссылки, для отвязки товаров от магазина</span>
 				</td>
-				
-				<td width="33%">
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Исключать товары с похожими названиями</span></p>
-					<textarea cols="20" rows="5" name="config_yam_excludewords"><?php echo $config_yam_excludewords; ?></textarea>
-					<br />
-					<span class="help">каждое с новой строки, например, "пепельниц зажигалк" для исключения товаров связанных с курением</span>
 
+				<td width="25%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Дефолтная категория Yandex</span></p>
 					<input type="text" name="config_yam_default_category_id" value="<?php echo $config_yam_default_category_id; ?>" size="30" style="width:250px;" />
 					<br />
 					<span class="help">в случае если не получилось никак определить</span>
+				</td>
+				
+				<td width="25%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Исключать товары с похожими названиями</span></p>
+					<textarea cols="20" rows="5" name="config_yam_excludewords"><?php echo $config_yam_excludewords; ?></textarea>
+					<br />
+					<span class="help">каждое с новой строки, например, "пепельниц зажигалк" для исключения товаров связанных с курением</span>
 				</td>
 			</tr>								
 		</table>

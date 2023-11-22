@@ -4747,8 +4747,13 @@ class ControllerSettingSetting extends Controller
             $this->data['config_yam_plus_for_main_price'] = $this->request->post['config_yam_plus_for_main_price'];
         } else {
             $this->data['config_yam_plus_for_main_price'] = $this->config->get('config_yam_plus_for_main_price');
-        }
-        
+        }    
+
+        if (isset($this->request->post['config_yam_tg_alert_group_id'])) {
+            $this->data['config_yam_tg_alert_group_id'] = $this->request->post['config_yam_tg_alert_group_id'];
+        } else {
+            $this->data['config_yam_tg_alert_group_id'] = $this->config->get('config_yam_tg_alert_group_id');
+        }    
         
         if (isset($this->request->post['config_yam_fbs_campaign_id'])) {
             $this->data['config_yam_fbs_campaign_id'] = $this->request->post['config_yam_fbs_campaign_id'];
@@ -4760,6 +4765,30 @@ class ControllerSettingSetting extends Controller
             $this->data['config_yam_fbs_warehouse_id'] = $this->request->post['config_yam_fbs_warehouse_id'];
         } else {
             $this->data['config_yam_fbs_warehouse_id'] = $this->config->get('config_yam_fbs_warehouse_id');
+        }
+
+        if (isset($this->request->post['config_yam_fbs_business_id'])) {
+            $this->data['config_yam_fbs_business_id'] = $this->request->post['config_yam_fbs_business_id'];
+        } else {
+            $this->data['config_yam_fbs_business_id'] = $this->config->get('config_yam_fbs_business_id');
+        }
+
+         if (isset($this->request->post['config_yam_express_campaign_id'])) {
+            $this->data['config_yam_express_campaign_id'] = $this->request->post['config_yam_express_campaign_id'];
+        } else {
+            $this->data['config_yam_express_campaign_id'] = $this->config->get('config_yam_express_campaign_id');
+        }
+        
+        if (isset($this->request->post['config_yam_express_warehouse_id'])) {
+            $this->data['config_yam_express_warehouse_id'] = $this->request->post['config_yam_express_warehouse_id'];
+        } else {
+            $this->data['config_yam_express_warehouse_id'] = $this->config->get('config_yam_express_warehouse_id');
+        }
+
+        if (isset($this->request->post['config_yam_express_business_id'])) {
+            $this->data['config_yam_express_business_id'] = $this->request->post['config_yam_express_business_id'];
+        } else {
+            $this->data['config_yam_express_business_id'] = $this->config->get('config_yam_express_business_id');
         }
         
         if (isset($this->request->post['config_yam_stock_field'])) {
@@ -4810,10 +4839,16 @@ class ControllerSettingSetting extends Controller
             $this->data['config_yam_default_category_id'] = $this->config->get('config_yam_default_category_id');
         }
         
-        if (isset($this->request->post['config_yam_yaMarketToken'])) {
-            $this->data['config_yam_yaMarketToken'] = $this->request->post['config_yam_yaMarketToken'];
+        if (isset($this->request->post['config_yam_fbs_yaMarketToken'])) {
+            $this->data['config_yam_fbs_yaMarketToken'] = $this->request->post['config_yam_fbs_yaMarketToken'];
         } else {
-            $this->data['config_yam_yaMarketToken'] = $this->config->get('config_yam_yaMarketToken');
+            $this->data['config_yam_fbs_yaMarketToken'] = $this->config->get('config_yam_fbs_yaMarketToken');
+        }
+
+         if (isset($this->request->post['config_yam_express_yaMarketToken'])) {
+            $this->data['config_yam_express_yaMarketToken'] = $this->request->post['config_yam_express_yaMarketToken'];
+        } else {
+            $this->data['config_yam_express_yaMarketToken'] = $this->config->get('config_yam_express_yaMarketToken');
         }
         
         if (isset($this->request->post['config_yam_yandexOauthID'])) {
