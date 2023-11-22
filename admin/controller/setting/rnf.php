@@ -442,6 +442,32 @@ class ControllerSettingRnf extends Controller {
 						AND p.asin <> ''												
 						AND p.asin <> 'INVALID'";
 
+						if (!$this->config->get('config_rainforest_enable_offers_for_added_from_amazon')){
+							$sql .= " AND (p.added_from_amazon = 1)";
+						}
+
+						if (!$this->config->get('config_rainforest_enable_offers_for_stock')){
+							$sql .= " AND (" . $this->rainforestAmazon->offersParser->PriceLogic->buildStockQueryField() . " = 0)";
+						}
+
+						if ($this->config->get('config_rainforest_pass_offers_for_ordered')){
+							$sql .= " AND ( p.actual_cost_date = '0000-00-00' ";
+
+							if ($this->config->get('config_rainforest_pass_offers_for_ordered_days')){
+								$sql .= " OR DATE_ADD(p.actual_cost_date, INTERVAL " . (int)$this->config->get('config_rainforest_pass_offers_for_ordered_days') . " DAY) < DATE(NOW())";
+							}
+
+							$sql .= ")";
+						}
+
+						if ($this->config->get('config_rainforest_disable_offers_use_field_ignore_parse')){
+							$sql .= " AND NOT (p.ignore_parse = 1 AND (p.ignore_parse_date_to = '0000-00-00' OR DATE(p.ignore_parse_date_to) > DATE(NOW())))";
+						}
+
+						if ($this->config->get('config_rainforest_disable_offers_if_has_special')){
+							$sql .= " AND p.product_id NOT IN (SELECT product_id FROM product_special ps WHERE ps.price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())))";
+						}
+
 						if ($explicitCategories){
 							$sql .= " AND p2c.category_id IN (" . implode(',', $explicitCategories) . ")";							
 						}
