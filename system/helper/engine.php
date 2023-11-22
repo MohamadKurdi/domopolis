@@ -1,9 +1,12 @@
 <?php
 
-function loadAndRenameCatalogModels($path, $className, $classNameTo){
+function loadAndRenameCatalogModels($path, $className = '', $classNameTo = ''){
 	$modelCatalogModelContents = file_get_contents(DIR_CATALOG . $path);
 
-	$modelCatalogModelContents = str_replace($className, $classNameTo, $modelCatalogModelContents);
+	if ($className && $classNameTo){
+		$modelCatalogModelContents = str_replace($className, $classNameTo, $modelCatalogModelContents);
+	}
+	
 	$modelCatalogModelContents = str_replace('<?php', '', $modelCatalogModelContents);
 	$modelCatalogModelContents = str_replace('<?', '', $modelCatalogModelContents);
 
