@@ -35,12 +35,16 @@ class ModelPaymentMonoCheckout extends Model
         return $secretKey;
     }
 
+    public function updateOrderInvoiceId($order_id, $invoiceId){
+        $this->db->query("UPDATE mono_orders SET InvoiceId = '" . $this->db->escape($InvoiceId) . "' WHERE order_id = '" . $this->db->escape($order_id) . "'");
+    }
+
     public function addOrder($order_id, $mono_order_id){
-       $this->db->ncquery("UPDATE `mono_orders` SET InvoiceId = '" . $this->db->escape($mono_order_id) . "' WHERE OrderId = '" . (int)$order_id . "'");
+       $this->db->ncquery("UPDATE `mono_orders` SET CheckoutOrderId = '" . $this->db->escape($mono_order_id) . "' WHERE OrderId = '" . (int)$order_id . "'");
     }
 
     public function getOrder($order_id, $mono_order_id){
-        $query = $this->db->ncquery("SELECT * FROM `mono_orders` WHERE InvoiceId = '". $this->db->escape($mono_order_id) . "' AND SecretKey = '" . $this->db->escape($order_id) . "'");
+        $query = $this->db->ncquery("SELECT * FROM `mono_orders` WHERE CheckoutOrderId = '". $this->db->escape($mono_order_id) . "' AND SecretKey = '" . $this->db->escape($order_id) . "'");
 
         if($query->num_rows) {
             return $query->row;
