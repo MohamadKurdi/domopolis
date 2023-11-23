@@ -5,7 +5,7 @@ final class Action {
 	protected $method 	= null;
 	protected $args 	= [];
 
-	public function __construct($route, $args = []) {
+	public function __construct(string $route, array $args = []) {
 		$path = '';
 		
 		$parts = explode('/', str_replace('../', '', (string)$route));

@@ -49,8 +49,7 @@
 					}
 
 					$result->row 		= isset($result->rows[0]) ? $result->rows[0] : [];
-
-					$result->fromCache = 'uncacheable driver';					
+					$result->fromCache 	= 'uncacheable driver';					
 					$query->close();
 					
 					return $result;

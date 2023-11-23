@@ -435,14 +435,6 @@
 			$this->db->query("UPDATE customer c SET total_product_cheque = (SELECT SUM(total_national) FROM `order_product` WHERE order_id IN (SELECT order_id FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "'))");
 			echo PHP_EOL;
 			
-			/*	echo '>> Пересчет накопительной скидки' . PHP_EOL;	
-				$action = new Action('sale/customer/updateCumulativeDiscountPercent');
-				if (isset($action)) {
-				$controller->dispatch($action, new Action('error/not_found'));
-				}
-				echo PHP_EOL;
-			*/
-			
 			echo '>> Подсчет среднего чека' . PHP_EOL;
 			echo 'QUERY:' . "UPDATE customer c SET avg_cheque = (SELECT AVG(total_national) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "'  GROUP BY customer_id)" . PHP_EOL;
 			$this->db->query("UPDATE customer c SET avg_cheque = (SELECT AVG(total_national) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "'  GROUP BY customer_id)");

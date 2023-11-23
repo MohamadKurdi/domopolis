@@ -118,18 +118,25 @@ class ControllerProductProduct extends Controller
 
             $delivery_city_nonmorphed = $this->data['delivery_city']['city'];
 
-            //Сроки доставки
             $this->data['delivery_dates'] = [];
             if ($product_info['stock_dates']) {
                 $this->data['delivery_dates']['start'] = date('d.m', strtotime('+'. $product_info['stock_dates']['start'] .' day'));
                 $this->data['delivery_dates']['end'] = date('d.m', strtotime('+'. $product_info['stock_dates']['end'] .' day'));
             }
 
+            //dirty hack
+            if ($this->config->get('config_country_id') == 109 && !empty($product_info[$this->config->get('config_warehouse_identifier')]) && $this->config->get('config_delivery_instock_term')){
+                $exploded_config_delivery_instock_term = explode('-', $this->config->get('config_delivery_instock_term'));
+
+                $this->data['delivery_dates']['start'] = date('d.m', strtotime('+'. $exploded_config_delivery_instock_term[0] .' day'));
+                $this->data['delivery_dates']['end'] = date('d.m', strtotime('+'. $exploded_config_delivery_instock_term[1] .' day'));
+            }
+
             $cdekDeliveryTerms = [];
 
             if (($this->data['delivery_city']['city'] != $this->language->get('default_city_' . $this->config->get('config_country_id')) || ($this->config->get('config_warehouse_identifier') != $this->config->get('config_warehouse_identifier_local'))) && $product_info['stock_dates'] && $this->model_tool_simpleapicustom->checkIfUseRUKZBYServices()) {
                 if (!empty($customer_city) && !empty($customer_city['id'])) {
-                    $cdekDeliveryTerms = $this->courierServices->getDeliveryTerms('Cdek', $customer_city['id']);
+                    $cdekDeliveryTerms = $this->courierServices->getDeliveryTerms('Cdek', $customer_city['id']);                    
 
                     if ($cdekDeliveryTerms) {
                         $this->data['cdek_delivery_dates']['start'] = date('d.m', strtotime('+'. ($product_info['stock_dates']['start'] + $cdekDeliveryTerms['deliveryPeriodMin'] + 1) .' day'));
@@ -138,10 +145,10 @@ class ControllerProductProduct extends Controller
                     }
                 }                
 
-                if (!empty($this->data['cdek_delivery_dates'])){
-                    $this->data['delivery_dates']['start']  = $this->data['cdek_delivery_dates']['start'];
-                    $this->data['delivery_dates']['end']    = $this->data['cdek_delivery_dates']['end'];
-                }
+                // if (!empty($this->data['cdek_delivery_dates'])){
+                //     $this->data['delivery_dates']['start']  = $this->data['cdek_delivery_dates']['start'];
+                //     $this->data['delivery_dates']['end']    = $this->data['cdek_delivery_dates']['end'];
+                // }
             }
 
             if ($product_info['stock_dates'] && $this->model_tool_simpleapicustom->checkIfUseUAServices()) {
@@ -154,7 +161,6 @@ class ControllerProductProduct extends Controller
                 }                
                 
                 foreach ($this->config->get('dostavkaplus_module') as $key => $dostavkaplus_module){
-                    //NP Config
                     if ($key == 3){
                         $this->data['np_delivery_price_text'] = $this->data['delivery_to_city_price_from'] . $this->currency->format($dostavkaplus_module['price_from'], $dostavkaplus_module['curr'], 1);
                         break;
@@ -210,163 +216,161 @@ class ControllerProductProduct extends Controller
                 if ($this->model_tool_simpleapicustom->checkIfUseUAServices()) {
                     foreach ($this->config->get('dostavkaplus_module') as $key => $dostavkaplus_module){
                         if ($key == 2){
-                             $delivery_price = $dostavkaplus_module['price'];
-                            
-                            $price = $product_info['price'];
-                            if ($product_info['special']){
-                                $price = $product_info['special'];
-                            }
+                           $delivery_price = $dostavkaplus_module['price'];
 
-                            $rates = explode(',', $dostavkaplus_module['sumrate']);
-                            if (count($rates) > 0) {
-                                foreach ($rates as $rate) {
-                                    $rate_data = explode(':', $rate);
-                                    $rate_data[0] = (float)trim($rate_data[0]);
+                           $price = $product_info['price'];
+                           if ($product_info['special']){
+                            $price = $product_info['special'];
+                        }
 
-                                    if ($rate_data[0] <= (float)$this->currency->format($price, $dostavkaplus_module['curr'], '', false)) {                                              
-                                        if (isset($rate_data[1])) {
-                                            $delivery_price = (float)trim($rate_data[1]);
-                                        }                                            
-                                    }
+                        $rates = explode(',', $dostavkaplus_module['sumrate']);
+                        if (count($rates) > 0) {
+                            foreach ($rates as $rate) {
+                                $rate_data = explode(':', $rate);
+                                $rate_data[0] = (float)trim($rate_data[0]);
+
+                                if ($rate_data[0] <= (float)$this->currency->format($price, $dostavkaplus_module['curr'], '', false)) {                                              
+                                    if (isset($rate_data[1])) {
+                                        $delivery_price = (float)trim($rate_data[1]);
+                                    }                                            
                                 }
                             }
+                        }
 
-                            if ((float)$delivery_price > 0){
-                                $this->data['courier_delivery_price_text'] = $this->currency->format($delivery_price, $dostavkaplus_module['curr'], 1);
-                            } else {
-                                $this->data['courier_delivery_price_text'] = $this->data['delivery_to_city_free'];
-                            }
+                        if ((float)$delivery_price > 0){
+                            $this->data['courier_delivery_price_text'] = $this->currency->format($delivery_price, $dostavkaplus_module['curr'], 1);
+                        } else {
+                            $this->data['courier_delivery_price_text'] = $this->data['delivery_to_city_free'];
+                        }
 
-                            break;
-                        }                   
-                    }
+                        break;
+                    }                   
                 }
+            }
         }
-            
-    $this->data['delivery_text'] = $this->data['delivery_to_city_courier'];
-    if ($this->config->get('config_warehouse_identifier') != $this->config->get('config_warehouse_identifier_local')) {                
-        $this->data['delivery_text'] = $this->data['delivery_to_city_remote'];
-    } else {
-                //Если склад в стране есть, но доставка в другой город
-        if ($this->data['delivery_city']['city'] != $this->language->get('default_city_' . $this->config->get('config_country_id'))) {
+
+        $this->data['delivery_text'] = $this->data['delivery_to_city_courier'];
+        if ($this->config->get('config_warehouse_identifier') != $this->config->get('config_warehouse_identifier_local')) {                
             $this->data['delivery_text'] = $this->data['delivery_to_city_remote'];
-        } else {
-            $this->data['delivery_city']['city'] = $this->data['delivery_city']['city'];//morphos\Russian\GeographicalNamesInflection::getCase($this->data['delivery_city']['city'], 'дательный');
-        }
-    }
-
-    $this->data['pickup_text'] = false;
-    if ($this->config->get('config_pickup_enable') && $delivery_city_nonmorphed == $this->language->get('default_city_' . $this->config->get('config_country_id')) && $product_info['stock_dates']) {
-        $tmp1 = explode(PHP_EOL, $this->config->get('config_pickup_dayoff_' . date('n')));
-        $tmp2 = explode(PHP_EOL, $this->config->get('config_pickup_dayoff_' . date('n', strtotime('+1 month'))));
-        $dayoffs = [];
-        $dayoffs_next = [];
-
-        foreach ($tmp1 as $tmp1_line) {
-            if ((int)trim($tmp1_line)) {
-                $dayoffs[] = (int)trim($tmp1_line);
+        } else {           
+            if ($this->data['delivery_city']['city'] != $this->language->get('default_city_' . $this->config->get('config_country_id'))) {
+                $this->data['delivery_text'] = $this->data['delivery_to_city_remote'];
+            } else {
+                $this->data['delivery_city']['city'] = $this->data['delivery_city']['city'];
             }
         }
 
-        foreach ($tmp2 as $tmp2_line) {
-            if ((int)trim($tmp2_line)) {
-                $dayoffs_next[] = (int)trim($tmp2_line);
+        $this->data['pickup_text'] = false;
+        if ($this->config->get('config_pickup_enable') && $delivery_city_nonmorphed == $this->language->get('default_city_' . $this->config->get('config_country_id')) && $product_info['stock_dates']) {
+            $tmp1 = explode(PHP_EOL, $this->config->get('config_pickup_dayoff_' . date('n')));
+            $tmp2 = explode(PHP_EOL, $this->config->get('config_pickup_dayoff_' . date('n', strtotime('+1 month'))));
+            $dayoffs = [];
+            $dayoffs_next = [];
+
+            foreach ($tmp1 as $tmp1_line) {
+                if ((int)trim($tmp1_line)) {
+                    $dayoffs[] = (int)trim($tmp1_line);
+                }
             }
-        }
+
+            foreach ($tmp2 as $tmp2_line) {
+                if ((int)trim($tmp2_line)) {
+                    $dayoffs_next[] = (int)trim($tmp2_line);
+                }
+            }
 
                 //Если товар есть на складе в текущей стране
-        if ($product_info[$this->config->get('config_warehouse_identifier_local')]) {
-            $pickup_times = $this->config->get('config_pickup_times');
-            $pickup_times = explode(';', $pickup_times);
+            if ($product_info[$this->config->get('config_warehouse_identifier_local')]) {
+                $pickup_times = $this->config->get('config_pickup_times');
+                $pickup_times = explode(';', $pickup_times);
 
                     //Проверяем, работает или нет вообще СЕГОДНЯ
-            if (!empty($pickup_times[date('N') - 1]) && $pickup_times[date('N') - 1] != 'false' && !in_array(date('j'), $dayoffs)) {
-                $pickup_times_today = explode(':', $pickup_times[date('N') - 1]);
+                if (!empty($pickup_times[date('N') - 1]) && $pickup_times[date('N') - 1] != 'false' && !in_array(date('j'), $dayoffs)) {
+                    $pickup_times_today = explode(':', $pickup_times[date('N') - 1]);
 
                         //Сегодня до начала открытия
-                if (date('G') < (int)$pickup_times_today[0]) {
-                    $this->data['pickup_text'] = sprintf($this->data['pickup_text_today_from'], $pickup_times_today[0]);
-                }
+                    if (date('G') < (int)$pickup_times_today[0]) {
+                        $this->data['pickup_text'] = sprintf($this->data['pickup_text_today_from'], $pickup_times_today[0]);
+                    }
 
                         //Сегодня после закрытия
-                if (date('G') >= (int)$pickup_times_today[0] && date('G') < (int)$pickup_times_today[1]) {
-                    $this->data['pickup_text'] = sprintf($this->data['pickup_text_today_to'], $pickup_times_today[1]);
-                }
-
-                if (date('G') >= (int)$pickup_times_today[1]) {
-                            //Проверяем, работает ли завтра, например в воскресенье
-                    if (date('N') == 7) {
-                        $next_day = 1;
-                    } else {
-                        $next_day = date('N') + 1;
+                    if (date('G') >= (int)$pickup_times_today[0] && date('G') < (int)$pickup_times_today[1]) {
+                        $this->data['pickup_text'] = sprintf($this->data['pickup_text_today_to'], $pickup_times_today[1]);
                     }
+
+                    if (date('G') >= (int)$pickup_times_today[1]) {
+                            //Проверяем, работает ли завтра, например в воскресенье
+                        if (date('N') == 7) {
+                            $next_day = 1;
+                        } else {
+                            $next_day = date('N') + 1;
+                        }
 
                             //Если работает завтра
-                    if (!empty($pickup_times[$next_day - 1]) && $pickup_times[$next_day - 1] != 'false') {
-                        $pickup_times_tomorrow = explode(':', $pickup_times[$next_day - 1]);
-                        $this->data['pickup_text'] = sprintf($this->data['pickup_text_tomorrow_from'], $pickup_times_tomorrow[0], $pickup_times_tomorrow[1]);
-                    } else {
+                        if (!empty($pickup_times[$next_day - 1]) && $pickup_times[$next_day - 1] != 'false') {
+                            $pickup_times_tomorrow = explode(':', $pickup_times[$next_day - 1]);
+                            $this->data['pickup_text'] = sprintf($this->data['pickup_text_tomorrow_from'], $pickup_times_tomorrow[0], $pickup_times_tomorrow[1]);
+                        } else {
                                 //Завтра не работает, значит открывается с понедельника
-                        $pickup_times_on_monday = explode(':', $pickup_times[0]);
-                        $this->data['pickup_text'] = sprintf($this->data['pickup_text_from_monday'], $pickup_times_on_monday[0], $pickup_times_on_monday[1]);
-                    }
-                }
-            } else {
-                        //Не работает, значит сегодня суббота или воскресенье, или выходной день, нужно найти когда откроется
-                if (date('N') == 6 || date('N') == 7) {
-                            //Проверим, работает ли в понедельник
-                    if (!in_array(date('j', strtotime('+' . (8 - date('N')) . ' day')), $dayoffs)) {
-                        $pickup_times_on_monday = explode(':', $pickup_times[0]);
-                        $this->data['pickup_text'] = sprintf($this->data['pickup_text_from_monday'], $pickup_times_on_monday[0], $pickup_times_on_monday[1]);
+                            $pickup_times_on_monday = explode(':', $pickup_times[0]);
+                            $this->data['pickup_text'] = sprintf($this->data['pickup_text_from_monday'], $pickup_times_on_monday[0], $pickup_times_on_monday[1]);
+                        }
                     }
                 } else {
+                        //Не работает, значит сегодня суббота или воскресенье, или выходной день, нужно найти когда откроется
+                    if (date('N') == 6 || date('N') == 7) {
+                            //Проверим, работает ли в понедельник
+                        if (!in_array(date('j', strtotime('+' . (8 - date('N')) . ' day')), $dayoffs)) {
+                            $pickup_times_on_monday = explode(':', $pickup_times[0]);
+                            $this->data['pickup_text'] = sprintf($this->data['pickup_text_from_monday'], $pickup_times_on_monday[0], $pickup_times_on_monday[1]);
+                        }
+                    } else {
                             //Проверяем следующие 14 дней, первый день когда откроется - тот и отображаем
-                    for ($i=1; $i<=14; $i++) {
+                        for ($i=1; $i<=14; $i++) {
                                 //Проверяем, работает ли в этот день самовывоз (+$i дней от текущего)
-                        if (!empty($pickup_times[date('N', strtotime('+' . $i . ' day')) - 1]) && $pickup_times[date('N', strtotime('+' . $i . ' day')) - 1] != 'false' && !in_array(date('j', strtotime('+' . $i . ' day')), $dayoffs)) {
-                            $pickup_times_on_this_day = explode(':', $pickup_times[date('N', strtotime('+' . $i . ' day')) - 1]);
-                            if ($this->config->get('config_language') == 'uk') {
-                                setlocale(LC_ALL, 'uk_UA.UTF-8');
-                                $dayname = getUkrainianWeekDayDeclenced(date('N', strtotime('+' . $i . ' day')));
-                            } else {
-                                setlocale(LC_ALL, 'ru_RU.UTF-8');
-                                $dayname = morphos\Russian\NounDeclension::getCase(mb_strtolower(strftime('%A', strtotime('+' . $i . ' day'))), 'винительный');
-                            }
+                            if (!empty($pickup_times[date('N', strtotime('+' . $i . ' day')) - 1]) && $pickup_times[date('N', strtotime('+' . $i . ' day')) - 1] != 'false' && !in_array(date('j', strtotime('+' . $i . ' day')), $dayoffs)) {
+                                $pickup_times_on_this_day = explode(':', $pickup_times[date('N', strtotime('+' . $i . ' day')) - 1]);
+                                if ($this->config->get('config_language') == 'uk') {
+                                    setlocale(LC_ALL, 'uk_UA.UTF-8');
+                                    $dayname = getUkrainianWeekDayDeclenced(date('N', strtotime('+' . $i . ' day')));
+                                } else {
+                                    setlocale(LC_ALL, 'ru_RU.UTF-8');
+                                    $dayname = morphos\Russian\NounDeclension::getCase(mb_strtolower(strftime('%A', strtotime('+' . $i . ' day'))), 'винительный');
+                                }
 
-                            if ($i == 1) {
+                                if ($i == 1) {
                                         //Завтра
-                                $this->data['pickup_text'] = sprintf($this->data['pickup_text_tomorrow_from'], $dayname . ', ' . (strftime('%d.%m', strtotime('+' . $i . ' day'))), $pickup_times_on_this_day[0], $pickup_times_on_this_day[1]);
-                            } elseif ($i == 2) {
+                                    $this->data['pickup_text'] = sprintf($this->data['pickup_text_tomorrow_from'], $dayname . ', ' . (strftime('%d.%m', strtotime('+' . $i . ' day'))), $pickup_times_on_this_day[0], $pickup_times_on_this_day[1]);
+                                } elseif ($i == 2) {
                                         //Послезавтра, пока точно так же как и в любой другой день
-                                $this->data['pickup_text'] = sprintf($this->data['pickup_text_datomorrow_from'], $dayname . ', ' . (strftime('%d.%m', strtotime('+' . $i . ' day'))), $pickup_times_on_this_day[0], $pickup_times_on_this_day[1]);
-                            } else {
+                                    $this->data['pickup_text'] = sprintf($this->data['pickup_text_datomorrow_from'], $dayname . ', ' . (strftime('%d.%m', strtotime('+' . $i . ' day'))), $pickup_times_on_this_day[0], $pickup_times_on_this_day[1]);
+                                } else {
                                         //Просто в любой другой день
-                                $this->data['pickup_text'] = sprintf($this->data['pickup_text_dayoff_from'], $dayname . ', ' . (strftime('%d.%m', strtotime('+' . $i . ' day'))), $pickup_times_on_this_day[0], $pickup_times_on_this_day[1]);
-                            }
+                                    $this->data['pickup_text'] = sprintf($this->data['pickup_text_dayoff_from'], $dayname . ', ' . (strftime('%d.%m', strtotime('+' . $i . ' day'))), $pickup_times_on_this_day[0], $pickup_times_on_this_day[1]);
+                                }
 
-                            break;
+                                break;
+                            }
                         }
                     }
                 }
-            }
 
                     //Товара нет в наличии в стране, самовывоз с ближайшей рабочей даты (не точно)
-        } else {
+            } else {
+            }
         }
-    }
 
-            //Получим id города клиента, переназначим на текущий, если нужно
-    if (!empty($customer_city) && !empty($customer_city['id'])) {
-        $this->data['delivery_city']['id'] = $customer_city['id'];
-    }
+        if (!empty($customer_city) && !empty($customer_city['id'])) {
+            $this->data['delivery_city']['id'] = $customer_city['id'];
+        }
 
-    $this->template = 'blocks/delivery_info';
-    if ($this->config->get('config_delivery_display_logic') == 'v2'){
-        $this->template = 'blocks/delivery_info2';
-    }
+        $this->template = 'blocks/delivery_info';
+        if ($this->config->get('config_delivery_display_logic') == 'v2'){
+            $this->template = 'blocks/delivery_info2';
+        }
 
-    $this->response->setOutput($this->render());
-}
+        $this->response->setOutput($this->render());
+    }
 }
 
 public function index($product_id = false, $just_price = false)
