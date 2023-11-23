@@ -23,9 +23,9 @@
 									<? if ($product['is_special_offer']) { ?>
 										<span style="color:red; font-weight:700;font-size: 14px;margin-bottom: 2px;">
 											<? if ($product['is_special_offer_present']) { ?>
-												<?=$text_gift ?>!
+												<?=$text_gift ?>
 											<? } else { ?>
-												<?=$text_special_offer ?>!
+												<?=$text_special_offer ?>
 											<? } ?>
 										</span><br />
 									<? } ?>
