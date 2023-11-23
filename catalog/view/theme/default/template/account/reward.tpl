@@ -226,7 +226,7 @@
         <div class="account_content">
         	<div class="bonus_head">
         		
-				<p class="title"><?php echo $text_retranslate_rewards_line_0; ?></p>
+				<p class="title"><?php $this->config->get('config_name'); ?><?php echo $text_retranslate_rewards_line_0; ?></p>
 				<p class="description"><?php echo $text_retranslate_rewards_line_1; ?></p>
 				<a href="<?php echo $rewards_article_href; ?>"><?php echo $text_retranslate_rewards_line_2; ?></a>
         	</div>

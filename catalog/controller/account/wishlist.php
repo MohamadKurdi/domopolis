@@ -1,21 +1,20 @@
 <?php 
 	class ControllerAccountWishList extends Controller {
 		public function index() {
+			$this->language->load('account/wishlist');
+			
+			$this->load->model('catalog/product');
+			$this->load->model('catalog/set');			
+			$this->load->model('tool/image');
+
 			if (!$this->customer->isLogged()) {
 				$this->session->data['redirect'] = $this->url->link('account/wishlist', '');
 				
 				$this->redirect($this->url->link('account/login', '', 'SSL'));
-			}
-			
-			$this->language->load('account/wishlist');
-			
-			$this->load->model('catalog/product');
-			$this->load->model('catalog/set');
-			
-			$this->load->model('tool/image');
+			}		
 			
 			if (!isset($this->session->data['wishlist'])) {
-				$this->session->data['wishlist'] = array();
+				$this->session->data['wishlist'] = [];
 			}
 			
 			foreach ($this->language->loadRetranslate('product/single') as $translationСode => $translationText){
@@ -25,7 +24,6 @@
 			foreach ($this->language->loadRetranslate('account/account') as $translationСode => $translationText){
 				$this->data[$translationСode] = $translationText;
 			}
-
 			
 			if (isset($this->request->get['remove'])) {
 				$key = array_search($this->request->get['remove'], $this->session->data['wishlist']);
@@ -41,7 +39,7 @@
 			
 			$this->document->setTitle($this->language->get('heading_title'));	
 			
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -55,16 +53,16 @@
 			'separator' => $this->language->get('text_separator')
 			);
 			
-			$this->data['heading_title'] = $this->language->get('heading_title');	
+			$this->data['heading_title'] 	= $this->language->get('heading_title');	
 			
-			$this->data['text_empty'] = $this->language->get('text_empty');
+			$this->data['text_empty'] 		= $this->language->get('text_empty');
 			
-			$this->data['column_image'] = $this->language->get('column_image');
-			$this->data['column_name'] = $this->language->get('column_name');
-			$this->data['column_model'] = $this->language->get('column_model');
-			$this->data['column_stock'] = $this->language->get('column_stock');
-			$this->data['column_price'] = $this->language->get('column_price');
-			$this->data['column_action'] = $this->language->get('column_action');
+			$this->data['column_image'] 	= $this->language->get('column_image');
+			$this->data['column_name'] 		= $this->language->get('column_name');
+			$this->data['column_model'] 	= $this->language->get('column_model');
+			$this->data['column_stock'] 	= $this->language->get('column_stock');
+			$this->data['column_price'] 	= $this->language->get('column_price');
+			$this->data['column_action'] 	= $this->language->get('column_action');
 			
 			$this->data['button_continue'] = $this->language->get('button_continue');
 			$this->data['button_cart'] = $this->language->get('button_cart');
@@ -78,8 +76,7 @@
 				$this->data['success'] = '';
 			}
 			
-			$results = [];
-			
+			$results = [];			
 			foreach ($this->session->data['wishlist'] as $key => $product_id) {								
 				if ($product_info = $this->model_catalog_product->getProduct($product_id)) { 
 					$results[] = $product_info; 			
@@ -88,9 +85,9 @@
 				}
 			}
 
-			$this->data['products'] = $this->model_catalog_product->prepareProductToArray($results);				
-			$this->data['remove_href'] = $this->url->link('account/wishlist', 'remove=');
-			$this->data['continue'] = $this->url->link('account/account', '');
+			$this->data['products'] 	= $this->model_catalog_product->prepareProductToArray($results);				
+			$this->data['remove_href'] 	= $this->url->link('account/wishlist', 'remove=');
+			$this->data['continue'] 	= $this->url->link('account/account', '');
 			
 			$this->template = 'account/wishlist.tpl';
 			
@@ -109,10 +106,10 @@
 		public function add() {
 			$this->language->load('account/wishlist');
 			
-			$json = array();
+			$json = [];
 			
 			if (!isset($this->session->data['wishlist'])) {
-				$this->session->data['wishlist'] = array();
+				$this->session->data['wishlist'] = [];
 			}
 			
 			if (isset($this->request->post['product_id'])) {
