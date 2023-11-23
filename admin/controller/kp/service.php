@@ -172,17 +172,14 @@
 
 			echoLine('[optimizeProductsDB] Финальные категории', 'i');	
 			$this->db->query("UPDATE category SET final = 0 WHERE 1");
-			$this->db->query("UPDATE category SET final = 1 WHERE category_id NOT IN ( SELECT parent_id FROM ( SELECT parent_id FROM category ) AS subquery )");
-			
-		//	echoLine('[optimizeProductsDB] Обнуление количества товаров со статусом нет в наличии', 'i');
-		//	$this->db->query("UPDATE product p SET quantity = 0, quantity_stock = 0, quantity_stockK = 0, quantity_stockM = 0, quantity_stockMN = 0, quantity_stockAS = 0, quantity_stock_onway = 0, quantity_stockK_onway = 0, quantity_stockM_onway = 0 WHERE stock_status_id IN (10,9)");
+			$this->db->query("UPDATE category SET final = 1 WHERE category_id NOT IN ( SELECT parent_id FROM ( SELECT parent_id FROM category ) AS subquery )");			
 
 			echoLine('[optimizeProductsDB] Выравнивание количества со складами', 'i');
-			$query = $this->db->query("SELECT product_id FROM product WHERE quantity < (quantity_stock + quantity_stockK + quantity_stockM)");
-			foreach ($query->rows as $row){
-				echo('.');
-				$this->db->query("UPDATE product SET quantity = (quantity_stock + quantity_stockK + quantity_stockM) WHERE product_id = '". (int)$row['product_id'] ."'");
-			}
+			$this->db->query("UPDATE product SET quantity = (quantity_stock + quantity_stockK + quantity_stockM) WHERE quantity < (quantity_stock + quantity_stockK + quantity_stockM)");
+
+			echoLine('[optimizeProductsDB] Выравнивание количества', 'i');
+			$this->db->query("UPDATE product SET quantity = 9999 WHERE stock_status_id = '" . $this->config->get('config_stock_status_id') . "' AND quantity = 0");
+			$this->db->query("UPDATE product SET quantity = 9999 WHERE stock_status_id = '" . $this->config->get('config_in_stock_status_id') . "' AND quantity = 0");
 
 			echoLine('[optimizeProductsDB] Нормализация markdown', 'i');
 			$this->db->query("UPDATE `product` SET ean = '', asin = '', isbn = ''	WHERE stock_product_id > 0");
