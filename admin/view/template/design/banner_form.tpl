@@ -108,6 +108,9 @@
 											<span class="error"><?php echo $error_banner_image[$image_row][$language['language_id']]; ?></span>
 										<?php } ?>
 									<?php } ?>
+									<br />
+									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#000; color:#FFF">Сортировка</span>   
+									<input type="number" step="1" style="width:90px;" name="banner_image[<?php echo $image_row; ?>][sort_order]" value="<?php echo $banner_image['sort_order']; ?>" />	
 								</td>
 								<td class="left">
 									<input type="text" name="banner_image[<?php echo $image_row; ?>][link]" value="<?php echo $banner_image['link']; ?>" /><br /><br />
@@ -265,6 +268,8 @@
 		<?php foreach ($languages as $language) { ?>
 			html += '<input type="text" name="banner_image[' + image_row + '][banner_image_description][<?php echo $language['language_id']; ?>][title]" value="" /> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br /><br />';
 		<?php } ?>
+
+		html += '<br /><span class="status_color" style="display:inline-block; padding:3px 5px; background:#000; color:#FFF">Сортировка</span><input type="number" step="1" style="width:90px;" name="banner_image[<' + image_row + '][sort_order]" value="0" />	'
 		html += '</td>';	
 		html += '<td class="left"><input type="text" name="banner_image[' + image_row + '][link]" value="" /><br /><br />';
 		<?php foreach ($languages as $language) { ?>

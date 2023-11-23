@@ -34,8 +34,8 @@ class ModelDesignBanner extends Model {
 					class 		= '" . $this->db->escape($banner_image['class'])  . "',
 					class_sm 	= '" . $this->db->escape($banner_image['class_sm'])  . "',
 					block 		= '" . (int)$banner_image['block'] . "',
-					block_sm 		= '" . (int)$banner_image['block_sm'] . "'
-					");
+					block_sm 	= '" . (int)$banner_image['block_sm'] . "',
+					sort_order 	= '" . (int)$banner_image['sort_order'] . "'");
 
 				$banner_image_id = $this->db->getLastId();
 
@@ -78,8 +78,8 @@ class ModelDesignBanner extends Model {
 					class 		= '" . $this->db->escape($banner_image['class'])  . "',
 					class_sm 	= '" . $this->db->escape($banner_image['class_sm'])  . "',
 					block 		= '" . (int)$banner_image['block'] . "',
-					block_sm 		= '" . (int)$banner_image['block_sm'] . "'
-					");
+					block_sm 	= '" . (int)$banner_image['block_sm'] . "',
+					sort_order 	= '" . (int)$banner_image['sort_order'] . "'");
 
 				$banner_image_id = $this->db->getLastId();
 
@@ -182,6 +182,7 @@ class ModelDesignBanner extends Model {
 				'class_sm' 					=> $banner_image['class_sm'],
 				'block' 					=> $banner_image['block'],
 				'block_sm' 					=> $banner_image['block_sm'],
+				'sort_order' 				=> $banner_image['sort_order'],
 			);
 		}
 
