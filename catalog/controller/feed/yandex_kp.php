@@ -952,7 +952,6 @@ class ControllerFeedYandexKP extends Controller {
 			$this->setProducts($products->rows)->addOffers();
 			$this->closeYML()->writeFeed($this->stock_path[0]);
 
-			//ADD DIRECT
 			echoLine('[DIRECT YML] ' . $store_id);
 			$products = $this->makeStockFeedQuery();
 			$this->loadSettings($store_id)->openYML()->addShop()->addCategories()->setFeedType('yandex');										
@@ -994,7 +993,6 @@ class ControllerFeedYandexKP extends Controller {
 			$this->setProductImages()->cacheCategoryDimensions();
 			$this->loadSettings($store_id)->openYML()->addShop()->addCategories();
 
-				//Товары в наличии
 			$sql = "SELECT DISTINCT(p.product_id) FROM product p 
 			LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
 			LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
@@ -1142,10 +1140,8 @@ class ControllerFeedYandexKP extends Controller {
 				p.status = 1 ";
 			
 			if ($this->config->get('config_vk_feed_only_in_stock')){
-				$sql .= "AND p.stock_status_id NOT IN (" . $this->config->get('config_not_in_stock_status_id') . ")
-						 AND p.quantity > 0 ";
-			}
-			
+				$sql .= "AND p.stock_status_id NOT IN (" . $this->config->get('config_not_in_stock_status_id') . ", " . $this->config->get('config_partly_in_stock_status_id') . ")";
+			}			
 
 			$sql .= "AND p.is_virtual = 0
 			AND p.is_markdown = 0
@@ -1154,7 +1150,7 @@ class ControllerFeedYandexKP extends Controller {
 
 			if (!empty($this->config->get('config_vk_feed_include_manufacturers')) && is_array($this->config->get('config_vk_feed_include_manufacturers'))){
 				$sql .= " AND p.manufacturer_id IN (" . implode(',', $this->config->get('config_vk_feed_include_manufacturers')) . ")";
-			}
+			}		
 
 			$products = $this->db->query($sql);	
 			$this->setProducts($products->rows)->addOffers();
