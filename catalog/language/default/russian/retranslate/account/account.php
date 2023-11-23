@@ -11,7 +11,7 @@ $_['text_retranslate_account_main_line_4'] = 'Здравствуйте, %s! Вы
 $_['text_retranslate_account_main_line_4_noname'] = 'Здравствуйте! Вы в личном кабинете покупателя';
 $_['text_retranslate_account_main_line_5'] = 'Здесь найдете всю информацию о ваших покупках и заказах, сможете изменить личные данные и покупать выгоднее с бонусами';
 
-$_['text_retranslate_rewards_line_0'] = 'Kitchen Profi Club';
+$_['text_retranslate_rewards_line_0'] = 'Club';
 $_['text_retranslate_rewards_line_1'] = 'Накапливайте бонусы и оплачивайте ими свои покупки';
 $_['text_retranslate_rewards_line_2'] = 'Подробнее';
 

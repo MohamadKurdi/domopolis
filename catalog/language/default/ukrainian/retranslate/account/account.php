@@ -11,7 +11,7 @@ $_['text_retranslate_account_main_line_4'] = 'Привіт, %s! Ви в особ
 $_['text_retranslate_account_main_line_4_noname'] = 'Привіт! Ви в особистому кабінеті покупця';
 $_['text_retranslate_account_main_line_5'] = 'Тут знайдете всю інформацію про ваші покупки і замовлення, зможете змінити особисті дані і купувати вигідніше з бонусами';
 
-$_['text_retranslate_rewards_line_0'] = 'Bonus Club';
+$_['text_retranslate_rewards_line_0'] = 'Club';
 $_['text_retranslate_rewards_line_1'] = 'Накопичуйте бонуси та оплачуйте ними свої покупки';
 $_['text_retranslate_rewards_line_2'] = 'Докладніше';
 
