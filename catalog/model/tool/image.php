@@ -116,7 +116,6 @@ class ModelToolImage extends Model {
 		}
 
 		return '';
-
 	}
 
 	public function resize_webp($filename, $width, $height, $type = '', $quality = IMAGE_QUALITY, $do_not_resize = false){

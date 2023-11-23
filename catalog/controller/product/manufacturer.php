@@ -141,8 +141,14 @@ class ControllerProductManufacturer extends Controller {
 				$this->data['categories'][$key]['name'] = $key;
 			}													
 
-			$image = $this->model_tool_image->resize($result['image'], 300, 300);						
-			$back_image = $this->model_tool_image->resize($result['back_image'], 300, 300);
+			$image 		= $this->model_tool_image->resize($result['image'], 300, 300);	
+
+			if ($result['back_image']){
+				$back_image = $this->model_tool_image->resize($result['back_image'], 300, 300);
+			} else {
+				$back_image = $this->model_tool_image->resize('white_back.jpg', 300, 300);
+			}		
+			
 
 			$this->data['categories'][$key]['manufacturer'][] = array(
 				'name' 					=> $result['name'],

@@ -3,8 +3,6 @@ class ControllerProductCountrybrand extends Controller {
 
 	public function index() {
 		$this->language->load('product/countrybrand');
-
-
 		$this->load->model('catalog/countrybrand');
 		$this->load->model('catalog/manufacturer');			
 		$this->load->model('tool/image'); 
@@ -63,15 +61,12 @@ class ControllerProductCountrybrand extends Controller {
 			$this->document->addStyle('/catalog/view/theme/kp/js/cloud-zoom-new/cloudzoom.css');
 
 			if ($this->config->get('config_google_remarketing_type') == 'ecomm') {
-
 				$this->data['google_tag_params'] = array(
 					'ecomm_prodid' => '',
 					'ecomm_pagetype' => 'category',
 					'ecomm_totalvalue' => 0
 				);
-
 			} 				
-
 
 			$this->document->setKeywords($countrybrand_info['meta_keyword']);
 			$this->document->setDescription($countrybrand_info['meta_description']);
@@ -85,6 +80,8 @@ class ControllerProductCountrybrand extends Controller {
 				$this->data['heading_title'] = $countrybrand_info['name'];		
 			}
 
+			$this->data['this_link'] = $this->url->link('product/countrybrand', 'countrybrand_id=' . $countrybrand_id);
+
 			foreach ($results as $result) {
 				if ($result['sort_order'] != -1) {
 
@@ -93,7 +90,6 @@ class ControllerProductCountrybrand extends Controller {
 					} else {
 						$key = utf8_substr(utf8_strtoupper($result['name']), 0, 1);
 					}
-
 
 					if (!isset($this->data['manufacturers'][$key])) {
 						$this->data['categories'][$key]['name'] = $key;
@@ -115,17 +111,20 @@ class ControllerProductCountrybrand extends Controller {
 
 
 					$image = $this->model_tool_image->resize($result['image'], 300, 300);
-					$back_image = $this->model_tool_image->resize($result['back_image'], 300, 300);
-
+					if ($result['back_image']){
+						$back_image = $this->model_tool_image->resize($result['back_image'], 300, 300);
+					} else {
+						$back_image = $this->model_tool_image->resize('white_back.jpg', 300, 300);
+					}
 
 					$this->data['categories'][$key]['manufacturer'][] = array(
-						'name' => $result['name'],
-						'mcategories' => $mcategories,
-						'image' => $image,
-						'back_image' => $back_image,
+						'name' 				=> $result['name'],
+						'mcategories' 		=> $mcategories,
+						'image' 			=> $image,
+						'back_image' 		=> $back_image,
 						'short_description' => strip_tags($description[$this->config->get('config_language_id')]['short_description']),
-						'location' => $description[$this->config->get('config_language_id')]['location'],
-						'href' => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $result['manufacturer_id'])
+						'location' 			=> $description[$this->config->get('config_language_id')]['location'],
+						'href' 				=> $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $result['manufacturer_id'])
 					);
 				}
 			}
@@ -160,7 +159,6 @@ class ControllerProductCountrybrand extends Controller {
 				$this->data['banner_ohuevshiy'] = $this->data['banner'] = false;
 			}
 
-
 			$this->data['compare'] = $this->url->link('product/compare');
 
 			if ($countrybrand_info['image']) {
@@ -187,8 +185,6 @@ class ControllerProductCountrybrand extends Controller {
 				$this->data['smallimg'] = $this->model_tool_image->resize($this->config->get('config_noimage'), $this->config->get('config_image_additional_width'),	$this->config->get('config_image_additional_height'));
 			}
 
-
-
 			$this->data['images'] = array();
 			$results = $this->model_catalog_countrybrand->getCountrybrandImages($this->request->get['countrybrand_id']);
 
@@ -208,10 +204,10 @@ class ControllerProductCountrybrand extends Controller {
 			);
 
 
-			$this->template = $this->config->get('config_template') . '/template/countrybrand/default.tpl';
+			$this->template = 'countrybrand/default.tpl';
 
 			if ($countrybrand_info['template']){
-				$this->template = $this->config->get('config_template') . '/template/countrybrand/' . $countrybrand_info['template'] . '.tpl';
+				$this->template = 'countrybrand/' . $countrybrand_info['template'] . '.tpl';
 			}
 
 			$this->children = array(
