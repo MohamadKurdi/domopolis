@@ -508,9 +508,9 @@
 			<?php } ?>
 
 			<div class="details-brand" style="margin-bottom: 25px;">
-				<p><span><?php echo $text_retranslate_brand; ?> </span><a href="<?php echo $manufacturer_href; ?>" style="color: #51A881;font-weight: bold;"><?php echo $manufacturer_name; ?></a></p>
+				<p><a href="<?php echo $manufacturer_href; ?>" style="color: #51A881;font-weight: bold;"><?php echo $manufacturer_name; ?></a></p>
 				<?php if(!empty($manufacturer_location)) { ?>
-					<p><span><?php echo $text_retranslate_manufacturer_country; ?> </span><span><?php echo $manufacturer_location; ?></span></p>
+					<p><span></span><span><?php echo $manufacturer_location; ?></span></p>
 				<?php } ?>
 			</div>
 

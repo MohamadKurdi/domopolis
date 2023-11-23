@@ -59,7 +59,6 @@
 				
 				</div>
 				 <?php  if (!$product['need_ask_about_stock'] && !$product['can_not_buy']) { ?>  
-
 					<?php if ($product['special']) { ?>
 						<div class="price__sale <?php if (empty($product['active_coupon'])) { ?>active_coupon_empty<?php } ?>">-<?php echo $product['saving']; ?>%</div>			
 					<?php } ?>
@@ -112,9 +111,6 @@
 						</svg>
 						<span><?php echo $button_add_to_cart;?></span>			
 					</button>
-					
-					
-					
 				</div>
 				
 				<?php } else { ?>

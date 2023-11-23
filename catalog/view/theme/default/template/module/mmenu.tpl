@@ -50,16 +50,10 @@
 									
 							<div class="main-center-cat-block">		
 								<span class="title_mmenu"><? echo $text_popular_products; ?></span>		
-								<ul>			
-									
-										<?php foreach ($category['products'] as $product):  ?>
-											
-												<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/product_single.tpl')); ?>
-											
-
-										<?php endforeach; ?>
-
-									
+								<ul>												
+									<?php foreach ($category['products'] as $product) {  ?>											
+										<?php include($this->checkTemplate(dirname(__FILE__), '/../structured/product_single.tpl')); ?>
+									<?php } ?>									
 								</ul>
 							</div>
 
@@ -195,16 +189,14 @@
 		$('#new_mmenu .main-center-cat-block .product__item').each(function(){
 			let _linkProduct = $(this).find('.product__title a').attr('href');
 
+			$(this).find('.product__btn-cart button').prop("onclick", null).off("click");
+			$(this).find('.product__btn-cart button').attr('onClick','');
 
 			$(this).find('.product__btn-cart button').on('click', function(){
 				 location.href = _linkProduct;
 			});
-			$(this).find('.product__btn-cart button').prop("onclick", null).off("click");
-			$(this).find('.product__btn-cart button').attr('onClick','');
 		});
-
     });
-
 </script>
 
 
