@@ -46,20 +46,20 @@
 			curl_setopt($ch, CURLOPT_URL, $this->reacherCONFIG['URI']);
 			
 			curl_setopt($ch, CURLOPT_HTTPHEADER,[
-			$this->reacherCONFIG['AUTH'] . ':' . $this->reacherCONFIG['KEY'],
-			'Content-Type: application/json',
-			'Connection: keep-alive',
+				$this->reacherCONFIG['AUTH'] . ':' . $this->reacherCONFIG['KEY'],
+				'Content-Type: application/json',
+				'Connection: keep-alive',
 			]);
 			
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 			curl_setopt($ch, CURLOPT_POST, 1);
 			curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode(
-			[
-			'to_email' => $email, 
-			'from_email' => $this->reacherCONFIG['FROM'], 
-			'hello_name' => $this->reacherCONFIG['HELO']
-			]));
+				[
+					'to_email' => $email, 
+					'from_email' => $this->reacherCONFIG['FROM'], 
+					'hello_name' => $this->reacherCONFIG['HELO']
+				]));
 			
 			$result = curl_exec ($ch);
 			curl_close ($ch);
@@ -128,9 +128,7 @@
 					}
 				}
 				
-				if ($json['is_reachable'] == 'unknown'){
-				//	print_r($json);
-					
+				if ($json['is_reachable'] == 'unknown'){					
 					if ($timeout){
 						if ($json['mx']['accepts_mail']){
 							$this->whitelist($email, 'accepts_mail');
@@ -262,6 +260,5 @@
 			$email = trim($email);
 			
 			$query = $this->db->ncquery("DELETE FROM customer_emails_blacklist WHERE email LIKE '" . $this->db->escape($email) . "'");
-		}
-		
+		}		
 	}											

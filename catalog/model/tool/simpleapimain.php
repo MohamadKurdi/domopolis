@@ -236,6 +236,16 @@
 		public function validatePhone($phone_number){			
 			return $this->registry->get('phoneValidator')->validate($phone_number);
 		}
+
+		public function validateEmail($email){			
+			$email = trim($email);
+			
+			if (!filter_var($email, FILTER_VALIDATE_EMAIL)){
+				return false;
+			}
+
+			return true;
+		}
 		
 		public function checkTelephoneForUniqueness($telephone, $register) {
 			$telephone = trim($telephone);

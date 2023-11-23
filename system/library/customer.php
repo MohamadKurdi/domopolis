@@ -368,8 +368,16 @@
 			return $this->email;
 		}
 		
-		public function getBirthday() {
+		public function getBirthday() {			
 			if ($this->birthday == '0000-00-00' || $this->birthday == '1970-01-01'){
+				return false;
+			}
+
+			if (!strtotime($this->birthday)){
+				return false;
+			}
+
+			if (date('Y-m-d', strtotime($this->birthday)) <= date('Y-m-d', strtotime('1900-01-01'))){
 				return false;
 			}
 			
