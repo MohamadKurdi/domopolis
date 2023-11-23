@@ -102,7 +102,7 @@
 				'payment_method' 	=> $order_info['payment_method'],
 				'shipping_method' 	=> $order_info['shipping_method'],	
 				'shipping_code' 	=> $order_info['shipping_code'],
-				'receipt_links'		=> $this->Fiscalisation->getReceiptLinks($receipt['receipt_id']),
+				'receipt_links'		=> $receipt?$this->Fiscalisation->getReceiptLinks($receipt['receipt_id']):[],
 				'total_national'	=> $total_national
 				);
 			}

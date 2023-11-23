@@ -104,12 +104,8 @@ class ControllerModuleMMenu extends Controller {
 						'href'     		=> $this->url->link('product/category', 'path=' . $category['category_id']),
 						'product_count'	=> $this->config->get('config_product_count')?$category['product_count']:false						
 					);
-
-
 				}
-			}			
-
-			
+			}						
 
 			$this->load->language('product/manufacturer');
 			$this->data['text_manufacturers'] = $this->language->get('text_manufacturers');
@@ -129,11 +125,12 @@ class ControllerModuleMMenu extends Controller {
 			$this->data['href_actions'] = $this->url->link('information/actions');
 
 			$this->data['special'] 		= $this->url->link('product/category', 'path=' . $this->config->get('config_special_category_id'));
-			$this->data['href_sale'] 	= $this->url->link('product/category', 'path=' . $this->config->get('config_special_category_id'));
-			
-			$this->data['href_newyear'] = $this->url->link('product/category', 'path=8227');
-			
-			
+			$this->data['href_sale'] 	= $this->url->link('product/category', 'path=' . $this->config->get('config_special_category_id'));			
+			$this->data['href_newyear'] = $this->url->link('product/category', 'path=8227');		
+
+			foreach ($this->language->loadRetranslate('product/single') as $translationСode => $translationText){
+				$this->data[$translationСode] = $translationText;
+			}			
 
 			$this->data['brands'] = [];
 

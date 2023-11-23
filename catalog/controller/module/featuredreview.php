@@ -1,6 +1,15 @@
 <?
 class ControllerModulefeaturedreview extends Controller {
-	protected function index($setting) {
+	protected function index($setting) {		
+		$this->load->model('catalog/review');
+		$this->load->model('module/reviews');
+		$this->load->model('catalog/category');
+		$this->load->model('catalog/manufacturer');
+		$this->load->model('catalog/product'); 
+		$this->load->model('tool/image');
+		$this->load->model('module/reviews');					
+		$this->load->language('product/product');
+		$this->load->language('module/featuredreview');
 		
 		$manufacturer_id = 0;
 		if (!empty($this->request->get['manufacturer_id'])){
@@ -40,31 +49,16 @@ class ControllerModulefeaturedreview extends Controller {
 			$this->setCachedOutput($out);
 			
 		} else {
-
-
-			$this->language->load('module/featuredreview');
-			$this->data['heading_title'] = $this->language->get('heading_title');
+			
+			$this->data['heading_title'] 	= $this->language->get('heading_title');
 			$this->data['text_all_reviews'] = $this->language->get('text_all_reviews');
-			$this->data['no_reviews'] = $this->language->get('no_reviews');
+			$this->data['no_reviews'] 		= $this->language->get('no_reviews');
+			$this->data['button_cart'] 		= $this->language->get('button_cart');
+			$this->data['customtitle'] 		= $this->config->get('popular_customtitle' . $this->config->get('config_language_id'));
 
-			$this->data['button_cart'] = $this->language->get('button_cart');
-
-			$this->data['customtitle'] = $this->config->get('popular_customtitle' . $this->config->get('config_language_id'));
-			if (!$this->data['customtitle']) { $this->data['customtitle'] = $this->data['heading_title']; } 
-
-			$this->load->model('catalog/product'); 
-
-			$this->load->model('tool/image');
-
-			$this->load->model('module/reviews');
-
-			$this->language->load('product/product');
-
-			$this->load->model('catalog/review');
-			$this->load->model('module/reviews');
-
-			$this->load->model('catalog/category');
-			$this->load->model('catalog/manufacturer');
+			if (!$this->data['customtitle']) { 
+				$this->data['customtitle'] = $this->data['heading_title']; 
+			} 
 
 			if ($category_id) {
 				$category = $this->model_catalog_category->getCategory($category_id);
@@ -78,17 +72,17 @@ class ControllerModulefeaturedreview extends Controller {
 				$manufacturer = false;
 			}
 
-			if ($category_id && $manufacturer_id) {
+			if ($category && $manufacturer) {
 				$microdata_name = $category['name'];
-			} elseif ($category_id && !$manufacturer_id) {
+			} elseif ($category && !$manufacturer) {
 				$microdata_name = $category['name'];
-			} elseif ($manufacturer_id) {
+			} elseif ($manufacturer) {
 				$microdata_name = $manufacturer['name'];
 			} else {
 				$microdata_name = $this->config->get('config_name');
 			}
 
-			$this->data['products'] = array();				
+			$this->data['products']  = [];				
 
 			if (empty($setting['limit'])) {
 				$setting['limit'] = 5;
@@ -112,8 +106,8 @@ class ControllerModulefeaturedreview extends Controller {
 			$results = $this->model_catalog_product->getFeaturedReviews($filter_data);
 			$results = array_slice($results, 0, (int)$setting['limit']);
 
-			$microdata_reviews = array();
-			$microdata_rating_score = array();
+			$microdata_reviews 		 = [];
+			$microdata_rating_score  = [];
 
 			$this->data['products'] = $this->model_catalog_product->prepareProductToArray($results);
 
@@ -130,7 +124,7 @@ class ControllerModulefeaturedreview extends Controller {
 				$product['reviews2'] = $reviews;
 			}				
 				
-			$this->data['microdata'] = array();
+			$this->data['microdata']  = [];
 
 			$microdata_rating_value = null;
 

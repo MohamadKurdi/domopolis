@@ -65,9 +65,7 @@ class ControllerProductManufacturer extends Controller {
 
 	public function index() {
 		$this->language->load('product/manufacturer');
-
 		$this->load->model('catalog/manufacturer');
-
 		$this->load->model('tool/image');		
 
 		foreach ($this->language->loadRetranslate('product/single') as $translationСode => $translationText){
@@ -97,7 +95,7 @@ class ControllerProductManufacturer extends Controller {
 
 		$this->data['button_continue'] = $this->language->get('button_continue');
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -112,13 +110,12 @@ class ControllerProductManufacturer extends Controller {
 		);		
 
 		$this->data['this_link'] = $this->url->link('product/manufacturer');
-		$this->data['categories'] = array();
+		$this->data['categories'] = [];
 
 		$current_store = (int)$this->config->get('config_store_id');
 		$current_lang  = (int)$this->config->get('config_language_id');
 		$current_curr  = (int)$this->currency->getId();
 
-			//Страницы стран
 		$this->data['countrybrands'] = [];			
 		$results = $this->model_catalog_manufacturer->getAllCountryBrands();
 
@@ -181,7 +178,6 @@ class ControllerProductManufacturer extends Controller {
 
 		$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
 
-
 		$results = $this->model_catalog_collection->getCollectionsByManufacturerNoVirtualForShowAll($manufacturer_id, 1);
 		if (!$results || $manufacturer_info['show_goods']){
 			$this->data['collections_link'] = false;
@@ -192,12 +188,11 @@ class ControllerProductManufacturer extends Controller {
 			$this->data['categories_link'] = false;
 		}
 
-
-
 		$filter_data = array(
 			'filter_manufacturer_id' 	=> $manufacturer_id,
 			'filter_not_bad' => true
-		);						
+		);		
+
 		if (!$this->model_catalog_product->getTotalProductSpecials($filter_data)){
 			$this->data['special_link'] = false;
 		}
@@ -212,8 +207,6 @@ class ControllerProductManufacturer extends Controller {
 			$this->data['products_link'] = false;
 		}
 
-
-
 		$filter_data = array(
 			'newlong'                	=> 1,			
 			'filter_not_bad'			=> true,
@@ -225,8 +218,6 @@ class ControllerProductManufacturer extends Controller {
 		if (!$this->model_catalog_product->getTotalProducts($filter_data)){
 			$this->data['newproducts_link'] = false;
 		}
-
-
 
 		$filter_data = array(
 			'start'           => 0,
@@ -240,6 +231,11 @@ class ControllerProductManufacturer extends Controller {
 
 	public function special(){
 		$this->language->load('product/manufacturer');
+		$this->load->model('catalog/manufacturer');
+		$this->load->model('catalog/product');
+		$this->load->model('catalog/set');
+		$this->load->model('catalog/collection');				
+		$this->load->model('tool/image'); 
 
 		foreach ($this->language->loadRetranslate('product/single') as $translationСode => $translationText){
 			$this->data[$translationСode] = $translationText;
@@ -249,14 +245,6 @@ class ControllerProductManufacturer extends Controller {
 			$this->data[$translationСode] = $translationText;
 		}
 
-		$this->load->model('catalog/manufacturer');
-
-		$this->load->model('catalog/product');
-		$this->load->model('catalog/set');
-		$this->load->model('catalog/collection');				
-
-		$this->load->model('tool/image'); 
-
 		if (isset($this->request->get['manufacturer_id'])) {
 			$manufacturer_id = (int)$this->request->get['manufacturer_id'];
 		} else {
@@ -264,6 +252,7 @@ class ControllerProductManufacturer extends Controller {
 		}
 
 		$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
+		$this->data['heading_title'] = $manufacturer_info['name'];
 
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];
@@ -290,9 +279,9 @@ class ControllerProductManufacturer extends Controller {
 		}
 
 		$this->data['page_type'] = 'manufacturer';
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -325,7 +314,7 @@ class ControllerProductManufacturer extends Controller {
 		$this->load->model('catalog/actions');								
 		$actions = $this->model_catalog_actions->getManufacturerActions($manufacturer_id);
 
-		$this->data['actions'] = array();
+		$this->data['actions'] = [];
 
 		if (count($actions) == 1){
 			$size = array(550, 860);
@@ -334,8 +323,6 @@ class ControllerProductManufacturer extends Controller {
 		} 
 
 		foreach ($actions as $action){
-
-
 			if ($action['image']) {
 				$image = $this->model_tool_image->resize($action['image'], 407, 491);					
 			} else {
@@ -501,6 +488,7 @@ class ControllerProductManufacturer extends Controller {
 			$this->return404();
 		}
 
+		$this->data['heading_title'] = $manufacturer_info['name'];
 
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];
@@ -527,7 +515,7 @@ class ControllerProductManufacturer extends Controller {
 		}
 
 		$this->data['page_type'] = 'manufacturer';
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -713,12 +701,13 @@ class ControllerProductManufacturer extends Controller {
 		}
 
 		$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
+		$this->data['heading_title'] = $manufacturer_info['name'];
 
 		if (!$manufacturer_info){
 			$this->return404();
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -750,7 +739,7 @@ class ControllerProductManufacturer extends Controller {
 		if (!$this->data['collections']) {		
 			$this->load->model('catalog/collection');	
 			$results = $this->model_catalog_collection->getCollectionsByManufacturerNoVirtualForShowAll($manufacturer_id, 300);
-			$this->data['collections'] = array();			
+			$this->data['collections'] = [];			
 
 			if (count($results)>0){
 				foreach ($results as $result){
@@ -882,8 +871,9 @@ class ControllerProductManufacturer extends Controller {
 		}
 
 		$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
+		$this->data['heading_title'] = $manufacturer_info['name'];
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -914,7 +904,7 @@ class ControllerProductManufacturer extends Controller {
 
 		if (!$this->data['categories']) {		
 			$this->load->model('module/keyworder');
-			$this->data['categories'] = array();
+			$this->data['categories'] = [];
 			$results_parent_categories = $this->model_catalog_manufacturer->getTreeCategoriesByManufacturer($manufacturer_id);								
 
 			if (is_array($results_parent_categories) && (count($results_parent_categories) == 1)){
@@ -925,7 +915,7 @@ class ControllerProductManufacturer extends Controller {
 						$parent_category['image'] = $image;						
 					}
 
-					$children = array();
+					$children = [];
 					foreach ($results_children as $children_category){
 						$image = $this->model_module_keyworder->getKeyworderImage($children_category['category_id'], $manufacturer_id);
 						if ($image){
@@ -958,7 +948,7 @@ class ControllerProductManufacturer extends Controller {
 						$name =  $parent_category['name'].' '.$manufacturer_info['name'];
 					}
 
-					$children = array();
+					$children = [];
 					foreach ($results_children as $children_category){
 						$image = $this->model_module_keyworder->getKeyworderImage($children_category['category_id'], $manufacturer_id);
 
@@ -1057,8 +1047,17 @@ class ControllerProductManufacturer extends Controller {
 	}
 
 	public function articles(){
+		$this->load->model('catalog/manufacturer');
+		$this->load->model('catalog/product');
+		$this->load->model('catalog/set');
+		$this->load->model('catalog/category');			
+		$this->load->model('catalog/news');
+		$this->load->model('catalog/ncomments');
+		$this->load->model('catalog/ncategory');
+		$this->load->model('tool/image'); 
 
 		$this->language->load('product/manufacturer');
+		$this->language->load('module/news');
 
 		foreach ($this->language->loadRetranslate('product/single') as $translationСode => $translationText){
 			$this->data[$translationСode] = $translationText;
@@ -1068,17 +1067,6 @@ class ControllerProductManufacturer extends Controller {
 			$this->data[$translationСode] = $translationText;
 		}
 
-		$this->load->model('catalog/manufacturer');
-
-		$this->load->model('catalog/product');
-		$this->load->model('catalog/set');
-		$this->load->model('catalog/category');	
-		$this->language->load('module/news');
-		$this->load->model('catalog/news');
-		$this->load->model('catalog/ncomments');
-		$this->load->model('catalog/ncategory');
-		$this->load->model('tool/image'); 
-
 		if (isset($this->request->get['manufacturer_id'])) {
 			$manufacturer_id = (int)$this->request->get['manufacturer_id'];
 		} else {
@@ -1086,8 +1074,9 @@ class ControllerProductManufacturer extends Controller {
 		}
 
 		$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
+		$this->data['heading_title'] = $manufacturer_info['name'];
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -1224,7 +1213,6 @@ class ControllerProductManufacturer extends Controller {
 		}								
 
 		if ($manufacturer_info['banner']){
-
 			if (!$manufacturer_info['banner_width'] || !$manufacturer_info['banner_height']){
 				$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], 1520, 300);
 			} else {
@@ -1234,21 +1222,18 @@ class ControllerProductManufacturer extends Controller {
 			$this->data['banner'] = false;
 		}		
 
-		$this->data['banner_width'] = $manufacturer_info['banner_width'];
-		$this->data['banner_height'] = $manufacturer_info['banner_height'];
+		$this->data['banner_width'] 	= $manufacturer_info['banner_width'];
+		$this->data['banner_height'] 	= $manufacturer_info['banner_height'];
 
-		$this->data['main_link'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
-		$this->data['products_link'] = $this->url->link('product/manufacturer/products', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
+		$this->data['main_link'] 		= $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
+		$this->data['products_link'] 	= $this->url->link('product/manufacturer/products', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
 		$this->data['collections_link'] = $this->url->link('product/manufacturer/collections', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
-		$this->data['categories_link'] = $this->url->link('product/manufacturer/categories', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
-		$this->data['articles_link'] = $this->url->link('product/manufacturer/articles', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
+		$this->data['categories_link'] 	= $this->url->link('product/manufacturer/categories', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
+		$this->data['articles_link'] 	= $this->url->link('product/manufacturer/articles', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
 		$this->data['newproducts_link'] = $this->url->link('product/manufacturer/newproducts', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
-		$this->data['special_link'] = $this->url->link('product/manufacturer/special', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
+		$this->data['special_link'] 	= $this->url->link('product/manufacturer/special', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
 
 		$this->getActiveLinks($this->request->get['manufacturer_id']);
-
-			//$this->document->addLink($this->url->link('product/manufacturer/articles', 'manufacturer_id=' . $this->request->get['manufacturer_id']), 'canonical');
-			//$this->document->setRobots('index, follow');
 
 		$this->document->addLink($this->url->link('product/manufacturer', 'manufacturer_id=' . $this->request->get['manufacturer_id']), 'canonical');
 		$this->document->setRobots('noindex, follow');
@@ -1288,13 +1273,10 @@ class ControllerProductManufacturer extends Controller {
 
 	public function info() {
 		$this->language->load('product/manufacturer');
-
 		$this->load->model('catalog/manufacturer');
-
 		$this->load->model('catalog/product');
 		$this->load->model('catalog/set');
 		$this->load->model('catalog/collection');				
-
 		$this->load->model('tool/image'); 
 
 		foreach ($this->language->loadRetranslate('product/single') as $translationСode => $translationText){
@@ -1338,7 +1320,7 @@ class ControllerProductManufacturer extends Controller {
 		}
 
 		$this->data['page_type'] = 'manufacturer';
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -1354,7 +1336,8 @@ class ControllerProductManufacturer extends Controller {
 
 		$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
 
-		if ($manufacturer_info) {							
+		if ($manufacturer_info) {
+			$this->data['heading_title'] = $manufacturer_info['name'];							
 
 			if ($manufacturer_info['image']){
 				$this->data['manufacturer_logo'] = $this->model_tool_image->resize($manufacturer_info['image'], 150, 150);
@@ -1379,7 +1362,6 @@ class ControllerProductManufacturer extends Controller {
 			$data = array(
 				'filter_manufacturer_id' => $manufacturer_id, 
 				'sort'                   => $sort,
-				//'no_child'      	     => true, 
 				'order'                  => $order,
 				'start'                  => ($page - 1) * $limit,
 				'limit'                  => $limit
@@ -1392,13 +1374,11 @@ class ControllerProductManufacturer extends Controller {
 			$this->data['short_description'] = html_entity_decode($manufacturer_info['short_description'], ENT_QUOTES, 'UTF-8');
 
 			if ($this->config->get('config_google_remarketing_type') == 'ecomm') {
-
 				$this->data['google_tag_params'] = array(
 					'ecomm_prodid' => '',
 					'ecomm_pagetype' => 'category',
 					'ecomm_totalvalue' => 0
 				);
-
 			} 
 
 			($manufacturer_info['seo_title'] == '')?$this->document->setTitle($manufacturer_info['name']):$this->document->setTitle($manufacturer_info['seo_title']);
@@ -1417,513 +1397,505 @@ class ControllerProductManufacturer extends Controller {
 			if (isset($this->request->get['order'])) {
 				$url .= '&order=' . $this->request->get['order'];
 			}
-				/*
-					if (isset($this->request->get['page'])) {
-					$url .= '&page=' . $this->request->get['page'];
-					}	
-				*/
-					if (isset($this->request->get['limit'])) {
-						$url .= '&limit=' . $this->request->get['limit'];
-					}
 
-
-					$this->data['this_href'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url);
-
-					$this->data['heading_title'] = $manufacturer_info['name'];
-					$this->data['seo_h1'] = ($manufacturer_info['seo_h1'] == '')?$manufacturer_info['name']:$manufacturer_info['seo_h1'];
-					$this->data['manufacturer_location'] = $manufacturer_info['location'];
-					$this->data['text_empty'] = $this->language->get('text_empty');
-					$this->data['text_quantity'] = $this->language->get('text_quantity');
-					$this->data['text_manufacturer'] = $this->language->get('text_manufacturer');
-					$this->data['text_model'] = $this->language->get('text_model');
-					$this->data['text_price'] = $this->language->get('text_price');
-					$this->data['text_tax'] = $this->language->get('text_tax');
-					$this->data['text_points'] = $this->language->get('text_points');
-					$this->data['text_compare'] = sprintf($this->language->get('text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
-					$this->data['text_display'] = $this->language->get('text_display');
-					$this->data['text_list'] = $this->language->get('text_list');
-					$this->data['text_grid'] = $this->language->get('text_grid');			
-					$this->data['text_sort'] = $this->language->get('text_sort');
-					$this->data['text_limit'] = $this->language->get('text_limit');
-					$this->data['text_show_all_products'] = $this->language->get('show_all_products');
-					$this->data['text_all_collection'] = $this->language->get('all_collection');
-					$this->data['text_open_collection'] = $this->language->get('open_collection');
-
-					$this->data['button_cart'] = $this->language->get('button_cart');
-					$this->data['button_wishlist'] = $this->language->get('button_wishlist');
-					$this->data['button_compare'] = $this->language->get('button_compare');
-					$this->data['button_continue'] = $this->language->get('button_continue');
-
-					$this->data['compare'] = $this->url->link('product/compare');
-
-					$this->data['products'] = array();
-					$data = array(
-						'filter_manufacturer_id' => $manufacturer_id, 
-						'sort'                   => $sort,
-						'no_child'      	=> true, 
-						'order'                  => $order,
-						'start'                  => ($page - 1) * $limit,
-						'limit'                  => $limit
-					);
-
-					$additionalContent = $this->model_catalog_manufacturer->getManufacturerContentByManufacturerId($manufacturer_id);
-
-					if ($additionalContent) {
-						foreach ($additionalContent as $k =>  $c) {
-							if ($c['type'] == 'collections') {
-								$this->load->model('catalog/collection');
-
-								$cArray = explode(",", $c['collections']);
-
-								$additionalContent[$k]['virtual'] = false;
-								foreach ($cArray as $cid) {
-
-									$real_collection = $this->model_catalog_collection->getCollection($cid);
-
-									if ($real_collection) {
-
-										$additionalContent[$k]['width'] = 500;
-										$additionalContent[$k]['height'] = 500;
-
-										if ($real_collection['virtual']){
-											$additionalContent[$k]['virtual'] = true;
-
-											$additionalContent[$k]['width'] = 745;
-											$additionalContent[$k]['height'] = 300;
-										}
-
-										if (isset($real_collection['image']) && $real_collection['image']) {
-											$image = $this->model_tool_image->resize($real_collection['image'], $additionalContent[$k]['width'], $additionalContent[$k]['height']);
-										} else {
-											$image = $this->model_tool_image->resize($this->config->get('config_noimage'), $additionalContent[$k]['width'], $additionalContent[$k]['height']);
-										}
-
-										$additionalContent[$k]['collections_array'][] = array(
-											'collection_id'     => $real_collection['collection_id'],
-											'name'       	    => $real_collection['name'],
-											'short_description' => $real_collection['short_description'],
-											'thumb'       	  	=> $image,
-											'href'              => $this->url->link('product/collection','collection_id=' . $real_collection['collection_id'])
-										);
-									}
-								}
-							} elseif ($c['type'] == 'categories') {
-								$this->load->model('catalog/category');
-								$this->load->model('module/keyworder');
-
-								$caArray = explode(",", $c['categories']);
-
-								foreach ($caArray as $caid) {
-
-									if ($real_category = $this->model_catalog_category->getCategory($caid)) {
-									//check if keyworder has image && name
-
-										if ($_key_image = $this->model_module_keyworder->getKeyworderImage($caid, $manufacturer_id)){
-											$image = $this->model_tool_image->resize($_key_image, 500, 500);								
-										} else {
-											if ($real_category['image']) {
-												$image = $this->model_tool_image->resize($real_category['image'], 500, 500);
-											} else {
-												$image = $this->model_tool_image->resize($this->config->get('config_noimage'), 500, 500);
-											}
-										}
-
-										if ($_key_name = $this->model_module_keyworder->getKeyworderName($caid, $manufacturer_id)){
-											$_name = $_key_name;
-										} else {
-											$_name = $real_category['name'];
-										}			
-
-										$additionalContent[$k]['categories_array'][] = array(
-											'category_id'       => $real_category['category_id'],
-											'name'       	    => $_name,
-											'short_description' => $real_category['name'] . ' ' . $manufacturer_info['name'],
-											'thumb'       	  	=> $image,
-											'href'              => $this->url->link('product/category', 'path=' . $real_category['category_id'] . '&manufacturer_id=' . $manufacturer_id)
-										);
-									}
-								}
-
-							}
-						}
-					}
-
-					$this->data['additionalContent'] = $additionalContent;
-
-
-					$product_total = $this->data['products_total'] = $this->model_catalog_product->getTotalProducts($data);						
-
-					$results = $this->model_catalog_product->getProducts($data);
-
-					$this->data['dimensions'] = array(
-						'w' => $this->config->get('config_image_product_width'),
-						'h' => $this->config->get('config_image_product_height')
-					);
-
-					$this->data['products'] = $this->model_catalog_product->prepareProductToArray($results);
-
-
-					$this->load->model('catalog/actions');								
-					$actions = $this->model_catalog_actions->getManufacturerActions($manufacturer_id);
-
-					if ($actions && count($actions)){
-						if (count($actions) == 1){
-							if ($page == 1 && $this->data['products'] && count($this->data['products']) > 10){
-
-								$action = array_shift($actions);
-								if ($action['image_to_cat']) {
-									$image = $this->model_tool_image->resize($action['image_to_cat'], 407, 491);
-								} else {
-									$image = $this->model_tool_image->resize($this->config->get('config_noimage'), 407, 491);
-								}
-
-								$action_data = array(
-									'is_inserted_action' => true,
-									'thumb'       => $image,
-									'title' => $action['title'],
-									'href' => $this->url->link('information/actions','actions_id=' . $action['actions_id'])
-								);
-
-								$counter = 1;
-								$tmp_products = array();
-								foreach ($this->data['products'] as $tmp_product){							
-									$tmp_products[] = $tmp_product;
-
-									if ($counter == 5){
-										$tmp_products[] = $action_data;
-									}
-
-									$counter++;
-								}
-								$this->data['products'] = $tmp_products;
-
-							}					
-						} elseif (count($actions) > 1) {	
-							if ($page <= count($actions)){									
-
-								shuffle ($actions);
-								$action = array_shift($actions);
-
-								if ($action['image_to_cat']) {
-									$image = $this->model_tool_image->resize($action['image_to_cat'], 407, 491);
-								} else {
-									$image = $this->model_tool_image->resize($this->config->get('config_noimage'), 407, 491);
-								}
-
-								$action_data = array(
-									'is_inserted_action' => true,
-									'thumb'       => $image,
-									'title' => $action['title'],
-									'href' => $this->url->link('information/actions','actions_id=' . $action['actions_id'])
-								);
-
-								$counter = 1;
-								$tmp_products = array();
-								foreach ($this->data['products'] as $tmp_product){							
-									$tmp_products[] = $tmp_product;
-
-									if ($counter == 5){
-										$tmp_products[] = $action_data;
-									}
-
-									$counter++;
-								}
-								$this->data['products'] = $tmp_products;
-							}
-
-						}
-					}
-
-					$url = '';
-
-					if( ! empty( $this->request->get['mfp'] ) ) {
-						$url .= '&mfp=' . $this->request->get['mfp'];
-					}
-
-					if (isset($this->request->get['limit'])) {
-						$url .= '&limit=' . $this->request->get['limit'];
-					}
-
-					$this->data['sorts'] = array();
-
-					foreach ($this->registry->get('sorts') as $sortConfig){
-						if ($sortConfig['visible']){
-							$this->data['sorts'][] = array(
-								'text'  => $this->language->get($sortConfig['text_variable']),
-								'value' => ($sortConfig['field'] . '-' . $sortConfig['order']),
-								'href'  => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=' . $sortConfig['field'] . '&order='. $sortConfig['order'] . $url)
-							);
-						}
-					}	
-
-
-					$url = '';
-
-					if( ! empty( $this->request->get['mfp'] ) ) {
-						$url .= '&mfp=' . $this->request->get['mfp'];
-					}
-
-					if (isset($this->request->get['sort'])) {
-						$url .= '&sort=' . $this->request->get['sort'];
-					}	
-
-					if (isset($this->request->get['order'])) {
-						$url .= '&order=' . $this->request->get['order'];
-					}
-
-					$this->data['limits'] = array();
-
-					$limits = array_unique(array($this->config->get('config_catalog_limit'), $this->config->get('config_catalog_limit') * 2, $this->config->get('config_catalog_limit') * 3));
-
-					sort($limits);
-
-					foreach($limits as $value){
-						$this->data['limits'][] = array(
-							'text'  => $value,
-							'value' => $value,
-							'href'  => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&limit=' . $value)
-						);
-					}
-
-					$url = '';
-
-					if( ! empty( $this->request->get['mfp'] ) ) {
-						$url .= '&mfp=' . $this->request->get['mfp'];
-					}
-
-					if (isset($this->request->get['sort'])) {
-						$url .= '&sort=' . $this->request->get['sort'];
-					}	
-
-					if (isset($this->request->get['order'])) {
-						$url .= '&order=' . $this->request->get['order'];
-					}
-
-					if (isset($this->request->get['limit'])) {
-						$url .= '&limit=' . $this->request->get['limit'];
-					}
-
-					$pagination = new Pagination();
-					$pagination->total = $product_total;
-					$pagination->page = $page;
-					$pagination->limit = $limit;
-					$pagination->text = $this->language->get('text_pagination');
-					$pagination->url = $this->url->link('product/manufacturer/info','manufacturer_id=' . $this->request->get['manufacturer_id'] .  $url . '&page={page}');
-
-					$this->data['text_show_more'] = $this->language->get('text_show_more');
-					$this->data['pagination'] = $pagination->render();
-					$this->data['pagination_text'] = $pagination->render_text();
-
-					$this->data['sort'] = $sort;
-					$this->data['order'] = $order;
-					$this->data['limit'] = $limit;
-
-					$this->data['current_sort'] = $this->language->get('text_default');
-
-					foreach ($this->data['sorts'] as $_sort){
-						if ($this->data['sort'] . '-'. $this->data['order'] == $_sort['value']){
-							$this->data['current_sort'] = $_sort['text'];
-						}
-					}
-
-					$this->data['continue'] = $this->url->link('common/home');
-
-					if (isset($product_total)) {
-						$num_pages = ceil($product_total / $limit);
-						if ($page == 1) {
-							$this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id']), 'canonical');
-							$this->document->setRobots('index, follow');
-						} else {
-							$this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . "&page=" . $page), 'canonical');
-
-							$this->document->setTitle(sprintf($this->language->get('text_page'), (int)$page) . $this->document->getTitle());
-							$this->document->setDescription(sprintf($this->language->get('text_page'), (int)$page) . $this->document->getDescription());
-
-							if ($this->config->get('config_index_manufacturer_pages')){
-								$this->document->setRobots("index, follow");
-							} else {
-								$this->document->setRobots("noindex, follow");
-							}
-						}
-						if ($page < $num_pages) {
-							$this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&page=' . ($page + 1)), 'next');
-						}
-						if ($page > 1) {							
-							if ($page == 2) {
-								$this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id']), 'prev');
-							} else {
-								$this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&page=' . ($page - 1)), 'prev');
-							}
-						}
-					} else {
-						$this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id']), 'canonical');
-					}
-
-
-					$this->data['main_link'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
-					$this->data['products_link'] = $this->url->link('product/manufacturer/products', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
-					$this->data['collections_link'] = $this->url->link('product/manufacturer/collections', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
-					$this->data['categories_link'] = $this->url->link('product/manufacturer/categories', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
-					$this->data['articles_link'] = $this->url->link('product/manufacturer/articles', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
-					$this->data['newproducts_link'] = $this->url->link('product/manufacturer/newproducts', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
-					$this->data['special_link'] = $this->url->link('product/manufacturer/special', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
-
-					$this->getActiveLinks($this->request->get['manufacturer_id']);
-
-					require_once(DIR_SYSTEM . 'library/microdata/opengraph/manufacturer.php');
-					require_once(DIR_SYSTEM . 'library/microdata/twittercard/manufacturer.php');
-
-					$this->data['active_button'] = 'info';
-
-					$this->load->model('design/layout');
-					$layout_id = $this->model_catalog_manufacturer->getManufacturerLayoutId($manufacturer_id);
-					if (!$layout_id){				
-						$layout_id = $this->model_design_layout->getLayout('product/manufacturer');				
-					}	
-
-					if ($template = $this->model_design_layout->getLayoutTemplateByLayoutId($layout_id)) {
-						$this->template = $template;				
-					} else {
-						$template_overload = false;
-						$this->load->model('setting/setting');
-						$custom_template_module = $this->model_setting_setting->getSetting('custom_template_module', $this->config->get('config_store_id'));
-						if(!empty($custom_template_module['custom_template_module'])){
-							foreach ($custom_template_module['custom_template_module'] as $key => $module) {
-								if (($module['type'] == 3) && !empty($module['manufacturers'])) {
-									if (in_array($manufacturer_id, $module['manufacturers'])) {
-										$this->template = $module['template_name'];
-										$template_overload = true;
-									}
-								}
-							}
-						}
-
-						if (!$template_overload) {
-							$this->template = 'product/manufacturer/info.tpl';
-						}
-					}
-
-				//REWARD TEXT
-					if ($this->config->get('rewardpoints_appinstall')){
-						$this->data['text_retranslate_app_block'] = sprintf($this->data['text_retranslate_app_block_reward'], $this->currency->format($this->config->get('rewardpoints_appinstall'), $this->config->get('config_currency_national'), 1));
-					}
-
-					$this->children = array(
-						'common/column_left',
-						'common/column_right',
-						'common/content_top',
-						'common/content_bottom',
-						'common/footer',
-						'common/header'
-					);							
-
-
-					if( isset( $this->request->get['mfilterAjax'] ) ) {
-						$settings	= $this->config->get('mega_filter_settings');
-						$baseTypes	= array( 'stock_status', 'manufacturers', 'rating', 'attributes', 'price', 'options', 'filters' );
-
-						if( isset( $this->request->get['mfilterBTypes'] ) ) {
-							$baseTypes = explode( ',', $this->request->get['mfilterBTypes'] );
-						}
-
-						if( ! empty( $settings['calculate_number_of_products'] ) || in_array( 'categories:tree', $baseTypes ) ) {
-							if( empty( $settings['calculate_number_of_products'] ) ) {
-								$baseTypes = array( 'categories:tree' );
-							}
-
-							$this->load->model( 'module/mega_filter' );
-
-							$idx = 0;
-
-							if( isset( $this->request->get['mfilterIdx'] ) )
-								$idx = (int) $this->request->get['mfilterIdx'];
-
-							$this->data['mfilter_json'] = json_encode( MegaFilterCore::newInstance( $this, NULL )->getJsonData($baseTypes, $idx) );
-						}
-
-						foreach( $this->children as $mf_child ) {
-							$mf_child = explode( '/', $mf_child );
-							$mf_child = array_pop( $mf_child );
-							$this->data[$mf_child] = '';
-						}
-						
-						$this->children=array();
-						$this->data['header'] = $this->data['column_left'] = $this->data['column_right'] = $this->data['content_top'] = $this->data['content_bottom'] = $this->data['footer'] = '';
-					}
-
-					if( ! empty( $this->data['breadcrumbs'] ) && ! empty( $this->request->get['mfp'] ) ) {
-
-						foreach( $this->data['breadcrumbs'] as $mfK => $mfBreadcrumb ) {
-							$mfReplace = preg_replace( '/path\[[^\]]+\],?/', '', $this->request->get['mfp'] );
-							$mfFind = ( mb_strpos( $mfBreadcrumb['href'], '?mfp=', 0, 'utf-8' ) !== false ? '?mfp=' : '&mfp=' );
-
-							$this->data['breadcrumbs'][$mfK]['href'] = str_replace(array(
-								$mfFind . $this->request->get['mfp'],
-								'&amp;mfp=' . $this->request->get['mfp'],
-								$mfFind . urlencode( $this->request->get['mfp'] ),
-								'&amp;mfp=' . urlencode( $this->request->get['mfp'] )
-							), $mfReplace ? $mfFind . $mfReplace : '', $mfBreadcrumb['href'] );
-						}
-					}
-
-
-					$this->response->setOutput($this->render());
-				} else {
-
-					$url = '';
-
-					if( ! empty( $this->request->get['mfp'] ) ) {
-						$url .= '&mfp=' . $this->request->get['mfp'];
-					}
-
-					if (isset($this->request->get['manufacturer_id'])) {
-						$url .= '&manufacturer_id=' . $this->request->get['manufacturer_id'];
-					}
-
-					if (isset($this->request->get['sort'])) {
-						$url .= '&sort=' . $this->request->get['sort'];
-					}	
-
-					if (isset($this->request->get['order'])) {
-						$url .= '&order=' . $this->request->get['order'];
-					}
-
-					if (isset($this->request->get['page'])) {
-						$url .= '&page=' . $this->request->get['page'];
-					}
-
-					if (isset($this->request->get['limit'])) {
-						$url .= '&limit=' . $this->request->get['limit'];
-					}
-
-					$this->data['breadcrumbs'][] = array(
-						'text'      => $this->language->get('text_error'),
-						'href'      => $this->url->link('product/category', $url),
-						'separator' => $this->language->get('text_separator')
-					);
-
-					$this->document->setTitle($this->language->get('text_error'));
-
-					$this->data['heading_title'] = $this->language->get('text_error');
-					$this->data['text_error'] = $this->language->get('text_error');
-					$this->data['button_continue'] = $this->language->get('button_continue');
-
-					$this->data['continue'] = $this->url->link('common/home');
-
-					$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
-
-					$this->template = 'error/not_found.tpl';
-
-					$this->children = array(
-						'common/column_left',
-						'common/column_right',
-						'common/content_top',
-						'common/content_bottom',
-						'common/footer',
-						'common/header'
-					);
-
-					$this->response->setOutput($this->render());
-				}			
+			if (isset($this->request->get['limit'])) {
+				$url .= '&limit=' . $this->request->get['limit'];
 			}
-		}
+
+
+			$this->data['this_href'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url);
+
+			$this->data['heading_title'] = $manufacturer_info['name'];
+			$this->data['seo_h1'] = ($manufacturer_info['seo_h1'] == '')?$manufacturer_info['name']:$manufacturer_info['seo_h1'];
+			$this->data['manufacturer_location'] = $manufacturer_info['location'];
+			$this->data['text_empty'] = $this->language->get('text_empty');
+			$this->data['text_quantity'] = $this->language->get('text_quantity');
+			$this->data['text_manufacturer'] = $this->language->get('text_manufacturer');
+			$this->data['text_model'] = $this->language->get('text_model');
+			$this->data['text_price'] = $this->language->get('text_price');
+			$this->data['text_tax'] = $this->language->get('text_tax');
+			$this->data['text_points'] = $this->language->get('text_points');
+			$this->data['text_compare'] = sprintf($this->language->get('text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
+			$this->data['text_display'] = $this->language->get('text_display');
+			$this->data['text_list'] = $this->language->get('text_list');
+			$this->data['text_grid'] = $this->language->get('text_grid');			
+			$this->data['text_sort'] = $this->language->get('text_sort');
+			$this->data['text_limit'] = $this->language->get('text_limit');
+			$this->data['text_show_all_products'] = $this->language->get('show_all_products');
+			$this->data['text_all_collection'] = $this->language->get('all_collection');
+			$this->data['text_open_collection'] = $this->language->get('open_collection');
+
+			$this->data['button_cart'] = $this->language->get('button_cart');
+			$this->data['button_wishlist'] = $this->language->get('button_wishlist');
+			$this->data['button_compare'] = $this->language->get('button_compare');
+			$this->data['button_continue'] = $this->language->get('button_continue');
+
+			$this->data['compare'] = $this->url->link('product/compare');
+
+			$this->data['products'] = [];
+			$data = array(
+				'filter_manufacturer_id' => $manufacturer_id, 
+				'sort'                   => $sort,
+				'no_child'      	=> true, 
+				'order'                  => $order,
+				'start'                  => ($page - 1) * $limit,
+				'limit'                  => $limit
+			);
+
+			$additionalContent = $this->model_catalog_manufacturer->getManufacturerContentByManufacturerId($manufacturer_id);
+
+			if ($additionalContent) {
+				foreach ($additionalContent as $k =>  $c) {
+					if ($c['type'] == 'collections') {
+						$this->load->model('catalog/collection');
+
+						$cArray = explode(",", $c['collections']);
+
+						$additionalContent[$k]['virtual'] = false;
+						foreach ($cArray as $cid) {
+
+							$real_collection = $this->model_catalog_collection->getCollection($cid);
+
+							if ($real_collection) {
+
+								$additionalContent[$k]['width'] = 500;
+								$additionalContent[$k]['height'] = 500;
+
+								if ($real_collection['virtual']){
+									$additionalContent[$k]['virtual'] = true;
+
+									$additionalContent[$k]['width'] = 745;
+									$additionalContent[$k]['height'] = 300;
+								}
+
+								if (isset($real_collection['image']) && $real_collection['image']) {
+									$image = $this->model_tool_image->resize($real_collection['image'], $additionalContent[$k]['width'], $additionalContent[$k]['height']);
+								} else {
+									$image = $this->model_tool_image->resize($this->config->get('config_noimage'), $additionalContent[$k]['width'], $additionalContent[$k]['height']);
+								}
+
+								$additionalContent[$k]['collections_array'][] = array(
+									'collection_id'     => $real_collection['collection_id'],
+									'name'       	    => $real_collection['name'],
+									'short_description' => $real_collection['short_description'],
+									'thumb'       	  	=> $image,
+									'href'              => $this->url->link('product/collection','collection_id=' . $real_collection['collection_id'])
+								);
+							}
+						}
+					} elseif ($c['type'] == 'categories') {
+						$this->load->model('catalog/category');
+						$this->load->model('module/keyworder');
+
+						$caArray = explode(",", $c['categories']);
+
+						foreach ($caArray as $caid) {
+
+							if ($real_category = $this->model_catalog_category->getCategory($caid)) {									
+								if ($_key_image = $this->model_module_keyworder->getKeyworderImage($caid, $manufacturer_id)){
+									$image = $this->model_tool_image->resize($_key_image, 500, 500);								
+								} else {
+									if ($real_category['image']) {
+										$image = $this->model_tool_image->resize($real_category['image'], 500, 500);
+									} else {
+										$image = $this->model_tool_image->resize($this->config->get('config_noimage'), 500, 500);
+									}
+								}
+
+								if ($_key_name = $this->model_module_keyworder->getKeyworderName($caid, $manufacturer_id)){
+									$_name = $_key_name;
+								} else {
+									$_name = $real_category['name'];
+								}			
+
+								$additionalContent[$k]['categories_array'][] = array(
+									'category_id'       => $real_category['category_id'],
+									'name'       	    => $_name,
+									'short_description' => $real_category['name'] . ' ' . $manufacturer_info['name'],
+									'thumb'       	  	=> $image,
+									'href'              => $this->url->link('product/category', 'path=' . $real_category['category_id'] . '&manufacturer_id=' . $manufacturer_id)
+								);
+							}
+						}
+					}
+				}
+			}
+
+			$this->data['additionalContent'] = $additionalContent;
+
+
+			$product_total = $this->data['products_total'] = $this->model_catalog_product->getTotalProducts($data);						
+
+			$results = $this->model_catalog_product->getProducts($data);
+
+			$this->data['dimensions'] = array(
+				'w' => $this->config->get('config_image_product_width'),
+				'h' => $this->config->get('config_image_product_height')
+			);
+
+			$this->data['products'] = $this->model_catalog_product->prepareProductToArray($results);
+
+
+			$this->load->model('catalog/actions');								
+			$actions = $this->model_catalog_actions->getManufacturerActions($manufacturer_id);
+
+			if ($actions && count($actions)){
+				if (count($actions) == 1){
+					if ($page == 1 && $this->data['products'] && count($this->data['products']) > 10){
+
+						$action = array_shift($actions);
+						if ($action['image_to_cat']) {
+							$image = $this->model_tool_image->resize($action['image_to_cat'], 407, 491);
+						} else {
+							$image = $this->model_tool_image->resize($this->config->get('config_noimage'), 407, 491);
+						}
+
+						$action_data = array(
+							'is_inserted_action' => true,
+							'thumb'       => $image,
+							'title' => $action['title'],
+							'href' => $this->url->link('information/actions','actions_id=' . $action['actions_id'])
+						);
+
+						$counter = 1;
+						$tmp_products = [];
+						foreach ($this->data['products'] as $tmp_product){							
+							$tmp_products[] = $tmp_product;
+
+							if ($counter == 5){
+								$tmp_products[] = $action_data;
+							}
+
+							$counter++;
+						}
+						$this->data['products'] = $tmp_products;
+
+					}					
+				} elseif (count($actions) > 1) {	
+					if ($page <= count($actions)){									
+
+						shuffle ($actions);
+						$action = array_shift($actions);
+
+						if ($action['image_to_cat']) {
+							$image = $this->model_tool_image->resize($action['image_to_cat'], 407, 491);
+						} else {
+							$image = $this->model_tool_image->resize($this->config->get('config_noimage'), 407, 491);
+						}
+
+						$action_data = array(
+							'is_inserted_action' => true,
+							'thumb'       => $image,
+							'title' => $action['title'],
+							'href' => $this->url->link('information/actions','actions_id=' . $action['actions_id'])
+						);
+
+						$counter = 1;
+						$tmp_products = [];
+						foreach ($this->data['products'] as $tmp_product){							
+							$tmp_products[] = $tmp_product;
+
+							if ($counter == 5){
+								$tmp_products[] = $action_data;
+							}
+
+							$counter++;
+						}
+						$this->data['products'] = $tmp_products;
+					}
+
+				}
+			}
+
+			$url = '';
+
+			if( ! empty( $this->request->get['mfp'] ) ) {
+				$url .= '&mfp=' . $this->request->get['mfp'];
+			}
+
+			if (isset($this->request->get['limit'])) {
+				$url .= '&limit=' . $this->request->get['limit'];
+			}
+
+			$this->data['sorts'] = [];
+
+			foreach ($this->registry->get('sorts') as $sortConfig){
+				if ($sortConfig['visible']){
+					$this->data['sorts'][] = array(
+						'text'  => $this->language->get($sortConfig['text_variable']),
+						'value' => ($sortConfig['field'] . '-' . $sortConfig['order']),
+						'href'  => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=' . $sortConfig['field'] . '&order='. $sortConfig['order'] . $url)
+					);
+				}
+			}	
+
+
+			$url = '';
+
+			if( ! empty( $this->request->get['mfp'] ) ) {
+				$url .= '&mfp=' . $this->request->get['mfp'];
+			}
+
+			if (isset($this->request->get['sort'])) {
+				$url .= '&sort=' . $this->request->get['sort'];
+			}	
+
+			if (isset($this->request->get['order'])) {
+				$url .= '&order=' . $this->request->get['order'];
+			}
+
+			$this->data['limits'] = [];
+
+			$limits = array_unique(array($this->config->get('config_catalog_limit'), $this->config->get('config_catalog_limit') * 2, $this->config->get('config_catalog_limit') * 3));
+
+			sort($limits);
+
+			foreach($limits as $value){
+				$this->data['limits'][] = array(
+					'text'  => $value,
+					'value' => $value,
+					'href'  => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&limit=' . $value)
+				);
+			}
+
+			$url = '';
+
+			if( ! empty( $this->request->get['mfp'] ) ) {
+				$url .= '&mfp=' . $this->request->get['mfp'];
+			}
+
+			if (isset($this->request->get['sort'])) {
+				$url .= '&sort=' . $this->request->get['sort'];
+			}	
+
+			if (isset($this->request->get['order'])) {
+				$url .= '&order=' . $this->request->get['order'];
+			}
+
+			if (isset($this->request->get['limit'])) {
+				$url .= '&limit=' . $this->request->get['limit'];
+			}
+
+			$pagination = new Pagination();
+			$pagination->total = $product_total;
+			$pagination->page = $page;
+			$pagination->limit = $limit;
+			$pagination->text = $this->language->get('text_pagination');
+			$pagination->url = $this->url->link('product/manufacturer/info','manufacturer_id=' . $this->request->get['manufacturer_id'] .  $url . '&page={page}');
+
+			$this->data['text_show_more'] = $this->language->get('text_show_more');
+			$this->data['pagination'] = $pagination->render();
+			$this->data['pagination_text'] = $pagination->render_text();
+
+			$this->data['sort'] = $sort;
+			$this->data['order'] = $order;
+			$this->data['limit'] = $limit;
+
+			$this->data['current_sort'] = $this->language->get('text_default');
+
+			foreach ($this->data['sorts'] as $_sort){
+				if ($this->data['sort'] . '-'. $this->data['order'] == $_sort['value']){
+					$this->data['current_sort'] = $_sort['text'];
+				}
+			}
+
+			$this->data['continue'] = $this->url->link('common/home');
+
+			if (isset($product_total)) {
+				$num_pages = ceil($product_total / $limit);
+				if ($page == 1) {
+					$this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id']), 'canonical');
+					$this->document->setRobots('index, follow');
+				} else {
+					$this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . "&page=" . $page), 'canonical');
+
+					$this->document->setTitle(sprintf($this->language->get('text_page'), (int)$page) . $this->document->getTitle());
+					$this->document->setDescription(sprintf($this->language->get('text_page'), (int)$page) . $this->document->getDescription());
+
+					if ($this->config->get('config_index_manufacturer_pages')){
+						$this->document->setRobots("index, follow");
+					} else {
+						$this->document->setRobots("noindex, follow");
+					}
+				}
+				if ($page < $num_pages) {
+					$this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&page=' . ($page + 1)), 'next');
+				}
+				if ($page > 1) {							
+					if ($page == 2) {
+						$this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id']), 'prev');
+					} else {
+						$this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&page=' . ($page - 1)), 'prev');
+					}
+				}
+			} else {
+				$this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id']), 'canonical');
+			}
+
+
+			$this->data['main_link'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
+			$this->data['products_link'] = $this->url->link('product/manufacturer/products', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
+			$this->data['collections_link'] = $this->url->link('product/manufacturer/collections', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
+			$this->data['categories_link'] = $this->url->link('product/manufacturer/categories', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
+			$this->data['articles_link'] = $this->url->link('product/manufacturer/articles', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
+			$this->data['newproducts_link'] = $this->url->link('product/manufacturer/newproducts', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
+			$this->data['special_link'] = $this->url->link('product/manufacturer/special', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
+
+			$this->getActiveLinks($this->request->get['manufacturer_id']);
+
+			require_once(DIR_SYSTEM . 'library/microdata/opengraph/manufacturer.php');
+			require_once(DIR_SYSTEM . 'library/microdata/twittercard/manufacturer.php');
+
+			$this->data['active_button'] = 'info';
+
+			$this->load->model('design/layout');
+			$layout_id = $this->model_catalog_manufacturer->getManufacturerLayoutId($manufacturer_id);
+			if (!$layout_id){				
+				$layout_id = $this->model_design_layout->getLayout('product/manufacturer');				
+			}	
+
+			if ($template = $this->model_design_layout->getLayoutTemplateByLayoutId($layout_id)) {
+				$this->template = $template;				
+			} else {
+				$template_overload = false;
+				$this->load->model('setting/setting');
+				$custom_template_module = $this->model_setting_setting->getSetting('custom_template_module', $this->config->get('config_store_id'));
+				if(!empty($custom_template_module['custom_template_module'])){
+					foreach ($custom_template_module['custom_template_module'] as $key => $module) {
+						if (($module['type'] == 3) && !empty($module['manufacturers'])) {
+							if (in_array($manufacturer_id, $module['manufacturers'])) {
+								$this->template = $module['template_name'];
+								$template_overload = true;
+							}
+						}
+					}
+				}
+
+				if (!$template_overload) {
+					$this->template = 'product/manufacturer/info.tpl';
+				}
+			}
+
+			if ($this->config->get('rewardpoints_appinstall')){
+				$this->data['text_retranslate_app_block'] = sprintf($this->data['text_retranslate_app_block_reward'], $this->currency->format($this->config->get('rewardpoints_appinstall'), $this->config->get('config_currency_national'), 1));
+			}
+
+			$this->children = array(
+				'common/column_left',
+				'common/column_right',
+				'common/content_top',
+				'common/content_bottom',
+				'common/footer',
+				'common/header'
+			);							
+
+
+			if( isset( $this->request->get['mfilterAjax'] ) ) {
+				$settings	= $this->config->get('mega_filter_settings');
+				$baseTypes	= array( 'stock_status', 'manufacturers', 'rating', 'attributes', 'price', 'options', 'filters' );
+
+				if( isset( $this->request->get['mfilterBTypes'] ) ) {
+					$baseTypes = explode( ',', $this->request->get['mfilterBTypes'] );
+				}
+
+				if( ! empty( $settings['calculate_number_of_products'] ) || in_array( 'categories:tree', $baseTypes ) ) {
+					if( empty( $settings['calculate_number_of_products'] ) ) {
+						$baseTypes = array( 'categories:tree' );
+					}
+
+					$this->load->model( 'module/mega_filter' );
+
+					$idx = 0;
+
+					if( isset( $this->request->get['mfilterIdx'] ) )
+						$idx = (int) $this->request->get['mfilterIdx'];
+
+					$this->data['mfilter_json'] = json_encode( MegaFilterCore::newInstance( $this, NULL )->getJsonData($baseTypes, $idx) );
+				}
+
+				foreach( $this->children as $mf_child ) {
+					$mf_child = explode( '/', $mf_child );
+					$mf_child = array_pop( $mf_child );
+					$this->data[$mf_child] = '';
+				}
+
+				$this->children=array();
+				$this->data['header'] = $this->data['column_left'] = $this->data['column_right'] = $this->data['content_top'] = $this->data['content_bottom'] = $this->data['footer'] = '';
+			}
+
+			if( ! empty( $this->data['breadcrumbs'] ) && ! empty( $this->request->get['mfp'] ) ) {
+
+				foreach( $this->data['breadcrumbs'] as $mfK => $mfBreadcrumb ) {
+					$mfReplace = preg_replace( '/path\[[^\]]+\],?/', '', $this->request->get['mfp'] );
+					$mfFind = ( mb_strpos( $mfBreadcrumb['href'], '?mfp=', 0, 'utf-8' ) !== false ? '?mfp=' : '&mfp=' );
+
+					$this->data['breadcrumbs'][$mfK]['href'] = str_replace(array(
+						$mfFind . $this->request->get['mfp'],
+						'&amp;mfp=' . $this->request->get['mfp'],
+						$mfFind . urlencode( $this->request->get['mfp'] ),
+						'&amp;mfp=' . urlencode( $this->request->get['mfp'] )
+					), $mfReplace ? $mfFind . $mfReplace : '', $mfBreadcrumb['href'] );
+				}
+			}
+
+
+			$this->response->setOutput($this->render());
+		} else {
+
+			$url = '';
+
+			if( ! empty( $this->request->get['mfp'] ) ) {
+				$url .= '&mfp=' . $this->request->get['mfp'];
+			}
+
+			if (isset($this->request->get['manufacturer_id'])) {
+				$url .= '&manufacturer_id=' . $this->request->get['manufacturer_id'];
+			}
+
+			if (isset($this->request->get['sort'])) {
+				$url .= '&sort=' . $this->request->get['sort'];
+			}	
+
+			if (isset($this->request->get['order'])) {
+				$url .= '&order=' . $this->request->get['order'];
+			}
+
+			if (isset($this->request->get['page'])) {
+				$url .= '&page=' . $this->request->get['page'];
+			}
+
+			if (isset($this->request->get['limit'])) {
+				$url .= '&limit=' . $this->request->get['limit'];
+			}
+
+			$this->data['breadcrumbs'][] = array(
+				'text'      => $this->language->get('text_error'),
+				'href'      => $this->url->link('product/category', $url),
+				'separator' => $this->language->get('text_separator')
+			);
+
+			$this->document->setTitle($this->language->get('text_error'));
+
+			$this->data['heading_title'] = $this->language->get('text_error');
+			$this->data['text_error'] = $this->language->get('text_error');
+			$this->data['button_continue'] = $this->language->get('button_continue');
+
+			$this->data['continue'] = $this->url->link('common/home');
+
+			$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
+
+			$this->template = 'error/not_found.tpl';
+
+			$this->children = array(
+				'common/column_left',
+				'common/column_right',
+				'common/content_top',
+				'common/content_bottom',
+				'common/footer',
+				'common/header'
+			);
+
+			$this->response->setOutput($this->render());
+		}			
+	}
+}
