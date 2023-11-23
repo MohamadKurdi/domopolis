@@ -3,7 +3,7 @@
 $_['heading_title']     = 'Мои Адреса';
 
 // Text
-$_['text_account']      = 'Личный Кабинет';
+$_['text_account']      = 'Кабинет';
 $_['text_address_book'] = 'Список адресов доставки';
 $_['text_edit_address'] = 'Редактировать адрес';
 $_['text_insert']       = 'Ваш адрес был успешно добавлен';
