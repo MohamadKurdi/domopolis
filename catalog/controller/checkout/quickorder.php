@@ -157,7 +157,7 @@ class ControllerCheckoutQuickorder extends Controller {
 									'company' 			=> '',
 								));
 
-								$this->customer->login($phone, false, true);
+								$this->customer->login($email, false, true);
 							}
 						}
 
@@ -580,7 +580,7 @@ class ControllerCheckoutQuickorder extends Controller {
 						'zone_id' 		=> '',
 						'company' 		=> '',
 					));
-					$this->customer->login($phone, false, true);
+					$this->customer->login($email, false, true);
 				}
 			}
 
@@ -968,7 +968,7 @@ class ControllerCheckoutQuickorder extends Controller {
 							'zone_id' 		=> '',
 							'company' 		=> '',
 						));
-						$this->customer->login($phone, false, true);
+						$this->customer->login($email, false, true);
 					}
 				}
 

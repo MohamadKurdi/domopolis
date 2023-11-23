@@ -258,7 +258,7 @@ function checkIfGetParamIsArray($param){
 function generateRandomEmail($host, $user = 'guest'){
 	$host = parse_url($host, PHP_URL_HOST);
 
-	return $user . generateRandomString(10) . '@' . $host;
+	return $user . microtime(true) . '@' . $host;
 }
 
 function generateRandomString($length = 50) {
