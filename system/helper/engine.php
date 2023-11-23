@@ -255,6 +255,12 @@ function checkIfGetParamIsArray($param){
 	return $param;
 }
 
+function generateRandomEmail($host, $user = 'guest'){
+	$host = parse_url($host, PHP_URL_HOST);
+
+	return $user . generateRandomString(10) . '@' . $host;
+}
+
 function generateRandomString($length = 50) {
 	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	$randomString = '';

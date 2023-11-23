@@ -49,7 +49,7 @@ class ControllerCheckoutQuickorder extends Controller {
 	public function checkoptions() {
 		$this->language->load('checkout/cart');
 
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->post['product_id'])) {
 			$product_id = $this->request->post['product_id'];
@@ -71,7 +71,7 @@ class ControllerCheckoutQuickorder extends Controller {
 			if (isset($this->request->post['option'])) {
 				$option = array_filter($this->request->post['option']);
 			} else {
-				$option = array();	
+				$option = [];	
 			}
 
 			if (isset($this->request->post['profile_id'])) {
@@ -91,7 +91,7 @@ class ControllerCheckoutQuickorder extends Controller {
 			$profiles = $this->model_catalog_product->getProfiles($product_info['product_id']);
 
 			if ($profiles) {
-				$profile_ids = array();
+				$profile_ids = [];
 
 				foreach ($profiles as $profile) {
 					$profile_ids[] = $profile['profile_id'];
@@ -111,7 +111,7 @@ class ControllerCheckoutQuickorder extends Controller {
 	}
 
 	public function createpreorder(){
-		$json = array();
+		$json = [];
 		$this->language->load('checkout/cart');
 
 		if ($this->request->server['REQUEST_METHOD'] == 'POST' && isset($this->request->post['product_id'])) {
@@ -135,25 +135,28 @@ class ControllerCheckoutQuickorder extends Controller {
 							if (!$this->customer->login($phone, false, true)) {
 								$this->load->model('account/customer');
 
+								$email = generateRandomEmail($this->config->get('config_ssl'));
+
 								$this->model_account_customer->addCustomer(array(
-									'firstname' => $this->language->get('text_client'),
-									'lastname' 	=> $phone,
+									'firstname' 		=> $this->language->get('text_client'),
+									'lastname' 			=> $phone,
 									'customer_group_id' => $this->config->get('config_customer_group_id'),
-									'email' 	=> $phone,
-									'telephone' => $phone,
-									'fax' 		=> '',
-									'password' 	=> rand(9999, 999999),
-									'company' 	=> '',
-									'company_id'=> 0,
-									'tax_id' 	=> 0,
-									'address_1' => '',
-									'address_2' => '',
-									'city' => '',
-									'postcode' => '',
-									'country_id' => $this->config->get('config_country_id'),
-									'zone_id' => '',
-									'company' => '',
+									'email' 			=> $email,
+									'telephone' 		=> $phone,
+									'fax' 				=> '',
+									'password' 			=> rand(9999, 999999),
+									'company' 			=> '',
+									'company_id'		=> 0,
+									'tax_id' 			=> 0,
+									'address_1' 		=> '',
+									'address_2' 		=> '',
+									'city' 				=> '',
+									'postcode' 			=> '',
+									'country_id' 		=> $this->config->get('config_country_id'),
+									'zone_id' 			=> '',
+									'company' 			=> '',
 								));
+
 								$this->customer->login($phone, false, true);
 							}
 						}
@@ -167,7 +170,7 @@ class ControllerCheckoutQuickorder extends Controller {
 						if (isset($this->request->post['option'])) {
 							$option = array_filter($this->request->post['option']);
 						} else {
-							$option = array();
+							$option = [];
 						}
 
 						if (isset($this->request->post['profile_id'])) {
@@ -182,13 +185,13 @@ class ControllerCheckoutQuickorder extends Controller {
 
 						$cart_key = $this->cart->makeCartKey($product_id, $option, $profile_id, false, false);										
 
-						$total_data = array();
+						$total_data = [];
 						$total = 0;
 						$taxes = $this->cart->getTaxes();
 
 						$this->load->model('setting/extension');
 
-						$sort_order = array(); 
+						$sort_order = []; 
 
 						$results = $this->model_setting_extension->getExtensions('total');
 
@@ -206,7 +209,7 @@ class ControllerCheckoutQuickorder extends Controller {
 							}
 						}
 
-						$sort_order = array(); 
+						$sort_order = []; 
 
 						foreach ($total_data as $key => $value) {
 							$sort_order[$key] = $value['sort_order'];
@@ -222,7 +225,7 @@ class ControllerCheckoutQuickorder extends Controller {
 
 						$this->language->load('checkout/checkout');
 
-						$data = array();
+						$data = [];
 
 						$data['invoice_prefix'] = $this->config->get('config_invoice_prefix');
 						$data['store_id'] 		= $this->config->get('config_store_id');
@@ -247,32 +250,31 @@ class ControllerCheckoutQuickorder extends Controller {
 
 							$payment_address = '';
 						} else {
-							$data['customer_id'] = 0;
-							$data['lastname'] = '';
-							$data['firstname'] = $this->language->get('text_client');
-							$data['email'] = $phone;
-							$data['fax'] ='';
+							$data['customer_id'] 	= 0;
+							$data['lastname'] 		= '';
+							$data['firstname'] 		= $this->language->get('text_client');
+							$data['email'] 			= $email;
+							$data['fax']  			= '';
 							$data['customer_group_id'] = '';
 
-							$payment_address = array();
+							$payment_address = [];
 
-							$payment_address['lastname']='';	
-							$payment_address['company']='';	
-							$payment_address['company_id']='';	
-							$payment_address['tax_id']='';	
-							$payment_address['address_1']='';
-							$payment_address['address_2']='';
-							$payment_address['city']='';
-							$payment_address['postcode']='';
-							$payment_address['zone']='';
-							$payment_address['zone_id']='';
-							$payment_address['country']='';
+							$payment_address['lastname'] = '';	
+							$payment_address['company'] = '';	
+							$payment_address['company_id'] = '';	
+							$payment_address['tax_id'] = '';	
+							$payment_address['address_1'] = '';
+							$payment_address['address_2'] = '';
+							$payment_address['city'] = '';
+							$payment_address['postcode'] = '';
+							$payment_address['zone'] = '';
+							$payment_address['zone_id'] = '';
+							$payment_address['country'] = '';
 							$payment_address['country_id'] = $this->config->get('config_country_id');
-							$payment_address['address_format']='';					
+							$payment_address['address_format'] = '';					
 						}
 
-						$data['telephone'] = $phone;
-						$data['email'] = $phone;
+						$data['telephone'] 	= $phone;
 
 						$data['payment_firstname'] 		= (isset($payment_address['firstname']))?$payment_address['firstname']:'';
 						$data['payment_lastname'] 		= (isset($payment_address['lastname']))?$payment_address['lastname']:'';
@@ -326,35 +328,34 @@ class ControllerCheckoutQuickorder extends Controller {
 						$data['ip'] = '';
 						$data['user_agent'] = '';
 						$data['accept_language'] = '';
-						$data['products'] = array();
+						$data['products'] = [];
 						$data['shipping_company'] = '';
 						$data['forwarded_ip'] = '';
-						$data['vouchers'] = array();
-						$data['totals'] = array();
-						$data['supplied'] = array();
+						$data['vouchers'] = [];
+						$data['totals'] = [];
+						$data['supplied'] = [];
 						$data['preorder'] = true;
 						$data['customer_group_id'] = $this->config->get('config_customer_group_id');
 
-						$shipping_address = array();
+						$shipping_address = [];
 
 						if ($this->cart->hasShipping()) {
 							if ($this->customer->isLogged()) {
 								$this->load->model('account/address');
 							} else {
-								$shipping_address['lastname']='';	
-								$shipping_address['company']='';	
-								$shipping_address['address_1']='';
-								$shipping_address['address_2']='';
-								$shipping_address['city']='';
-								$shipping_address['postcode']='';
-								$shipping_address['zone']='';
-								$shipping_address['zone_id']='';
-								$shipping_address['country']='';
+								$shipping_address['lastname'] = '';	
+								$shipping_address['company'] = '';	
+								$shipping_address['address_1'] = '';
+								$shipping_address['address_2'] = '';
+								$shipping_address['city'] = '';
+								$shipping_address['postcode'] = '';
+								$shipping_address['zone'] = '';
+								$shipping_address['zone_id'] = '';
+								$shipping_address['country'] = '';
 								$shipping_address['country_id'] = $this->config->get('config_country_id');
-								$shipping_address['address_format']='';						
+								$shipping_address['address_format'] = '';						
 							}
 
-								// $data['shipping_firstname'] = $this->request->post['quickorder-dialog-name'];
 							$data['shipping_lastname'] 			= (isset($shipping_address['lastname']))?$shipping_address['lastname']:'';	
 							$data['shipping_company'] 			= (isset($shipping_address['company']))?$shipping_address['company']:'';
 							$data['shipping_address_1'] 		= (isset($shipping_address['address_1']))?$shipping_address['address_1']:'';
@@ -380,10 +381,10 @@ class ControllerCheckoutQuickorder extends Controller {
 							}				
 						}
 
-						$product_data = array();
+						$product_data = [];
 
 						foreach ($this->cart->getProducts() as $product) {
-							$option_data = array();
+							$option_data = [];
 
 							foreach ($product['option'] as $option) {
 								if ($option['type'] != 'file') {
@@ -425,7 +426,7 @@ class ControllerCheckoutQuickorder extends Controller {
 							); 
 						}
 
-						$voucher_data = array();
+						$voucher_data = [];
 
 						if (!empty($this->session->data['vouchers'])) {
 							foreach ($this->session->data['vouchers'] as $voucher) {
@@ -443,11 +444,11 @@ class ControllerCheckoutQuickorder extends Controller {
 							}
 						}  
 
-						$data['products'] = $product_data;
-						$data['vouchers'] = $voucher_data;
-						$data['totals'] = $total_data;
-						$data['comment'] = isset($this->session->data['comment'])?$this->session->data['comment']:'';
-						$data['total'] = 0;
+						$data['products'] 	= $product_data;
+						$data['vouchers'] 	= $voucher_data;
+						$data['totals'] 	= $total_data;
+						$data['comment'] 	= isset($this->session->data['comment'])?$this->session->data['comment']:'';
+						$data['total'] 		= 0;
 
 						if (isset($this->request->cookie['tracking'])) {
 							$this->load->model('affiliate/affiliate');
@@ -508,7 +509,7 @@ class ControllerCheckoutQuickorder extends Controller {
 						$this->load->model('checkout/order');
 
 						$json['order_id'] = $this->model_checkout_order->addOrder($data);
-						$this->model_checkout_order->confirm($json['order_id'], $this->config->get('config_order_status_id'), 'Заявка на уточнение цены и наличия', true);
+						$this->model_checkout_order->confirm($json['order_id'], $this->config->get('config_order_status_id'), $this->language->get('text_preorder_comment'), true);
 
 						$this->session->data['order_id'] = $json['order_id'];
 
@@ -543,7 +544,7 @@ class ControllerCheckoutQuickorder extends Controller {
 		$this->language->load('checkout/cart');	
 		$this->language->load('checkout/checkout');
 
-		$json = array();
+		$json = [];
 		if (isset($this->request->post['quickfastorder-phone']) && mb_strlen($this->request->post['quickfastorder-phone'],'UTF-8')>=7 && $this->registry->get('phoneValidator')->validate($this->request->post['quickfastorder-phone'])) {
 			$phone = $this->request->post['quickfastorder-phone'];
 		} else {
@@ -554,17 +555,17 @@ class ControllerCheckoutQuickorder extends Controller {
 			$json['error']['cart'] = 'CART IS EMPTY';
 		}
 
-		if (!$json) {	
-			$email = $phone;
-
+		if (!$json) {				
 			if (!$this->customer->isLogged()) {
-				if (!$this->customer->login($email, false, true)) {
+				if (!$this->customer->login($phone, false, true)) {
 					$this->load->model('account/customer');
+
+					$email = generateRandomEmail($this->config->get('config_ssl'));
 
 					$this->model_account_customer->addCustomer(array(
 						'firstname' 	=> $this->language->get('text_client'),
-						'lastname' 		=> $phone,
-						'email' 		=> $phone,
+						'lastname' 		=> '',
+						'email' 		=> $email,
 						'telephone' 	=> $phone,
 						'fax' 			=> '',
 						'password' 		=> rand(9999, 999999),
@@ -579,15 +580,15 @@ class ControllerCheckoutQuickorder extends Controller {
 						'zone_id' 		=> '',
 						'company' 		=> '',
 					));
-					$this->customer->login($email, false, true);
+					$this->customer->login($phone, false, true);
 				}
 			}
 
-			$total_data = array();
+			$total_data = [];
 			$total 		= 0;
 			$taxes 		= $this->cart->getTaxes();
 
-			$sort_order = array(); 
+			$sort_order = []; 
 
 			$results = $this->model_setting_extension->getExtensions('total');
 
@@ -605,7 +606,7 @@ class ControllerCheckoutQuickorder extends Controller {
 				}
 			}
 
-			$sort_order = array(); 
+			$sort_order = []; 
 
 			foreach ($total_data as $key => $value) {
 				$sort_order[$key] = $value['sort_order'];
@@ -613,7 +614,7 @@ class ControllerCheckoutQuickorder extends Controller {
 
 			array_multisort($sort_order, SORT_ASC, $total_data);						
 
-			$data = array();
+			$data = [];
 			$data['invoice_prefix'] = $this->config->get('config_invoice_prefix');
 			$data['store_id'] = $this->config->get('config_store_id');
 			$data['store_name'] = $this->config->get('config_name');
@@ -640,29 +641,28 @@ class ControllerCheckoutQuickorder extends Controller {
 				$data['lastname'] = '';					
 				$data['firstname'] = $this->language->get('text_client');
 				$data['email'] = $phone;
-				$data['fax'] ='';
+				$data['fax']  = '';
 				$data['customer_group_id'] = '';
 
-				$payment_address = array();
+				$payment_address = [];
 
-				$payment_address['lastname']='';	
-				$payment_address['company']='';	
-				$payment_address['company_id']='';	
-				$payment_address['tax_id']='';	
-				$payment_address['address_1']='';
-				$payment_address['address_2']='';
-				$payment_address['city']='';
-				$payment_address['postcode']='';
-				$payment_address['zone']='';
-				$payment_address['zone_id']='';
-				$payment_address['country']='';
-				$payment_address['country_id']='';
-				$payment_address['address_format']='';					
+				$payment_address['lastname'] = '';	
+				$payment_address['company'] = '';	
+				$payment_address['company_id'] = '';	
+				$payment_address['tax_id'] = '';	
+				$payment_address['address_1'] = '';
+				$payment_address['address_2'] = '';
+				$payment_address['city'] = '';
+				$payment_address['postcode'] = '';
+				$payment_address['zone'] = '';
+				$payment_address['zone_id'] = '';
+				$payment_address['country'] = '';
+				$payment_address['country_id'] = '';
+				$payment_address['address_format'] = '';					
 			}
 
 			$data['telephone'] = $phone;
 
-				//$data['payment_firstname'] = $this->request->post['quickorder-dialog-name'];
 			$data['payment_firstname'] 		= '';
 			$data['payment_lastname'] 		= (isset($payment_address['lastname']))?$payment_address['lastname']:'';
 			$data['payment_company'] 		= (isset($payment_address['company']))?$payment_address['company']:'';	
@@ -690,72 +690,71 @@ class ControllerCheckoutQuickorder extends Controller {
 				$data['payment_code'] = '';
 			}
 
-			$data['payment_secondary_method'] = '';
-			$data['payment_secondary_code'] = '';
-			$data['postcode'] = '';
+			$data['payment_secondary_method'] 	= '';
+			$data['payment_secondary_code'] 	= '';
+			$data['postcode'] 					= '';
 
 			$data['shipping_firstname'] = '';
-			$data['shipping_lastname'] = '';
+			$data['shipping_lastname'] 	= '';
 			$data['shipping_address_1'] = '';
 			$data['shipping_address_2'] = '';
-			$data['shipping_city'] = '';
-			$data['shipping_postcode'] = '';
-			$data['shipping_country'] = '';
+			$data['shipping_city'] 		= '';
+			$data['shipping_postcode'] 	= '';
+			$data['shipping_country'] 	= '';
 			$data['shipping_country_id'] = '';
-			$data['shipping_zone'] = '';
-			$data['shipping_zone_id'] = '';
+			$data['shipping_zone'] 		= '';
+			$data['shipping_zone_id'] 	= '';
 			$data['shipping_address_format'] = '';
-			$data['shipping_method'] = '';
-			$data['shipping_code'] = '';				
-			$data['comment'] = '';
-			$data['total'] = '';
-			$data['total_national'] = '';
-			$data['affiliate_id'] = '';
-			$data['commission'] = '';
-			$data['language_id'] = $this->config->get('config_language_id');
-			$data['currency_id'] = '';
-			$data['currency_code'] = '';
-			$data['currency_value'] = '';
-			$data['ip'] = '';
-			$data['user_agent'] = '';
-			$data['accept_language'] = '';
-			$data['products'] = array();
-			$data['shipping_company'] = '';
-			$data['forwarded_ip'] = '';
-			$data['vouchers'] = array();
-			$data['totals'] = array();
-			$data['supplied'] = array();
+			$data['shipping_method'] 	= '';
+			$data['shipping_code'] 		= '';				
+			$data['comment'] 			= '';
+			$data['total'] 				= '';
+			$data['total_national'] 	= '';
+			$data['affiliate_id'] 		= '';
+			$data['commission'] 		= '';
+			$data['language_id'] 		= $this->config->get('config_language_id');
+			$data['currency_id'] 		= '';
+			$data['currency_code'] 		= '';
+			$data['currency_value'] 	= '';
+			$data['ip'] 				= '';
+			$data['user_agent'] 		= '';
+			$data['accept_language'] 	= '';
+			$data['products'] 			= [];
+			$data['shipping_company'] 	= '';
+			$data['forwarded_ip'] 		= '';
+			$data['vouchers'] 			= [];
+			$data['totals'] 			= [];
+			$data['supplied'] 			= [];
 
-			$shipping_address = array();
+			$shipping_address = [];
 
 			if ($this->cart->hasShipping()) {
 				if ($this->customer->isLogged()) {
 					$this->load->model('account/address');
 				} else {
-					$shipping_address['lastname']='';	
-					$shipping_address['company']='';	
-					$shipping_address['address_1']='';
-					$shipping_address['address_2']='';
-					$shipping_address['city']='';
-					$shipping_address['postcode']='';
-					$shipping_address['zone']='';
-					$shipping_address['zone_id']='';
-					$shipping_address['country']='';
-					$shipping_address['country_id']='';
-					$shipping_address['address_format']='';						
+					$shipping_address['lastname']		= '';	
+					$shipping_address['company'] 		= '';	
+					$shipping_address['address_1'] 		= '';
+					$shipping_address['address_2'] 		= '';
+					$shipping_address['city'] 			= '';
+					$shipping_address['postcode'] 		= '';
+					$shipping_address['zone'] 			= '';
+					$shipping_address['zone_id'] 		= '';
+					$shipping_address['country'] 		= '';
+					$shipping_address['country_id'] 	= '';
+					$shipping_address['address_format'] = '';						
 				}
 
-					// $data['shipping_firstname'] = $this->request->post['quickorder-dialog-name'];
-				$data['shipping_lastname'] = (isset($shipping_address['lastname']))?$shipping_address['lastname']:'';	
-				$data['shipping_company'] = (isset($shipping_address['company']))?$shipping_address['company']:'';
-				$data['shipping_address_1'] = (isset($shipping_address['address_1']))?$shipping_address['address_1']:'';
-				$data['shipping_address_2'] = (isset($shipping_address['address_2']))?$shipping_address['address_2']:'';
-				$data['shipping_city'] = (isset($shipping_address['city']))?$shipping_address['city']:'';
-				$data['shipping_postcode'] = (isset($shipping_address['postcode']))?$shipping_address['postcode']:'';
-				$data['shipping_zone'] = (isset($shipping_address['zone']))?$shipping_address['zone']:'';
-				$data['shipping_zone_id'] = (isset($shipping_address['zone_id']))?$shipping_address['zone_id']:'';
-				$data['shipping_country'] =(isset($shipping_address['country']))?$shipping_address['country']:'';
-				$data['shipping_country_id'] = (isset($shipping_address['country_id']))?$shipping_address['country_id']:'';
+				$data['shipping_lastname'] 		= (isset($shipping_address['lastname']))?$shipping_address['lastname']:'';	
+				$data['shipping_company'] 		= (isset($shipping_address['company']))?$shipping_address['company']:'';
+				$data['shipping_address_1'] 	= (isset($shipping_address['address_1']))?$shipping_address['address_1']:'';
+				$data['shipping_address_2'] 	= (isset($shipping_address['address_2']))?$shipping_address['address_2']:'';
+				$data['shipping_city'] 			= (isset($shipping_address['city']))?$shipping_address['city']:'';
+				$data['shipping_postcode'] 		= (isset($shipping_address['postcode']))?$shipping_address['postcode']:'';
+				$data['shipping_zone'] 			= (isset($shipping_address['zone']))?$shipping_address['zone']:'';
+				$data['shipping_zone_id'] 		= (isset($shipping_address['zone_id']))?$shipping_address['zone_id']:'';
+				$data['shipping_country'] 		=(isset($shipping_address['country']))?$shipping_address['country']:'';
+				$data['shipping_country_id'] 	= (isset($shipping_address['country_id']))?$shipping_address['country_id']:'';
 				$data['shipping_address_format'] = (isset($shipping_address['address_format']))?$shipping_address['address_format']:'';
 
 				if (isset($this->session->data['shipping_method']['title'])) {
@@ -771,9 +770,9 @@ class ControllerCheckoutQuickorder extends Controller {
 				}				
 			}
 
-			$product_data = array();
+			$product_data = [];
 			foreach ($this->cart->getProducts() as $product) {
-				$option_data = array();
+				$option_data = [];
 
 				foreach ($product['option'] as $option) {
 					if ($option['type'] != 'file') {
@@ -817,7 +816,7 @@ class ControllerCheckoutQuickorder extends Controller {
 				); 
 			}
 
-			$voucher_data = array();
+			$voucher_data = [];
 
 			if (!empty($this->session->data['vouchers'])) {
 				foreach ($this->session->data['vouchers'] as $voucher) {
@@ -921,7 +920,7 @@ class ControllerCheckoutQuickorder extends Controller {
 			return;
 		}
 		
-		$json = array();
+		$json = [];
 		$this->language->load('checkout/cart');		
 		$this->language->load('checkout/checkout');
 
@@ -936,7 +935,6 @@ class ControllerCheckoutQuickorder extends Controller {
 		}
 
 		if (!$json) {	
-			$email = $phone;
 			if (isset($this->request->post['product_id'])) {
 				$product_id = $this->request->post['product_id'];
 			} else {
@@ -947,13 +945,15 @@ class ControllerCheckoutQuickorder extends Controller {
 
 			if ($product_info) {
 				if (!$this->customer->isLogged()) {
-					if (!$this->customer->login($email, false, true)) {
+					if (!$this->customer->login($phone, false, true)) {
 						$this->load->model('account/customer');
+
+						$email = generateRandomEmail($this->config->get('config_ssl'));
 
 						$this->model_account_customer->addCustomer(array(
 							'firstname' 	=> $this->language->get('text_client'),
 							'lastname' 		=> $this->language->get('text_fastorder_default'),
-							'email' 		=> $phone,
+							'email' 		=> $email,
 							'telephone' 	=> $phone,
 							'fax' 			=> '',
 							'password' 		=> rand(9999, 999999),
@@ -968,7 +968,7 @@ class ControllerCheckoutQuickorder extends Controller {
 							'zone_id' 		=> '',
 							'company' 		=> '',
 						));
-						$this->customer->login($email, false, true);
+						$this->customer->login($phone, false, true);
 					}
 				}
 
@@ -981,7 +981,7 @@ class ControllerCheckoutQuickorder extends Controller {
 				if (isset($this->request->post['option'])) {
 					$option = array_filter($this->request->post['option']);
 				} else {
-					$option = array();
+					$option = [];
 				}
 
 				if (isset($this->request->post['profile_id'])) {
@@ -995,11 +995,11 @@ class ControllerCheckoutQuickorder extends Controller {
 				$this->cart->add($this->request->post['product_id'], $quantity, $option, $profile_id);					
 				$cart_key = $this->cart->makeCartKey($product_id, $option, $profile_id, false, false);																																					
 
-				$total_data = array();
+				$total_data = [];
 				$total = 0;
 				$taxes = $this->cart->getTaxes();
 			
-				$sort_order = array(); 
+				$sort_order = []; 
 				$results = $this->model_setting_extension->getExtensions('total');
 
 				foreach ($results as $key => $value) {
@@ -1015,7 +1015,7 @@ class ControllerCheckoutQuickorder extends Controller {
 					}
 				}
 
-				$sort_order = array(); 
+				$sort_order = []; 
 
 				foreach ($total_data as $key => $value) {
 					$sort_order[$key] = $value['sort_order'];
@@ -1023,11 +1023,11 @@ class ControllerCheckoutQuickorder extends Controller {
 
 				array_multisort($sort_order, SORT_ASC, $total_data);			
 			
-				$data = array();
+				$data = [];
 
 				$data['invoice_prefix'] = $this->config->get('config_invoice_prefix');
-				$data['store_id'] = $this->config->get('config_store_id');
-				$data['store_name'] = $this->config->get('config_name');
+				$data['store_id'] 		= $this->config->get('config_store_id');
+				$data['store_name'] 	= $this->config->get('config_name');
 
 				if ($data['store_id']) {
 					$data['store_url'] = $this->config->get('config_url');		
@@ -1036,13 +1036,13 @@ class ControllerCheckoutQuickorder extends Controller {
 				}
 
 				if ($this->customer->isLogged()) {
-					$data['customer_id'] = $this->customer->getId();
-					$data['customer_group_id'] = $this->customer->getCustomerGroupId();
-					$data['firstname'] = $this->customer->getFirstName();
-					$data['lastname'] = $this->customer->getLastName();
-					$data['email'] = $this->customer->getEmail();
-					$data['telephone'] = $this->customer->getTelephone();
-					$data['fax'] = $this->customer->getFax();
+					$data['customer_id'] 		= $this->customer->getId();
+					$data['customer_group_id'] 	= $this->customer->getCustomerGroupId();
+					$data['firstname'] 			= $this->customer->getFirstName();
+					$data['lastname'] 			= $this->customer->getLastName();
+					$data['email'] 				= $this->customer->getEmail();
+					$data['telephone'] 			= $this->customer->getTelephone();
+					$data['fax'] 				= $this->customer->getFax();
 
 					$this->load->model('account/address');
 
@@ -1052,45 +1052,43 @@ class ControllerCheckoutQuickorder extends Controller {
 					$data['customer_id'] = 0;
 					$data['lastname'] = '';
 						// TODO
-					$data['firstname'] = $this->language->get('text_client');
-					$data['email'] = $phone;
-					$data['fax'] ='';
+					$data['firstname'] 	= $this->language->get('text_client');
+					$data['email'] 		= $email;
+					$data['fax']  		= '';
 					$data['customer_group_id'] = '';
 
-					$payment_address = array();
+					$payment_address = [];
 
-					$payment_address['lastname']='';	
-					$payment_address['company']='';	
-					$payment_address['company_id']='';	
-					$payment_address['tax_id']='';	
-					$payment_address['address_1']='';
-					$payment_address['address_2']='';
-					$payment_address['city']='';
-					$payment_address['postcode']='';
-					$payment_address['zone']='';
-					$payment_address['zone_id']='';
-					$payment_address['country']='';
-					$payment_address['country_id']='';
-					$payment_address['address_format']='';					
+					$payment_address['lastname'] = '';	
+					$payment_address['company'] = '';	
+					$payment_address['company_id'] = '';	
+					$payment_address['tax_id'] = '';	
+					$payment_address['address_1'] = '';
+					$payment_address['address_2'] = '';
+					$payment_address['city'] = '';
+					$payment_address['postcode'] = '';
+					$payment_address['zone'] = '';
+					$payment_address['zone_id'] = '';
+					$payment_address['country'] = '';
+					$payment_address['country_id'] = '';
+					$payment_address['address_format'] = '';					
 				}
 
-				$data['telephone'] = $phone;
-				$data['email'] = $phone;
+				$data['telephone'] 	= $phone;
 
 					//$data['payment_firstname'] = $this->request->post['quickorder-dialog-name'];
-				$data['payment_firstname'] = '';
-				$data['payment_lastname'] = (isset($payment_address['lastname']))?$payment_address['lastname']:'';
-				$data['payment_company'] = (isset($payment_address['company']))?$payment_address['company']:'';	
+				$data['payment_firstname'] 	= '';
+				$data['payment_lastname'] 	= (isset($payment_address['lastname']))?$payment_address['lastname']:'';
+				$data['payment_company'] 	= (isset($payment_address['company']))?$payment_address['company']:'';	
 				$data['payment_company_id'] = (isset($payment_address['company_id']))?$payment_address['company_id']:'';	
-				$data['payment_tax_id'] = (isset($payment_address['tax_id']))?$payment_address['tax_id']:'';
-				$data['payment_address_1'] = (isset($payment_address['address_1']))?$payment_address['address_1']:'';
-				$data['payment_address_2'] = (isset($payment_address['address_2']))?$payment_address['address_2']:'';
-				$data['payment_city'] = (isset($payment_address['city']))?$payment_address['city']:'';
-					// $data['payment_postcode'] = (isset($payment_address['postcode']))?$payment_address['postcode']:'';	$payment_address['postcode'];
-				$data['payment_postcode'] = '';
-				$data['payment_zone'] = (isset($payment_address['zone']))?$payment_address['zone']:'';
-				$data['payment_zone_id'] = (isset($payment_address['zone_id']))?$payment_address['zone_id']:'';
-				$data['payment_country'] = (isset($payment_address['country']))?$payment_address['country']:'';	
+				$data['payment_tax_id'] 	= (isset($payment_address['tax_id']))?$payment_address['tax_id']:'';
+				$data['payment_address_1'] 	= (isset($payment_address['address_1']))?$payment_address['address_1']:'';
+				$data['payment_address_2'] 	= (isset($payment_address['address_2']))?$payment_address['address_2']:'';
+				$data['payment_city'] 		= (isset($payment_address['city']))?$payment_address['city']:'';				
+				$data['payment_postcode'] 	= '';
+				$data['payment_zone'] 		= (isset($payment_address['zone']))?$payment_address['zone']:'';
+				$data['payment_zone_id'] 	= (isset($payment_address['zone_id']))?$payment_address['zone_id']:'';
+				$data['payment_country'] 	= (isset($payment_address['country']))?$payment_address['country']:'';	
 				$data['payment_country_id'] = (isset($payment_address['country_id']))?$payment_address['country_id']:'';	
 				$data['payment_address_format'] = (isset($payment_address['address_format']))?$payment_address['address_format']:'';	
 
@@ -1131,33 +1129,32 @@ class ControllerCheckoutQuickorder extends Controller {
 				$data['ip'] = '';
 				$data['user_agent'] = '';
 				$data['accept_language'] = '';
-				$data['products'] = array();
+				$data['products'] = [];
 				$data['shipping_company'] = '';
 				$data['forwarded_ip'] = '';
-				$data['vouchers'] = array();
-				$data['totals'] = array();
-				$data['supplied'] = array();
+				$data['vouchers'] = [];
+				$data['totals'] = [];
+				$data['supplied'] = [];
 
-				$shipping_address = array();
+				$shipping_address = [];
 
 				if ($this->cart->hasShipping()) {
 					if ($this->customer->isLogged()) {
 						$this->load->model('account/address');
 					} else {
-						$shipping_address['lastname']='';	
-						$shipping_address['company']='';	
-						$shipping_address['address_1']='';
-						$shipping_address['address_2']='';
-						$shipping_address['city']='';
-						$shipping_address['postcode']='';
-						$shipping_address['zone']='';
-						$shipping_address['zone_id']='';
-						$shipping_address['country']='';
-						$shipping_address['country_id']='';
-						$shipping_address['address_format']='';						
+						$shipping_address['lastname'] = '';	
+						$shipping_address['company'] = '';	
+						$shipping_address['address_1'] = '';
+						$shipping_address['address_2'] = '';
+						$shipping_address['city'] = '';
+						$shipping_address['postcode'] = '';
+						$shipping_address['zone'] = '';
+						$shipping_address['zone_id'] = '';
+						$shipping_address['country'] = '';
+						$shipping_address['country_id'] = '';
+						$shipping_address['address_format'] = '';						
 					}
 
-						// $data['shipping_firstname'] = $this->request->post['quickorder-dialog-name'];
 					$data['shipping_lastname'] = (isset($shipping_address['lastname']))?$shipping_address['lastname']:'';	
 					$data['shipping_company'] = (isset($shipping_address['company']))?$shipping_address['company']:'';
 					$data['shipping_address_1'] = (isset($shipping_address['address_1']))?$shipping_address['address_1']:'';
@@ -1183,10 +1180,10 @@ class ControllerCheckoutQuickorder extends Controller {
 					}				
 				}
 
-				$product_data = array();
+				$product_data = [];
 
 				foreach ($this->cart->getProducts() as $product) {
-					$option_data = array();
+					$option_data = [];
 
 					foreach ($product['option'] as $option) {
 						if ($option['type'] != 'file') {
@@ -1228,7 +1225,7 @@ class ControllerCheckoutQuickorder extends Controller {
 					); 
 				}
 
-				$voucher_data = array();
+				$voucher_data = [];
 
 				if (!empty($this->session->data['vouchers'])) {
 					foreach ($this->session->data['vouchers'] as $voucher) {
@@ -1325,11 +1322,11 @@ class ControllerCheckoutQuickorder extends Controller {
 
 				$order_info = $this->model_checkout_order->getOrder($json['order_id']);
 				$products = $this->model_checkout_order->getOrderProducts($json['order_id']);				
-				$transactionProducts = array();
+				$transactionProducts = [];
 				$this->load->model('catalog/product');
 
-				$transactionProducts = array();
-				$transactionGTINS = array();
+				$transactionProducts = [];
+				$transactionGTINS = [];
 				$hasAllProductsOnStock = false;
 				$hasSomeProductsOnStock = false;
 				$productsOnStock = 0;
@@ -1356,7 +1353,6 @@ class ControllerCheckoutQuickorder extends Controller {
 						'total' 		=> $product['total_national'],
 						'quantity' 		=> $product['quantity'],
 					);
-
 
 
 					if ($gtin){
@@ -1396,17 +1392,13 @@ class ControllerCheckoutQuickorder extends Controller {
 				);
 
 				$json['google_ecommerce_info'] = array_map('prepareEcommString', $json['google_ecommerce_info']);
-				$json['google_ecommerce_info']['transactionProducts'] = $transactionProducts;
-				$json['google_ecommerce_info']['transactionGTINS'] = $transactionGTINS;
-				$json['google_ecommerce_info']['transactionEmail'] = $this->customer->getEmail();
+				$json['google_ecommerce_info']['transactionProducts'] 		= $transactionProducts;
+				$json['google_ecommerce_info']['transactionGTINS'] 			= $transactionGTINS;
+				$json['google_ecommerce_info']['transactionEmail'] 			= $this->customer->getEmail();
 				$json['google_ecommerce_info']['config_google_merchant_id'] = $this->config->get('config_google_merchant_id');	
-				$json['google_ecommerce_info']['display_survey'] = ($this->config->get('config_google_merchant_id') && $this->customer->getEmail() && filter_var($this->customer->getEmail() , FILTER_VALIDATE_EMAIL) && !strpos($order_info['email'], $_SERVER['HTTP_HOST']));
-
-
-
-					//и удалить товар из корзины, кстати:)
+				$json['google_ecommerce_info']['display_survey'] 			= ($this->config->get('config_google_merchant_id') && $this->customer->getEmail() && filter_var($this->customer->getEmail() , FILTER_VALIDATE_EMAIL) && !strpos($order_info['email'], $_SERVER['HTTP_HOST']));
+					
 				$this->cart->remove($cart_key);
-					//и восстанавливаем корзину такой, как была.
 				$this->session->data['cart'] = $temp_array;
 
 				unset($this->session->data['quickorder_key']);
