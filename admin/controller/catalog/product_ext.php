@@ -653,13 +653,18 @@ class ControllerCatalogProductExt extends Controller {
         }
 
         if (!empty($data['filter_category'])){
-            $this->load->model('catalog/category');
-            $category = $this->model_catalog_category->getCategory($data['filter_category']);
-
-            if (!empty($category['path'])){
-                $this->data['category'] = $category['path'];
+            if ($data['filter_category'] == '*'){
+                $this->data['category'] = '*';
             } else {
-                $this->data['category'] = $category['name'];
+
+                $this->load->model('catalog/category');
+                $category = $this->model_catalog_category->getCategory($data['filter_category']);
+
+                if (!empty($category['path'])){
+                    $this->data['category'] = $category['path'];
+                } else {
+                    $this->data['category'] = $category['name'];
+                }
             }            
         }
 

@@ -214,6 +214,7 @@
 									<input type="text" id="filter_category_input" name="<?php echo $col; ?>" value="<?php echo (!empty($category)?$category:'') ?>" style="width:60px;" />
 									<input type="hidden" id="filter_category_val" name="filter_<?php echo $col; ?>" value="<?php echo (!is_null($filters[$col])?$filters[$col]:''); ?>" />				
 									<span onclick="$('#filter_category_input').val(''); $('#filter_category_val').val('');" style="border-bottom:1px dashed gray; font-size:10px;cursor:pointer;">очистить</span>
+									<span onclick="$('#filter_category_input').val('*'); $('#filter_category_val').val('*');" style="border-bottom:1px dashed gray; font-size:10px;cursor:pointer;">нету</span>
 
 									<script>
 										$('input[name=\'<?php echo $col; ?>\']').autocomplete({
@@ -534,35 +535,36 @@
 	function filter() {
 		url = 'index.php?route=catalog/product_ext&token=<?php echo $token; ?>&sort=<?php echo $sort; ?>&order=<?php echo $order; ?>';
 		
-		<?php foreach($column_info as $column => $val) {
-			if ($val['filter']['show']) {
-				if ($val['filter']['type'] == 0) { ?>
-				var filter_<?php echo $column; ?> = $('input[name=\'filter_<?php echo $column; ?>\']').attr('value');
-				
-				if (filter_<?php echo $column; ?>) {
-					url += '&filter_<?php echo $column; ?>=' + encodeURIComponent(filter_<?php echo $column; ?>);
-				}
-				<?php if ($column == "price") { ?>
-					var filter_price_special = $('input[name=\'filter_price_special\']').val();
-					
-					if (filter_price_special) {
-						url += '&filter_price_special=' + encodeURIComponent(filter_price_special);
-					}
-				<?php } ?>
-				
-				<?php } else if ($val['filter']['type'] == 1) { ?>
-				var filter_<?php echo $column; ?> = $('select[name=\'filter_<?php echo $column; ?>\']').attr('value');
-				<?php if (in_array($column, array('tax_class', 'store'))) { ?>
+		<?php foreach($column_info as $column => $val) { ?>
+			<?php if ($val['filter']['show']) { ?>
+				<?php if ($val['filter']['type'] == 0) { ?>
+					var filter_<?php echo $column; ?> = $('input[name=\'filter_<?php echo $column; ?>\']').attr('value');
+
 					if (filter_<?php echo $column; ?>) {
-						<?php } else { ?>
-						if (filter_<?php echo $column; ?> && filter_<?php echo $column; ?> != '*') {
-						<?php } ?>
-						url += '&filter_<?php echo $column; ?>=' + encodeURIComponent(filter_<?php echo $column; ?>)<?php echo ($column == "category") ? " + '&filter_sub_category=" . ((isset($filters['sub_category'])) ? $filters['sub_category'] : '0') . "'" : ""; ?>;
+						url += '&filter_<?php echo $column; ?>=' + encodeURIComponent(filter_<?php echo $column; ?>);
 					}
-					
-					<?php }
-				}
-			} ?>
+					<?php if ($column == "price") { ?>
+						var filter_price_special = $('input[name=\'filter_price_special\']').val();
+
+						if (filter_price_special) {
+							url += '&filter_price_special=' + encodeURIComponent(filter_price_special);
+						}
+					<?php } ?>
+
+				<?php } elseif ($val['filter']['type'] == 1) { ?>
+
+					var filter_<?php echo $column; ?> = $('select[name=\'filter_<?php echo $column; ?>\']').attr('value');
+					<?php if (in_array($column, array('tax_class', 'store'))) { ?>
+						if (filter_<?php echo $column; ?>) {
+						<?php } else { ?>
+							if (filter_<?php echo $column; ?> && filter_<?php echo $column; ?> != '*') {
+							<?php } ?>
+							url += '&filter_<?php echo $column; ?>=' + encodeURIComponent(filter_<?php echo $column; ?>)<?php echo ($column == "category") ? " + '&filter_sub_category=" . ((isset($filters['sub_category'])) ? $filters['sub_category'] : '0') . "'" : ""; ?>;
+						}
+
+					<?php } ?>
+				<?php	} ?>
+			<?php	} ?>
 			location = url;
 		}
 		
