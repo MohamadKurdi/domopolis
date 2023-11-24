@@ -231,16 +231,28 @@
 	<h2>Начисление бонусов</h2>
 	<table class="form">														
 		<tr>
-			<td style="width:50%">
+			<td style="width:25%">
 				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бонусов за установку приложения</span></p>
-				<input type="text" name="rewardpoints_appinstall" value="<?php echo $rewardpoints_appinstall; ?>" size="5" />
+				<input type="number" step="1" name="rewardpoints_appinstall" value="<?php echo $rewardpoints_appinstall; ?>" size="5" />
 				<span class="help">количество бонусов в национальной валюте, начисляемое при установке приложения, код <b>APPINSTALL_POINTS_ADD</b>,бонусы с этим кодом могут быть начислены только один раз одному покупателю</span>
 			</td>
 
-			<td style="width:50%">
+			<td style="width:25%">
 				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бонусов на день рождения</span></p>
-				<input type="text" name="rewardpoints_birthday" value="<?php echo $rewardpoints_birthday; ?>" size="5" />
+				<input type="number" step="1"  name="rewardpoints_birthday" value="<?php echo $rewardpoints_birthday; ?>" size="5" />
 				<span class="help">количество бонусов в национальной валюте, начисляемое на день рождения, код <b>BIRTHDAY_GREETING_REWARD</b>, бонусы с этим кодом могут быть начислены не чаще чем раз в 365 дней</span>
+			</td>
+
+			<td style="width:25%">
+				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бонусов за отзыв</span></p>
+				<input type="number" step="1"  name="rewardpoints_review" value="<?php echo $rewardpoints_review; ?>" size="5" />
+				<span class="help">количество бонусов в национальной валюте, начисляемое за отзыв, код <b>REVIEW_WRITTEN_REWARD</b>, покупатель должен купить товар</span>
+			</td>
+
+			<td style="width:25%">
+				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Дней после отзыва</span></p>
+				<input type="number" step="1"  name="rewardpoints_review_days" value="<?php echo $rewardpoints_review_days; ?>" size="5" />
+				<span class="help">через сколько дней начислять бонусы</span>
 			</td>
 		</tr>
 	</table>

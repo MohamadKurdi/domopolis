@@ -1118,6 +1118,18 @@ class ControllerSettingSetting extends Controller
             $this->data['rewardpoints_birthday'] = $this->config->get('rewardpoints_birthday');
         }
 
+        if (isset($this->request->post['rewardpoints_review'])) {
+            $this->data['rewardpoints_review'] = $this->request->post['rewardpoints_review'];
+        } else {
+            $this->data['rewardpoints_review'] = $this->config->get('rewardpoints_review');
+        }
+
+        if (isset($this->request->post['rewardpoints_review_days'])) {
+            $this->data['rewardpoints_review_days'] = $this->request->post['rewardpoints_review_days'];
+        } else {
+            $this->data['rewardpoints_review_days'] = $this->config->get('rewardpoints_review_days');
+        }
+
         if (isset($this->request->post['rewardpoints_reminder_enable'])) {
             $this->data['rewardpoints_reminder_enable'] = $this->request->post['rewardpoints_reminder_enable'];
         } else {
