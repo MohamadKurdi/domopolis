@@ -6,8 +6,6 @@
 
 		</tr>
 </table>
-
-
 <h2>Действие при успешном выполненнии первого заказа</h2>
 	<table class="form">														
 		<tr>
@@ -128,7 +126,23 @@
 		</tr>														
 	</table>
 
-	<h2>Уведомление о сгорании</h2>
+	<h2>Уведомление о сгорании и начислении</h2>
+	<table class="form">
+		<tr>
+			<td style="width:200px;">
+				<span class="status_color" style="text-align: left; background: #51A62D; color: #FFF; ?>;">
+					Уведомление о начислении бонусов
+				</span>
+			</td>
+			<td style="width:50px" class="center">
+				<input class="checkbox" type="checkbox" name="rewardpoints_added_sms_enable" id="rewardpoints_added_sms_enable"<?php if ($rewardpoints_added_sms_enable) { echo ' checked="checked"'; }?>/><label for="rewardpoints_added_sms_enable"></label>
+			</td>
+			<td style="padding:5px;">
+				<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="rewardpoints_added_sms_text" value="<?php echo $rewardpoints_added_sms_text; ?>" />
+				<span class="help"><b>{FIRSTNAME}, {POINTS_ADDED}, {POINTS_TOTAL}, {POINTS_ACTIVE_TO}</b></span>
+			</td>
+		</tr>
+	</table>
 	<table class="form">
 		<tr>
 			<td style="width:200px;">
@@ -231,28 +245,50 @@
 	<h2>Начисление бонусов</h2>
 	<table class="form">														
 		<tr>
-			<td style="width:25%">
+			<td style="width:20%">
 				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бонусов за установку приложения</span></p>
-				<input type="number" step="1" name="rewardpoints_appinstall" value="<?php echo $rewardpoints_appinstall; ?>" size="5" />
+				<input type="number" step="1" name="rewardpoints_appinstall" value="<?php echo $rewardpoints_appinstall; ?>" size="10" />
 				<span class="help">количество бонусов в национальной валюте, начисляемое при установке приложения, код <b>APPINSTALL_POINTS_ADD</b>,бонусы с этим кодом могут быть начислены только один раз одному покупателю</span>
 			</td>
 
-			<td style="width:25%">
+			<td style="width:20%">
 				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бонусов на день рождения</span></p>
-				<input type="number" step="1"  name="rewardpoints_birthday" value="<?php echo $rewardpoints_birthday; ?>" size="5" />
+				<input type="number" step="1"  name="rewardpoints_birthday" value="<?php echo $rewardpoints_birthday; ?>" size="10" />
 				<span class="help">количество бонусов в национальной валюте, начисляемое на день рождения, код <b>BIRTHDAY_GREETING_REWARD</b>, бонусы с этим кодом могут быть начислены не чаще чем раз в 365 дней</span>
 			</td>
 
-			<td style="width:25%">
+			<td style="width:20%">
 				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бонусов за отзыв</span></p>
 				<input type="number" step="1"  name="rewardpoints_review" value="<?php echo $rewardpoints_review; ?>" size="5" />
 				<span class="help">количество бонусов в национальной валюте, начисляемое за отзыв, код <b>REVIEW_WRITTEN_REWARD</b>, покупатель должен купить товар</span>
 			</td>
 
-			<td style="width:25%">
-				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Дней после отзыва</span></p>
+			<td style="width:20%">
+				<div>
+				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Минимальная длина отзыва</span></p>
+				<input type="number" step="1"  name="rewardpoints_review_min_length" value="<?php echo $rewardpoints_review_min_length; ?>" size="10" />
+				<span class="help">короче не считается</span>
+				</div>
+
+				<div>
+				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Фото в отзыве обязательно</span></p>
+				<select name="rewardpoints_review_need_image">
+					<?php if ($rewardpoints_review_need_image) { ?>
+						<option value="1" selected="selected">Включить</option>
+						<option value="0">Отключить</option>
+					<?php } else { ?>													
+						<option value="1">Включить</option>
+						<option value="0"  selected="selected">Отключить</option>
+					<? } ?>
+				</select>	
+				<span class="help">начислять бонусы только за отзывы с фото</span>
+				</div>
+			</td>
+
+			<td style="width:20%">
+				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Дней после публикации отзыва</span></p>
 				<input type="number" step="1"  name="rewardpoints_review_days" value="<?php echo $rewardpoints_review_days; ?>" size="5" />
-				<span class="help">через сколько дней начислять бонусы</span>
+				<span class="help">через сколько дней начислять бонусы после одобрения</span>
 			</td>
 		</tr>
 	</table>

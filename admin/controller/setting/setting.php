@@ -1124,6 +1124,18 @@ class ControllerSettingSetting extends Controller
             $this->data['rewardpoints_review'] = $this->config->get('rewardpoints_review');
         }
 
+        if (isset($this->request->post['rewardpoints_review_need_image'])) {
+            $this->data['rewardpoints_review_need_image'] = $this->request->post['rewardpoints_review_need_image'];
+        } else {
+            $this->data['rewardpoints_review_need_image'] = $this->config->get('rewardpoints_review_need_image');
+        }
+
+        if (isset($this->request->post['rewardpoints_review_min_length'])) {
+            $this->data['rewardpoints_review_min_length'] = $this->request->post['rewardpoints_review_min_length'];
+        } else {
+            $this->data['rewardpoints_review_min_length'] = $this->config->get('rewardpoints_review_min_length');
+        }
+
         if (isset($this->request->post['rewardpoints_review_days'])) {
             $this->data['rewardpoints_review_days'] = $this->request->post['rewardpoints_review_days'];
         } else {
@@ -1158,6 +1170,18 @@ class ControllerSettingSetting extends Controller
             $this->data['rewardpoints_reminder_sms_text'] = $this->request->post['rewardpoints_reminder_sms_text'];
         } else {
             $this->data['rewardpoints_reminder_sms_text'] = $this->config->get('rewardpoints_reminder_sms_text');
+        }
+
+        if (isset($this->request->post['rewardpoints_added_sms_enable'])) {
+            $this->data['rewardpoints_added_sms_enable'] = $this->request->post['rewardpoints_added_sms_enable'];
+        } else {
+            $this->data['rewardpoints_added_sms_enable'] = $this->config->get('rewardpoints_added_sms_enable');
+        }
+
+        if (isset($this->request->post['rewardpoints_added_sms_text'])) {
+            $this->data['rewardpoints_added_sms_text'] = $this->request->post['rewardpoints_added_sms_text'];
+        } else {
+            $this->data['rewardpoints_added_sms_text'] = $this->config->get('rewardpoints_added_sms_text');
         }
 
         $reward_overload_keys = [
@@ -2931,6 +2955,12 @@ class ControllerSettingSetting extends Controller
             'config_viber_rewardpoints_reminder_image',
             'config_viber_rewardpoints_reminder_button_text',
             'config_viber_rewardpoints_reminder_button_url',
+
+            'config_viber_rewardpoints_added_enabled',
+            'config_viber_rewardpoints_added',
+            'config_viber_rewardpoints_added_image',
+            'config_viber_rewardpoints_added_button_text',
+            'config_viber_rewardpoints_added_button_url',
 
             'config_viber_transaction_text_type_1',
             'config_viber_transaction_text_type_1_image',

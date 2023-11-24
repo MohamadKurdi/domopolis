@@ -174,6 +174,8 @@
 						<b>{PARTLY}</b> - инфо о частичной оплате<br />
 						<b>{DELIVERY_SERVICE}</b> - служба доставки<br />
 						<b>{POINTS_AMOUNT}</b> - количество бонусов на счету<br />
+						<b>{POINTS_ADDED}</b> - бонусов добавлено<br />
+						<b>{POINTS_ACTIVE_TO}</b> - дата активности добавленных бонусов<br />
 						<b>{POINTS_DAYS_LEFT}</b> - осталось дней до сгорания бонусов
 					</span>
 				</td>
@@ -283,7 +285,6 @@
 			</tr>
 
 			<tr>
-
 				<td style="width:200px;">
 					<span class="status_color" style="text-align: left; background: #ef5e67; color: #FFF; ?>;">
 						Уведомление о сгорании бонусов
@@ -294,6 +295,20 @@
 				</td>
 				<td style="padding:5px;">
 					<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="rewardpoints_reminder_sms_text" value="<?php echo $rewardpoints_reminder_sms_text; ?>" />
+				</td>
+			</tr>
+
+			<tr>
+				<td style="width:200px;">
+					<span class="status_color" style="text-align: left; background: #51A62D; color: #FFF; ?>;">
+						Уведомление о начислении бонусов
+					</span>
+				</td>
+				<td style="width:50px" class="center">
+					<input class="checkbox" type="checkbox" name="rewardpoints_added_sms_enable" id="rewardpoints_added_sms_enable"<?php if ($rewardpoints_added_sms_enable) { echo ' checked="checked"'; }?>/><label for="rewardpoints_reminder_enable"></label>
+				</td>
+				<td style="padding:5px;">
+					<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="rewardpoints_added_sms_text" value="<?php echo $rewardpoints_added_sms_text; ?>" />
 				</td>
 			</tr>
 

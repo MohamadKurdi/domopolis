@@ -295,6 +295,53 @@
 
 				<tr>
 					<td style="width:200px;">
+						<span class="status_color" style="text-align: left; background: #51A62D; color:#fff">
+							Уведомление о начислении бонусов  
+						</span>
+					</td>
+					<td style="width:50px" class="center">
+						<input class="checkbox" type="checkbox" name="config_viber_rewardpoints_added_enabled" id="config_viber_rewardpoints_added_enabled" <?php if ($config_viber_rewardpoints_added_enabled) { echo ' checked="checked"'; }?> />
+						<label for="config_viber_rewardpoints_added_enabled"></label>
+					</td>
+					<td style="width:300px;">
+						<p>
+							<span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+								Текст
+							</span>
+						</p>
+
+						<textarea name="config_viber_rewardpoints_added" cols="50" rows="7"><?php echo $config_viber_rewardpoints_added; ?></textarea>
+					</td>
+					<td style="width:250px;">
+						<div class="image">
+							<img src="<?php echo $viber_rewardpoints_added_image; ?>" alt="" id="thumb-viber_rewardpoints_added_image" height="150px" />
+							<input type="text" style="font-size:10px; width:150px;" class="image-ajax" name="config_viber_rewardpoints_added_image" value="<?php echo $config_viber_rewardpoints_added_image; ?>" id="viber_rewardpoints_added_image" />
+							<br />
+							<a onclick="image_upload('viber_rewardpoints_added_image', 'thumb-viber_rewardpoints_added_image');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb-viber_rewardpoints_added_image').attr('src', '<?php echo $no_image; ?>'); $('#viber_rewardpoints_added_image').attr('value', ''); $('#viber_rewardpoints_added_image').trigger('change');"><?php echo $text_clear; ?></a>
+						</div>
+					</td>
+					<td style="width:200px;">
+						<p>
+							<span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+								Текст кнопки
+							</span>
+						</p>
+
+						<textarea name="config_viber_rewardpoints_added_button_text" cols="50" rows="7"><?php echo $config_viber_rewardpoints_added_button_text; ?></textarea>
+					</td>
+					<td style="width:200px;">
+						<p>
+							<span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+								URL кнопки
+							</span>
+						</p>
+
+						<textarea name="config_viber_rewardpoints_added_button_url" cols="50" rows="7"><?php echo $config_viber_rewardpoints_added_button_url; ?></textarea>
+					</td>
+				</tr>
+
+				<tr>
+					<td style="width:200px;">
 						<span class="status_color" style="text-align: left; background: #ef5e67; color:#fff">
 							Уведомление о сгорании бонусов  
 						</span>
