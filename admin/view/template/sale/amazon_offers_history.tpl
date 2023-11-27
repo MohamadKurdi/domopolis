@@ -25,9 +25,9 @@
 			<tr>
 				<td width="70px;" class="center">
 					<b>	
-					<small><?php echo $offer['offer']['date_added']; ?></small>
+					<small><?php echo $offer['date_added']; ?></small>
 					<br />
-					<small><?php echo $offer['offer']['time_added']; ?></small>
+					<small><?php echo $offer['time_added']; ?></small>
 					</b>
 				</td>
 				<td width="70px;" class="center">

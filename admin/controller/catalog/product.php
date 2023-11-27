@@ -1370,7 +1370,8 @@ class ControllerCatalogProduct extends Controller {
 				$this->data['amazon_offers_histories'][] = [
 					'asin' 				=> $amazon_offers_history['asin'],
 					'store_id' 			=> $amazon_offers_history['store_id'],
-					'date_added' 		=> date('Y-m-d H:i:s', strtotime($amazon_offers_history['date_added'])),
+					'date_added' 		=> date('Y-m-d', strtotime($amazon_offers_history['date_added'])),
+					'time_added' 		=> date('H:i:s', strtotime($amazon_offers_history['date_added'])),
 					'weight' 			=> $amazon_offers_history['weight'],
 					'amazon_best_price' => $this->currency->format_with_left($amazon_offers_history['amazon_best_price'], $offer['priceCurrency']),
 					'price' 			=> $this->currency->format_with_left($amazon_offers_history['price'], $this->config->get('config_currency'), 1),
