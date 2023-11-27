@@ -260,7 +260,7 @@
 			<td style="width:20%">
 				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бонусов за отзыв</span></p>
 				<input type="number" step="1"  name="rewardpoints_review" value="<?php echo $rewardpoints_review; ?>" size="5" />
-				<span class="help">количество бонусов в национальной валюте, начисляемое за отзыв, код <b>REVIEW_WRITTEN_REWARD</b>, покупатель должен купить товар</span>
+				<span class="help">количество бонусов в национальной валюте, начисляемое за отзыв, код <b>REVIEW_WRITTEN_REWARD</b></span>
 			</td>
 
 			<td style="width:20%">
