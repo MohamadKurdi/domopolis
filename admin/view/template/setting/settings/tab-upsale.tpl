@@ -286,9 +286,25 @@
 			</td>
 
 			<td style="width:20%">
-				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Дней после публикации отзыва</span></p>
-				<input type="number" step="1"  name="rewardpoints_review_days" value="<?php echo $rewardpoints_review_days; ?>" size="5" />
-				<span class="help">через сколько дней начислять бонусы после одобрения</span>
+				<div>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Дней после публикации отзыва</span></p>
+					<input type="number" step="1"  name="rewardpoints_review_days" value="<?php echo $rewardpoints_review_days; ?>" size="5" />
+					<span class="help">через сколько дней начислять бонусы после одобрения</span>
+				</div>
+
+				<div>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Покупка обязательна</span></p>
+					<select name="rewardpoints_needs_purchased">
+						<?php if ($rewardpoints_needs_purchased) { ?>
+							<option value="1" selected="selected">Включить</option>
+							<option value="0">Отключить</option>
+						<?php } else { ?>													
+							<option value="1">Включить</option>
+							<option value="0"  selected="selected">Отключить</option>
+						<? } ?>
+					</select>	
+					<span class="help">у клиента должен быть заказ с этим товаром</span>
+				</div>
 			</td>
 		</tr>
 	</table>

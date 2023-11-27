@@ -1136,6 +1136,12 @@ class ControllerSettingSetting extends Controller
             $this->data['rewardpoints_review_min_length'] = $this->config->get('rewardpoints_review_min_length');
         }
 
+         if (isset($this->request->post['rewardpoints_needs_purchased'])) {
+            $this->data['rewardpoints_needs_purchased'] = $this->request->post['rewardpoints_needs_purchased'];
+        } else {
+            $this->data['rewardpoints_needs_purchased'] = $this->config->get('rewardpoints_needs_purchased');
+        }
+
         if (isset($this->request->post['rewardpoints_review_days'])) {
             $this->data['rewardpoints_review_days'] = $this->request->post['rewardpoints_review_days'];
         } else {

@@ -53,13 +53,13 @@ class ModelCatalogReview extends Model
 
         if (!isset($data['bads'])) {
             $data['bads'] = '';
-        }        
+        }
             
         $this->db->query("INSERT INTO review SET 
             addimage    = '" . $this->db->escape($data['addimage']) . "', 
             good        = '" . $this->db->escape($data['good']) . "', 
             bads        = '" . $this->db->escape($data['bads']) . "', 
-            status      = '" . (int)!$this->config->get('config_review_statusp') . "', 
+            status      = '" . (int)$this->config->get('config_review_statusp') . "', 
             author      = '" . $this->db->escape($data['name']) . "', 
             customer_id = '" . (int)$this->customer->getId() . "',             
             product_id  = '" . (int)$product_id . "',

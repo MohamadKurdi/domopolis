@@ -87,7 +87,7 @@
 				}
 			}
 
-			if (false && $this->config->get('rewardpoints_review')){
+			if ($this->config->get('rewardpoints_review')){
 				echoLine('[ControllerKPReward::cron] Reward for rewiews started', 'i');		
 				$sql = "SELECT rw.*,					
 					c.language_id as language_id
@@ -103,15 +103,17 @@
 				foreach ($query->rows as $row){
 					echoLine('[ControllerKPReward::cron] Review ' . $row['review_id'] . ', checking...', 'i');
 
-					if ($this->customer->validateIfProductWasPurchased($row['product_id'], $row['customer_id'])){
-						echoLine('[ControllerKPReward::cron] Product was bought by customer, ok', 's');
-					} else {
-						echoLine('[ControllerKPReward::cron] Product was not bought by customer, skip', 'e');
-						continue;
+					if ($this->config->get('rewardpoints_needs_purchased')){
+						if ($this->customer->validateIfProductWasPurchased($row['product_id'], $row['customer_id'])){
+							echoLine('[ControllerKPReward::cron] Product was bought by customer, ok', 's');
+						} else {
+							echoLine('[ControllerKPReward::cron] Product was not bought by customer, skip', 'e');
+							continue;
+						}
 					}
 
 					if ($this->config->get('rewardpoints_review_min_length')){
-						$length = mb_strlen($review['text']) + mb_strlen($review['bads']) + mb_strlen($review['good']);
+						$length = mb_strlen($row['text']) + mb_strlen($row['bads']) + mb_strlen($row['good']);
 
 						if ($length >= (int)$this->config->get('rewardpoints_review_min_length')){
 							echoLine('[ControllerKPReward::cron] Review length is ' . $length . ', ok', 's');
@@ -136,6 +138,7 @@
 					$description 	= $this->language->getCatalogLanguageString($row['language_id'], 'account/reward', 'text_review_add');
 
 					$this->customer->addReward($row['customer_id'], $description, $points, 0, 'REVIEW_WRITTEN_REWARD');
+					$this->db->query("UPDATE review SET rewarded = 1 WHERE review_id = '" . (int)$row['review_id'] . "'");
 				}
 			}			
 
@@ -146,8 +149,6 @@
 				
 				$sql = "SELECT DISTINCT(customer_id), store_id, language_id, firstname, lastname, telephone, email FROM customer WHERE birthday_month = '" . (int)date('n', strtotime('+1 day')) . "' AND birthday_date = '" . (int)date('j', strtotime('+1 day')) . "'";
 				$query = $this->db->query($sql);
-
-				echoLine('[ControllerKPReward::cron] SQL: ' . $sql, 'w');
 				
 				if ($query->num_rows){
 					foreach ($query->rows as $row){
