@@ -440,6 +440,12 @@ unset($this->session->data['gac:listfrom']); }
 						<?php if ($is_set) { ?>
 							<input type="hidden" name="set_id" size="4" value="<?php echo $is_set; ?>">
 						<?php } ?>
+
+						<?php if (!empty($text_retranslate_reward_review)) { ?>
+									<div class="product-info__active_action">					
+										<h3><?php echo $text_retranslate_reward_review; ?></h3>										
+									</div>
+						<?php } ?>
 						
 						<?php if (!empty($active_action)) { ?>
 							<div class="product-info__active_action">					

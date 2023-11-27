@@ -97,6 +97,8 @@ $_['text_retranslate_89'] = 'Варіант';
 $_['text_retranslate_90'] = 'Кількість';
 
 $_['text_retranslate_related'] = 'З цим товаром також купують';
+$_['text_retranslate_reward_review_nophoto'] = 'У вас є замовлення з цим товаром! Залиште відгук та отримайте %s бонусів!';
+$_['text_retranslate_reward_review_photo'] = 'У вас є замовлення з цим товаром! Залиште відгук з фото та отримайте %s бонусів!';
 
 $_['all_collection'] = 'Вся колекція';
 

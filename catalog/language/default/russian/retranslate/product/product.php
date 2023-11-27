@@ -95,6 +95,9 @@ $_['text_retranslate_88'] = 'Покупают вместе';
 
 $_['text_retranslate_related'] = 'С этим товаром также покупают';
 
+$_['text_retranslate_reward_review_nophoto'] = 'У вас есть заказ с этим товаром! Оставьте отзыв и получите %s бонусов!';
+$_['text_retranslate_reward_review_photo'] = 'У вас есть заказ с этим товаром! Оставьте отзыв с фото и получите %s бонусов!';
+
 $_['delivery_to_city_courier'] = 'Доставка по';
 $_['delivery_to_city_remote'] = 'Отправка в';
 $_['delivery_to_city_cs_ru'] = 'Доставка СДЭК в';
