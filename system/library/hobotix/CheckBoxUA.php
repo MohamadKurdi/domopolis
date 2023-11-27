@@ -442,6 +442,10 @@ class CheckBoxUA {
             }
         }
 
+        if (!$order_info['paid_by'] && (in_array($order_info['shipping_code'], ['dostavkaplus.sh13', 'dostavkaplus.sh3']) || mb_stripos($order_info['shipping_method'], 'Новою Поштою'))){
+            $result['label'] = 'Післяплата';
+        }
+
         return $result;
     }
 
@@ -624,7 +628,9 @@ class CheckBoxUA {
                 $payment_item['payment_system'] = $addition_payment_info['payment_system'];
             }
 
-            if($this->config->get('receipt_payment_label_text')){
+            if(!empty($addition_payment_info['label'])){
+                $payment_item['label'] = $addition_payment_info['label'];
+            } elseif ($this->config->get('receipt_payment_label_text')){
                 $payment_item['label'] = $this->config->get('receipt_payment_label_text');
             }
             
