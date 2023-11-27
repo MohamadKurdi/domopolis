@@ -16,6 +16,27 @@ function bool_real_stripos($haystack, $needle){
 	return !(stripos($haystack, $needle) === false);			
 }
 
+function parseText($node, $keyword, $dom, $link, $target = '', $tooltip = 0){
+	if (mb_strpos($node->nodeValue, $keyword) !== false) {
+		$keywordOffset 	= mb_strpos($node->nodeValue, $keyword, 0, 'UTF-8');
+		$newNode 		= $node->splitText($keywordOffset);
+		$newNode->deleteData(0, mb_strlen($keyword, 'UTF-8'));
+		$span = $dom->createElement('a', $keyword);
+		if ($tooltip) {
+			$span->setAttribute('href', '#');
+			$span->setAttribute('style', 'text-decoration:none');
+			$span->setAttribute('class', 'title');
+			$span->setAttribute('title', $keyword . '|' . $link);
+		} else {
+			$span->setAttribute('href', $link);
+			$span->setAttribute('target', $target);
+		}
+
+		$node->parentNode->insertBefore($span, $newNode);
+		$this->parseText($newNode, $keyword, $dom, $link, $target, $tooltip);
+	}
+}
+
 function parseAmazonDeliveryDateToEnglish($date){
 	$de_months 		= ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
 	$de_months2 	= ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];

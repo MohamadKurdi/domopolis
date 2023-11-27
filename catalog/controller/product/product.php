@@ -1778,7 +1778,6 @@ public function index($product_id = false, $just_price = false)
                         $dom->loadHTML('<div>' . $xdescription . '</div>');
                         libxml_use_internal_errors(false);
 
-
                         $xpath = new DOMXPath($dom);
 
                         foreach ($autolinks as $autolink) {
@@ -1796,7 +1795,7 @@ public function index($product_id = false, $just_price = false)
                             );
 
                             foreach ($pTexts as $pText) {
-                                $this->parseText($pText, $keyword, $dom, $xlink, $target, $tooltip);
+                                parseText($pText, $keyword, $dom, $xlink, $target, $tooltip);
                             }
                         }
 
@@ -2147,9 +2146,7 @@ public function index($product_id = false, $just_price = false)
                     $this->data['ukrcredits_show_icons'] = $ukrcredits_setting['show_icons'];
 
                     $this->load->model('module/ukrcredits');
-                    $this->data['credits_info'] = $this->model_module_ukrcredits->checkproduct($product_info);         
-                    
-                //    $this->log->debug($this->data['credits_data']);           
+                    $this->data['credits_info'] = $this->model_module_ukrcredits->checkproduct($product_info);                 
 
                     if (!empty($this->data['credits_info']['pp']) || !empty($this->data['credits_info']['ii']) || !empty($this->data['credits_info']['mb'])) {
                          $this->data['credits_status'] = true;
@@ -2304,8 +2301,8 @@ public function index($product_id = false, $just_price = false)
             $this->load->model('catalog/review');
             $this->load->model('tool/image');
 
-            $this->data['text_on'] = $this->language->get('text_on');
-            $this->data['text_no_reviews'] = $this->language->get('text_no_reviews');
+            $this->data['text_on']          = $this->language->get('text_on');
+            $this->data['text_no_reviews']  = $this->language->get('text_no_reviews');
 
             if (isset($this->request->get['page'])) {
                 $page = $this->request->get['page'];
@@ -2315,8 +2312,8 @@ public function index($product_id = false, $just_price = false)
 
             $this->data['reviews'] = [];
 
-            $review_total = $this->model_catalog_review->getTotalReviewsByProductId($this->request->get['product_id']);
-            $results = $this->model_catalog_review->getReviewsByProductId($this->request->get['product_id'], ($page - 1) * 5, 5);
+            $review_total   = $this->model_catalog_review->getTotalReviewsByProductId($this->request->get['product_id']);
+            $results        = $this->model_catalog_review->getReviewsByProductId($this->request->get['product_id'], ($page - 1) * 5, 5);
 
             $this->data['product_id'] = (int)$this->request->get['product_id'];
 
@@ -2346,12 +2343,12 @@ public function index($product_id = false, $just_price = false)
                 );
             }
 
-            $pagination = new Pagination();
-            $pagination->total = $review_total;
-            $pagination->page = $page;
-            $pagination->limit = 5;
-            $pagination->text = $this->language->get('text_pagination');
-            $pagination->url = $this->url->link('product/product/review', 'product_id=' . $this->request->get['product_id'] . '&page={page}');
+            $pagination         = new Pagination();
+            $pagination->total  = $review_total;
+            $pagination->page   = $page;
+            $pagination->limit  = 5;
+            $pagination->text   = $this->language->get('text_pagination');
+            $pagination->url    = $this->url->link('product/product/review', 'product_id=' . $this->request->get['product_id'] . '&page={page}');
 
             $this->data['pagination'] = $pagination->render();
 
@@ -2845,29 +2842,7 @@ public function index($product_id = false, $just_price = false)
             
             $this->template = 'module/setproductform.tpl';
             return $this->render();
-        }
-        
-        private function parseText($node, $keyword, $dom, $link, $target = '', $tooltip = 0)
-        {
-            if (mb_strpos($node->nodeValue, $keyword) !== false) {
-                $keywordOffset = mb_strpos($node->nodeValue, $keyword, 0, 'UTF-8');
-                $newNode = $node->splitText($keywordOffset);
-                $newNode->deleteData(0, mb_strlen($keyword, 'UTF-8'));
-                $span = $dom->createElement('a', $keyword);
-                if ($tooltip) {
-                    $span->setAttribute('href', '#');
-                    $span->setAttribute('style', 'text-decoration:none');
-                    $span->setAttribute('class', 'title');
-                    $span->setAttribute('title', $keyword . '|' . $link);
-                } else {
-                    $span->setAttribute('href', $link);
-                    $span->setAttribute('target', $target);
-                }
-                
-                $node->parentNode->insertBefore($span, $newNode);
-                $this->parseText($newNode, $keyword, $dom, $link, $target, $tooltip);
-            }
-        }
+        }            
         
         public function updateOptionInfo()
         {
