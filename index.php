@@ -388,25 +388,25 @@
 
 	
 	//Other libraries
-	$registry->set('document', 			new Document()); 				
-	$registry->set('customer', 			new Customer($registry));
+	$registry->set('document', 			new Document());	 					
 	$registry->set('affiliate', 		new Affiliate($registry));
 	$registry->set('currency', 			new Currency($registry));
+	$registry->set('smsQueue', 			new hobotix\SmsQueue($registry));
+	$registry->set('phoneValidator', 	new hobotix\phoneValidator($registry));
+	$registry->set('smsAdaptor', 		new hobotix\SmsAdaptor($registry));
+	$registry->set('customer', 			new hobotix\CustomerExtended($registry));
 	$registry->set('tax', 				new Tax($registry));
 	$registry->set('weight', 			new Weight($registry));
 	$registry->set('length', 			new Length($registry));
 	$registry->set('cart', 				new Cart($registry));	
 	$registry->set('encryption', 		new Encryption($registry->get('config')->get('config_encryption')));
-	$registry->set('Bitrix24', 			new hobotix\Bitrix24($registry));
-	$registry->set('smsQueue', 			new hobotix\SmsQueue($registry));	
+	$registry->set('Bitrix24', 			new hobotix\Bitrix24($registry));	
 	$registry->set('mAlert', 			new hobotix\mAlert($registry));	
 	$registry->set('shortAlias', 		new hobotix\shortAlias($registry));
 	$registry->set('emailBlackList', 	new hobotix\EmailBlackList($registry));	
 	$registry->set('elasticSearch', 	new hobotix\ElasticSearch($registry));		
 	$registry->set('courierServices', 	new hobotix\CourierServices($registry));
 	$registry->set('openaiAdaptor', 	new hobotix\OpenAIAdaptor($registry));
-	$registry->set('phoneValidator', 	new hobotix\phoneValidator($registry));
-	$registry->set('smsAdaptor', 		new hobotix\SmsAdaptor($registry));
 	$registry->set('Fiscalisation',		new hobotix\Fiscalisation($registry));
 	
 	$registry->set('bypass_rainforest_caches_and_settings', true);

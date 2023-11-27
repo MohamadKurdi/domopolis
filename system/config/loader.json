@@ -23,6 +23,7 @@
 		"/hobotix/mAlert",
 		"/hobotix/ShortAlias",
 		"/hobotix/SmsAdaptor",
+		"/hobotix/CustomerExtended",
 		"/hobotix/SessionDBHandler",
 		"/hobotix/EmailBlackList",
 		"/hobotix/RainforestAmazon",
