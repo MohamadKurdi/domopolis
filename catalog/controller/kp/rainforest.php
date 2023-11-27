@@ -211,16 +211,16 @@ class ControllerKPRainForest extends Controller {
 
 
 		if (!$this->config->get('config_rainforest_enable_pricing')){
-			echoLine('[parseofferscron] RNF AMAZON PRICING NOT ENABLED', 'e');
+			echoLine('[parseoffersqueuecron] RNF AMAZON PRICING NOT ENABLED', 'e');
 			return;
 		}
 
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 
-		echoLine('[ControllerDPRainForest::parseofferscron], Working with queue', 'i');
+		echoLine('[ControllerDPRainForest::parseoffersqueuecron], Working with queue', 'i');
 
 		$total = $this->rainforestAmazon->offersParser->getTotalProductsAmazonOffersInQueue();
-		echoLine('[ControllerDPRainForest::parseofferscron], Total in queue: ' . $total, 'i');
+		echoLine('[ControllerDPRainForest::parseoffersqueuecron], Total in queue: ' . $total, 'i');
 
 		if ($total > 0){
 			$timer = new \hobotix\FPCTimer();
@@ -239,7 +239,7 @@ class ControllerKPRainForest extends Controller {
 				$results = $this->rainforestAmazon->offersParser->clearProductsAmazonQueueStep();
 			}
 
-			echoLine('[parseofferscron] Time for iteration: ' . $timer->getTime() . ' s.', 'i');
+			echoLine('[parseoffersqueuecron] Time for iteration: ' . $timer->getTime() . ' s.', 'i');
 			unset($timer);
 
 			if ($this->config->get('config_openai_enable') && $this->config->get('config_rainforest_export_names_with_openai') && $this->config->get('config_openai_enable_export_names')){

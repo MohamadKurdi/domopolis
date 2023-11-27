@@ -26,7 +26,29 @@ class PriceHistory
 		return $query->rows;
 	}
 
-	public function addBestOfferHistory($data){
+	private function addBestOfferHistoryBugEcho($data){
+		echoLine('[PriceHistory::addBestOfferHistoryBugEcho] Got Bug in history adding!', 'e');
+		print_r($data);
+		die();
+	}
+
+	public function addBestOfferHistory($data){		
+		if (empty($data['amazon_best_price'])){
+			return $this->addBestOfferHistoryBugEcho($data);
+		}
+
+		if (empty($data['price'])){
+			return $this->addBestOfferHistoryBugEcho($data);
+		}
+
+		if (empty($data['offer_data'])){
+			return $this->addBestOfferHistoryBugEcho($data);
+		}
+
+		if (empty($data['original_offer_data'])){
+			return $this->addBestOfferHistoryBugEcho($data);
+		}
+
 		$this->clearHistory($data['asin']);
 
 		$this->db->query("INSERT INTO product_offers_history SET 

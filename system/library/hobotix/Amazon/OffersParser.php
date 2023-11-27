@@ -7,12 +7,11 @@ class OffersParser
 	
 	const CLASS_NAME = 'hobotix\\Amazon\\OffersParser';
 	
-	private $db;	
-	private $config;
-	private $log;
+	private $db 	= null;	
+	private $config = null;
+	private $log 	= null;
 
-	//private $testAsin = 'B07V5FWPT1';
-	private $testAsin = false;
+	private $testASIN = null;
 
 	private $no_offers_logic = false;
 
@@ -29,6 +28,10 @@ class OffersParser
 
 		require_once(dirname(__FILE__) . '/PriceLogic.php');
 		$this->PriceLogic = new PriceLogic($registry);
+
+		if ($this->config->get('config_rainforest_test_asin')){
+			$this->testASIN = trim($this->config->get('config_rainforest_test_asin'));
+		}
 
 		//models
 		require_once(dirname(__FILE__) . '/models/hoboModel.php');	
@@ -158,8 +161,13 @@ class OffersParser
 			$sql .= " AND (p.amzn_last_offers = '0000-00-00 00:00:00' OR DATE(p.amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -" . $this->config->get('config_rainforest_update_period') . " DAY)))";
 		}		
 
-
-		$sql = "SELECT DISTINCT(asin), product_id " . $sql . " ORDER BY amzn_last_offers ASC LIMIT " . (int)\hobotix\RainforestAmazon::offerParserLimit;		
+		if ($this->no_offers_logic){
+			$limit = (int)\hobotix\RainforestAmazon::noOfferParserLimit;
+		} else {
+			$limit = (int)\hobotix\RainforestAmazon::offerParserLimit;
+		}
+		
+		$sql = "SELECT DISTINCT(asin), product_id " . $sql . " ORDER BY amzn_last_offers ASC LIMIT " . (int)$limit;		
 
 		$query = $this->db->ncquery($sql);
 
@@ -169,8 +177,9 @@ class OffersParser
 			}
 		}
 
-		if ($this->testAsin){
-			return [$this->testAsin];
+		if ($this->testASIN){
+			echoLine('[OffersParser::getProductsToGetOffers] Test ASIN is: ' . $this->testASIN, 'w');
+			return [$this->testASIN];
 		}
 
 		return $result;

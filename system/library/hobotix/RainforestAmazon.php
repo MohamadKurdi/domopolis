@@ -45,6 +45,7 @@ class RainforestAmazon
 		offerRequestLimits = Сколько запросов в параллели
 	*/
 	public const offerParserLimit 		= 2000;
+	public const noOfferParserLimit 	= 10000;
 	public const offerRequestLimits 	= 20;
 
 	/*
