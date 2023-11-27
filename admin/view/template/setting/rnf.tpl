@@ -1068,6 +1068,20 @@
 							</td>
 						</tr>
 
+						<tr>
+							<td class="right">
+								Тестовый ASIN
+							</td>
+							<td style="width:50px;" class="center">
+								<input type="text" name="config_rainforest_test_asin" value="<?php echo $config_rainforest_test_asin; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Нужно для отладки, чтоб не менять постоянно тестовый асин в коде
+								</span>
+							</td>
+						</tr>
+
 
 						<tr>
 							<td colspan="3" class="left" style="color:#D69241;">

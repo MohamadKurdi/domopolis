@@ -70,7 +70,9 @@ class ControllerSettingRnf extends Controller {
 		'config_brands_in_mmenu',
 		'config_second_level_subcategory_in_categories',
 		'config_display_subcategory_in_all_categories',
-		'config_rainforest_show_only_filled_products_in_catalog',		
+		'config_rainforest_show_only_filled_products_in_catalog',
+
+		'config_rainforest_test_asin',
 
 		'config_no_zeroprice',
 		'config_product_hide_sku',
