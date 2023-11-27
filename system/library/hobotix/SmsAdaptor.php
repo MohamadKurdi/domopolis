@@ -223,6 +223,8 @@ class SmsAdaptor {
 		return '';
 	}
 
+
+	//SMS+Viber SERVICE FUNCTIONS
 	public function sendSMSFirstOrderPromo($order_info, $data){
 		$template = [
 			'{ID}' 			=> $order_info['order_id'], 
@@ -269,7 +271,6 @@ class SmsAdaptor {
 		}
 	}
 
-	//SMS+Viber SERVICE FUNCTIONS
 	public function sendBirthdayGreeting($customer_info, $data){
 		$template = [
 			'{SNAME}'			=> $this->config->get('config_name'), 
@@ -305,6 +306,53 @@ class SmsAdaptor {
 			$sms = [
 				'to' 		=> $customer_info['telephone'],
 				'message' 	=> reTemplate($template, $this->config->get('config_sms_birthday_greeting'))
+			];
+
+			$smsID = $this->registry->get('smsQueue')->queue($sms);
+			$this->addOrderSmsHistory(false, ['sms' => $sms['message']], 'Queued', $smsID, (int)$customer_info['customer_id']);
+
+			return $smsID;
+		}
+	}
+
+	public function sendRewardAdded($customer_info, $data){
+		$template = [
+			'{SNAME}'			=> $this->config->get('config_name'), 
+			'{DATE}'			=> date('d.m.Y'), 
+			'{TIME}'			=> date('H:i:s'), 
+			'{PHONE}'			=> $customer_info['telephone'], 
+			'{FIRSTNAME}'		=> $customer_info['firstname'], 
+			'{LASTNAME}' 		=> $customer_info['lastname'],
+			'{POINTS_TOTAL}'	=> $data['points_total'],
+			'{POINTS_ADDED}' 	=> $data['points_added'],
+			'{POINTS_ACTIVE_TO}'=> $data['points_active_to'],
+		];
+
+		if ($this->config->get('config_viber_rewardpoints_added_enabled')){
+			$viber = [
+				'viber' 		=> true,
+				'to' 			=> $customer_info['telephone'],
+				'message' 		=> reTemplate($template, $this->config->get('config_viber_rewardpoints_added')),
+				'messageSms' 	=> reTemplate($template, $this->config->get('rewardpoints_added_sms_text')),
+
+				'button_txt' 	=> $this->config->get('config_viber_rewardpoints_added_button_text'),
+				'button_url' 	=> $this->config->get('config_viber_rewardpoints_added_button_url'), 				
+			];
+
+			if (!empty($this->config->get('config_viber_rewardpoints_added_image')) && file_exists(DIR_IMAGE . $this->config->get('config_viber_rewardpoints_added_image'))){
+				$viber['picture_url'] = HTTPS_CATALOG . DIR_IMAGE_NAME . $this->config->get('config_viber_rewardpoints_added_image');
+			}
+
+			$viberID = $this->registry->get('smsQueue')->queue($viber);
+			$this->addOrderSmsHistory(false, ['sms' => $viber['message']], 'Queued', $viberID, (int)$customer_info['customer_id']);
+
+			return $viberID;
+		}
+
+		if ($this->config->get('rewardpoints_added_sms_enable')){
+			$sms = [
+				'to' 		=> $customer_info['telephone'],
+				'message' 	=> reTemplate($template, $this->config->get('rewardpoints_added_sms_text'))
 			];
 
 			$smsID = $this->registry->get('smsQueue')->queue($sms);

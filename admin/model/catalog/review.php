@@ -1,36 +1,69 @@
 <?php
 	class ModelCatalogReview extends Model {
 		public function addReview($data) {
-			$this->db->query("INSERT INTO review SET addimage = '" . $this->db->escape($data['addimage']) . "', answer = '" . $this->db->escape(strip_tags($data['answer'])) . "', good = '" . $this->db->escape(strip_tags($data['good'])) . "', bads = '" . $this->db->escape(strip_tags($data['bads'])) . "', html_status = '" . (int)$data['html_status'] . "', purchased = '" . (int)$data['purchased'] . "', author = '" . $this->db->escape($data['author']) . "', product_id = '" . $this->db->escape($data['product_id']) . "', text = '" . $this->db->escape(strip_tags($data['text'])) . "', rating = '" . (int)$data['rating'] . "', status = '" . (int)$data['status'] . "', date_added = '" . $this->db->escape($data['date_added']) . "'");
+			$this->db->query("INSERT INTO review SET 
+				addimage 	= '" . $this->db->escape($data['addimage']) . "', 
+				answer 		= '" . $this->db->escape(strip_tags($data['answer'])) . "', 
+				good 		= '" . $this->db->escape(strip_tags($data['good'])) . "', 
+				bads 		= '" . $this->db->escape(strip_tags($data['bads'])) . "', 
+				html_status = '" . (int)$data['html_status'] . "', 
+				purchased 	= '" . (int)$data['purchased'] . "', 
+				author 		= '" . $this->db->escape($data['author']) . "', 
+				product_id 	= '" . $this->db->escape($data['product_id']) . "', 
+				text 		= '" . $this->db->escape(strip_tags($data['text'])) . "', 
+				rating 		= '" . (int)$data['rating'] . "', 
+				status 			= '" . (int)$data['status'] . "',
+				date_modified 	= NOW(),
+				date_added 		= '" . $this->db->escape($data['date_added']) . "'");
 			
 			$review_id = $this->db->getLastId();
 			
 			$this->db->query("DELETE FROM review_description WHERE review_id = '" . (int)$review_id . "'");
 			foreach ($data['review_description'] as $language_id => $value) {
 				$this->db->query("INSERT INTO review_description SET 
-				review_id = '" . (int)$review_id . "', 
-				language_id = '" . (int)$language_id . "',
-				answer = '" . $this->db->escape(strip_tags($value['answer'])) . "',
-				good = '" . $this->db->escape(strip_tags($value['good'])) . "',
-				bads = '" . $this->db->escape(strip_tags($value['bads'])) . "',
-				text = '" . $this->db->escape(strip_tags($value['text'])) . "'");
+				review_id 		= '" . (int)$review_id . "', 
+				language_id 	= '" . (int)$language_id . "',
+				answer 			= '" . $this->db->escape(strip_tags($value['answer'])) . "',
+				good			= '" . $this->db->escape(strip_tags($value['good'])) . "',
+				bads 			= '" . $this->db->escape(strip_tags($value['bads'])) . "',
+				text 			= '" . $this->db->escape(strip_tags($value['text'])) . "'");
 			}
 			
 			return $review_id;			
 		}
 		
 		public function editReview($review_id, $data) {
-			$this->db->query("UPDATE review SET addimage = '" . $this->db->escape($data['addimage']) . "', answer = '" . $this->db->escape(strip_tags($data['answer'])) . "', good = '" . $this->db->escape(strip_tags($data['good'])) . "', bads = '" . $this->db->escape(strip_tags($data['bads'])) . "', html_status = '" . (int)$data['html_status'] . "', purchased = '" . (int)$data['purchased'] . "', author = '" . $this->db->escape($data['author']) . "', product_id = '" . $this->db->escape($data['product_id']) . "', text = '" . $this->db->escape(strip_tags($data['text'])) . "', rating = '" . (int)$data['rating'] . "', status = '" . (int)$data['status'] . "', date_added = '" . $this->db->escape($data['date_added']) . "' WHERE review_id = '" . (int)$review_id . "'");
+			$review = $this->getReview($review_id);
+
+			if ($review['status'] == 0 && !checkDateIsGood($review['date_approved']) && $data['status'] == 1){
+				$this->db->query("UPDATE review SET date_approved = NOW()	WHERE review_id = '" . (int)$review_id . "'");
+			}
+
+			$this->db->query("UPDATE review SET 
+				addimage 	= '" . $this->db->escape($data['addimage']) . "', 
+				answer 		= '" . $this->db->escape(strip_tags($data['answer'])) . "', 
+				good 		= '" . $this->db->escape(strip_tags($data['good'])) . "', 
+				bads 		= '" . $this->db->escape(strip_tags($data['bads'])) . "', 
+				html_status = '" . (int)$data['html_status'] . "', 
+				purchased 	= '" . (int)$data['purchased'] . "', 
+				author 		= '" . $this->db->escape($data['author']) . "', 
+				product_id 	= '" . $this->db->escape($data['product_id']) . "', 
+				text 		= '" . $this->db->escape(strip_tags($data['text'])) . "', 
+				rating 		= '" . (int)$data['rating'] . "', 
+				status 		= '" . (int)$data['status'] . "', 
+				date_added 		= '" . $this->db->escape($data['date_added']) . "',
+				date_modified 	= NOW()
+				WHERE review_id = '" . (int)$review_id . "'");			
 			
 			$this->db->query("DELETE FROM review_description WHERE review_id = '" . (int)$review_id . "'");
 			foreach ($data['review_description'] as $language_id => $value) {
 				$this->db->query("INSERT INTO review_description SET 
-				review_id = '" . (int)$review_id . "', 
-				language_id = '" . (int)$language_id . "',
-				answer = '" . $this->db->escape(strip_tags($value['answer'])) . "',
-				good = '" . $this->db->escape(strip_tags($value['good'])) . "',
-				bads = '" . $this->db->escape(strip_tags($value['bads'])) . "',
-				text = '" . $this->db->escape(strip_tags($value['text'])) . "'");
+				review_id 		= '" . (int)$review_id . "', 
+				language_id 	= '" . (int)$language_id . "',
+				answer 			= '" . $this->db->escape(strip_tags($value['answer'])) . "',
+				good 			= '" . $this->db->escape(strip_tags($value['good'])) . "',
+				bads 			= '" . $this->db->escape(strip_tags($value['bads'])) . "',
+				text 			= '" . $this->db->escape(strip_tags($value['text'])) . "'");
 			}
 			
 			return $review_id;
@@ -65,7 +98,25 @@
 		}
 		
 		public function getReviews($data = array()) {
-			$sql =  $sql = "SELECT r.review_id, r.purchased, html_status, r.addimage, pd.name, r.author, r.rating, r.status, r.date_added, r.customer_id, r.good, r.bads, r.text FROM review r LEFT JOIN product_description pd ON (r.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";																																					  
+			$sql =  $sql = "SELECT 
+				r.review_id, 
+				r.purchased, 
+				html_status, 
+				r.addimage, 
+				r.rewarded, 
+				pd.name, 
+				r.author, 
+				r.rating, 
+				r.status, 
+				r.date_added,
+				r.date_modified,
+				r.date_approved,
+				r.rewarded,   
+				r.customer_id, 
+				r.good, 
+				r.bads, 
+				r.text 
+				FROM review r LEFT JOIN product_description pd ON (r.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";																																					  
 			
 			$sort_data = array(
 			'pd.name',

@@ -1760,12 +1760,11 @@
 				$language_id = $config['config_language'];
 			}
 			
-			require_once(VQMod::modCheck(DIR_SYSTEM . 'library/tax.php'));
-			require_once(VQMod::modCheck(DIR_SYSTEM . 'library/customer.php'));
+			$this->load->library('tax');
+			$this->load->library('hobotix/CustomerExtended');
 			
-			$registry = clone $this->registry;
-			
-			$registry->set('customer', new Customer($registry));
+			$registry = clone $this->registry;			
+			$registry->set('customer', new \hobotix\CustomerExtended($registry));
 			
 			$oConfig = $registry->get('config');
 			

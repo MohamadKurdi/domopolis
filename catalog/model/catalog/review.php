@@ -38,29 +38,38 @@ class ModelCatalogReview extends Model
             
         return $parsed;
     }
+
+    
              
     public function addReview($product_id, $data)
-    {
-        
+    {        
         if (!isset($data['addimage'])) {
             $data['addimage'] = '';
         }
+        
         if (!isset($data['good'])) {
             $data['good'] = '';
         }
+
         if (!isset($data['bads'])) {
             $data['bads'] = '';
-        }
+        }        
             
-        if (!$this->config->get('config_review_statusp')) {
-            $review_statusp = 0;
-        } else {
-            $review_statusp = 1;
-        }
+        $this->db->query("INSERT INTO review SET 
+            addimage    = '" . $this->db->escape($data['addimage']) . "', 
+            good        = '" . $this->db->escape($data['good']) . "', 
+            bads        = '" . $this->db->escape($data['bads']) . "', 
+            status      = '" . (int)!$this->config->get('config_review_statusp') . "', 
+            author      = '" . $this->db->escape($data['name']) . "', 
+            customer_id = '" . (int)$this->customer->getId() . "',             
+            product_id  = '" . (int)$product_id . "',
+            store_id    = '" . (int)$this->config->get('config_store_id') . "',
+            text        = '" . $this->db->escape($data['text']) . "', 
+            purchased   = '" . (int)$this->customer->validateIfProductWasPurchased($product_id) . "', 
+            rating      = '" . (int)$data['rating'] . "', 
+            date_added = NOW()");
             
-            $this->db->query("INSERT INTO review SET addimage = '" . $this->db->escape($data['addimage']) . "', good = '" . $this->db->escape($data['good']) . "', bads = '" . $this->db->escape($data['bads']) . "', status = '" . $review_statusp . "', author = '" . $this->db->escape($data['name']) . "', customer_id = '" . (int)$this->customer->getId() . "', product_id = '" . (int)$product_id . "', text = '" . $this->db->escape($data['text']) . "', rating = '" . (int)$data['rating'] . "', date_added = NOW()");
-            
-            $review_id = $this->db->getLastId();
+        $review_id = $this->db->getLastId();
     }
         
     public function getDickAssReviewsByProductId($product_id, $start = 0, $limit = 20)

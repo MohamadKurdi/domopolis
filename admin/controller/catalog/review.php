@@ -196,7 +196,13 @@
 				'bads'     				=> $result['bads'],
 				'text'     				=> $result['text'],
 				'status'     			=> $result['status'],
-				'date_added' 			=> date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+				'rewarded'     			=> $result['rewarded'],
+				'date_added' 			=> checkDateIsGood($result['date_added'])?date('Y-m-d', strtotime($result['date_added'])):false,
+				'time_added' 			=> checkDateIsGood($result['date_added'])?date('H:i:s', strtotime($result['date_added'])):false,
+				'date_modified' 		=> checkDateIsGood($result['date_modified'])?date('Y-m-d', strtotime($result['date_modified'])):false,
+				'time_modified' 		=> checkDateIsGood($result['date_modified'])?date('H:i:s', strtotime($result['date_modified'])):false,
+				'date_approved' 		=> checkDateIsGood($result['date_approved'])?date('Y-m-d', strtotime($result['date_approved'])):false,
+				'time_approved' 		=> checkDateIsGood($result['date_approved'])?date('H:i:s', strtotime($result['date_approved'])):false,
 				'selected'   			=> isset($this->request->post['selected']) && in_array($result['review_id'], $this->request->post['selected']),
 				'action'     			=> $action
 				);
@@ -455,6 +461,7 @@
 				} else {
 				$this->data['answer'] = '';
 			}
+
 			if (isset($this->request->post['purchased'])) {
 				$this->data['purchased'] = $this->request->post['purchased'];
 				} elseif (!empty($review_info)) {
@@ -462,6 +469,7 @@
 				} else {
 				$this->data['purchased'] = '';
 			}
+
 			if (isset($this->request->post['date_added'])) {
 				$this->data['date_added'] = $this->request->post['date_added'];
 				} elseif (!empty($review_info)) {
@@ -469,6 +477,7 @@
 				} else {
 				$this->data['date_added'] = '';
 			}
+
 			if (isset($this->request->post['addimage'])) {
 				$this->data['addimage'] = $this->request->post['addimage'];
 				} elseif (!empty($review_info)) {

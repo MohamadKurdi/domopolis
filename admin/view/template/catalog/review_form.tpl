@@ -164,8 +164,15 @@
 								<?php } ?>
 							</select></td>
 					</tr>
+
 					<tr>
-					<td><?php echo $entry_date_added; ?></td><td><input type="text" name="date_added" value="<?php echo $date_added; ?>" class="datetime" /></td></tr>
+						<td>
+							<?php echo $entry_date_added; ?>							
+						</td>
+						<td>
+							<input type="text" name="date_added" value="<?php echo $date_added; ?>" class="datetime" />
+						</td>
+					</tr>
 					
 				</table>
 			</div>

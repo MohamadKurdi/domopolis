@@ -5,6 +5,10 @@ function reformatDate($date){
 	return date('Y-m-d', strtotime($date['year'] . '-' . $date['month'] . '-' . $date['day']));
 }
 
+function checkDateIsGood($date){
+	return ($date != '0000-00-00 00:00:00' && $date != '0000-00-00');
+}
+
 function guessYear($date){
 	if ($date['month'] < date('n')){
 		return date('Y') + 1;

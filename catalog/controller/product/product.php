@@ -605,6 +605,16 @@ public function index($product_id = false, $just_price = false)
         if (!$just_price) {
             $this->load->model('catalog/review');
 
+            if ($this->config->get('rewardpoints_review')){
+                if ($this->customer->validateIfProductWasPurchased($this->request->get['product_id'])){
+                    if ($this->config->get('rewardpoints_review_need_image')){
+                        $this->data['text_retranslate_reward_review'] = sprintf($this->data['text_retranslate_reward_review_photo'], $this->config->get('rewardpoints_review'));
+                    } else {
+                        $this->data['text_retranslate_reward_review'] = sprintf($this->data['text_retranslate_reward_review_nophoto'], $this->config->get('rewardpoints_review'));
+                    }                    
+                }
+            }
+
             $this->data['text_on']          = $this->language->get('text_on');
             $this->data['text_no_reviews']  = $this->language->get('text_no_reviews');
             $this->data['entry_good']       = $this->language->get('entry_good');
@@ -2446,7 +2456,6 @@ public function index($product_id = false, $just_price = false)
             if ($this->request->server['REQUEST_METHOD'] == 'POST') {
                 $this->request->post = $this->shortcodes->strip_shortcodes($this->request->post);
 
-
                 if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 25)) {
                     $json['error'] = $this->language->get('error_name');
                 }
@@ -2467,15 +2476,6 @@ public function index($product_id = false, $just_price = false)
                     $json['error'] = $this->language->get('error_rating');
                 }
 
-                /*
-                if ($this->config->get('config_review_captcha')) {
-                if (empty($this->session->data['captcha']) || ($this->session->data['captcha'] != $this->request->post['captcha'])) {
-                print $this->session->data['captcha'];
-                $json['error'] = $this->language->get('error_captcha');
-                }
-                }
-                */
-                
                 if (isset($this->request->files) && isset($this->request->files['add-review-image']) && is_array($this->request->files['add-review-image']) && mb_strlen($this->request->files['add-review-image']['name']) > 3) {
                     $upload_directory = DIR_IMAGE . 'data/review_upload/';
                     $blacklist = array(".php", ".phtml", ".php3", ".php4", ".php5");
@@ -2501,15 +2501,13 @@ public function index($product_id = false, $just_price = false)
                             'image/jpg'  => '.jpg',
                             'image/jpeg' => '.jpeg',
                             'image/png'  => '.png',
-                            'image/webp' => '.webp'
+                            'image/webp' => '.webp',
+                            'image/avif' => '.avif'
                         );
                         
                         $upload_file_name = md5(time()) . $filenames[$imageinfo['mime']];
                         
-                        if (move_uploaded_file(
-                            $this->request->files['add-review-image']['tmp_name'],
-                            $upload_directory . $upload_file_name
-                        )) {
+                        if (move_uploaded_file($this->request->files['add-review-image']['tmp_name'], $upload_directory . $upload_file_name)) {
                             $this->request->post['addimage'] = 'data/review_upload/' . $upload_file_name;
                         } else {
                             $json['error'] = $this->language->get('error_filetype');
@@ -2528,7 +2526,6 @@ public function index($product_id = false, $just_price = false)
                 if (empty($json['error'])) {
                     $this->model_catalog_review->addReview($this->request->get['product_id'], $this->request->post);
                     
-
                     if (!$this->config->get('config_review_statusp')) {
                         $json['success'] = $this->language->get('text_success');
                     } else {

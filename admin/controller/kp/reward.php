@@ -86,7 +86,58 @@
 					$this->customer->clearRewardQueueByCRQID($row['customer_reward_queue_id']);					
 				}
 			}
-			
+
+			if (false && $this->config->get('rewardpoints_review')){
+				echoLine('[ControllerKPReward::cron] Reward for rewiews started', 'i');		
+				$sql = "SELECT rw.*,					
+					c.language_id as language_id
+					FROM review rw 
+					LEFT JOIN customer c ON (rw.customer_id = c.customer_id) 
+					WHERE rw.customer_id > 0 
+					AND rw.status = 1 
+					AND DATE(rw.date_approved) >= DATE(DATE_SUB(NOW(), INTERVAL " . (int)$this->config->get('rewardpoints_review_days') . " DAY)) 
+					AND rw.rewarded = 0";
+
+				$query = $this->db->query($sql);
+
+				foreach ($query->rows as $row){
+					echoLine('[ControllerKPReward::cron] Review ' . $row['review_id'] . ', checking...', 'i');
+
+					if ($this->customer->validateIfProductWasPurchased($row['product_id'], $row['customer_id'])){
+						echoLine('[ControllerKPReward::cron] Product was bought by customer, ok', 's');
+					} else {
+						echoLine('[ControllerKPReward::cron] Product was not bought by customer, skip', 'e');
+						continue;
+					}
+
+					if ($this->config->get('rewardpoints_review_min_length')){
+						$length = mb_strlen($review['text']) + mb_strlen($review['bads']) + mb_strlen($review['good']);
+
+						if ($length >= (int)$this->config->get('rewardpoints_review_min_length')){
+							echoLine('[ControllerKPReward::cron] Review length is ' . $length . ', ok', 's');
+						} else {
+							echoLine('[ControllerKPReward::cron] Review length is ' . $length . ', skip', 'e');
+							continue;
+						}
+					}
+
+					if ($this->config->get('rewardpoints_review_need_image')){
+						if ($row['addimage']){
+							echoLine('[ControllerKPReward::cron] Review has image, ok', 's');
+						} else {
+							echoLine('[ControllerKPReward::cron] Review has no image, skip', 'e');
+							continue;
+						}
+					}
+
+					echoLine('[ControllerKPReward::cron] Review passed all conditions, going on', 's');
+
+					$points 		= (int)$this->model_setting_setting->getKeySettingValue('config', 'rewardpoints_review', (int)$row['store_id']);
+					$description 	= $this->language->getCatalogLanguageString($row['language_id'], 'account/reward', 'text_review_add');
+
+					$this->customer->addReward($row['customer_id'], $description, $points, 0, 'REVIEW_WRITTEN_REWARD');
+				}
+			}			
 
 			if ($this->config->get('rewardpoints_birthday')){
 				echoLine('[ControllerKPReward::cron] Birthday greeting started', 'i');
@@ -98,7 +149,6 @@
 
 				echoLine('[ControllerKPReward::cron] SQL: ' . $sql, 'w');
 				
-
 				if ($query->num_rows){
 					foreach ($query->rows as $row){
 						$validate_query = $this->db->query("SELECT * FROM customer_reward WHERE customer_id = '" . $row['customer_id'] . "' AND reason_code = 'BIRTHDAY_GREETING_REWARD' AND DATE(date_added) >= '" . date('Y-m-d', strtotime('-11 month')) . "'");
