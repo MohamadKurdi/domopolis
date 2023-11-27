@@ -100,6 +100,9 @@ $_['text_retranslate_related'] = 'З цим товаром також купую
 $_['text_retranslate_reward_review_nophoto'] = 'У вас є замовлення з цим товаром! Залиште відгук та отримайте %s бонусів!';
 $_['text_retranslate_reward_review_photo'] = 'У вас є замовлення з цим товаром! Залиште відгук з фото та отримайте %s бонусів!';
 
+$_['text_retranslate_reward_review_nobuy_nophoto'] = 'Залиште відгук про цей товар та отримайте %s бонусів!';
+$_['text_retranslate_reward_review_nobuy_photo'] = 'Залиште відгук з фото про цей товар та отримайте %s бонусів!';
+
 $_['all_collection'] = 'Вся колекція';
 
 $_['delivery_to_city_v2_title'] = 'Доставка по м. ';

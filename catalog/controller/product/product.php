@@ -606,13 +606,21 @@ public function index($product_id = false, $just_price = false)
             $this->load->model('catalog/review');
 
             if ($this->config->get('rewardpoints_review')){
-                if ($this->customer->validateIfProductWasPurchased($this->request->get['product_id'])){
+                if ($this->config->get('rewardpoints_needs_purchased')){
+                   if ($this->customer->validateIfProductWasPurchased($this->request->get['product_id'])){
+                        if ($this->config->get('rewardpoints_review_need_image')){
+                            $this->data['text_retranslate_reward_review'] = sprintf($this->data['text_retranslate_reward_review_photo'], $this->config->get('rewardpoints_review'));
+                        } else {
+                            $this->data['text_retranslate_reward_review'] = sprintf($this->data['text_retranslate_reward_review_nophoto'], $this->config->get('rewardpoints_review'));
+                        }                    
+                    }
+                } else {
                     if ($this->config->get('rewardpoints_review_need_image')){
-                        $this->data['text_retranslate_reward_review'] = sprintf($this->data['text_retranslate_reward_review_photo'], $this->config->get('rewardpoints_review'));
+                        $this->data['text_retranslate_reward_review'] = sprintf($this->data['text_retranslate_reward_review_nobuy_photo'], $this->config->get('rewardpoints_review'));
                     } else {
-                        $this->data['text_retranslate_reward_review'] = sprintf($this->data['text_retranslate_reward_review_nophoto'], $this->config->get('rewardpoints_review'));
-                    }                    
-                }
+                        $this->data['text_retranslate_reward_review'] = sprintf($this->data['text_retranslate_reward_review_nobuy_nophoto'], $this->config->get('rewardpoints_review'));
+                    }   
+                }               
             }
 
             $this->data['text_on']          = $this->language->get('text_on');
@@ -2243,17 +2251,35 @@ public function index($product_id = false, $just_price = false)
         }
 
         public function onereview()
-        {
-            $this->language->load('product/product');
+        {               
+            $this->load->model('catalog/review');
+            $this->load->model('tool/image');
+            $this->load->language('product/product');
 
             foreach ($this->language->loadRetranslate('product/product') as $translationСode => $translationText) {
                 $this->data[$translationСode] = $translationText;
             }
 
-            $this->load->model('catalog/review');
-            $this->load->model('tool/image');
-            $this->data['text_on'] = $this->language->get('text_on');
-            $this->data['text_no_reviews'] = $this->language->get('text_no_reviews');
+            $this->data['text_on']          = $this->language->get('text_on');
+            $this->data['text_no_reviews']  = $this->language->get('text_no_reviews');
+
+            if ($this->config->get('rewardpoints_review')){
+                if ($this->config->get('rewardpoints_needs_purchased')){
+                   if ($this->customer->validateIfProductWasPurchased($this->request->get['product_id'])){
+                        if ($this->config->get('rewardpoints_review_need_image')){
+                            $this->data['text_retranslate_reward_review'] = sprintf($this->data['text_retranslate_reward_review_photo'], $this->config->get('rewardpoints_review'));
+                        } else {
+                            $this->data['text_retranslate_reward_review'] = sprintf($this->data['text_retranslate_reward_review_nophoto'], $this->config->get('rewardpoints_review'));
+                        }                    
+                    }
+                } else {
+                    if ($this->config->get('rewardpoints_review_need_image')){
+                        $this->data['text_retranslate_reward_review'] = sprintf($this->data['text_retranslate_reward_review_nobuy_photo'], $this->config->get('rewardpoints_review'));
+                    } else {
+                        $this->data['text_retranslate_reward_review'] = sprintf($this->data['text_retranslate_reward_review_nobuy_nophoto'], $this->config->get('rewardpoints_review'));
+                    }   
+                }               
+            }
 
             $results = $this->model_catalog_review->getBestReviewsForProductID($this->request->get['product_id']);
 
@@ -2292,14 +2318,32 @@ public function index($product_id = false, $just_price = false)
 
         public function review()
         {
-            $this->language->load('product/product');
+
+            $this->load->model('catalog/review');
+            $this->load->model('tool/image');
+            $this->load->language('product/product');
+            
             foreach ($this->language->loadRetranslate('product/product') as $translationСode => $translationText) {
                 $this->data[$translationСode] = $translationText;
             }
 
-
-            $this->load->model('catalog/review');
-            $this->load->model('tool/image');
+            if ($this->config->get('rewardpoints_review')){
+                if ($this->config->get('rewardpoints_needs_purchased')){
+                   if ($this->customer->validateIfProductWasPurchased($this->request->get['product_id'])){
+                        if ($this->config->get('rewardpoints_review_need_image')){
+                            $this->data['text_retranslate_reward_review'] = sprintf($this->data['text_retranslate_reward_review_photo'], $this->config->get('rewardpoints_review'));
+                        } else {
+                            $this->data['text_retranslate_reward_review'] = sprintf($this->data['text_retranslate_reward_review_nophoto'], $this->config->get('rewardpoints_review'));
+                        }                    
+                    }
+                } else {
+                    if ($this->config->get('rewardpoints_review_need_image')){
+                        $this->data['text_retranslate_reward_review'] = sprintf($this->data['text_retranslate_reward_review_nobuy_photo'], $this->config->get('rewardpoints_review'));
+                    } else {
+                        $this->data['text_retranslate_reward_review'] = sprintf($this->data['text_retranslate_reward_review_nobuy_nophoto'], $this->config->get('rewardpoints_review'));
+                    }   
+                }               
+            }
 
             $this->data['text_on']          = $this->language->get('text_on');
             $this->data['text_no_reviews']  = $this->language->get('text_no_reviews');
