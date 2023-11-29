@@ -95,8 +95,8 @@ $_['text_retranslate_88'] = 'Покупают вместе';
 
 $_['text_retranslate_related'] = 'С этим товаром также покупают';
 
-$_['text_retranslate_reward_review_nophoto'] = 'У вас есть заказ с этим товаром! Оставьте отзыв и получите %s бонусов!';
-$_['text_retranslate_reward_review_photo'] = 'У вас есть заказ с этим товаром! Оставьте отзыв с фото и получите %s бонусов!';
+$_['text_retranslate_reward_review_nophoto'] = 'У вас есть заказ с этим товаром! Оставьте отзыв и получите  <span><i class="fas fa-gift"></i> %s бонусов!</span>';
+$_['text_retranslate_reward_review_photo'] = 'У вас есть заказ с этим товаром! Оставьте отзыв с фото и получите <span><i class="fas fa-gift"></i>   %s бонусов!</span>';
 
 $_['text_retranslate_reward_review_nobuy_nophoto'] = 'Оставьте отзыв про этот товар и получите %s бонусов!';
 $_['text_retranslate_reward_review_nobuy_photo'] = 'Оставьте отзыв  с фото про этот товар и получите %s бонусов!';

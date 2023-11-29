@@ -97,8 +97,8 @@ $_['text_retranslate_89'] = 'Варіант';
 $_['text_retranslate_90'] = 'Кількість';
 
 $_['text_retranslate_related'] = 'З цим товаром також купують';
-$_['text_retranslate_reward_review_nophoto'] = 'У вас є замовлення з цим товаром! Залиште відгук та отримайте %s бонусів!';
-$_['text_retranslate_reward_review_photo'] = 'У вас є замовлення з цим товаром! Залиште відгук з фото та отримайте %s бонусів!';
+$_['text_retranslate_reward_review_nophoto'] = 'У вас є замовлення з цим товаром! Залиште відгук та отримайте <span><i class="fas fa-gift"></i>   %s бонусів!</span>';
+$_['text_retranslate_reward_review_photo'] = 'У вас є замовлення з цим товаром! Залиште відгук з фото та отримайте <span><i class="fas fa-gift"></i> %s бонусів!</span>';
 
 $_['text_retranslate_reward_review_nobuy_nophoto'] = 'Залиште відгук про цей товар та отримайте %s бонусів!';
 $_['text_retranslate_reward_review_nobuy_photo'] = 'Залиште відгук з фото про цей товар та отримайте %s бонусів!';
