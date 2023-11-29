@@ -54,6 +54,17 @@ function normalizeForYML($field) {
 	return trim($field);
 }
 
+function prepareFieldForYML($field) {
+	$field = htmlspecialchars_decode($field);
+	$field = strip_tags($field);
+	$from = array('"', '&', '>', '<', '\'', '&nbsp;');
+	$to = array('&quot;', '&amp;', '&gt;', '&lt;', '&apos;', ' ');
+	$field = str_replace($from, $to, $field);
+	$field = preg_replace('#[\x00-\x08\x0B-\x0C\x0E-\x1F]+#is', ' ', $field);
+
+	return trim($field);
+}
+
 function preparePhone($phone){
 	if ($phone[0] == '+'){
 		$phone = substr($phone, 1);			

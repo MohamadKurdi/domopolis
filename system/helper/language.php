@@ -16,6 +16,18 @@ function bool_real_stripos($haystack, $needle){
 	return !(stripos($haystack, $needle) === false);			
 }
 
+function detectUnits($attribute) {
+	$attribute['name'] = trim(strip_tags($attribute['name']));
+	$attribute['text'] = trim(strip_tags($attribute['text']));
+
+	if (preg_match('/\(([^\)]+)\)$/mi', $attribute['name'], $matches)) {
+		$attribute['name'] = trim(str_replace('('.$matches[1].')', '', $attribute['name']));
+		$attribute['unit'] = trim($matches[1]);
+	}
+
+	return $attribute;
+}		
+
 function parseText($node, $keyword, $dom, $link, $target = '', $tooltip = 0){
 	if (mb_strpos($node->nodeValue, $keyword) !== false) {
 		$keywordOffset 	= mb_strpos($node->nodeValue, $keyword, 0, 'UTF-8');
