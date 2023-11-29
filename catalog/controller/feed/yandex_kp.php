@@ -10,15 +10,17 @@ class ControllerFeedYandexKP extends Controller {
 	private $ozon_full_path 		= ['ozon_feed_full_{store_id}.xml'];
 	private $ozon_path 				= ['ozon_feed_{store_id}.xml'];
 	private $priceva_path 			= ['priceva_{brand}_{store_id}.xml'];		
+	private $priceva_full_path		= ['priceva_feed_full_{store_id}.xml'];
+	private $priceva_stock_path		= ['priceva_feed_stock_{store_id}.xml'];
 
 	private $supported_currencies 	= array('RUR', 'RUB', 'USD', /* 'BYN', 'KZT', */ 'EUR', 'UAH');	
 	private $local_deliveries_cost 	= ['0' => 400, '1' => 80, '2' => false, '5' => false];
 	private $pickup_available 		= ['0', '1'];
 		
-	private $yandexWeightClassID = 1;
-	private $yandexLengthClassID = 1;
-	private $ozonWeightClassID 	= 2;
-	private $ozonLengthClassID 	= 2;
+	private $yandexWeightClassID 	= 1;
+	private $yandexLengthClassID 	= 1;
+	private $ozonWeightClassID 		= 2;
+	private $ozonLengthClassID 		= 2;
 		
 	private $excludeOzonManufacturers 	= [];
 	private $excludeYandexManufacturers = [];	
@@ -48,43 +50,20 @@ class ControllerFeedYandexKP extends Controller {
 		$this->currentLengthClassID = $this->yandexLengthClassID;
 		$this->excludeYandexManufacturers 	= $this->config->get('config_yandex_exclude_manufacturers');
 
-		if ($this->type == 'ozon'){
-			echoLine('Тип фида: Озон');
+		echoLine('[ControllerFeedYandexKP::setFeedType] Feed type is set: ' . $this->type, 'i');
 
+		if ($this->type == 'ozon'){			
 			$this->currentWeightClassID = $this->ozonWeightClassID;
 			$this->currentLengthClassID = $this->ozonLengthClassID;
 
 			$this->excludeOzonManufacturers 	= $this->config->get('config_ozon_exclude_manufacturers');
 		}
 
-		echoLine('Единица веса:' . $this->currentWeightClassID);
-		echoLine('Единица длины:' . $this->currentLengthClassID);
+		echoLine('[ControllerFeedYandexKP::setFeedType] Weight is set: ' . $this->currentWeightClassID, 'i');
+		echoLine('[ControllerFeedYandexKP::setFeedType] Length is set: ' . $this->currentLengthClassID, 'i');
 
 		return $this;
-	}
-
-	protected function prepareField($field) {
-		$field = htmlspecialchars_decode($field);
-		$field = strip_tags($field);
-		$from = array('"', '&', '>', '<', '\'', '&nbsp;');
-		$to = array('&quot;', '&amp;', '&gt;', '&lt;', '&apos;', ' ');
-		$field = str_replace($from, $to, $field);
-		$field = preg_replace('#[\x00-\x08\x0B-\x0C\x0E-\x1F]+#is', ' ', $field);
-
-		return trim($field);
-	}
-
-	protected function detectUnits($attribute) {
-		$attribute['name'] = trim(strip_tags($attribute['name']));
-		$attribute['text'] = trim(strip_tags($attribute['text']));
-
-		if (preg_match('/\(([^\)]+)\)$/mi', $attribute['name'], $matches)) {
-			$attribute['name'] = trim(str_replace('('.$matches[1].')', '', $attribute['name']));
-			$attribute['unit'] = trim($matches[1]);
-		}
-
-		return $attribute;
-	}				
+	}		
 
 	private function loadSettings($store_id){
 		$this->load->model('setting/setting');	
@@ -142,7 +121,6 @@ class ControllerFeedYandexKP extends Controller {
 	}
 
 	private function addShop(){
-
 		$this->yml .= '<name>' . $this->config->get('config_name') . '</name>' . PHP_EOL;
 		$this->yml .= '<company>' . $this->config->get('config_owner') . '</company>' . PHP_EOL;
 		$this->yml .= '<url>' . $this->config->get('config_ssl') . '</url>' . PHP_EOL;
@@ -171,27 +149,27 @@ class ControllerFeedYandexKP extends Controller {
 
 		$this->yml .= '</currencies>' . PHP_EOL;
 
-		echoLine('[YML] Добавили валюты');
+		echoLine('[ControllerFeedYandexKP::addCurrency] Finished adding currencies', 's');
 
 		return $this;
 	}
 
-	private function addCategoriesPriceva(){				
+	private function addCategoriesPriceva(){
 		$this->yml .= '<categories>' . PHP_EOL;
 
 		$query = $this->db->query("SELECT cd.name, c.category_id, c.parent_id FROM category c LEFT JOIN category_description cd ON (c.category_id = cd.category_id) LEFT JOIN category_to_store c2s ON (c.category_id = c2s.category_id) WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "'  AND c.status = '1' AND c.sort_order <> '-1' AND c.priceva_enable = 1");
 
 		foreach ($query->rows as $row){
 			if (!empty($row['parent_id'])){
-				$this->yml .= '<category id="' . $row['category_id'] . '" parentId="' . $row['parent_id'] . '" >' . $this->prepareField($row['name']) . '</category>' . PHP_EOL;
+				$this->yml .= '<category id="' . $row['category_id'] . '" parentId="' . $row['parent_id'] . '" >' . prepareFieldForYML($row['name']) . '</category>' . PHP_EOL;
 			} else {
-				$this->yml .= '<category id="' . $row['category_id'] . '">' . $this->prepareField($row['name']) . '</category>' . PHP_EOL;
+				$this->yml .= '<category id="' . $row['category_id'] . '">' . prepareFieldForYML($row['name']) . '</category>' . PHP_EOL;
 			}
 		}
 
 		$this->yml .= '</categories>' . PHP_EOL;
 
-		echoLine('[YML] Добавили категории');
+		echoLine('[ControllerFeedYandexKP::addCategoriesPriceva] Finished adding categories', 's');
 
 		return $this;
 	}
@@ -203,9 +181,9 @@ class ControllerFeedYandexKP extends Controller {
 
 		foreach ($query->rows as $row){
 			if (!empty($row['parent_id'])){
-				$this->yml .= '<category id="' . $row['category_id'] . '" parentId="' . $row['parent_id'] . '" >' . $this->prepareField($row['name']) . '</category>' . PHP_EOL;
+				$this->yml .= '<category id="' . $row['category_id'] . '" parentId="' . $row['parent_id'] . '" >' . prepareFieldForYML($row['name']) . '</category>' . PHP_EOL;
 			} else {
-				$this->yml .= '<category id="' . $row['category_id'] . '">' . $this->prepareField($row['name']) . '</category>' . PHP_EOL;
+				$this->yml .= '<category id="' . $row['category_id'] . '">' . prepareFieldForYML($row['name']) . '</category>' . PHP_EOL;
 			}
 		}
 
@@ -218,9 +196,9 @@ class ControllerFeedYandexKP extends Controller {
 			foreach ($query->rows as $row){
 
 				if (!empty($row['parent_id'])){
-					$this->yml .= '<category id="' . ($max_category_id + $row['category_id']) . '" parentId="' . ($max_category_id + $row['parent_id']) . '" >' . $this->prepareField($row['name']) . '</category>' . PHP_EOL;
+					$this->yml .= '<category id="' . ($max_category_id + $row['category_id']) . '" parentId="' . ($max_category_id + $row['parent_id']) . '" >' . prepareFieldForYML($row['name']) . '</category>' . PHP_EOL;
 				} else {
-					$this->yml .= '<category id="' . ($max_category_id + $row['category_id']) . '">' . $this->prepareField($row['name']) . '</category>' . PHP_EOL;
+					$this->yml .= '<category id="' . ($max_category_id + $row['category_id']) . '">' . prepareFieldForYML($row['name']) . '</category>' . PHP_EOL;
 				}
 			}
 		}
@@ -376,7 +354,7 @@ class ControllerFeedYandexKP extends Controller {
 
 		$this->yml .= '</offers>' . PHP_EOL;
 
-		echoLine('[YML] Добавили товары');
+		echoLine('[ControllerFeedYandexKP::addOffersOzonTruncated] Adding offers ready', 's');
 
 		return $this;
 	}
@@ -418,9 +396,8 @@ class ControllerFeedYandexKP extends Controller {
 			}
 
 			if ($this->type == 'market' && $this->config->get('config_yam_offer_id_link_disable')){
-					//Если маркет и включена настройка "не подавать URI", во всех остальных случаях мы ее подаем
 			} else {
-				$this->yml .= '	<url>' . $this->prepareField($this->url->link('product/product', 'product_id=' . $product['product_id'])) . '</url>' . PHP_EOL;
+				$this->yml .= '	<url>' . prepareFieldForYML($this->url->link('product/product', 'product_id=' . $product['product_id'])) . '</url>' . PHP_EOL;
 			}
 
 			$this->yml .= '	<pickup>' . (bool)$product['pickup'] . '</pickup>' . PHP_EOL;
@@ -462,27 +439,27 @@ class ControllerFeedYandexKP extends Controller {
 			}
 			$this->yml .= '	<currencyId>' 	. $this->config->get('config_regional_currency') . '</currencyId>' . PHP_EOL;				
 
-			$this->yml .= '	<vendor><![CDATA[' 		. $this->prepareField($product['manufacturer']) . ']]></vendor>' . PHP_EOL;
-			$this->yml .= '	<vendorCode><![CDATA[' 	. $this->prepareField($product['model']) . ']]></vendorCode>' . PHP_EOL;
-			$this->yml .= '	<model><![CDATA[' 		. $this->prepareField($product['name']) . ']]></model>' . PHP_EOL;
-			$this->yml .= '	<description><![CDATA[' . $this->prepareField($product['description']) . ']]></description>' . PHP_EOL;
+			$this->yml .= '	<vendor><![CDATA[' 		. prepareFieldForYML($product['manufacturer']) . ']]></vendor>' . PHP_EOL;
+			$this->yml .= '	<vendorCode><![CDATA[' 	. prepareFieldForYML($product['model']) . ']]></vendorCode>' . PHP_EOL;
+			$this->yml .= '	<model><![CDATA[' 		. prepareFieldForYML($product['name']) . ']]></model>' . PHP_EOL;
+			$this->yml .= '	<description><![CDATA[' . prepareFieldForYML($product['description']) . ']]></description>' . PHP_EOL;
 
 			$this->yml .= '	<available>' . $product['available'] . '</available>' . PHP_EOL;
 
 			if (!empty($product['resized_images'])){
 				foreach ($product['resized_images'] as $image){
-					$this->yml .= '	<picture><![CDATA[' . $this->prepareField($image) . ']]></picture>' . PHP_EOL;
+					$this->yml .= '	<picture><![CDATA[' . prepareFieldForYML($image) . ']]></picture>' . PHP_EOL;
 				}
 			}
 
 			$this->yml .= '	<categoryId>' . $product['main_category_id'] . '</categoryId>' . PHP_EOL;
 
 			if (!empty($product['ean'])){
-				$this->yml .= '	<barcode><![CDATA[' . $this->prepareField($product['ean']) . ']]></barcode>' . PHP_EOL;
+				$this->yml .= '	<barcode><![CDATA[' . prepareFieldForYML($product['ean']) . ']]></barcode>' . PHP_EOL;
 			}
 
 			if ($product['location']){
-				$this->yml .= '	<country_of_origin><![CDATA[' . $this->prepareField($product['location']) . ']]></country_of_origin>' . PHP_EOL;
+				$this->yml .= '	<country_of_origin><![CDATA[' . prepareFieldForYML($product['location']) . ']]></country_of_origin>' . PHP_EOL;
 			}
 
 			if ($product['minimum'] > 1) {					
@@ -491,7 +468,7 @@ class ControllerFeedYandexKP extends Controller {
 
 			if ($product['attributes']){
 				foreach ($product['attributes'] as $attribute){
-					$attribute = $this->detectUnits($attribute);
+					$attribute = detectUnits($attribute);
 
 					if (!empty($attribute['unit'])){
 						$this->yml .= '	<param name="' . $attribute['name'] . '" unit="' . $attribute['unit'] . '"><![CDATA[' . $attribute['text'] . ']]></param>' . PHP_EOL;
@@ -519,7 +496,7 @@ class ControllerFeedYandexKP extends Controller {
 
 		$this->yml .= '</offers>' . PHP_EOL;
 
-		echoLine('[YML] Добавили товары');
+		echoLine('[ControllerFeedYandexKP::addOffers] Adding offers ready', 's');
 
 		return $this;
 	}
@@ -532,14 +509,18 @@ class ControllerFeedYandexKP extends Controller {
 			$product_id = $product['product_id'];				
 			$this->yml .= '<offer id="' . $product_id . '" available="' . $product['available'] . '">' . PHP_EOL;
 
-			$this->yml .= '	<url>' . $this->prepareField($this->url->link('product/product', 'product_id=' . $product['product_id'])) . '</url>' . PHP_EOL;
+			$this->yml .= '	<url>' . prepareFieldForYML($this->url->link('product/product', 'product_id=' . $product['product_id'])) . '</url>' . PHP_EOL;
 
-			$this->yml .= '	<name><![CDATA[' 		. $this->prepareField($product['name']) . ']]></name>' . PHP_EOL;
-			$this->yml .= '	<vendor><![CDATA[' 		. $this->prepareField($product['manufacturer']) . ']]></vendor>' . PHP_EOL;
-			$this->yml .= '	<vendorCode><![CDATA[' 	. $this->prepareField($product['sku']) . ']]></vendorCode>' . PHP_EOL;
-			$this->yml .= '	<model><![CDATA[' 		. $this->prepareField($product['model']) . ']]></model>' . PHP_EOL;				
+			$this->yml .= '	<name><![CDATA[' 		. prepareFieldForYML($product['name']) . ']]></name>' . PHP_EOL;
+			$this->yml .= '	<vendor><![CDATA[' 		. prepareFieldForYML($product['manufacturer']) . ']]></vendor>' . PHP_EOL;
+			$this->yml .= '	<vendorCode><![CDATA[' 	. prepareFieldForYML($product['sku']) . ']]></vendorCode>' . PHP_EOL;
+			$this->yml .= '	<model><![CDATA[' 		. prepareFieldForYML($product['model']) . ']]></model>' . PHP_EOL;	
+
+			if (!empty($product['ean'])){
+				$this->yml .= '	<barcode><![CDATA[' . prepareFieldForYML($product['ean']) . ']]></barcode>' . PHP_EOL;
+			}
+
 			$this->yml .= '	<categoryId>' . $product['main_category_id'] . '</categoryId>' . PHP_EOL;
-
 			$this->yml .= '	<currencyId>' 	. $this->config->get('config_regional_currency') . '</currencyId>' . PHP_EOL;								
 
 			if ($product['special'] && $product['special'] < $product['price']){
@@ -550,28 +531,26 @@ class ControllerFeedYandexKP extends Controller {
 			}
 
 			if ($product['mpp_price'] > 0){
-				$this->yml .= '<repricingMin><![CDATA[' . $this->currency->format($product['mpp_price'], '', '', false) . ']]></repricingMin>' . PHP_EOL;
+				$this->yml .= '	<repricingMin><![CDATA[' . $this->currency->format($product['mpp_price'], '', '', false) . ']]></repricingMin>' . PHP_EOL;
 			}
 
-			$this->yml .= '<hasRRP>' . (int)$product['has_rrp'] . '</hasRRP>' . PHP_EOL;				
+			$this->yml .= '	<hasRRP>' . (int)$product['has_rrp'] . '</hasRRP>' . PHP_EOL;				
 
 			$competitorUrls = explode(PHP_EOL, $product['competitors']);
 
 			foreach ($competitorUrls as $competitorUrl){
 				if (trim($competitorUrl)){
-					$this->yml .= '<competitorUrl><![CDATA[' . atrim($competitorUrl) . ']]></competitorUrl>' . PHP_EOL;	
+					$this->yml .= '	<competitorUrl><![CDATA[' . atrim($competitorUrl) . ']]></competitorUrl>' . PHP_EOL;	
 				}
 			}	
 
-			$this->yml .= '<stockQuantity>' . (int)$product[$this->config->get('config_warehouse_identifier')] . '</stockQuantity>' . PHP_EOL;
-
-			//	$this->yml .= '<tags>' . PHP_EOL;
-			$this->yml .= 	'<stock>' . (int)($product[$this->config->get('config_warehouse_identifier')] > 0) . '</stock>' . PHP_EOL;				
-			//	$this->yml .= '</tags>'. PHP_EOL;
+			$this->yml .= '	<stock>' . (int)($product[$this->config->get('config_warehouse_identifier')] > 0) . '</stock>' . PHP_EOL;
+			$this->yml .= '	<stockQuantity>' . (int)$product[$this->config->get('config_warehouse_identifier')] . '</stockQuantity>' . PHP_EOL;
+			$this->yml .= '	<available>' . (int)($product['available']) . '</available>' . PHP_EOL;	
 
 			if ($product['attributes']){
 				foreach ($product['attributes'] as $attribute){
-					$attribute = $this->detectUnits($attribute);
+					$attribute = detectUnits($attribute);
 
 					if (!empty($attribute['unit'])){
 						$this->yml .= '	<param name="' . $attribute['name'] . '" unit="' . $attribute['unit'] . '"><![CDATA[' . $attribute['text'] . ']]></param>' . PHP_EOL;
@@ -586,7 +565,7 @@ class ControllerFeedYandexKP extends Controller {
 
 		$this->yml .= '</offers>' . PHP_EOL;
 
-		echoLine('[YML] Добавили товары');
+		echoLine('[ControllerFeedYandexKP::addPricevaOffers] Adding offers ready', 's');
 
 		return $this;
 	}
@@ -619,14 +598,14 @@ class ControllerFeedYandexKP extends Controller {
 		$this->load->model('catalog/product');
 		$this->load->model('tool/image');
 
-		$this->products = array();
+		$this->products = [];
 
-		echoLine('[YML] Получаем товары из БД');
+		echoLine('[ControllerFeedYandexKP::setProducts] Getting products from database...', 'i');
 
 		$counter = 0;
 		$total = count($products);
 
-		echoLine('[YML] Всего ' . $total);
+		echoLine('[ControllerFeedYandexKP::setProducts] Got total products: ' . $total);
 
 		$invalidCategories = [];
 
@@ -690,10 +669,11 @@ class ControllerFeedYandexKP extends Controller {
 			}
 		}
 
-		echoLine('[YML] INVALID CATEGORIES WITHOUT MAPPING: ' . implode(',' , $invalidCategories), 'e');
+		echoLine('');
+		echoLine('[ControllerFeedYandexKP::setProducts] Now having categories without mapping: ' . implode(',' , $invalidCategories), 'e');
 
 		echoLine('');
-		echoLine('[YML] Получили товары');
+		echoLine('[ControllerFeedYandexKP::setProducts] Finished preparing products', 's');
 
 		return $this;
 	}
@@ -713,11 +693,11 @@ class ControllerFeedYandexKP extends Controller {
 
 	private function setProductImages() {
 		$query = $this->db->query("SELECT product_id, image FROM product_image ORDER BY product_id");
-		$this->images = array();
+		$this->images = [];
 
 		foreach($query->rows as $row) {
 			if (!isset($this->images[$row['product_id']])) {
-				$this->images[$row['product_id']] = array();
+				$this->images[$row['product_id']] = [];
 			}
 			if (count($this->images[$row['product_id']]) < 9)
 				$this->images[$row['product_id']][] = $row['image'];
@@ -798,7 +778,7 @@ class ControllerFeedYandexKP extends Controller {
 		$this->load->model('catalog/product');
 		$this->load->model('tool/image');
 
-		$this->products = array();
+		$this->products = [];
 
 		echoLine('[YML] Сейчас мы будем обновлять цены на Маркете');
 
@@ -952,7 +932,7 @@ class ControllerFeedYandexKP extends Controller {
 			$this->setProducts($products->rows)->addOffers();
 			$this->closeYML()->writeFeed($this->stock_path[0]);
 
-			echoLine('[DIRECT YML] ' . $store_id);
+			echoLine('[ControllerFeedYandexKP::makeStockFeed] Making stock feed for store: ' . $store_id, 'i');
 			$products = $this->makeStockFeedQuery();
 			$this->loadSettings($store_id)->openYML()->addShop()->addCategories()->setFeedType('yandex');										
 			$this->setProducts($products->rows)->addOffers();
@@ -967,11 +947,11 @@ class ControllerFeedYandexKP extends Controller {
 					$assortmentClient = new \Yandex\Market\Partner\Clients\AssortmentClient($this->config->get('config_yam_yandexOauthID'), $this->config->get('config_yam_yandexAccessToken'));
 					$feedID = $assortmentClient->getFeeds($campaignID)->current()->getId();
 
-					echoLine('[YML] Обновление фида ' . $feedID . ' в ' . $campaignID, 'i');
+					echoLine('[ControllerFeedYandexKP::makeStockFeed] Feed updated ' . $feedID . ' @ ' . $campaignID, 's');
 
 					$assortmentClient->refreshFeed($campaignID, $feedID);
 				} catch (\Yandex\Market\Partner\Exception\PartnerRequestException $e){
-					echoLine('[YML] YAM API ERROR: ' . $e->getMessage(), 'e');
+					echoLine('[ControllerFeedYandexKP::makeStockFeed] Got API error: ' . $e->getMessage(), 'e');
 				}
 			}
 
@@ -1019,9 +999,12 @@ class ControllerFeedYandexKP extends Controller {
 			$this->setProductImages();
 
 			$feedsQuery = $this->db->query("SELECT manufacturer_id, priceva_feed FROM manufacturer WHERE priceva_enable = 1 AND TRIM(priceva_feed) <> ''");
-			$feedsArray = array();
+			$feedsArray 		= [];
+			$manufacturersArray = [];
 
 			foreach ($feedsQuery->rows as $feed){
+				$manufacturersArray[] = $feed['manufacturer_id'];
+
 				if (empty($feedsArray[$feed['priceva_feed']])){
 					$feedsArray[$feed['priceva_feed']] = array($feed['manufacturer_id']);
 				} else {
@@ -1030,21 +1013,25 @@ class ControllerFeedYandexKP extends Controller {
 			}
 
 			foreach ($feedsArray as $pricevaFeed => $pricevaManufacturers){	
-
 				foreach ($stores as $store_id){
-					echoLine('[PRICEVA] ' . implode(',', $pricevaManufacturers) . ' ' .  $store_id);
+					echoLine('[ControllerFeedYandexKP::makePricevaFeeds] ' . implode(',', $pricevaManufacturers) . ' ' .  $store_id, 'i');
 					$this->loadSettings($store_id)->openYML()->addShop()->addCategories()->setFeedType('priceva');
 
 					$sql = "SELECT DISTINCT(p.product_id) FROM product p 
 					LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
 					LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
 					WHERE 
-					p.status = 1 
-					AND p.is_virtual = 0
-					AND p.is_markdown = 0
-					AND p.priceva_disable <> 1
-					AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
-					AND p2s.store_id = '" . $this->config->get('config_store_id') . "'";
+					p.status 				= 1 
+					AND p.is_virtual 		= 0
+					AND p.is_markdown 		= 0
+					AND p.priceva_disable 	<> 1";
+
+					if ($this->config->get('config_priceva_only_available')){
+						$sql .= " AND p.stock_status_id NOT IN (" . $this->config->get('config_partly_in_stock_status_id') . ", " . $this->config->get('config_not_in_stock_status_id') . ") ";
+					}
+					
+					$sql .= " AND pd.language_id 		= '" . (int)$this->config->get('config_language_id') . "'
+					AND p2s.store_id 		= '" . $this->config->get('config_store_id') . "'";
 					$sql .= " AND p.manufacturer_id IN (". implode(',', $pricevaManufacturers) .")";
 					$sql .= " AND (p.product_id IN (SELECT product_id FROM category_path cp LEFT JOIN product_to_category p2c ON (cp.category_id = p2c.category_id) WHERE cp.path_id IN (SELECT category_id FROM category WHERE priceva_enable = 1)) OR p.priceva_enable = 1)";
 
@@ -1058,6 +1045,40 @@ class ControllerFeedYandexKP extends Controller {
 						$this->closeYML()->writeFeed(str_replace(['{brand}'], [$pricevaFeed], $this->priceva_path[0]));
 					}					
 				}
+			}
+
+
+			foreach ($stores as $store_id){
+				echoLine('[ControllerFeedYandexKP::makePricevaFeeds] General feed for ' .  $store_id, 'i');
+				$this->loadSettings($store_id)->openYML()->addShop()->addCategories()->setFeedType('priceva');
+
+				$sql = "SELECT DISTINCT(p.product_id) FROM product p 
+				LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
+				LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
+				WHERE 
+				p.status 				= 1 
+				AND p.is_virtual 		= 0
+				AND p.is_markdown 		= 0
+				AND p.priceva_disable 	<> 1";
+
+				if ($this->config->get('config_priceva_only_available')){
+					$sql .= " AND p.stock_status_id NOT IN (" . $this->config->get('config_partly_in_stock_status_id') . ", " . $this->config->get('config_not_in_stock_status_id') . ") ";
+				}
+
+				$sql .= " AND pd.language_id 		= '" . (int)$this->config->get('config_language_id') . "'
+				AND p2s.store_id 		= '" . $this->config->get('config_store_id') . "'";
+				$sql .= " AND p.manufacturer_id IN (". implode(',', $manufacturersArray) .")";
+				$sql .= " AND (p.product_id IN (SELECT product_id FROM category_path cp LEFT JOIN product_to_category p2c ON (cp.category_id = p2c.category_id) WHERE cp.path_id IN (SELECT category_id FROM category WHERE priceva_enable = 1)) OR p.priceva_enable = 1)";
+
+				$products = $this->db->query($sql);	
+
+				$this->setProducts($products->rows)->addPricevaOffers();
+
+				if ($this->config->get('config_priceva_directory_name')){
+					$this->closeYML()->writeFeed(str_replace(['{dir}'], [$pricevaFeed, $this->config->get('config_priceva_directory_name')], $this->priceva_full_path[0]));
+				} else {
+					$this->closeYML()->writeFeed(str_replace(['{brand}'], [$pricevaFeed], $this->priceva_full_path[0]));
+				}	
 			}
 		}
 	}

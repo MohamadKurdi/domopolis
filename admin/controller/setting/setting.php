@@ -4288,6 +4288,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_priceva_directory_name'] = $this->config->get('config_priceva_directory_name');
         }
 
+        if (isset($this->request->post['config_priceva_only_available'])) {
+            $this->data['config_priceva_only_available'] = $this->request->post['config_priceva_only_available'];
+        } else {
+            $this->data['config_priceva_only_available'] = $this->config->get('config_priceva_only_available');
+        }
+
         if (isset($this->request->post['config_priceva_competitor_field_mapping'])) {
             $this->data['config_priceva_competitor_field_mapping'] = $this->request->post['config_priceva_competitor_field_mapping'];
         } else {

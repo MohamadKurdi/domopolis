@@ -321,6 +321,19 @@
 					</td>
 
 					<td width="20%">
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3f6ad8; color:#FFF">Только доступные товары</span></p>
+						<select name="config_priceva_only_available">
+							<?php if ($config_priceva_only_available) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+					</td>
+
+					<td width="20%">
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3f6ad8; color:#FFF">Включить PriceControl</span></p>
 						<select name="config_pricecontrol_enable_api">
 							<?php if ($config_pricecontrol_enable_api) { ?>
