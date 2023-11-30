@@ -16,6 +16,17 @@ class TranslateAdaptor {
 		$this->use($this->config->get('config_translation_library'));
 	}
 
+	public function getTranslateLibraries(){
+		$results = [];
+
+		$libraries = glob(dirname(__FILE__) . '/Translate/*');        
+        foreach ($libraries as $library) {
+            $results[] = pathinfo($library,  PATHINFO_FILENAME);
+        }
+
+        return $results;
+	}
+
 	public function use($translateClass){
 		if (file_exists(DIR_SYSTEM . '/library/hobotix/Translate/' . $translateClass . '.php')){
 			require_once (DIR_SYSTEM . '/library/hobotix/Translate/' . $translateClass . '.php');
@@ -23,7 +34,9 @@ class TranslateAdaptor {
 			$this->translateObject = new $translateClass($this->registry);
 
 			echoLine('[TranslateAdaptor::use] Using ' . $translateClass . ' translation library', 's');			
-		} 		
+		} else {
+			echoLine('[TranslateAdaptor::use] Tried to use ' . $translateClass . ' translation library, but failed', 'e');	
+		}
 
 		return $this;
 	}

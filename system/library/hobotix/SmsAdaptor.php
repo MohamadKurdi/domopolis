@@ -26,6 +26,17 @@ class SmsAdaptor {
 		}
 	}
 
+	public function getSmsGates(){
+		$results = [];
+
+		$smsgates = glob(dirname(__FILE__) . '/SMS/*');        
+        foreach ($smsgates as $smsgate) {
+            $results[] = pathinfo($smsgate,  PATHINFO_FILENAME);
+        }
+
+        return $results;
+	}
+
 	public function getBalance(){
 		if (method_exists($this->smsObject, 'getBalance')){
 			try {
