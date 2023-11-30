@@ -335,6 +335,7 @@ $registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
 $registry->set('courierServices', 	new hobotix\CourierServices($registry));
 $registry->set('checkBoxUA', 		new hobotix\CheckBoxUA($registry));
 $registry->set('Fiscalisation',		new hobotix\Fiscalisation($registry));
+$registry->set('supplierAdaptor',	new hobotix\SupplierAdaptor($registry));
 $registry->set('simpleProcess', 	new hobotix\simpleProcess(['route' => $route, 'config' => $configFile, 'args' => $allArguments], $configFilesPrefix));
 
 $registry->set('customer_group_id', (int)$registry->get('config')->get('config_customer_group_id'));

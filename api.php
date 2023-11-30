@@ -356,6 +356,7 @@ $registry->set('pricevaAdaptor',    new hobotix\PricevaAdaptor($registry));
 $registry->set('courierServices',   new hobotix\CourierServices($registry));
 $registry->set('checkBoxUA',        new hobotix\CheckBoxUA($registry));
 $registry->set('Fiscalisation',     new hobotix\Fiscalisation($registry));
+$registry->set('supplierAdaptor',   new hobotix\SupplierAdaptor($registry));
 
 if ($registry->get('customer')->getTracking()) {
     setcookie('tracking', $registry->get('customer')->getTracking(), time() + 3600 * 24 * 1000, '/');

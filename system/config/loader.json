@@ -36,7 +36,8 @@
 		"/hobotix/MinifyAdaptor",
 		"/hobotix/PhoneValidator",		
 		"/hobotix/CheckBoxUA",
-		"/hobotix/Fiscalisation"
+		"/hobotix/Fiscalisation",
+		"/hobotix/SupplierAdaptor"
 	],
 	"startup_libraries":[
 		"engine/action",

@@ -54,6 +54,7 @@ require_once(DIR_SYSTEM . 'library/user.php');
 require_once(DIR_SYSTEM . 'library/weight.php');
 require_once(DIR_SYSTEM . 'library/length.php');
 require_once(DIR_SYSTEM . 'library/cart.php');
+require_once(DIR_SYSTEM . 'library/template.php');
 require_once(DIR_SYSTEM . 'library/hobotix/Bitrix24.php');
 require_once(DIR_SYSTEM . 'library/hobotix/SmsQueue.php');
 require_once(DIR_SYSTEM . 'library/hobotix/PushQueue.php');
@@ -72,6 +73,7 @@ require_once(DIR_SYSTEM . 'library/hobotix/SimpleProcess.php');
 require_once(DIR_SYSTEM . 'library/hobotix/TranslateAdaptor.php');
 require_once(DIR_SYSTEM . 'library/hobotix/CheckBoxUA.php');		
 require_once(DIR_SYSTEM . 'library/hobotix/Fiscalisation.php');
+require_once(DIR_SYSTEM . 'library/hobotix/SupplierAdaptor.php');
 
 $registry 	= new Registry();
 $loader 	= new Loader($registry);
@@ -193,6 +195,7 @@ $registry->set('url',  				new Url(HTTPS_SERVER, $registry));
 $registry->set('session', 			new Session()); 
 $registry->set('mobileDetect', 		new \Detection\MobileDetect);
 $registry->set('document', 			new Document());
+$registry->set('templateLib',		new Template());
 $registry->set('currency', 			new Currency($registry));
 $registry->set('smsQueue', 			new hobotix\smsQueue($registry)); 	
 $registry->set('smsAdaptor', 		new hobotix\SmsAdaptor($registry));
@@ -214,6 +217,7 @@ $registry->set('translateAdaptor', 	new hobotix\TranslateAdaptor($registry));
 $registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
 $registry->set('checkBoxUA', 		new hobotix\CheckBoxUA($registry));
 $registry->set('Fiscalisation',		new hobotix\Fiscalisation($registry));
+$registry->set('supplierAdaptor',	new hobotix\SupplierAdaptor($registry));
 
 if (!$registry->get('config')->get('config_enable_amazon_specific_modes')){
 	$registry->set('bypass_rainforest_caches_and_settings', true);
