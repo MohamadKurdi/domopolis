@@ -170,7 +170,6 @@
 
 		
 		protected function render() {
-
 			foreach ($this->children as $child) {
 				$this->data[basename($child)] = $this->getChild($child);
 			}						

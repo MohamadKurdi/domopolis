@@ -693,12 +693,7 @@ class ControllerSettingSetting extends Controller
             $this->data['config_zadarma_secret_key'] = $this->config->get('config_zadarma_secret_key');
         }
 
-        $this->data['smsgates'] = [];
-
-        $smsgates = glob(DIR_SYSTEM . '/library/hobotix/SMS/*');        
-        foreach ($smsgates as $smsgate) {
-            $this->data['smsgates'][] = pathinfo($smsgate,  PATHINFO_FILENAME);
-        }
+        $this->data['smsgates'] = $this->smsAdaptor->getSmsGates();
 
         if (isset($this->request->post['config_smsgate_library'])) {
             $this->data['config_smsgate_library'] = $this->request->post['config_smsgate_library'];
@@ -812,12 +807,7 @@ class ControllerSettingSetting extends Controller
             $this->data['config_template'] = $this->config->get('config_template');
         }
         
-        $this->data['templates'] = [];
-        
-        $directories = glob(DIR_CATALOG . 'view/theme/*', GLOB_ONLYDIR);        
-        foreach ($directories as $directory) {
-            $this->data['templates'][] = basename($directory);
-        }
+        $this->data['templates'] = $this->templateLib->getTemplates();               
         
         if (isset($this->request->post['config_country_id'])) {
             $this->data['config_country_id'] = $this->request->post['config_country_id'];
@@ -4431,12 +4421,7 @@ class ControllerSettingSetting extends Controller
             $this->data['config_helpcrunch_send_auth_data'] = $this->config->get('config_helpcrunch_send_auth_data');
         }
 
-        $this->data['translategates'] = [];
-
-        $translategates = glob(DIR_SYSTEM . '/library/hobotix/Translate/*');        
-        foreach ($translategates as $translategate) {
-            $this->data['translategates'][] = pathinfo($translategate,  PATHINFO_FILENAME);
-        }
+        $this->data['translategates'] = $this->translateAdaptor->getTranslateLibraries();
 
         if (isset($this->request->post['config_translate_api_enable'])) {
             $this->data['config_translate_api_enable'] = $this->request->post['config_translate_api_enable'];

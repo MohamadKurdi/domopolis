@@ -7,6 +7,16 @@ function removeEOLS($s){
 	return $s;
 }
 
+function removeLeftGT($s){
+	$s = trim($s);
+
+	if (mb_substr($s, 0, 4) == '&gt;'){
+		$s = mb_substr($s, 4);
+	}
+
+	return trim($s);
+}	
+
 function reparseEOLSToSlash($st){			
 	$ste = explode(PHP_EOL, $st);
 
