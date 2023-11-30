@@ -1,4 +1,45 @@
 <?php echo $header; ?>
+<style>
+    .red{
+        background-color:#ef5e67;
+    }
+    .orange{
+        background-color:#ff7f00;
+    }
+    .green{
+        background-color:#00ad07;
+    }    
+    .black{
+         background-color:#353740;
+    }
+
+    .text-red{
+        color:#ef5e67;
+    }
+    .text-orange{
+        color:#ff7f00;
+    }
+    .text-green{
+        color:#00ad07;
+    }
+
+    input.process, textarea.process{
+        border:2px solid #ff7f00;
+        background-color: #ead985;
+    }
+    input.finished, textarea.finished{
+        border:2px solid #00ad07;
+        background-color: #e9ece6;
+    }
+
+    span.smallbutton{
+        padding:3px 5px;
+        display:inline-block;
+        margin-right:10px;
+        color:white;
+        cursor:pointer;
+    }
+</style>
 <div id="content">
 	<div class="breadcrumb">
 		<?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -20,10 +61,18 @@
 				<?php } ?>
 				<a onclick="$('#form').submit();" class="button"><?php echo $button_save; ?></a>
 				<a href="<?php echo $cancel; ?>" class="button"><?php echo $button_cancel; ?></a>
-			</div>
+			</div>			
 		</div>
-		<div class="content">
-			<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
+		<div class="content">		
+				<div id="tabs" class="htabs">
+					<a href="#tab-info"><i class="fa fa-info"></i> Поставщик</a>
+					<a href="#tab-categories"><i class="fa fa-refresh"></i> Сопоставление категорий парсера <?php if (!empty($supplier_categories_total)) { ?>(<?php echo $supplier_categories_total; ?>)<?php } ?></a>		
+					<div class="clr"></div>
+				</div>
+				<div class="th_style"></div>
+
+			<div id="tab-info">
+				<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
 				<div style="width:100%;">
 					<table class="form">
 						<tr>
@@ -273,12 +322,152 @@
 							</td>
 						</tr>
 					</table>
+
+					<h2>Фид, парсер</h2>
+					<table class="form">
+						<tr>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Фид данных</span></td>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Библиотека разбора</span></td>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Обновлять наличие</span></td>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Обновлять цену</span></td>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Загрузить категории</span></td>
+						</tr>
+						<tr>
+							<td>
+								<textarea name="path_to_feed" style="width:90%" rows="2"><?php echo $path_to_feed; ?></textarea>
+							</td>
+							<td>
+								<select name="parser">	
+									<option value="">Нету библиотеки</option>
+									<?php foreach ($parser_libraries as $parser_library) { ?>
+										<?php if ($parser_library == $parser) { ?>
+											<option value="<?php echo $parser_library; ?>" selected="selected"><?php echo $parser_library; ?></option>
+										<?php } else { ?>
+											<option value="<?php echo $parser_library; ?>"><?php echo $parser_library; ?></option>
+										<?php } ?>
+									<?php } ?>				
+								</select>
+							</td>
+							<td>
+								<select name="stock">
+									<?php if ($stock) { ?>
+										<option value="1" selected="selected">Включить</option>
+										<option value="0">Отключить</option>
+									<?php } else { ?>													
+										<option value="1">Включить</option>
+										<option value="0"  selected="selected">Отключить</option>
+									<? } ?>
+								</select>
+							</td>
+							<td>
+								<select name="prices">
+									<?php if ($prices) { ?>
+										<option value="1" selected="selected">Включить</option>
+										<option value="0">Отключить</option>
+									<?php } else { ?>													
+										<option value="1">Включить</option>
+										<option value="0"  selected="selected">Отключить</option>
+									<? } ?>
+								</select>
+							</td>
+							<td>
+								<a class="button" href="<?php echo $update_categories; ?>">Загрузить или обновить</a>
+							</td>
+						</tr>
+					</table>
+
 				</div>
 				<div style="clear:both;"></div>
-			</form>
+				</form>
+			</div>	
+
+			<div id="tab-categories">
+				<table class="list">
+					<?php foreach ($supplier_categories as $supplier_category) { ?>
+						<tr>
+							<td class="left" style="font-size:20px; width:400px;">
+								<?php echo $supplier_category['supplier_category']; ?>
+							</td>
+							<td class="left" style="padding:5px;">
+								<div>
+									<input type="text" style="width:95%;" class="supplier_category_autocomplete" data-supplier-category-id="<?php echo $supplier_category['supplier_category_id']; ?>" id="category_<?php echo $supplier_category['supplier_category_id']; ?>" value="<?php echo $supplier_category['path']; ?>" placeholder="Автоподбор" />			
+									<input type="hidden" class="supplier_category_id" id="category_id_<?php echo $supplier_category['supplier_category_id']; ?>" data-supplier-category-id="<?php echo $supplier_category['supplier_category_id']; ?>" value="<?php echo $supplier_category['category_id']; ?>">								
+								</div>
+								<div style="text-align:left;">
+									<?php if ($supplier_category['guessed']) { ?>
+										<?php foreach ($supplier_category['guessed'] as $guessed) { ?>
+											<span style="border-bottom:1px dashed grey; cursor:pointer; margin-right:10px; font-size:10px;" onclick="$('#category_id_<?php echo $supplier_category['supplier_category_id']; ?>').val('<?php echo $guessed['category_id']; ?>').trigger('change'); $('#category_<?php echo $supplier_category['supplier_category_id']; ?>').val('<?php echo $guessed['name']; ?>'); ">
+												<?php echo $guessed['name']; ?>
+											</span>
+										<?php } ?>
+									<?php } ?>
+								</div>
+							</td>
+							<td class="right" style="padding:5px; width:50px;">
+								<a class="button" onclick="$('#category_id_<?php echo $supplier_category['supplier_category_id']; ?>').val('').trigger('change'); $('#category_<?php echo $supplier_category['supplier_category_id']; ?>').val(''); return false;"><i class="fa fa-times"></i></a>
+							</td>
+						</tr>
+					<?php } ?>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+	$('.supplier_category_id').on('change', function(){save($(this))});			
+
+	function save(elem){
+        let supplier_category_id  	= elem.attr('data-supplier-category-id');
+        let category_id 			= elem.val();        
+
+        $.ajax({
+            url : 'index.php?route=sale/supplier/category&token=<?php echo $token; ?>',
+            data: {
+                supplier_category_id: supplier_category_id,
+                category_id:    	  category_id,
+            },
+            type: 'POST',
+            beforeSend: function(){
+                $('#category_' + supplier_category_id).removeClass('process, finished').addClass('finished');
+            },
+            success: function(){
+                $('#category_' + supplier_category_id).removeClass('process, finished').addClass('finished');
+            }
+        });
+    }
+
+	$('.supplier_category_autocomplete').each(function(index, elem){
+		elem = $(this);
+		elem.autocomplete({
+			delay: 500,
+			source: function(request, response) {		
+				$.ajax({
+					url: 'index.php?route=catalog/category/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+					dataType: 'json',
+					success: function(json) {				
+						response($.map(json, function(item) {
+							return {
+								label: item.name,
+								value: item.category_id
+							}
+						}));
+					}
+				});
+			},
+			select: function(event, ui) {
+				elem.val(ui.item.label);
+				$('#category_id_' + elem.attr('data-supplier-category-id')).val(ui.item.value).trigger('change');
+
+				return false;
+			},
+			focus: function(event, ui) {
+				return false;
+			}
+		});
+	});
+
+</script> 
+
 <script type="text/javascript">
 	$('input[name=\'supplier_parent\']').autocomplete({
 		delay: 500,
@@ -312,4 +501,7 @@
 		}
 	});
 </script> 
+<script type="text/javascript">
+		$('#tabs a').tabs();
+	</script> 
 <?php echo $footer; ?>

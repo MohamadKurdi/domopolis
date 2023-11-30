@@ -89,7 +89,10 @@
 							<td class="left">Мейл</td>
 							<td class="left">Хороший</td>
 							<td class="left">Плохой</td>
-							<td class="left">Коэффициент</td>
+							<td class="left">Коэфф</td>
+							<td class="left">Фид</td>
+							<td class="left">Нал</td>
+							<td class="left">Цены</td>
 							<td class="right">
 								<?php if ($sort == 'sort_order') { ?>
 								<a href="<?php echo $sort_sort_order; ?>" class="<?php echo strtolower($order); ?>">Сортировка</a>
@@ -165,9 +168,9 @@
 											<? } ?>
 										</td>
 
-										<td class="left" style="font-size:11px;">
+										<td class="center">
 											<? if ($supplier['business_name']) { ?>
-												<?php echo $supplier['business_name']; ?>
+												<small><?php echo $supplier['business_name']; ?></small>
 											<? } else { ?>
 												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 											<? } ?>
@@ -199,17 +202,17 @@
 
 										<td class="center" style="padding:8px;">
 											<? if ($supplier['amzn_good']) { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Хороший</span>
+												<i class="fa fa-check-circle" style="color:#00AD07"></i>
 											<? } else { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Нейтральный</span>
+												<i class="fa fa-question-circle" style="color:#ff7815"></i>
 											<? } ?>
 										</td>
 
 										<td class="center" style="padding:8px;">
 											<? if ($supplier['amzn_bad']) { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Плохой</span>
+												<i class="fa fa-exclamation-circle" style="color:#cf4a61"></i>
 											<? } else { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Нейтральный</span>
+												<i class="fa fa-question-circle" style="color:#ff7815"></i>
 											<? } ?>
 										</td>												
 
@@ -219,8 +222,34 @@
 											</span>
 										</td>
 
-										<td class="right">
-											<?php echo $supplier['sort_order']; ?>
+										<td class="center" style="padding:8px; width:100px;">
+											<? if ($supplier['path_to_feed']) { ?>
+												<small><?php echo $supplier['path_to_feed']; ?></small>
+											<? } else { ?>
+												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+											<? } ?>
+										</td>	
+
+										<td class="center" style="padding:8px;">
+											<? if ($supplier['stock']) { ?>
+												<i class="fa fa-check-circle" style="color:#00AD07"></i>
+											<? } else { ?>
+												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+											<? } ?>
+										</td>
+
+										<td class="center" style="padding:8px;">
+											<? if ($supplier['prices']) { ?>
+												<i class="fa fa-check-circle" style="color:#00AD07"></i>
+											<? } else { ?>
+												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+											<? } ?>
+										</td>
+
+										<td class="center">
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:black; color:#FFF">
+												<?php echo $supplier['sort_order']; ?>
+											</span>
 										</td>
 
 										<td class="right" width="110px">

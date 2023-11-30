@@ -31,7 +31,11 @@ class ModelSaleSupplier extends Model {
 		is_native 				= '" . (int)$data['is_native'] . "',
 		rating50 				= '" . (int)$data['rating50'] . "',
 		ratings_total 			= '" . (int)$data['ratings_total'] . "',
-		positive_ratings100 	= '" . (int)$data['positive_ratings100'] . "'");
+		positive_ratings100 	= '" . (int)$data['positive_ratings100'] . "',
+		path_to_feed 			= '" . $this->db->escape($data['path_to_feed']) . "',
+		parser 					= '" . $this->db->escape($data['parser']) . "',
+		stock 					= '" . (int)$data['stock'] . "',
+		prices 					= '" . (int)$data['prices'] . "'");
 		
 		$supplier_id = $this->db->getLastId();
 		
@@ -69,7 +73,11 @@ class ModelSaleSupplier extends Model {
 		is_native 				= '" . (int)$data['is_native'] . "',
 		rating50 				= '" . (int)$data['rating50'] . "',
 		ratings_total 			= '" . (int)$data['ratings_total'] . "',
-		positive_ratings100 	= '" . (int)$data['positive_ratings100'] . "'
+		positive_ratings100 	= '" . (int)$data['positive_ratings100'] . "',
+		path_to_feed 			= '" . $this->db->escape($data['path_to_feed']) . "',
+		parser 					= '" . $this->db->escape($data['parser']) . "',
+		stock 					= '" . (int)$data['stock'] . "',
+		prices 					= '" . (int)$data['prices'] . "'
 		WHERE supplier_id = '" . (int)$supplier_id . "'");				
 	}
 	
@@ -97,6 +105,34 @@ class ModelSaleSupplier extends Model {
 		} else {
 			return false;			
 		}
+	}
+
+	public function tryToGuessCategory($name) {
+		$this->load->model('catalog/category');
+
+		$data = [
+			'filter_name_extended' 	=> $name,
+			'start' 				=> 0,
+			'limit' 				=> 5
+		];
+
+		return $this->model_catalog_category->getCategories($data);
+	}
+
+	public function getSupplierCategories($supplier_id) {
+		$query = $this->db->query("SELECT * FROM supplier_categories WHERE supplier_id = '" . (int)$supplier_id . "'");
+
+		return $query->rows;
+	}
+
+	public function getTotalSupplierCategories($supplier_id) {
+		$query = $this->db->query("SELECT COUNT(*) as total FROM supplier_categories WHERE supplier_id = '" . (int)$supplier_id . "'");
+
+		return $query->row['total'];
+	}
+
+	public function updateSupplierCategory($supplier_category_id, $category_id) {
+		$query = $this->db->query("UPDATE supplier_categories SET category_id = '" . (int)$category_id . "' WHERE supplier_category_id = '" . (int)$supplier_category_id . "'");		
 	}
 
 	public function getTotalSellerOffers($data = []){

@@ -570,7 +570,20 @@ class ModelCatalogCategory extends Model {
 	
 	public function getCategory($category_id) {
 		$query = $this->db->query("SELECT DISTINCT *, 
-			(SELECT GROUP_CONCAT(cd1.name ORDER BY level SEPARATOR ' &gt; ') FROM category_path cp LEFT JOIN category_description cd1 ON (cp.path_id = cd1.category_id AND cp.category_id != cp.path_id) WHERE cp.category_id = c.category_id AND cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY cp.category_id) AS path, (SELECT cd1.name FROM category_description cd1 WHERE cd1.category_id = c.virtual_parent_id AND cd1.language_id = '2' ) AS virtual_path FROM category c LEFT JOIN category_description cd2 ON (c.category_id = cd2.category_id) WHERE c.category_id = '" . (int)$category_id . "' AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'");				
+			(SELECT GROUP_CONCAT(cd1.name ORDER BY level SEPARATOR ' &gt; ') FROM category_path cp 
+			LEFT JOIN category_description cd1 ON (cp.path_id = cd1.category_id AND cp.category_id != cp.path_id) 
+			WHERE cp.category_id = c.category_id 
+			AND cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+			GROUP BY cp.category_id) AS path, 
+			(SELECT cd1.name FROM category_description cd1 WHERE cd1.category_id = c.virtual_parent_id AND cd1.language_id = '2' ) AS virtual_path 
+			FROM category c LEFT JOIN category_description cd2 ON (c.category_id = cd2.category_id) 
+			WHERE c.category_id = '" . (int)$category_id . "' 
+			AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'");	
+
+		if ($query->row){
+			$query->row['path'] = removeLeftGT($query->row['path']);		
+			$query->row['name'] = removeLeftGT($query->row['name']);
+		}
 			
 		return $query->row;
 	} 
@@ -615,12 +628,13 @@ class ModelCatalogCategory extends Model {
 		c.hotline_category_name,
 		c.yandex_category_name,
 		cd2.menu_name, 
-		cd2.alternate_name, 
+		cd2.alternate_name,
+		cd1.name as simple_name, 
 		c.parent_id, 
 		c.sort_order,
 		(SELECT menu_icon FROM category c4 WHERE c4.category_id = cp.category_id) as menu_icon, 
 		(SELECT image FROM category c5 WHERE c5.category_id = cp.category_id) as image, 
-		GROUP_CONCAT(cd1.name ORDER BY cp.level SEPARATOR ' &gt; ') AS name 
+		GROUP_CONCAT(cd1.name ORDER BY cp.level SEPARATOR ' &gt; ') AS name
 		FROM category_path cp 
 		LEFT JOIN category c ON (cp.path_id = c.category_id) 
 		LEFT JOIN category_description cd1 ON (c.category_id = cd1.category_id) 
@@ -629,7 +643,11 @@ class ModelCatalogCategory extends Model {
 		AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 		
 		if (!empty($data['filter_name'])) {
-			$sql .= " AND cd2.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+			$sql .= " AND LOWER(cd2.name) LIKE '" . $this->db->escape(mb_strtolower($data['filter_name'])) . "%'";
+		}
+
+		if (!empty($data['filter_name_extended'])) {
+			$sql .= " AND (LOWER(cd2.name) LIKE '%" . $this->db->escape(mb_strtolower($data['filter_name_extended'])) . "%')";
 		}
 
 		if (isset($data['filter_parent_id'])) {
