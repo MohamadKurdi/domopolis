@@ -539,30 +539,65 @@
 				</td>
 
 				<td style="width:20%">
-					<div>
-						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Отключать пустые категории</span></p>
-						<select type="select" name="config_disable_empty_categories">
-							<? if ($config_disable_empty_categories) { ?>
-								<option value="1" selected='selected' >Включить</option>
-								<option value="0" >Отключить</option>
-							<? } else { ?>
-								<option value="1" >Включить</option>
-								<option value="0"  selected='selected' >Отключить</option>
-							<? } ?>       
-						</select>										
+					<div style="padding:10px; border:1px dashed grey;">
+						<div>
+							<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Отключать пустые категории</span></p>
+							<select type="select" name="config_disable_empty_categories">
+								<? if ($config_disable_empty_categories) { ?>
+									<option value="1" selected='selected' >Включить</option>
+									<option value="0" >Отключить</option>
+								<? } else { ?>
+									<option value="1" >Включить</option>
+									<option value="0"  selected='selected' >Отключить</option>
+								<? } ?>       
+							</select>										
+						</div>
+						<div>
+							<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включать не-пустые категории</span></p>
+							<select type="select" name="config_enable_non_empty_categories">
+								<? if ($config_enable_non_empty_categories) { ?>
+									<option value="1" selected='selected' >Включить</option>
+									<option value="0" >Отключить</option>
+								<? } else { ?>
+									<option value="1" >Включить</option>
+									<option value="0"  selected='selected' >Отключить</option>
+								<? } ?>       
+							</select>										
+						</div>
+					</div>		
+
+					<div style="padding:10px; border:1px dashed grey; margin-top:10px;">	
+						<div>		
+							<p>
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Удалять скидки не на складе</span>
+							</p>
+							<select type="select" name="config_drop_special_prices_not_in_warehouses">
+								<? if ($config_drop_special_prices_not_in_warehouses) { ?>
+									<option value="1" selected='selected' >Включить</option>
+									<option value="0" >Отключить</option>
+								<? } else { ?>
+									<option value="1" >Включить</option>
+									<option value="0"  selected='selected' >Отключить</option>
+								<? } ?>       
+							</select>
+							<br />
+							<span class="help">Сбрасывать скидки для товаров не в наличии на локальном складе</span>			
+						</div>
+						<div>
+							<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Восстанавливать скидку</span></p>
+							<select type="select" name="config_restore_special_prices_not_in_warehouses">
+								<? if ($config_restore_special_prices_not_in_warehouses) { ?>
+									<option value="1" selected='selected' >Включить</option>
+									<option value="0" >Отключить</option>
+								<? } else { ?>
+									<option value="1" >Включить</option>
+									<option value="0"  selected='selected' >Отключить</option>
+								<? } ?>       
+							</select>	
+							<br />
+							<span class="help">Если товар появился в наличии, восстановить скидку</span>	
+						</div>
 					</div>
-					<div>
-						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включать не-пустые категории</span></p>
-						<select type="select" name="config_enable_non_empty_categories">
-							<? if ($config_enable_non_empty_categories) { ?>
-								<option value="1" selected='selected' >Включить</option>
-								<option value="0" >Отключить</option>
-							<? } else { ?>
-								<option value="1" >Включить</option>
-								<option value="0"  selected='selected' >Отключить</option>
-							<? } ?>       
-						</select>										
-					</div>				
 				</td>
 
 				<td style="width:18%">

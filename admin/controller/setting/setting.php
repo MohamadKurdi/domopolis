@@ -3134,6 +3134,24 @@ class ControllerSettingSetting extends Controller
             $this->data['config_vk_add_feed_for_category_id_2'] = $this->config->get('config_vk_add_feed_for_category_id_2');
         }
 
+        if (isset($this->request->post['config_vk_ignore_general_brand_exclusion_for_category_id_0'])) {
+            $this->data['config_vk_ignore_general_brand_exclusion_for_category_id_0'] = $this->request->post['config_vk_ignore_general_brand_exclusion_for_category_id_0'];
+        } else {
+            $this->data['config_vk_ignore_general_brand_exclusion_for_category_id_0'] = $this->config->get('config_vk_ignore_general_brand_exclusion_for_category_id_0');
+        }
+
+        if (isset($this->request->post['config_vk_ignore_general_brand_exclusion_for_category_id_1'])) {
+            $this->data['config_vk_ignore_general_brand_exclusion_for_category_id_1'] = $this->request->post['config_vk_ignore_general_brand_exclusion_for_category_id_1'];
+        } else {
+            $this->data['config_vk_ignore_general_brand_exclusion_for_category_id_1'] = $this->config->get('config_vk_ignore_general_brand_exclusion_for_category_id_1');
+        }
+
+        if (isset($this->request->post['config_vk_ignore_general_brand_exclusion_for_category_id_2'])) {
+            $this->data['config_vk_ignore_general_brand_exclusion_for_category_id_2'] = $this->request->post['config_vk_ignore_general_brand_exclusion_for_category_id_2'];
+        } else {
+            $this->data['config_vk_ignore_general_brand_exclusion_for_category_id_2'] = $this->config->get('config_vk_ignore_general_brand_exclusion_for_category_id_2');
+        }
+
         if (isset($this->request->post['config_vk_pixel_header'])) {
             $this->data['config_vk_pixel_header'] = $this->request->post['config_vk_pixel_header'];
         } else {

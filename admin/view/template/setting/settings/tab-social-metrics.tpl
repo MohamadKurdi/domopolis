@@ -294,24 +294,67 @@
 				</td>
 
 				<td style="width:25%">
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Специальная категория - 1</span></p>
-					<input type="number" step="1" name="config_vk_add_feed_for_category_id_0" value="<?php echo $config_vk_add_feed_for_category_id_0; ?>" size="30" style="width:250px;" />
-					<br />
-					<span class="help">будет создан дополнительно фид из товаров только этой категории</span>
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Специальная категория - 1</span></p>
+						<input type="number" step="1" name="config_vk_add_feed_for_category_id_0" value="<?php echo $config_vk_add_feed_for_category_id_0; ?>" size="30" style="width:250px;" />
+						<br />
+						<span class="help">будет создан дополнительно фид из товаров только этой категории</span>
+					</div>
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Игнорировать выборку брендов</span></p>
+						<select name="config_vk_ignore_general_brand_exclusion_for_category_id_0">
+							<?php if ($config_vk_ignore_general_brand_exclusion_for_category_id_0) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>                                                   
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+					</div>
 				</td>
 
 				<td style="width:25%">
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Специальная категория - 2</span></p>
-					<input type="number" step="1" name="config_vk_add_feed_for_category_id_1" value="<?php echo $config_vk_add_feed_for_category_id_1; ?>" size="30" style="width:250px;" />
-					<br />
-					<span class="help">будет создан дополнительно фид из товаров только этой категории</span>
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Специальная категория - 2</span></p>
+						<input type="number" step="1" name="config_vk_add_feed_for_category_id_1" value="<?php echo $config_vk_add_feed_for_category_id_1; ?>" size="30" style="width:250px;" />
+						<br />
+						<span class="help">будет создан дополнительно фид из товаров только этой категории</span>
+
+					</div>
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Игнорировать выборку брендов</span></p>
+						<select name="config_vk_ignore_general_brand_exclusion_for_category_id_1">
+							<?php if ($config_vk_ignore_general_brand_exclusion_for_category_id_1) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>                                                   
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+					</div>
 				</td>
 
 				<td style="width:25%">
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Специальная категория - 3</span></p>
-					<input type="number" step="1" name="config_vk_add_feed_for_category_id_2" value="<?php echo $config_vk_add_feed_for_category_id_2; ?>" size="30" style="width:250px;" />
-					<br />
-					<span class="help">будет создан дополнительно фид из товаров только этой категории</span>
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Специальная категория - 3</span></p>
+						<input type="number" step="1" name="config_vk_add_feed_for_category_id_2" value="<?php echo $config_vk_add_feed_for_category_id_2; ?>" size="30" style="width:250px;" />
+						<br />
+						<span class="help">будет создан дополнительно фид из товаров только этой категории</span>
+					</div>
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Игнорировать выборку брендов</span></p>
+						<select name="config_vk_ignore_general_brand_exclusion_for_category_id_2">
+							<?php if ($config_vk_ignore_general_brand_exclusion_for_category_id_2) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>                                                   
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+					</div>
 				</td>
 			</tr>       
 		</table>
