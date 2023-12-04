@@ -91,6 +91,8 @@
 							<td class="left">Плохой</td>
 							<td class="left">Коэфф</td>
 							<td class="left">Фид</td>
+							<td class="left">РРЦ</td>
+							<td class="left">Парсер</td>
 							<td class="left">Нал</td>
 							<td class="left">Цены</td>
 							<td class="right">
@@ -225,6 +227,29 @@
 										<td class="center" style="padding:8px; width:100px;">
 											<? if ($supplier['path_to_feed']) { ?>
 												<small><?php echo $supplier['path_to_feed']; ?></small>
+											<? } else { ?>
+												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+											<? } ?>
+										</td>	
+
+										<td class="center" style="padding:8px; width:100px;">
+											<? if ($supplier['rrp_in_feed']) { ?>
+												<i class="fa fa-check-circle" style="color:#00AD07"></i>
+											<? } else { ?>
+												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+											<? } ?>
+										</td>
+
+										<td class="center" style="padding:8px; width:100px;">
+											<? if ($supplier['parser']) { ?>												
+												<small><?php echo $supplier['parser']; ?></small>
+
+												<?php if ($supplier['parser_status']) { ?>
+													<i class="fa fa-check-circle" style="color:#00AD07"></i>
+												<?php } else { ?>
+													<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+												<?php } ?>
+
 											<? } else { ?>
 												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 											<? } ?>

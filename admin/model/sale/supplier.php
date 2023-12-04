@@ -33,7 +33,10 @@ class ModelSaleSupplier extends Model {
 		ratings_total 			= '" . (int)$data['ratings_total'] . "',
 		positive_ratings100 	= '" . (int)$data['positive_ratings100'] . "',
 		path_to_feed 			= '" . $this->db->escape($data['path_to_feed']) . "',
+		rrp_in_feed 			= '" . (int)$data['rrp_in_feed'] . "',
 		parser 					= '" . $this->db->escape($data['parser']) . "',
+		currency 				= '" . $this->db->escape($data['currency']) . "',
+		parser_status 			= '" . (int)$data['parser_status'] . "',
 		stock 					= '" . (int)$data['stock'] . "',
 		prices 					= '" . (int)$data['prices'] . "'");
 		
@@ -76,6 +79,9 @@ class ModelSaleSupplier extends Model {
 		positive_ratings100 	= '" . (int)$data['positive_ratings100'] . "',
 		path_to_feed 			= '" . $this->db->escape($data['path_to_feed']) . "',
 		parser 					= '" . $this->db->escape($data['parser']) . "',
+		currency 				= '" . $this->db->escape($data['currency']) . "',
+		rrp_in_feed 			= '" . (int)$data['rrp_in_feed'] . "',
+		parser_status 			= '" . (int)$data['parser_status'] . "',
 		stock 					= '" . (int)$data['stock'] . "',
 		prices 					= '" . (int)$data['prices'] . "'
 		WHERE supplier_id = '" . (int)$supplier_id . "'");				
@@ -133,6 +139,10 @@ class ModelSaleSupplier extends Model {
 
 	public function updateSupplierCategory($supplier_category_id, $category_id) {
 		$query = $this->db->query("UPDATE supplier_categories SET category_id = '" . (int)$category_id . "' WHERE supplier_category_id = '" . (int)$supplier_category_id . "'");		
+	}
+
+	public function updateSupplierCategoryField($supplier_category_id, $field, $value) {
+		$query = $this->db->query("UPDATE supplier_categories SET `" . $this->db->escape($field) . "` = '" . (int)$value . "' WHERE supplier_category_id = '" . (int)$supplier_category_id . "'");		
 	}
 
 	public function getTotalSellerOffers($data = []){

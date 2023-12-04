@@ -327,10 +327,13 @@
 					<table class="form">
 						<tr>
 							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Фид данных</span></td>
-							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Библиотека разбора</span></td>
-							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Обновлять наличие</span></td>
-							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Обновлять цену</span></td>
-							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Загрузить категории</span></td>
+							<td width="15%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Библиотека разбора</span></td>
+							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Парсить</span></td>
+							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">В фиде РРЦ</span></td>
+							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Обновлять наличие</span></td>
+							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Обновлять цену</span></td>
+							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Валюта</span></td>
+							<td width="15%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Загрузить категории</span></td>
 						</tr>
 						<tr>
 							<td>
@@ -346,6 +349,28 @@
 											<option value="<?php echo $parser_library; ?>"><?php echo $parser_library; ?></option>
 										<?php } ?>
 									<?php } ?>				
+								</select>
+							</td>
+							<td>
+								<select name="parser_status">
+									<?php if ($parser_status) { ?>
+										<option value="1" selected="selected">Включить</option>
+										<option value="0">Отключить</option>
+									<?php } else { ?>													
+										<option value="1">Включить</option>
+										<option value="0"  selected="selected">Отключить</option>
+									<? } ?>
+								</select>
+							</td>
+							<td>
+								<select name="rrp_in_feed">
+									<?php if ($rrp_in_feed) { ?>
+										<option value="1" selected="selected">Включить</option>
+										<option value="0">Отключить</option>
+									<?php } else { ?>													
+										<option value="1">Включить</option>
+										<option value="0"  selected="selected">Отключить</option>
+									<? } ?>
 								</select>
 							</td>
 							<td>
@@ -371,7 +396,10 @@
 								</select>
 							</td>
 							<td>
-								<a class="button" href="<?php echo $update_categories; ?>">Загрузить или обновить</a>
+								<input type="text" name="currency" value="<?php echo $currency; ?>" style="width:50px"/>
+							</td>
+							<td>
+								<a class="button" href="<?php echo $update_categories; ?>">Загрузить</a>
 							</td>
 						</tr>
 					</table>
@@ -383,6 +411,13 @@
 
 			<div id="tab-categories">
 				<table class="list">
+					<tr>
+						<td class="left">Поставщик</td>
+						<td class="left">Магазин</td>
+						<td class="left">Товары</td>
+						<td class="left">Наличие</td>
+						<td class="left">Цены</td>						
+					</tr>
 					<?php foreach ($supplier_categories as $supplier_category) { ?>
 						<tr>
 							<td class="left" style="font-size:20px; width:400px;">
@@ -391,7 +426,9 @@
 							<td class="left" style="padding:5px;">
 								<div>
 									<input type="text" style="width:95%;" class="supplier_category_autocomplete" data-supplier-category-id="<?php echo $supplier_category['supplier_category_id']; ?>" id="category_<?php echo $supplier_category['supplier_category_id']; ?>" value="<?php echo $supplier_category['path']; ?>" placeholder="Автоподбор" />			
-									<input type="hidden" class="supplier_category_id" id="category_id_<?php echo $supplier_category['supplier_category_id']; ?>" data-supplier-category-id="<?php echo $supplier_category['supplier_category_id']; ?>" value="<?php echo $supplier_category['category_id']; ?>">								
+									<input type="hidden" class="supplier_category_id" id="category_id_<?php echo $supplier_category['supplier_category_id']; ?>" data-field="category_id"  data-supplier-category-id="<?php echo $supplier_category['supplier_category_id']; ?>" value="<?php echo $supplier_category['category_id']; ?>">
+
+									<a class="button" onclick="$('#category_id_<?php echo $supplier_category['supplier_category_id']; ?>').val('').trigger('change'); $('#category_<?php echo $supplier_category['supplier_category_id']; ?>').val(''); return false;"><i class="fa fa-times"></i></a>								
 								</div>
 								<div style="text-align:left;">
 									<?php if ($supplier_category['guessed']) { ?>
@@ -403,8 +440,17 @@
 									<?php } ?>
 								</div>
 							</td>
-							<td class="right" style="padding:5px; width:50px;">
-								<a class="button" onclick="$('#category_id_<?php echo $supplier_category['supplier_category_id']; ?>').val('').trigger('change'); $('#category_<?php echo $supplier_category['supplier_category_id']; ?>').val(''); return false;"><i class="fa fa-times"></i></a>
+							<td class="center" style="padding:5px; width:50px;">
+								<input class="supplier_category_checkbox checkbox" data-field="products" data-supplier-category-id="<?php echo $supplier_category['supplier_category_id']; ?>" id="products_<?php echo $supplier_category['supplier_category_id']; ?>" type="checkbox" name="products_<?php echo $supplier_category['supplier_category_id']; ?>" <? if ($supplier_category['products']){ ?> checked="checked" <? } ?> value="1" />
+								<label for="products_<?php echo $supplier_category['supplier_category_id']; ?>"></label>
+							</td>
+							<td class="center" style="padding:5px; width:50px;">
+								<input class="supplier_category_checkbox checkbox" data-field="stocks" data-supplier-category-id="<?php echo $supplier_category['supplier_category_id']; ?>" id="stocks_<?php echo $supplier_category['supplier_category_id']; ?>" type="checkbox" name="stocks_<?php echo $supplier_category['supplier_category_id']; ?>" <? if ($supplier_category['stocks']){ ?> checked="checked" <? } ?> value="1" />
+								<label for="stocks_<?php echo $supplier_category['supplier_category_id']; ?>"></label>
+							</td>
+							<td class="center" style="padding:5px; width:50px;">
+								<input class="supplier_category_checkbox checkbox" data-field="prices" data-supplier-category-id="<?php echo $supplier_category['supplier_category_id']; ?>" id="prices_<?php echo $supplier_category['supplier_category_id']; ?>" type="checkbox" name="prices_<?php echo $supplier_category['supplier_category_id']; ?>" <? if ($supplier_category['prices']){ ?> checked="checked" <? } ?> value="1" />
+								<label for="prices_<?php echo $supplier_category['supplier_category_id']; ?>"></label>
 							</td>
 						</tr>
 					<?php } ?>
@@ -414,24 +460,42 @@
 	</div>
 </div>
 <script type="text/javascript">
-	$('.supplier_category_id').on('change', function(){save($(this))});			
+	$('input[type=checkbox], input[type=hidden]').bind('change', function(){save($(this)); });			
 
 	function save(elem){
         let supplier_category_id  	= elem.attr('data-supplier-category-id');
-        let category_id 			= elem.val();        
+        let field 					= elem.attr('data-field');
+        let value 					= elem.val();   
+
+        if (elem.attr('type') == 'checkbox'){
+        	if (elem.attr('checked')){
+        		value = 1;
+        	} else {
+        		value = 0;
+        	}
+        }           
 
         $.ajax({
-            url : 'index.php?route=sale/supplier/category&token=<?php echo $token; ?>',
+            url : 'index.php?route=sale/supplier/field&token=<?php echo $token; ?>',
             data: {
                 supplier_category_id: supplier_category_id,
-                category_id:    	  category_id,
+                field:    	  field,
+                value:    	  value,
             },
             type: 'POST',
             beforeSend: function(){
-                $('#category_' + supplier_category_id).removeClass('process, finished').addClass('finished');
+            	if (field == 'category_id'){
+            		$('#category_' + supplier_category_id).removeClass('process, finished').addClass('finished');
+            	} else {
+            		elem.removeClass('process, finished').addClass('finished');
+            	}               
             },
             success: function(){
-                $('#category_' + supplier_category_id).removeClass('process, finished').addClass('finished');
+            	if (field == 'category_id'){
+                	$('#category_' + supplier_category_id).removeClass('process, finished').addClass('finished');
+                } else {
+            		elem.removeClass('process, finished').addClass('finished');
+            	} 
             }
         });
     }

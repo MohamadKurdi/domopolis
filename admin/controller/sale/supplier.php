@@ -13,11 +13,11 @@ class ControllerSaleSupplier extends Controller {
 		$this->getList();
 	}
 
-	public function category() {
+	public function field() {
 		$this->load->model('sale/supplier');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST')){
-			$this->model_sale_supplier->updateSupplierCategory($this->request->post['supplier_category_id'], $this->request->post['category_id']);
+			$this->model_sale_supplier->updateSupplierCategoryField($this->request->post['supplier_category_id'], $this->request->post['field'], $this->request->post['value']);
 		}
 	}
 
@@ -32,7 +32,7 @@ class ControllerSaleSupplier extends Controller {
 
 		if ($supplier && $supplier['parser']){
 			$this->supplierAdaptor->use($supplier['parser'], $supplier);
-			$this->supplierAdaptor->updateCategories($this->supplierAdaptor->getCategories());
+			$this->supplierAdaptor->SupplierCategory->updateCategories($this->supplierAdaptor->getCategories());
 		}
 
 		if (!is_cli()){
@@ -42,6 +42,26 @@ class ControllerSaleSupplier extends Controller {
 
 			$this->redirect($this->url->link('sale/supplier/update', 'token=' . $this->session->data['token'] . $url, 'SSL'));			
 		}		
+	}
+
+	public function cron(){
+		$suppliers = $this->supplierAdaptor->getSuppliers();
+
+		echoLine('[ControllerSaleSupplier::cron] Got ' . count($suppliers) . ' suppliers', 's');
+
+		foreach ($suppliers as $supplier){
+			$this->supplierAdaptor->use($supplier['parser'], $supplier);
+			echoLine('[ControllerSaleSupplier::cron] Working with supplier ' . $supplier['supplier_name'], 'i');
+
+			$products = $this->supplierAdaptor->getProducts();
+			echoLine('[ControllerSaleSupplier::cron] Got ' . count($products) . ' products', 'w');
+
+			foreach ($products as $product){
+				
+				$this->supplierAdaptor->SupplierProduct->addProductToSupplierTable($product);
+			}
+		}
+
 	}
 
 	public function insert() {
@@ -543,6 +563,9 @@ class ControllerSaleSupplier extends Controller {
 				'path_to_feed'     		=> $result['path_to_feed'],
 				'stock'     			=> $result['stock'],
 				'prices'     			=> $result['prices'],
+				'parser'     			=> $result['parser'],
+				'parser_status'     	=> $result['parser_status'],
+				'rrp_in_feed'     		=> $result['rrp_in_feed'],
 				'total_offers'     		=> $total_offers,
 				'email'     			=> $result['email'],
 				'telephone'     		=> $result['telephone'],
@@ -644,6 +667,9 @@ class ControllerSaleSupplier extends Controller {
 	}
 
 	protected function getForm() {
+		$this->load->model('sale/supplier');
+		$this->load->model('catalog/category');
+
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
 		$this->data['text_enabled'] = $this->language->get('text_enabled');
@@ -867,6 +893,22 @@ class ControllerSaleSupplier extends Controller {
 			$this->data['parser'] = 0;
 		}
 
+		if (isset($this->request->post['parser_status'])) {
+			$this->data['parser_status'] = $this->request->post['parser_status'];
+		} elseif (!empty($supplier_info)) {
+			$this->data['parser_status'] = $supplier_info['parser_status'];
+		} else {
+			$this->data['parser_status'] = 0;
+		}
+
+		if (isset($this->request->post['rrp_in_feed'])) {
+			$this->data['rrp_in_feed'] = $this->request->post['rrp_in_feed'];
+		} elseif (!empty($supplier_info)) {
+			$this->data['rrp_in_feed'] = $supplier_info['rrp_in_feed'];
+		} else {
+			$this->data['rrp_in_feed'] = 0;
+		}
+
 		if (isset($this->request->post['stock'])) {
 			$this->data['stock'] = $this->request->post['stock'];
 		} elseif (!empty($supplier_info)) {
@@ -881,6 +923,14 @@ class ControllerSaleSupplier extends Controller {
 			$this->data['prices'] = $supplier_info['prices'];
 		} else {
 			$this->data['prices'] = 0;
+		}
+
+		if (isset($this->request->post['currency'])) {
+			$this->data['currency'] = $this->request->post['currency'];
+		} elseif (!empty($supplier_info)) {
+			$this->data['currency'] = $supplier_info['currency'];
+		} else {
+			$this->data['currency'] = 0;
 		}
 
 		$this->data['supplier_categories'] 			= [];
@@ -920,6 +970,9 @@ class ControllerSaleSupplier extends Controller {
 					'supplier_category_id' 	=> $supplier_category['supplier_category_id'],
 					'supplier_category' 	=> $supplier_category['supplier_category'],
 					'category_id' 			=> $supplier_category['category_id'],
+					'products' 				=> $supplier_category['products'],
+					'stocks' 				=> $supplier_category['stocks'],
+					'prices' 				=> $supplier_category['prices'],
 					'category' 				=> $category,
 					'path' 					=> $path,
 					'guessed' 				=> $guessed_data
