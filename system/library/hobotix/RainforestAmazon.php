@@ -96,29 +96,22 @@ class RainforestAmazon
 			}
 		}
 
-		//Loading Classes
-		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/OffersParser.php');
-		$this->offersParser = new Amazon\OffersParser($registry);
-
+		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/OffersParser.php');		
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/RainforestRetriever.php');
-
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/InfoUpdater.php');
-		$this->infoUpdater = new Amazon\InfoUpdater($registry);
-
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/ParamsTranslator.php');
-		$this->paramsTranslator = new Amazon\ParamsTranslator();
-				
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/CategoryParser.php');
-		$this->categoryParser = new Amazon\CategoryParser($registry, $this->rfClient);
-
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/CategoryRetriever.php');
-		$this->categoryRetriever = new Amazon\CategoryRetriever($registry);
-
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/ProductsRetriever.php');
-		$this->productsRetriever = new Amazon\ProductsRetriever($registry);
-
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/SimpleProductParser.php');
-		$this->simpleProductParser = new Amazon\SimpleProductParser($registry, $this->rfClient);	
+
+		$this->offersParser 		= new Amazon\OffersParser($registry);
+		$this->infoUpdater 			= new Amazon\InfoUpdater($registry);		
+		$this->paramsTranslator 	= new Amazon\ParamsTranslator();			
+		$this->categoryParser 		= new Amazon\CategoryParser($registry, $this->rfClient);		
+		$this->categoryRetriever 	= new Amazon\CategoryRetriever($registry);		
+		$this->productsRetriever 	= new Amazon\ProductsRetriever($registry);		
+		$this->simpleProductParser 	= new Amazon\SimpleProductParser($registry, $this->rfClient);	
 
 		if ($this->config->get('config_telegram_bot_enable_alerts') && $this->config->get('config_telegram_bot_token') && $this->config->get('config_rainforest_tg_alert_group_id')){
 			$this->telegramBot 		= new \Longman\TelegramBot\Telegram($this->config->get('config_telegram_bot_token'), $this->config->get('config_telegram_bot_name'));
