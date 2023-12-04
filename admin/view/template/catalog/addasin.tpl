@@ -117,7 +117,7 @@
                             <td class="left" style="width:40%">
                                 <div>
                                     <input type="text" name="category" style="width:90%" placeholder="Добавить в категорию" />
-                                    <input type="hidden" name="category_id" value="<?php echo $category_id; ?>" />
+                                    <input type="hidden" name="category_id" value="<?php echo !empty($category_id)?$category_id:''; ?>" />
                                     <span class="help">будет добавлен в эту категорию, если не задать, попробуем определить сами</span>
                                 </div>
                             </td>
