@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>">
-	<?php require_once(dirname(__FILE__).'/../header_head.tpl'); ?>
+	<?php require_once(dirname(__FILE__) . '/header_head.tpl'); ?>
 	<body>
 		<div id="container">
 			<div id="header">
