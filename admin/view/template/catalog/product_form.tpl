@@ -84,12 +84,15 @@
 					<?php } ?>				
 					<a href="#tab-image" style="background-color:#ff7815; color:#FFF;">Картинки</a>
 					<a href="#tab-videos" style="background-color:#ff7815; color:#FFF;">Видео</a>
+
 					<?php if ($this->config->get('config_product_options_enable')) { ?>
 						<a href="#tab-option" style="background-color:#ff7815; color:#FFF;">Опции</a>
 					<?php } ?>
+
 					<?php if ($this->config->get('config_product_profiles_enable')) { ?>
 						<a href="#tab-profile" style="background-color:#ff7815; color:#FFF;">Профили</a>
 					<?php } ?>
+
 					<?php if ($this->config->get('config_option_products_enable')) { ?>
 						<a href="#tab-product-option" style="background-color:#ff7815; color:#FFF;">Товары как опции</a>
 					<?php } ?>
@@ -143,7 +146,7 @@
 						<?php require_once(dirname(__FILE__) . '/product_tabs/tab-amazon.tpl'); ?>
 					<?php } ?>
 
-					<?php if ($this->config->get('config_country_id') != 176) { ?>
+					<?php if ($this->config->get('config_country_id') == 176) { ?>
 						<?php require_once(dirname(__FILE__) . '/product_tabs/tab-yandex-market.tpl'); ?>
 					<?php } ?>
 
