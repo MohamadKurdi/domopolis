@@ -80,13 +80,13 @@
 						<?php } ?>
 					<?php } ?>
 
-					<?php if ($offer['link'] || $offer['supplier']['store_url']) { ?>
+					<?php if ($offer['link'] || !empty($offer['supplier']['store_url'])) { ?>
 						<div>
 						<?php if ($offer['link']) { ?>						
 							<a href="<?php echo $offer['link']; ?>" target="_blank"><i class="fa fa-external-link-square"></i> offer link</a>
 						<?php } ?>
 
-						<?php if ($offer['supplier']['store_link']) { ?>						
+						<?php if (!empty($offer['supplier']) && !empty($offer['supplier']['store_link'])) { ?>						
 							<a href="<?php echo $offer['supplier']['store_link']; ?>" target="_blank"><i class="fa fa-external-link-square"></i> store link</a>
 						<?php } ?>
 						</div>
