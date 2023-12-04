@@ -463,6 +463,18 @@ class ControllerSettingSetting extends Controller
             $this->data['config_enable_non_empty_categories'] = $this->config->get('config_enable_non_empty_categories');
         }
 
+        if (isset($this->request->post['config_drop_special_prices_not_in_warehouses'])) {
+            $this->data['config_drop_special_prices_not_in_warehouses'] = $this->request->post['config_drop_special_prices_not_in_warehouses'];
+        } else {
+            $this->data['config_drop_special_prices_not_in_warehouses'] = $this->config->get('config_drop_special_prices_not_in_warehouses');
+        }
+
+        if (isset($this->request->post['config_restore_special_prices_not_in_warehouses'])) {
+            $this->data['config_restore_special_prices_not_in_warehouses'] = $this->request->post['config_restore_special_prices_not_in_warehouses'];
+        } else {
+            $this->data['config_restore_special_prices_not_in_warehouses'] = $this->config->get('config_restore_special_prices_not_in_warehouses');
+        }
+
         if (isset($this->request->post['config_disable_fast_orders'])) {
             $this->data['config_disable_fast_orders'] = $this->request->post['config_disable_fast_orders'];
         } else {
@@ -3104,6 +3116,24 @@ class ControllerSettingSetting extends Controller
             $this->data['config_vk_feed_only_in_stock'] = $this->config->get('config_vk_feed_only_in_stock');
         }
 
+        if (isset($this->request->post['config_vk_add_feed_for_category_id_0'])) {
+            $this->data['config_vk_add_feed_for_category_id_0'] = $this->request->post['config_vk_add_feed_for_category_id_0'];
+        } else {
+            $this->data['config_vk_add_feed_for_category_id_0'] = $this->config->get('config_vk_add_feed_for_category_id_0');
+        }
+
+        if (isset($this->request->post['config_vk_add_feed_for_category_id_1'])) {
+            $this->data['config_vk_add_feed_for_category_id_1'] = $this->request->post['config_vk_add_feed_for_category_id_1'];
+        } else {
+            $this->data['config_vk_add_feed_for_category_id_1'] = $this->config->get('config_vk_add_feed_for_category_id_1');
+        }
+
+        if (isset($this->request->post['config_vk_add_feed_for_category_id_2'])) {
+            $this->data['config_vk_add_feed_for_category_id_2'] = $this->request->post['config_vk_add_feed_for_category_id_2'];
+        } else {
+            $this->data['config_vk_add_feed_for_category_id_2'] = $this->config->get('config_vk_add_feed_for_category_id_2');
+        }
+
         if (isset($this->request->post['config_vk_pixel_header'])) {
             $this->data['config_vk_pixel_header'] = $this->request->post['config_vk_pixel_header'];
         } else {
@@ -4876,6 +4906,24 @@ class ControllerSettingSetting extends Controller
             $this->data['config_yam_default_category_id'] = $this->request->post['config_yam_default_category_id'];
         } else {
             $this->data['config_yam_default_category_id'] = $this->config->get('config_yam_default_category_id');
+        }
+
+        if (isset($this->request->post['config_yam_add_feed_for_category_id_0'])) {
+            $this->data['config_yam_add_feed_for_category_id_0'] = $this->request->post['config_yam_add_feed_for_category_id_0'];
+        } else {
+            $this->data['config_yam_add_feed_for_category_id_0'] = $this->config->get('config_yam_add_feed_for_category_id_0');
+        }
+
+        if (isset($this->request->post['config_yam_add_feed_for_category_id_1'])) {
+            $this->data['config_yam_add_feed_for_category_id_1'] = $this->request->post['config_yam_add_feed_for_category_id_1'];
+        } else {
+            $this->data['config_yam_add_feed_for_category_id_1'] = $this->config->get('config_yam_add_feed_for_category_id_1');
+        }
+
+        if (isset($this->request->post['config_yam_add_feed_for_category_id_2'])) {
+            $this->data['config_yam_add_feed_for_category_id_2'] = $this->request->post['config_yam_add_feed_for_category_id_2'];
+        } else {
+            $this->data['config_yam_add_feed_for_category_id_2'] = $this->config->get('config_yam_add_feed_for_category_id_2');
         }
         
         if (isset($this->request->post['config_yam_fbs_yaMarketToken'])) {

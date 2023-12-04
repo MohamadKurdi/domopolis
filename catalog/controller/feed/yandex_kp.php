@@ -2,11 +2,14 @@
 
 class ControllerFeedYandexKP extends Controller {
 
-	private $full_path 	= ['yandex_fast_full_feed_{store_id}.xml'];
-	private $stock_path = ['yandex_market_feed_{store_id}{yam_prefix}.xml'];
-	private $direct_stock_path = ['yandex_direct_stock_feed_{store_id}.xml'];
+	private $full_path 			= ['yandex_fast_full_feed_{store_id}.xml'];
+	private $stock_path 		= ['yandex_market_feed_{store_id}{yam_prefix}.xml'];
+	private $direct_stock_path 	= ['yandex_direct_stock_feed_{store_id}.xml'];
 
-	private $vk_full_path 			= ['vk_feed_{store_id}.xml'];	
+	private $vk_full_path 			= ['vk_feed_{store_id}.xml'];
+	private $vk_special_cat_path 	= ['vk_feed_special_{category_id}_{store_id}.xml'];
+	private $vk_special_cat_set 	= null;
+
 	private $ozon_full_path 		= ['ozon_feed_full_{store_id}.xml'];
 	private $ozon_path 				= ['ozon_feed_{store_id}.xml'];
 	private $priceva_path 			= ['priceva_{brand}_{store_id}.xml'];		
@@ -573,6 +576,10 @@ class ControllerFeedYandexKP extends Controller {
 	private function writeFeed($path){
 		$path = str_replace('{store_id}', $this->config->get('config_store_id'), $path);
 
+		if ($this->type == 'vkontakte' && $this->vk_special_cat_set){
+			$path = str_replace('{category_id}', $this->vk_special_cat_set, $path);
+		}
+
 		if ($this->type == 'market' && $this->config->get('config_yam_offer_id_prefix_enable') && $this->config->get('config_yam_offer_id_prefix')){
 			$path = str_replace('{yam_prefix}', mb_strtolower($this->config->get('config_yam_offer_id_prefix')), $path);
 		} else {
@@ -591,7 +598,13 @@ class ControllerFeedYandexKP extends Controller {
 		fwrite($file, $this->yml);
 		fclose($file);
 
-		echoLine('[YML] Записали файл ' . $path);
+		echoLine('[ControllerFeedYandexKP::writeFeed] Wrote file: ' . $path, 's');
+	}
+
+	private function setVKSpecialCategoryId($category_id){
+		$this->vk_special_cat_set = $category_id;
+
+		return $this;
 	}
 
 	private function setProducts($products){
@@ -1145,7 +1158,7 @@ class ControllerFeedYandexKP extends Controller {
 		}
 		
 		foreach ($stores as $store_id){
-			echoLine('[ControllerFeedYandexKP::makeVkontakteFeed] Working in store:' . $store_id, 'i');
+			echoLine('[ControllerFeedYandexKP::makeVkontakteFeed] Working in store:' . $store_id, 'i');			
 
 			if ($store_id == 0){
 				$this->updateVkontakteSetAllNotInFeed();
@@ -1175,8 +1188,45 @@ class ControllerFeedYandexKP extends Controller {
 
 			$products = $this->db->query($sql);	
 			$this->setProducts($products->rows)->addOffers();
-
 			$this->closeYML()->writeFeed($this->vk_full_path[0]);				
+
+
+			for ($i=0; $i<=3; $i++){
+				if ($this->config->get('config_vk_add_feed_for_category_id_' . $i)){
+					echoLine('[ControllerFeedYandexKP::makeVkontakteFeed] Have setting for special category, ' . $this->config->get('config_vk_add_feed_for_category_id_' . $i), 'i');
+
+					$this->openYML()->addShop()->addCategories()->setFeedType('vkontakte')->setVKSpecialCategoryId($this->config->get('config_vk_add_feed_for_category_id_' . $i));		
+
+					$sql = "SELECT DISTINCT(p.product_id) 
+					FROM category_path cp 
+					LEFT JOIN product_to_category p2c ON (cp.category_id = p2c.category_id)
+					LEFT JOIN product p ON (p2c.product_id = p.product_id)
+					LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
+					LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
+					WHERE 
+					p.status = 1 ";
+
+					$sql .= " AND cp.path_id = '" . (int)$this->config->get('config_vk_add_feed_for_category_id_' . $i) . "'";					
+
+					if ($this->config->get('config_vk_feed_only_in_stock')){
+						$sql .= "AND p.stock_status_id NOT IN (" . $this->config->get('config_not_in_stock_status_id') . ", " . $this->config->get('config_partly_in_stock_status_id') . ")";
+					}			
+
+					$sql .= "AND p.is_virtual = 0
+					AND p.is_markdown = 0
+					AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+					AND p2s.store_id = '" . $this->config->get('config_store_id') . "'";
+
+					if (!empty($this->config->get('config_vk_feed_include_manufacturers')) && is_array($this->config->get('config_vk_feed_include_manufacturers'))){
+						$sql .= " AND p.manufacturer_id IN (" . implode(',', $this->config->get('config_vk_feed_include_manufacturers')) . ")";
+					}
+
+					$products = $this->db->query($sql);	
+					$this->setProducts($products->rows)->addOffers();
+					$this->closeYML()->writeFeed($this->vk_special_cat_path[0]);				
+
+				}
+			}
 		}
 	}
 }																																														

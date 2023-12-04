@@ -383,19 +383,41 @@
 					<br />
 					<span class="help">товары в фиде маркета будут подаваться без ссылки, для отвязки товаров от магазина</span>
 				</td>
-
+				
+				<td width="50%" colspan="2">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Исключать товары с похожими названиями</span></p>
+					<textarea rows="5" name="config_yam_excludewords"><?php echo $config_yam_excludewords; ?></textarea>
+					<br />
+					<span class="help">каждое с новой строки, например, "пепельниц зажигалк" для исключения товаров связанных с курением</span>
+				</td>
+			</tr>
+			<tr>				
 				<td width="25%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Дефолтная категория Yandex</span></p>
-					<input type="text" name="config_yam_default_category_id" value="<?php echo $config_yam_default_category_id; ?>" size="30" style="width:250px;" />
+					<input type="number" step="1" name="config_yam_default_category_id" value="<?php echo $config_yam_default_category_id; ?>" size="30" style="width:250px;" />
 					<br />
 					<span class="help">в случае если не получилось никак определить</span>
 				</td>
-				
+
 				<td width="25%">
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Исключать товары с похожими названиями</span></p>
-					<textarea cols="20" rows="5" name="config_yam_excludewords"><?php echo $config_yam_excludewords; ?></textarea>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Специальная категория - 1</span></p>
+					<input type="number" step="1" name="config_yam_add_feed_for_category_id_0" value="<?php echo $config_yam_add_feed_for_category_id_0; ?>" size="30" style="width:250px;" />
 					<br />
-					<span class="help">каждое с новой строки, например, "пепельниц зажигалк" для исключения товаров связанных с курением</span>
+					<span class="help">будет создан дополнительно фид из товаров только этой категории</span>
+				</td>
+
+				<td width="25%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Специальная категория - 2</span></p>
+					<input type="number" step="1" name="config_yam_add_feed_for_category_id_1" value="<?php echo $config_yam_add_feed_for_category_id_1; ?>" size="30" style="width:250px;" />
+					<br />
+					<span class="help">будет создан дополнительно фид из товаров только этой категории</span>
+				</td>
+
+				<td width="25%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Специальная категория - 3</span></p>
+					<input type="number" step="1" name="config_yam_add_feed_for_category_id_2" value="<?php echo $config_yam_add_feed_for_category_id_2; ?>" size="30" style="width:250px;" />
+					<br />
+					<span class="help">будет создан дополнительно фид из товаров только этой категории</span>
 				</td>
 			</tr>								
 		</table>

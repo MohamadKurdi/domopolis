@@ -252,20 +252,6 @@
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">VK прайслист ID</span></p>
 						<input type="text" name="config_vk_pricelist_id" value="<?php echo $config_vk_pricelist_id; ?>" size="40" />
 					</div>
-
-					<div>
-						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">В фиде только наличие</span></p>
-						<select name="config_vk_feed_only_in_stock">
-							<?php if ($config_vk_feed_only_in_stock) { ?>
-								<option value="1" selected="selected">Включить</option>
-								<option value="0">Отключить</option>
-							<?php } else { ?>													
-								<option value="1">Включить</option>
-								<option value="0"  selected="selected">Отключить</option>
-							<? } ?>
-						</select>
-					</div>
-
 				</td>
 
 				<td width="30%">
@@ -289,8 +275,45 @@
 					</div>
 				</td>
 			</tr>
+		</table>
 
+		<h2 style="color:#3F6AD8">VK Ремаркетинг фид</h2>
+		<table class="form">
+			<tr>                
+				<td style="width:25%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">В фиде только наличие</span></p>
+					<select name="config_vk_feed_only_in_stock">
+						<?php if ($config_vk_feed_only_in_stock) { ?>
+							<option value="1" selected="selected">Включить</option>
+							<option value="0">Отключить</option>
+						<?php } else { ?>                                                   
+							<option value="1">Включить</option>
+							<option value="0"  selected="selected">Отключить</option>
+						<? } ?>
+					</select>
+				</td>
 
+				<td style="width:25%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Специальная категория - 1</span></p>
+					<input type="number" step="1" name="config_vk_add_feed_for_category_id_0" value="<?php echo $config_vk_add_feed_for_category_id_0; ?>" size="30" style="width:250px;" />
+					<br />
+					<span class="help">будет создан дополнительно фид из товаров только этой категории</span>
+				</td>
+
+				<td style="width:25%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Специальная категория - 2</span></p>
+					<input type="number" step="1" name="config_vk_add_feed_for_category_id_1" value="<?php echo $config_vk_add_feed_for_category_id_1; ?>" size="30" style="width:250px;" />
+					<br />
+					<span class="help">будет создан дополнительно фид из товаров только этой категории</span>
+				</td>
+
+				<td style="width:25%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Специальная категория - 3</span></p>
+					<input type="number" step="1" name="config_vk_add_feed_for_category_id_2" value="<?php echo $config_vk_add_feed_for_category_id_2; ?>" size="30" style="width:250px;" />
+					<br />
+					<span class="help">будет создан дополнительно фид из товаров только этой категории</span>
+				</td>
+			</tr>       
 		</table>
 
 
