@@ -498,114 +498,9 @@ class ControllerApiInfo1C extends Controller
     public function updateLocalPricesXML()
     {
         if (!$this->config->get('config_odinass_update_local_prices')) {
-            echoLine('РРЦ отключено!');
+            echoLine('[ControllerApiInfo1C::updateLocalPricesXML] ');
             return;
-        }
-
-        $this->load->model('kp/info1c');
-        $this->load->model('catalog/product');
-        $this->load->model('sale/supplier');
-        $this->load->model('setting/setting');
-        $this->load->model('setting/store');
-        echo 'Получаем JSON из 1С' . PHP_EOL;
-        $json = $this->model_kp_info1c->getLocalPricesXML();
-
-        echo 'Всего товаров:' . count($json) . PHP_EOL;
-
-        $stores = $this->model_setting_store->getStores();
-        $currency_mapping = array(
-            '0' => $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', 0)
-        );
-
-        foreach ($stores as $store) {
-            $currency_mapping[$store['store_id']] = $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', $store['store_id']);
-        }
-
-        $currency_mapping = array_flip($currency_mapping);
-
-        foreach ($json as $key => $data) {
-            if ($product = $this->model_catalog_product->getProduct(trim($key))) {
-                echo '[i] Товар ' . $key . ' найден' . PHP_EOL;
-                $this->model_catalog_product->clearProductStorePricesNational($product['product_id']);
-
-
-                foreach ($data as $price) {
-                    if (!empty($price['supplier'])) {
-                        $supplier = $this->model_sale_supplier->getSupplierByName($price['supplier']);
-                        $supplier_id = $supplier['supplier_id'];
-                        echo '[ss] Поставщик ' . $price['supplier'] . ' найден, ID' . $supplier_id . ' валюта ' . $price['currency'] . PHP_EOL;
-
-                        if (!$supplier_id) {
-                            $supplier_data = array(
-                                'supplier_name' => $this->db->escape(trim($price['supplier'])),
-                                'supplier_code' => mb_strtoupper(preg_replace('/[^a-zA-Zа-яА-Я0-9]/ui', '', $price['supplier'])),
-                                'supplier_type' => 'Официальный магазин сторонних поставщиков',
-                                'supplier_country' => $price['currency'],
-                                'supplier_comment' => '',
-                                'supplier_m_coef' => '',
-                                'supplier_l_coef' => '',
-                                'supplier_n_coef' => '',
-                                'supplier_parent_id' => '0',
-                                'sort_order' => '0',
-                                'supplier_inner' => '1'
-                            );
-
-
-                            echo '[ss] Поставщик ' . $price['supplier'] . ' не найден, добавлен' . PHP_EOL;
-                            $supplier_id = $this->model_sale_supplier->addSupplier($supplier_data);
-                        }
-
-                        $availability = ($price['availability'] == 'true')?100:0;
-
-                        if (!empty($price['cost'])) {
-                            $cost = $price['cost'];
-                        } else {
-                            $cost = ($price['price']*0.6);
-                        }
-
-                            //Запишем сразу в табличку наличия у локального поставщика
-                        $this->db->query("
-							INSERT INTO local_supplier_products SET 
-							supplier_id = '" . (int)$supplier_id . "',
-							supplier_product_id = '" . (int)0 . "',
-							product_id = '" . (int)$product['product_id'] . "',
-							product_model = '" . $this->db->escape($product['model']) . "',
-							product_ean = '',
-							price = '" . (float)$cost . "',
-							price_recommend = '" . (float)$price['price'] . "',
-							currency = '" . $this->db->escape($price['currency']) . "',
-							stock = '" . $availability . "',
-							product_xml = '" . base64_encode(serialize($price)) . "'
-							ON DUPLICATE KEY UPDATE
-							supplier_product_id = '" . (int)0 . "',
-							product_model = '" . $this->db->escape($product['model']) . "',
-							product_ean = '',
-							price = '" . (float)$cost . "',
-							price_recommend = '" . (float)$price['price'] . "',
-							currency = '" . $this->db->escape($price['currency']) . "',
-							stock = '" . $availability . "',
-							product_xml = '" . base64_encode(serialize($price)) . "'
-							");
-                    }
-
-                    //установка РРЦ в товар
-                    //удаляем все записи в переназначении на магазын
-
-                    $store_id = 0;
-                    if (isset($currency_mapping[$price['currency']])) {
-                        $store_id = $currency_mapping[$price['currency']];
-                    }
-
-                    echo '[i] Доабвлена РРЦ ' . $price['price'] . ' ' . $price['currency'] . ', магазин ' . $store_id . PHP_EOL;
-
-                    if ($price['price'] > 0) {
-                        $this->db->query("INSERT IGNORE INTO product_price_national_to_store SET store_id = '" . (int)$store_id . "', product_id = '" . (int)$product['product_id'] . "', price = '" . (float)$price['price'] . "', dot_not_overload_1c = '0', settled_from_1c = '1',  currency = '" . $this->db->escape($price['currency']) . "'");
-                    }
-                }
-            } else {
-                echo '[i] Товар ' . $key . ' не найден' . PHP_EOL;
-            }
-        }
+        }       
     }
 
     public function getAllVouchersList()
@@ -1620,14 +1515,6 @@ class ControllerApiInfo1C extends Controller
             $str .= ' SKU: ' . $result['sku'] . ' -> ' . $sku;
 
             $json []= array('sku' => 'ok');
-        }
-
-        if ($cleanup) {
-            $this->db->query("UPDATE local_supplier_products SET product_ean = '' WHERE product_id = '" . (int)$product_id . "'");
-
-            $json[] = array(
-                'cleanup' => 'ok'
-            );
         }
 
         if ($json) {
