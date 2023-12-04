@@ -22,7 +22,9 @@ class DeeplTranslator
 		$this->db 		= $registry->get('db');
 		$this->config 	= $registry->get('config');
 
-		$this->deeplTranslator = new \DeepL\Translator($this->config->get('config_deepl_translate_api_key'));
+		if ($this->config->get('config_deepl_translate_api_key')){
+			$this->deeplTranslator = new \DeepL\Translator($this->config->get('config_deepl_translate_api_key'));
+		}		
 	}
 
 	public function checkIfItIsPossibleToMakeRequest(){
