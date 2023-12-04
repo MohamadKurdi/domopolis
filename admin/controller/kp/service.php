@@ -372,6 +372,8 @@
 			echo 'QUERY:' . "UPDATE customer SET birthday_month = MONTH(DATE(birthday)) WHERE LENGTH(birthday) > 4 AND birthday <> '0000-00-00';" . PHP_EOL;
 			$this->db->query("UPDATE customer SET birthday_month = MONTH(DATE(birthday)) WHERE LENGTH(birthday) > 4 AND birthday <> '0000-00-00';");
 			echo PHP_EOL;
+
+			$this->db->query("UPDATE customer SET birthday_month = '0', birthday_date = '0' WHERE birthday = '0000-00-00'");
 			
 			echo '>> Проверка подписки на уведомления' . PHP_EOL;
 			echo 'QUERY:' . "UPDATE customer SET has_push = 0 WHERE 1" . PHP_EOL;
