@@ -2510,6 +2510,8 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['product_specials'] = [];
 		}
 
+		$this->data['product_specials_backup'] = $this->model_catalog_product->getProductSpecialsBackup($this->request->get['product_id']);
+
 		if (isset($this->request->post['product_video'])) {
 			$product_videos = $this->request->post['product_video'];
 		} elseif (isset($this->request->get['product_id'])) {

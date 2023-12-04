@@ -1497,6 +1497,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_product_options_enable'] = $this->config->get('config_product_options_enable');
         }
 
+        if (isset($this->request->post['config_product_profiles_enable'])) {
+            $this->data['config_product_profiles_enable'] = $this->request->post['config_product_profiles_enable'];
+        } else {
+            $this->data['config_product_profiles_enable'] = $this->config->get('config_product_profiles_enable');
+        }
+
         if (isset($this->request->post['config_product_alsoviewed_enable'])) {
             $this->data['config_product_alsoviewed_enable'] = $this->request->post['config_product_alsoviewed_enable'];
         } else {

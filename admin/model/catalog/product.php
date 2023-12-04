@@ -2604,6 +2604,12 @@
 			
 			return $query->rows;
 		}
+
+		public function getProductSpecialsBackup($product_id) {
+			$query = $this->db->query("SELECT * FROM product_special_backup WHERE product_id = '" . (int)$product_id . "' ORDER BY priority, price");						
+			
+			return $query->rows;
+		}
 		
 		public function getProductSpecialsWithRecalc($product_id) {
 			$query = $this->db->query("SELECT * FROM product_special WHERE product_id = '" . (int)$product_id . "' ORDER BY priority, price");

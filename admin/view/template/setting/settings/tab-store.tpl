@@ -419,6 +419,21 @@
 						<span class="help">если не отображаются - отключить</span>	
 					</div>					
 				</td>
+
+				<td style="width:18%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Recurring profiles</span></p>
+						<select type="select" name="config_product_profiles_enable">
+							<? if ($config_product_profiles_enable) { ?>
+								<option value="1" selected='selected' >Включить</option>
+								<option value="0" >Отключить</option>
+							<? } else { ?>
+								<option value="1" >Включить</option>
+								<option value="0"  selected='selected' >Отключить</option>
+							<? } ?>       
+						</select>
+						<br />
+						<span class="help">если не используются - отключить</span>	
+				</td>
 			</tr>
 		</table>
 
