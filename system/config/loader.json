@@ -10,7 +10,6 @@
 		"startup"		
 	],
 	"libraries":[				
-		"customer",
 		"affiliate",
 		"currency",
 		"tax",
