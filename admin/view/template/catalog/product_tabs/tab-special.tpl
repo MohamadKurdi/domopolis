@@ -64,7 +64,6 @@
 		<?php } ?>
 		<tfoot>
 			<tr>
-				<td colspan="7"></td>
 				<td class="right"><a onclick="addSpecial();" class="button"><?php echo $button_add_special; ?></a></td>
 			</tr>
 		</tfoot>
@@ -125,14 +124,12 @@
 			</tbody>
 			<tfoot>
 			<tr>
-				<td colspan="7"></td>
-				<td class="right">
+				<td class="right" colspan="7">
 					<a onclick="removeAllHistories();" class="button">Очистить</a>
 					<a onclick="restoreAllHistories();" class="button">Восстановить</a>
 				</td>
 			</tr>
 		</tfoot>
-			<?php $special_row++; ?>
 		<?php } ?>
 	</table>
 	<?php } ?>
