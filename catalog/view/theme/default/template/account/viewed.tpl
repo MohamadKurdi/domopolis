@@ -1,16 +1,12 @@
-<?php
-$this->language->load('module/mattimeotheme');
-$button_quick = $this->language->get('entry_quickview');
-?>
 <?php echo $header; ?><?php echo $column_right; ?>
 
 <style type="text/css">
 	
 	@media screen and (max-width:560px){
 		.stock_status {
-	    font-size: 13px;
-	    line-height: 16px;
-	}
+			font-size: 13px;
+			line-height: 16px;
+		}
 		.product__grid{
 			justify-content: space-between;
 		}
@@ -28,7 +24,7 @@ $button_quick = $this->language->get('entry_quickview');
 			display: none
 		}
 		.product__title a {
-		    font-size: 12px;
+			font-size: 12px;
 			line-height: 14px;
 			display: -webkit-box;
 			-webkit-line-clamp: 3;
@@ -42,73 +38,73 @@ $button_quick = $this->language->get('entry_quickview');
 		}
 		.product__label > div{
 			font-size: 10px;
-		    padding: 4px 6px;
-		    line-height: 1;
-		    height: auto
+			padding: 4px 6px;
+			line-height: 1;
+			height: auto
 		}
 		.product__item .price__sale {
-		    right: 10px;
-		    left: inherit;
-		    top: 10px;
-		    font-size: 10px;
-		    padding: 4px 6px;
-		    line-height: 1;
+			right: 10px;
+			left: inherit;
+			top: 10px;
+			font-size: 10px;
+			padding: 4px 6px;
+			line-height: 1;
 		}
 		.product__photo{
 			margin-bottom: 10px
 		}
 		.product__price-new {
 			font-size: 15px;
-		    line-height: 1;
-		    margin: 0
+			line-height: 1;
+			margin: 0
 		}
 		.product__price-old {
-		    font-size: 12px;
-		    line-height: 1;
-		    margin: 0;
-		    align-self: start;
+			font-size: 12px;
+			line-height: 1;
+			margin: 0;
+			align-self: start;
 		}
 		.product__price {
-		    display: flex;
-		    flex-wrap: wrap;
-		    align-self: start;
-		    flex-direction: column;
-		    justify-content: start;
-		    align-items: start;
-		    text-align: left;
+			display: flex;
+			flex-wrap: wrap;
+			align-self: start;
+			flex-direction: column;
+			justify-content: start;
+			align-items: start;
+			text-align: left;
 		}
 		.product__item .product__btn-cart .number__product__block{
 			display: none
 		}
-		 .product__item .product__btn-cart button{
-		 	padding-left: 0;
-		 	width: 30px;
+		.product__item .product__btn-cart button{
+			padding-left: 0;
+			width: 30px;
 			height: 30px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-		 }
-		  .product__item .product__btn-cart button svg{
-		  	margin: 0 !important;
-		  	width: 15px;
-		  	height: 15px
-		  }
-		 .product__item .product__btn-cart {
-		    position: absolute;
-		    margin: 0;
-		    z-index: 1;
-		    width: auto;
-		    right: 10px;
-		    bottom: 10px;
-		    height: 30px
+		}
+		.product__item .product__btn-cart button svg{
+			margin: 0 !important;
+			width: 15px;
+			height: 15px
+		}
+		.product__item .product__btn-cart {
+			position: absolute;
+			margin: 0;
+			z-index: 1;
+			width: auto;
+			right: 10px;
+			bottom: 10px;
+			height: 30px
 		}
 		.product_add-favorite {
-		    top: 10px;
-		    width: 40px;
-		    height: 35px;
-		    bottom: initial;
-		    left: 10px;
-		    flex-direction: column;
+			top: 10px;
+			width: 40px;
+			height: 35px;
+			bottom: initial;
+			left: 10px;
+			flex-direction: column;
 		}
 		.product_add-favorite button{
 			margin-left: 0 !important;
@@ -143,67 +139,67 @@ $button_quick = $this->language->get('entry_quickview');
 	}
 	@media screen and (min-width: 768px) {
 		.sticky {
-		  	position: fixed;
-		  	z-index: 101;
+			position: fixed;
+			z-index: 101;
 		}
 		.stop {
-		  	position: relative;
-		  	z-index: 101;
+			position: relative;
+			z-index: 101;
 		}
 	}
 </style>
 <section class="catalog account_wrap" id="content"><?php echo $content_top; ?>
- 	<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
-	<div class="wrap two_column">
-		<div class="side_bar">
-            <?php echo $column_left; ?>
-        </div>
-        <div class="account_content">
-		  	<?php if ($products) { ?>
-		  		<!--catalog__content-->
-				<div class="catalog__content product-grid">
-			  	<!--catalog__content-head-->
-						<div class="catalog__content-head">						
-							<!--display-type-->
-							<?php if (empty($do_not_show_left_aside_in_list)) { ?>
-								<div class="display-type">
-									<a href="#" data-tpl="tpl_tile" class="current">
-										<svg width="20" height="20" viewbox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-											<path d="M8 1H1V8H8V1Z" stroke="#EAE9E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-											<path d="M19 1H12V8H19V1Z" stroke="#EAE9E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-											<path d="M19 12H12V19H19V12Z" stroke="#EAE9E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-											<path d="M8 12H1V19H8V12Z" stroke="#EAE9E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-										</svg>
-									</a>
-									<a href="#" data-tpl="tpl_list">
-										<svg width="20" height="20" viewbox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-											<path d="M19 7H1M19 1H1M19 13H1M19 19H1" stroke="#EAE9E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-										</svg>
-									</a>
-								</div>
-							<?php } ?>	
-							<!--/display-type-->
+<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
+<div class="wrap two_column">
+	<div class="side_bar">
+		<?php echo $column_left; ?>
+	</div>
+	<div class="account_content">
+		<?php if (!empty($products)) { ?>
+			<!--catalog__content-->
+			<div class="catalog__content product-grid">
+				<!--catalog__content-head-->
+				<div class="catalog__content-head">						
+					<!--display-type-->
+					<?php if (empty($do_not_show_left_aside_in_list)) { ?>
+						<div class="display-type">
+							<a href="#" data-tpl="tpl_tile" class="current">
+								<svg width="20" height="20" viewbox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M8 1H1V8H8V1Z" stroke="#EAE9E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+									<path d="M19 1H12V8H19V1Z" stroke="#EAE9E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+									<path d="M19 12H12V19H19V12Z" stroke="#EAE9E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+									<path d="M8 12H1V19H8V12Z" stroke="#EAE9E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+								</svg>
+							</a>
+							<a href="#" data-tpl="tpl_list">
+								<svg width="20" height="20" viewbox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M19 7H1M19 1H1M19 13H1M19 19H1" stroke="#EAE9E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+								</svg>
+							</a>
 						</div>
-						<!--/catalog__content-head-->
-			 	<div class="product-grid product__grid" id="product__grid">
-				<?php foreach ($products as $product) { ?>
-					<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/product_single.tpl')); ?>
-				<?php } ?>
+					<?php } ?>	
+					<!--/display-type-->
+				</div>
+				<!--/catalog__content-head-->
+				<div class="product-grid product__grid" id="product__grid">
+					<?php if (!empty($products)) { ?>
+						<?php foreach ($products as $product) { ?>
+							<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/product_single.tpl')); ?>
+						<?php } ?>
+					<?php } ?>
 
-			  	</div>
+				</div>
 				<output id="output" class="hidden"></output>
 				
 			<?php } else { ?>
-		  		<div class="content"><?php echo $text_empty; ?></div>
-		  		<div class="buttons">
-			    	<a href="<?php echo $continue; ?>" class="button"><?php echo $button_continue; ?></a>
-			  	</div>
-		  	<?php }?>
-		  	</div>
-	  	</div>
+				<div class="content"><?php echo $text_empty; ?></div>
+				<div class="buttons">
+					<a href="<?php echo $continue; ?>" class="button"><?php echo $button_continue; ?></a>
+				</div>
+			<?php }?>
+		</div>
 	</div>
+</div>
 </section>
-  <?php echo $content_bottom; ?>
-
-
+<?php echo $content_bottom; ?>
 <?php echo $footer; ?>
