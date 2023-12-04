@@ -8,7 +8,7 @@
 				<td class="right"><?php echo $entry_priority; ?></td>
 				<td class="right"><?php echo $entry_price; ?></td>										
 				<td class="left"><?php echo $entry_date_start; ?></td>
-				<td class="left" colspan="2"><?php echo $entry_date_end; ?></td>
+				<td class="left"><?php echo $entry_date_end; ?></td>
 			</tr>
 		</thead>
 		<?php $special_row = 0; ?>
@@ -64,7 +64,7 @@
 		<?php } ?>
 		<tfoot>
 			<tr>
-				<td colspan="6"></td>
+				<td colspan="7"></td>
 				<td class="right"><a onclick="addSpecial();" class="button"><?php echo $button_add_special; ?></a></td>
 			</tr>
 		</tfoot>
@@ -123,13 +123,22 @@
 					</td>					
 				</tr>
 			</tbody>
+			<tfoot>
+			<tr>
+				<td colspan="7"></td>
+				<td class="right">
+					<a onclick="removeAllHistories();" class="button">Очистить</a>
+					<a onclick="restoreAllHistories();" class="button">Восстановить</a>
+				</td>
+			</tr>
+		</tfoot>
 			<?php $special_row++; ?>
 		<?php } ?>
 	</table>
 	<?php } ?>
 </div>
 
-<script type="text/javascript"><!--
+<script type="text/javascript">
 	var special_row = <?php echo $special_row; ?>;
 	
 	function addSpecial() {
@@ -165,4 +174,4 @@
 		
 		special_row++;
 	}
-	//--></script> 
+	</script> 
