@@ -1345,6 +1345,13 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['fill_from_amazon'] = 0;
 		}
 
+		$this->data['amazon_product_link'] 				= false;
+		$this->data['filled_from_amazon'] 				= false;
+		$this->data['description_filled_from_amazon'] 	= false;
+		$this->data['amazon_product_json'] 				= false;
+		$this->data['amazon_best_price'] 				= false;
+		$this->data['amazon_lowest_price'] 				= false;
+
 		if ($this->data['asin']){
 			$this->load->model('kp/product');
 			
