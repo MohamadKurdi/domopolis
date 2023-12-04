@@ -84,7 +84,7 @@
 				<td class="left"><?php echo $entry_date_start; ?></td>
 				<td class="left"><?php echo $entry_date_end; ?></td>
 			</tr>
-
+		</thead>
 			<?php foreach ($product_specials_backup as $product_special_backup) { ?>
 			<tbody id="special-backup-row">
 				<tr>
@@ -125,8 +125,7 @@
 			</tbody>
 			<?php $special_row++; ?>
 		<?php } ?>
-
-		</thead>
+	</table>
 	<?php } ?>
 </div>
 

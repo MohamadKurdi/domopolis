@@ -62,7 +62,9 @@
 						<a href="#tab-ukrcredits" style="background-color:#00ad07; color:#FFF;" ><?php echo $tab_ukrcredits; ?></a>
 					<?php } ?>
 
-					<a href="#tab-amazon" style="background-color:#FF9900; color:#FFF;"><i class="fa fa-amazon"></i> Amazon</a>
+					<?php if ($this->config->get('config_rainforest_enable_api')) { ?>
+						<a href="#tab-amazon" style="background-color:#FF9900; color:#FFF;"><i class="fa fa-amazon"></i> Amazon</a>
+					<?php } ?>
 					
 					<?php if ($this->config->get('config_country_id') == 176) { ?>
 						<a href="#tab-yandex-market" style="background-color:#cf4a61; color:#FFF;"><i class="fa fa-yahoo"></i> Yandex.Market</a>
@@ -81,7 +83,8 @@
 					<a href="#tab-attribute" style="background-color:#ff7815; color:#FFF;">Атрибуты</a>
 					<?php if ($this->config->get('config_use_separate_table_for_features')) { ?>
 						<a href="#tab-feature" style="background-color:#ff7815; color:#FFF;">Особенности</a>
-					<?php } ?>				
+					<?php } ?>
+									
 					<a href="#tab-image" style="background-color:#ff7815; color:#FFF;">Картинки</a>
 					<a href="#tab-videos" style="background-color:#ff7815; color:#FFF;">Видео</a>
 
@@ -142,7 +145,7 @@
 						<?php require_once(dirname(__FILE__) . '/product_tabs/tab-priceva.tpl'); ?>
 					<?php } ?>
 
-					<?php if ($this->config->get('config_priceva_enable_api')) { ?>		
+					<?php if ($this->config->get('config_rainforest_enable_api')) { ?>		
 						<?php require_once(dirname(__FILE__) . '/product_tabs/tab-amazon.tpl'); ?>
 					<?php } ?>
 
