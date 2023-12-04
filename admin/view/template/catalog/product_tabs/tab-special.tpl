@@ -122,7 +122,8 @@
 					</td>					
 				</tr>
 			</tbody>
-			<tfoot>
+		<?php } ?>
+					<tfoot>
 			<tr>
 				<td class="right" colspan="7">
 					<a onclick="removeAllHistories();" class="button">Очистить</a>
@@ -130,7 +131,6 @@
 				</td>
 			</tr>
 		</tfoot>
-		<?php } ?>
 	</table>
 	<?php } ?>
 </div>
