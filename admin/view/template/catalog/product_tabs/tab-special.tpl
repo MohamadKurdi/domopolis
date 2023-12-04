@@ -9,6 +9,7 @@
 				<td class="right"><?php echo $entry_price; ?></td>										
 				<td class="left"><?php echo $entry_date_start; ?></td>
 				<td class="left"><?php echo $entry_date_end; ?></td>
+				<td class="left"></td>
 			</tr>
 		</thead>
 		<?php $special_row = 0; ?>
