@@ -64,7 +64,7 @@
 		<?php } ?>
 		<tfoot>
 			<tr>
-				<td class="right"><a onclick="addSpecial();" class="button"><?php echo $button_add_special; ?></a></td>
+				<td class="right" colspan="8"><a onclick="addSpecial();" class="button">Добавить скидку</a></td>
 			</tr>
 		</tfoot>
 	</table>
