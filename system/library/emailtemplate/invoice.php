@@ -348,4 +348,3 @@ class EmailTemplateInvoice extends TCPDF_EasyTable {
 		return $px*25.4/72;
 	}
 }
-?>

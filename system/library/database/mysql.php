@@ -31,20 +31,19 @@ final class DBMySQL {
 				if (is_resource($resource)) {
 					$i = 0;
 
-					$data = array();
+					$data = [];
 
 					while ($result = mysql_fetch_assoc($resource)) {
 						$data[$i] = $result;
-
 						$i++;
 					}
 
 					mysql_free_result($resource);
 
-					$query = new stdClass();
-					$query->row = isset($data[0]) ? $data[0] : array();
-					$query->rows = $data;
-					$query->num_rows = $i;
+					$query 				= new stdClass();
+					$query->row 		= isset($data[0]) ? $data[0] : array();
+					$query->rows 		= $data;
+					$query->num_rows 	= $i;
 
 					unset($data);
 					$query->sql = $sql;					
@@ -70,8 +69,8 @@ final class DBMySQL {
 				$md5query = md5($sql);
 				if ($query = $this->cache->get('sql.' . $md5query)){				
 					if ($query->sql == $sql) {
-						$this->cachedquery = $query;
-						$query->fromcache = 'cached!';
+						$this->cachedquery 	= $query;
+						$query->fromcache 	= 'cached!';
 						return($query);					
 					}				
 				}
@@ -84,7 +83,7 @@ final class DBMySQL {
 				if (is_resource($resource)) {
 					$i = 0;
 
-					$data = array();
+					$data = [];
 
 					while ($result = mysql_fetch_assoc($resource)) {
 						$data[$i] = $result;
@@ -143,4 +142,3 @@ final class DBMySQL {
 		}
 	}
 }
-?>

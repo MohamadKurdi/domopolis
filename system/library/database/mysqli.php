@@ -7,17 +7,17 @@
 			$port = $this->defaultPort;
 			
 			if (stripos($hostname, 'sock')){
-				$socket = $hostname;
-				$hostname = NULL;
+				$socket 	= $hostname;
+				$hostname 	= null;
 				} else {
-				$socket = NULL;
+				$socket 	= null;
 			}
 			
 			if ($hostname && stripos($hostname, ':')){
-				$exploded = explode(':', $hostname);
-				$hostname = $exploded[0];
-				$port = $exploded[1];
-				$socket = NULL;
+				$exploded 	= explode(':', $hostname);
+				$hostname 	= $exploded[0];
+				$port 		= $exploded[1];
+				$socket 	= null;
 			}
 			
 			$this->cache = new Cache(CACHE_DRIVER);

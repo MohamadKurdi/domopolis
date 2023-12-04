@@ -14,17 +14,17 @@
 			$port = $this->defaultPort;
 			
 			if ($hostname && stripos($hostname, 'sock')){
-				$socket = $hostname;
-				$hostname = NULL;
+				$socket 	= $hostname;
+				$hostname 	= null;
 				} else {
-				$socket = NULL;
+				$socket 	= null;
 			}
 			
 			if ($hostname && stripos($hostname, ':')){
-				$exploded = explode(':', $hostname);
-				$hostname = $exploded[0];
-				$port = $exploded[1];
-				$socket = NULL;
+				$exploded 	= explode(':', $hostname);
+				$hostname 	= $exploded[0];
+				$port 		= $exploded[1];
+				$socket 	= null;
 			}
 			
 			$this->cache = new Cache(CACHE_DRIVER);
@@ -33,9 +33,9 @@
 			$this->link = new mysqli($hostname, $username, $password, $database, $port, $socket);
 			
 			if (function_exists('loadJsonConfig')){
-				$jsonConfig = loadJsonConfig('dbcache');
-				$this->uncacheableTables = $jsonConfig['uncacheableTables'];
-				$this->explicitCacheableTables = $jsonConfig['explicitCacheableTables'];
+				$jsonConfig 					= loadJsonConfig('dbcache');
+				$this->uncacheableTables 		= $jsonConfig['uncacheableTables'];
+				$this->explicitCacheableTables 	= $jsonConfig['explicitCacheableTables'];
 			}
 
 			error_reporting($err_level); 
@@ -105,7 +105,6 @@
 		} 
 
 		private function getCachedQueryAndReturn($sql, $fromCache, $explicit = false){
-
 			if ($result = $this->cache->get('sql.' . md5($sql), $explicit)){				
 				if ($result->sql == $sql) {
 					$this->cachedNumRows 	= $result->num_rows;

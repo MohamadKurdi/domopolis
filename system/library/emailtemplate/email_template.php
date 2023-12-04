@@ -67,7 +67,7 @@
 			$this->store_id = $this->config->get("config_store_id");
 			if(!$this->store_id) $this->store_id = 0;
 			
-			if(($this->customer instanceof Customer) && $this->customer->isLogged()){
+			if($this->customer->isLogged()){
 				$this->customer_id = $this->customer->getId();
 				$this->customer_group_id = $this->customer->getCustomerGroupId();
 				} else {
@@ -582,7 +582,7 @@
 				
 				if(isset($this->data['customer_group_id'])){
 					$filter_data['customer_group_id'] = $this->data['customer_group_id'];
-					} elseif (($this->customer instanceof Customer) && $this->customer->isLogged()) {
+					} elseif ($this->customer->isLogged()) {
 					$filter_data['customer_group_id'] = $this->customer->getCustomerGroupId();
 					} else {
 					$filter_data['customer_group_id'] = $this->config->get('config_customer_group_id');
