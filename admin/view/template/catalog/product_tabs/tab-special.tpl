@@ -123,7 +123,7 @@
 				</tr>
 			</tbody>
 		<?php } ?>
-					<tfoot>
+		<tfoot>
 			<tr>
 				<td class="right" colspan="7">
 					<a onclick="removeAllHistories();" class="button">Очистить</a>
