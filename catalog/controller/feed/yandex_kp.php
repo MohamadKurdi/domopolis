@@ -1217,8 +1217,14 @@ class ControllerFeedYandexKP extends Controller {
 					AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
 					AND p2s.store_id = '" . $this->config->get('config_store_id') . "'";
 
-					if (!empty($this->config->get('config_vk_feed_include_manufacturers')) && is_array($this->config->get('config_vk_feed_include_manufacturers'))){
-						$sql .= " AND p.manufacturer_id IN (" . implode(',', $this->config->get('config_vk_feed_include_manufacturers')) . ")";
+					if (!$this->config->get('config_vk_ignore_general_brand_exclusion_for_category_id_' . $i)){
+						echoLine('[ControllerFeedYandexKP::makeVkontakteFeed] Not ignoring manufacturer inclusions, adding just selected', 'w');
+
+						if (!empty($this->config->get('config_vk_feed_include_manufacturers')) && is_array($this->config->get('config_vk_feed_include_manufacturers'))){
+							$sql .= " AND p.manufacturer_id IN (" . implode(',', $this->config->get('config_vk_feed_include_manufacturers')) . ")";
+						}
+					} else {
+						echoLine('[ControllerFeedYandexKP::makeVkontakteFeed] Ignoring manufacturer inclusions, adding all', 'w');
 					}
 
 					$products = $this->db->query($sql);	
