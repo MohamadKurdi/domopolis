@@ -136,17 +136,18 @@
 			return $localImageDir . $localImageName;
 		}	
 
-		public function parseResponse($response){			
-			$response = json_decode($response, true);	
+		public function parseResponse($response){
+			$raw 		= $response;		
+			$response 	= json_decode($response, true);	
 			
 			if (!isset($response['request_info']['success'])){
-				throw new \Exception($response);
+				throw new \Exception((string)$raw);
 				echoLine('[RainforestRetriever::parseResponse] Something bad happened, stopping!', 'e');
 				die();				
 			}
 			
 			if ($response['request_info']['success'] == false){
-				throw new \Exception($response);
+				throw new \Exception((string)$raw);
 				return false;
 			}
 
