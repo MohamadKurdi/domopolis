@@ -411,6 +411,62 @@ class productModelGet extends hoboModel{
 		return $result;
 	}
 
+	public function getCategoriesToReprice(){
+		$results = [];
+
+		$sql 	= "SELECT category_id FROM category WHERE need_reprice = 1";
+		$query 	= $this->db->ncquery($sql);
+
+		foreach ($query->rows as $row){
+			$results[] = $row['category_id'];
+		}
+
+		return $results;
+	}
+
+	public function setCategoryWasRepriced($category_id){
+		$this->db->ncquery("UPDATE category SET need_reprice = 0, last_reprice = NOW() WHERE category_id = '" . (int)$category_id . "'");
+	}
+
+
+	public function getTotalProductsWithFastPriceFullForCategory($category_id){
+		$result = [];
+
+		$sql = "SELECT COUNT(DISTINCT p.product_id) as total FROM category_path cp 
+			LEFT JOIN product_to_category p2c ON (cp.category_id = p2c.category_id) 
+			LEFT JOIN product p ON (p2c.product_id = p.product_id)
+			WHERE amazon_best_price > 0 
+			AND asin <> 'INVALID' 
+			AND cp.path_id = '" . (int)$category_id . "'";		
+
+		return $this->db->ncquery($sql)->row['total'];		
+	}	
+
+	public function getProductsWithFastPriceFullForCategory($category_id, $start){
+		$result = [];
+
+		$sql = "SELECT DISTINCT p.* FROM category_path cp 
+			LEFT JOIN product_to_category p2c ON (cp.category_id = p2c.category_id) 
+			LEFT JOIN product p ON (p2c.product_id = p.product_id)
+			WHERE amazon_best_price > 0 
+			AND asin <> 'INVALID' 
+			AND cp.path_id = '" . (int)$category_id . "'
+			ORDER BY p.product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
+
+		$query = $this->db->ncquery($sql);
+
+		foreach ($query->rows as $row){
+			$result[] = [
+				'product_id' 			=> $row['product_id'],
+				'amazon_best_price'		=> $row['amazon_best_price'],
+				'asin' 					=> $row['asin']									
+			];
+		}
+
+		return $result;
+	}
+
+
 	public function getTotalProductsWithFastPriceFull(){
 		$result = [];
 

@@ -27,7 +27,8 @@ class PriceHistory
 	}
 
 	private function addBestOfferHistoryBugEcho($data){
-		echoLine('[PriceHistory::addBestOfferHistoryBugEcho] Got Bug in history adding!', 'e');
+		//echoLine('[PriceHistory::addBestOfferHistoryBugEcho] Got Bug in history adding!', 'e');
+		return true;
 	}
 
 	public function addBestOfferHistory($data){		

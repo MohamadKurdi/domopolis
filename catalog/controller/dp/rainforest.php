@@ -1276,20 +1276,72 @@ class ControllerDPRainForest extends Controller {
 
 		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 
-		echoLine('[fixpricesfull] Total products: ' . $total);
+		echoLine('[ControllerDPRainForest::fixpricesfull] Total products: ' . $total);
 		$k = 1;		
 
 		for ($i = 1; $i <= ($iterations+1); $i++){
 			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFastPriceFull(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 			if ($products){		
 				foreach ($products as $product){
-					echoLine('[fixpricesfull] Product ' . $product['product_id'] . ' / ' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
+					echoLine('[ControllerDPRainForest::fixpricesfull] Product ' . $product['product_id'] . ' / ' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
 					
 					$this->rainforestAmazon->offersParser->PriceLogic->updateProductPrices($product['asin'], $product['amazon_best_price'], true);
 					$k++;	
 				}
 			}	
 		}		
+	}
+
+
+	/*
+	Переустановка цен по категориям с маркером репрайс
+	*/
+	public function reprice(){
+		if (!$this->config->get('config_rainforest_enable_reprice_cron')){
+			echoLine('[ControllerDPRainForest::reprice] CRON IS DISABLED IN ADMIN', 'e');
+			return;
+		}
+
+		$this->load->library('hobotix/FPCTimer');
+
+		if ($this->config->has('config_rainforest_reprice_cron_time_start') && $this->config->has('config_rainforest_reprice_cron_time_end')){
+			$interval = new \hobotix\Interval($this->config->get('config_rainforest_reprice_cron_time_start') . '-' . $this->config->get('config_rainforest_reprice_cron_time_end'));
+
+			if (!$interval->isNow()){
+				echoLine('[ControllerDPRainForest::reprice] NOT ALLOWED TIME', 'e');
+				return;
+			} else {
+				echoLine('[ControllerDPRainForest::reprice] ALLOWED TIME', 's');				
+			}
+		}
+
+
+		$categories = $this->rainforestAmazon->productsRetriever->model_product_get->getCategoriesToReprice();
+		echoLine('[ControllerDPRainForest::reprice] Have ' . count($categories) . ' to reprice', 'i');
+
+		foreach ($categories as $category_id){
+			echoLine('[ControllerDPRainForest::reprice] Working with ' . $category_id . ', repricing', 'i');
+
+			$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFastPriceFullForCategory($category_id);		
+			$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
+
+			echoLine('[fixpricesfull] Total products: ' . $total);
+			$k = 1;		
+
+			for ($i = 1; $i <= ($iterations+1); $i++){
+				$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFastPriceFullForCategory($category_id, ($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
+				if ($products){		
+					foreach ($products as $product){
+						echoLine('[fixpricesfull] Product ' . $product['product_id'] . ' / ' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
+
+						$this->rainforestAmazon->offersParser->PriceLogic->updateProductPrices($product['asin'], $product['amazon_best_price'], true);
+						$k++;	
+					}
+				}	
+			}
+
+			$this->rainforestAmazon->productsRetriever->model_product_get->setCategoryWasRepriced($category_id);
+		}	
 	}
 
 
