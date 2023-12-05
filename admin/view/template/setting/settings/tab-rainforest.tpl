@@ -265,9 +265,6 @@
 					</select>
 				</div>
 
-			</td>
-
-			<td style="width:20%">
 				<div>
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Валидация ASIN</span></p>
 					<select name="config_rainforest_enable_asins_parser">
@@ -281,9 +278,6 @@
 					</select>
 				</div>
 
-			</td>
-
-			<td style="width:20%">
 				<div>
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Валидация EAN/GTIN</span></p>
 					<select name="config_rainforest_enable_eans_parser">
@@ -297,6 +291,18 @@
 					</select>
 				</div>
 
+				<div>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Генератор SEO-данных</span></p>
+					<select name="config_enable_seogen_cron">
+						<?php if ($config_enable_seogen_cron) { ?>
+							<option value="1" selected="selected">Включить</option>
+							<option value="0">Отключить</option>
+						<?php } else { ?>													
+							<option value="1">Включить</option>
+							<option value="0"  selected="selected">Отключить</option>
+						<? } ?>
+					</select>
+				</div>
 			</td>
 
 			<td style="width:20%">
@@ -319,14 +325,13 @@
 					<input type="time" name="config_rainforest_offersqueue_parser_time_start" value="<?php echo $config_rainforest_offersqueue_parser_time_start; ?>" size="50" style="width:70px;" /> - 
 					<input type="time" name="config_rainforest_offersqueue_parser_time_end" value="<?php echo $config_rainforest_offersqueue_parser_time_end; ?>" size="50" style="width:70px;" />
 				</div>
-
 			</td>
 
 			<td style="width:20%">
 				<div>
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Генератор SEO-данных</span></p>
-					<select name="config_enable_seogen_cron">
-						<?php if ($config_enable_seogen_cron) { ?>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Воркер репрайсинга</span></p>
+					<select name="config_rainforest_enable_reprice_cron">
+						<?php if ($config_rainforest_enable_reprice_cron) { ?>
 							<option value="1" selected="selected">Включить</option>
 							<option value="0">Отключить</option>
 						<?php } else { ?>													
@@ -335,6 +340,23 @@
 						<? } ?>
 					</select>
 				</div>
+
+				<div>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-clock-o"></i> Время работы</span></p>
+
+					<input type="time" name="config_rainforest_reprice_cron_time_start" value="<?php echo $config_rainforest_reprice_cron_time_start; ?>" size="50" style="width:70px;" /> - 
+					<input type="time" name="config_rainforest_reprice_cron_time_end" value="<?php echo $config_rainforest_reprice_cron_time_end; ?>" size="50" style="width:70px;" />
+				</div>
+
+			</td>
+
+			<td style="width:20%">
+
+
+			</td>
+
+			<td style="width:20%">
+
 
 			</td>
 		</tr>

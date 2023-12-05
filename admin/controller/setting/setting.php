@@ -4404,6 +4404,10 @@ class ControllerSettingSetting extends Controller
         'config_rainforest_enable_offersqueue_parser',
         'config_rainforest_offersqueue_parser_time_start',
         'config_rainforest_offersqueue_parser_time_end',
+
+        'config_rainforest_enable_reprice_cron',
+        'config_rainforest_reprice_cron_time_start',
+        'config_rainforest_reprice_cron_time_end',
         
         'config_rainforest_enable_asins_parser',
         'config_rainforest_enable_eans_parser',        
