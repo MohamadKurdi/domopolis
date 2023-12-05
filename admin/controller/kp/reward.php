@@ -147,7 +147,7 @@
 				$this->db->query("UPDATE customer SET birthday_date = DAY(DATE(birthday)) WHERE LENGTH(birthday) > 4 AND birthday <> '0000-00-00';");
 				$this->db->query("UPDATE customer SET birthday_month = MONTH(DATE(birthday)) WHERE LENGTH(birthday) > 4 AND birthday <> '0000-00-00';");			
 				
-				$sql = "SELECT DISTINCT(customer_id), store_id, language_id, firstname, lastname, telephone, email FROM customer WHERE birthday_month = '" . (int)date('n', strtotime('-1 day')) . "' AND birthday_date = '" . (int)date('j', strtorime('-1 day')) . "'";
+				$sql = "SELECT DISTINCT(customer_id), store_id, language_id, firstname, lastname, telephone, email FROM customer WHERE birthday_month = '" . (int)date('n', strtotime('-1 day')) . "' AND birthday_date = '" . (int)date('j', strtotime('-1 day')) . "'";
 				$query = $this->db->query($sql);
 				
 				if ($query->num_rows){
