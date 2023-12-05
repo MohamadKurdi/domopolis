@@ -2,7 +2,6 @@
 class ModelCheckoutOrder extends Model {
 
 	public function addOrder($data) {	
-
 		if ($double_order_id = $this->validateDoubleOrder($data)){
 			return $double_order_id;
 		}
@@ -189,6 +188,14 @@ class ModelCheckoutOrder extends Model {
 			$data['payment_country'] 	= $this->model_localisation_country->getCountry($data['payment_country_id'])['name'];
 		}
 
+		if (empty($data['payment_secondary_method'])){
+			$data['payment_secondary_method'] = '';
+		}
+
+		if (empty($data['payment_secondary_code'])){
+			$data['payment_secondary_code'] = '';
+		}
+
 		if (empty($data['do_not_call'])){
 			$data['do_not_call'] = 0;
 		} elseif (is_array($data['do_not_call'])){
@@ -278,11 +285,10 @@ class ModelCheckoutOrder extends Model {
 
 		$order_id = $this->db->getLastId();			
 
-			//CREATE CUSTOMER IF CUSTOMER_ID = 0
-		if (empty($data['customer_id']) || (int)$data['customer_id'] == 0){				
+		if (empty($data['customer_id'])){				
 			$customer_id = false;
 
-			if (!$customer_id){
+			if (!$customer_id && !empty($this->session->data['customer_id'])){
 				$customer_id = (int)$this->session->data['customer_id'];
 			}
 
@@ -362,6 +368,10 @@ class ModelCheckoutOrder extends Model {
 			$this->db->ncquery("UPDATE `order` SET yam_shipment_id = '" . (int)$data['yam_shipment_id'] . "' WHERE order_id = '" . (int)$order_id . "'");
 		}
 
+		if (empty($data['postcode'])){
+			$data['postcode'] = '';
+		}
+
 		$this->db->ncquery("UPDATE address SET 
 			city 		= '" . $this->db->escape($data['shipping_city']) . "',  
 			address_1 	= '" . $this->db->escape($data['shipping_address_1']) . "',
@@ -372,6 +382,10 @@ class ModelCheckoutOrder extends Model {
 		$this->updateDaDataFields($data);
 
 		foreach ($data['products'] as $product) {
+			if (empty($product['from_stock'])){
+				$product['from_stock'] = false;
+			}
+
 			$this->db->ncquery("INSERT INTO order_product SET 
 				order_id 		= '" . (int)$order_id . "', 
 				product_id 		= '" . (int)$product['product_id'] . "', 
@@ -412,7 +426,7 @@ class ModelCheckoutOrder extends Model {
 			}
 
 			$this->db->ncquery("DELETE FROM `order_set` WHERE `order_id` = ".(int)$order_id);
-			if ((int)$product['set']) {
+			if (!empty($product['set'])) {
 				$productSet = $this->db->ncquery("SELECT ps.`set_id` as sid, s.product_id as psid, ps.product_id as pid, ps.price as prprice, ps.quantity as quantity, p.short_name as name, p.model as model FROM `product_to_set` ps LEFT JOIN `set` s ON (ps.set_id = s.set_id) LEFT JOIN `product` p ON (ps.product_id = p.product_id) WHERE ps.`set_id` = ".(int)$product['set']);
 				foreach ($productSet->rows as $prSet) {
 					$price_national = $this->currency->convert($prSet['prprice'], $this->config->get('config_currency'), $this->config->get('config_regional_currency'));
@@ -430,8 +444,6 @@ class ModelCheckoutOrder extends Model {
 					$this->db->ncquery("INSERT IGNORE INTO amzn_product_queue SET asin = '" . $this->db->escape($asin_query->row['asin']) . "', date_added = NOW()");
 				}			
 			}
-
-			$this->db->ncquery("UPDATE product SET `" . $this->config->get('config_warehouse_identifier') . "` = (`" . $this->config->get('config_warehouse_identifier') . "` - ". (int)$product['quantity'] .") WHERE product_id = '" . (int)$product['product_id'] . "' AND `" . $this->config->get('config_warehouse_identifier') . "` > 0");
 
 			if ($this->config->get('config_warehouse_identifier') == $this->config->get('config_warehouse_identifier')){
 				if ($this->config->get('config_yam_offer_id_prefix_enable') && $this->config->get('config_yam_offer_id_prefix')){
@@ -863,8 +875,8 @@ class ModelCheckoutOrder extends Model {
 			$customer_id = $this->customer->isLogged();
 		}
 
-		if (!$customer_id){
-			$customer_id = !empty($this->session->data['customer_id'])?$this->session->data['customer_id']:(int)$this->session->data['customer_id'];
+		if (!$customer_id && !empty($this->session->data['customer_id'])){
+			$customer_id = (int)$this->session->data['customer_id'];
 		}
 
 		if (trim($data['email']) && !$customer_id){
@@ -939,754 +951,203 @@ class ModelCheckoutOrder extends Model {
 		return false;
 	}
 		
-		public function getOrder($order_id) {
-			$order_query = $this->db->non_cached_query("SELECT *, (SELECT os.name FROM `order_status` os WHERE os.order_status_id = o.order_status_id AND os.language_id = o.language_id) AS order_status FROM `order` o WHERE o.order_id = '" . (int)$order_id . "'");
-			
-			if ($order_query->num_rows) {
-				$country_query = $this->db->ncquery("SELECT * FROM `country` WHERE country_id = '" . (int)$order_query->row['payment_country_id'] . "'");
-				
-				if ($country_query->num_rows) {
-					$payment_iso_code_2 = $country_query->row['iso_code_2'];
-					$payment_iso_code_3 = $country_query->row['iso_code_3'];
-				} else {
-					$payment_iso_code_2 = '';
-					$payment_iso_code_3 = '';				
-				}
-				
-				$zone_query = $this->db->ncquery("SELECT * FROM `zone` WHERE zone_id = '" . (int)$order_query->row['payment_zone_id'] . "'");
-				
-				if ($zone_query->num_rows) {
-					$payment_zone_code = $zone_query->row['code'];
-				} else {
-					$payment_zone_code = '';
-				}			
-				
-				$country_query = $this->db->ncquery("SELECT * FROM `country` WHERE country_id = '" . (int)$order_query->row['shipping_country_id'] . "'");
-				
-				if ($country_query->num_rows) {
-					$shipping_iso_code_2 = $country_query->row['iso_code_2'];
-					$shipping_iso_code_3 = $country_query->row['iso_code_3'];
-				} else {
-					$shipping_iso_code_2 = '';
-					$shipping_iso_code_3 = '';				
-				}
-				
-				$zone_query = $this->db->ncquery("SELECT * FROM `zone` WHERE zone_id = '" . (int)$order_query->row['shipping_zone_id'] . "'");
-				
-				if ($zone_query->num_rows) {
-					$shipping_zone_code = $zone_query->row['code'];
-				} else {
-					$shipping_zone_code = '';
-				}
-				
-				$this->load->model('localisation/language');
-				
-				$language_info = $this->model_localisation_language->getLanguage($order_query->row['language_id']);
-				
-				if ($language_info) {
-					$language_code = $language_info['code'];
-					$language_filename = $language_info['filename'];
-					$language_directory = $language_info['directory'];
-				} else {
-					$language_code = '';
-					$language_filename = '';
-					$language_directory = '';
-				}
-				
-				return [
-					'order_id'                => $order_query->row['order_id'],
-					'pwa'               	  => $order_query->row['pwa'],	
-					'yam'               	  => $order_query->row['yam'],
-					'yam_id'               	  => $order_query->row['yam_id'],
-					'yam_shipment_date'       => $order_query->row['yam_shipment_date'],
-					'yam_shipment_id'         => $order_query->row['yam_shipment_id'],
-					'yam_box_id'         	  => $order_query->row['yam_box_id'],
-					'yam_status'              => $order_query->row['yam_status'],
-					'yam_substatus'           => $order_query->row['yam_substatus'],
-					'yam_fake'           	  => $order_query->row['yam_fake'],
-					'affiliate_id' 			  => $order_query->row['affiliate_id'],
-					'commission' 			  => $order_query->row['commission'],
-					'invoice_no'              => $order_query->row['invoice_no'],
-					'invoice_prefix'          => $order_query->row['invoice_prefix'],
-					'store_id'                => $order_query->row['store_id'],
-					'store_name'              => $order_query->row['store_name'],
-					'store_url'               => $order_query->row['store_url'],				
-					'customer_id'             => $order_query->row['customer_id'],
-					'customer_group_id' 		=> (isset($order_query->row['customer_group_id'])) ? $order_query->row['customer_group_id'] : '',
-					'affiliate_id' 				=> (isset($order_query->row['affiliate_id'])) ? $order_query->row['affiliate_id'] : '',
-					'weight' 					=> (isset($order_query->row['weight'])) ? $order_query->row['weight'] : 0,
-					'firstname'               => $order_query->row['firstname'],
-					'lastname'                => $order_query->row['lastname'],
-					'telephone'               => $order_query->row['telephone'],
-					'fax'                     => $order_query->row['fax'],
-					'email'                   => $order_query->row['email'],
-					'payment_firstname'       => $order_query->row['payment_firstname'],
-					'payment_lastname'        => $order_query->row['payment_lastname'],				
-					'payment_company'         => $order_query->row['payment_company'],
-					'payment_company_id'      => $order_query->row['payment_company_id'],
-					'payment_tax_id'          => $order_query->row['payment_tax_id'],
-					'payment_address_1'       => $order_query->row['payment_address_1'],
-					'payment_address_2'       => $order_query->row['payment_address_2'],
-					'payment_postcode'        => $order_query->row['payment_postcode'],
-					'payment_city'            => $order_query->row['payment_city'],
-					'payment_zone_id'         => $order_query->row['payment_zone_id'],
-					'payment_zone'            => $order_query->row['payment_zone'],
-					'payment_zone_code'       => $payment_zone_code,
-					'payment_country_id'      => $order_query->row['payment_country_id'],
-					'payment_country'         => $order_query->row['payment_country'],	
-					'payment_iso_code_2'      => $payment_iso_code_2,
-					'payment_iso_code_3'      => $payment_iso_code_3,
-					'payment_address_format'  => $order_query->row['payment_address_format'],
-					'payment_method'          => $order_query->row['payment_method'],
-					'payment_code'            => $order_query->row['payment_code'],
-					'payment_secondary_method'=> $order_query->row['payment_secondary_method'],
-					'payment_secondary_code'  => $order_query->row['payment_secondary_code'],
-					'concardis_id'  		  => $order_query->row['concardis_id'],
-					'shipping_firstname'      => $order_query->row['shipping_firstname'],
-					'shipping_lastname'       => $order_query->row['shipping_lastname'],				
-					'shipping_company'        => $order_query->row['shipping_company'],
-					'shipping_address_1'      => $order_query->row['shipping_address_1'],
-					'shipping_address_2'      => $order_query->row['shipping_address_2'],
-					'shipping_postcode'       => $order_query->row['shipping_postcode'],
-					'shipping_city'           => $order_query->row['shipping_city'],
-					'shipping_zone_id'        => $order_query->row['shipping_zone_id'],
-					'shipping_zone'           => $order_query->row['shipping_zone'],
-					'shipping_zone_code'      => $shipping_zone_code,
-					'shipping_country_id'     => $order_query->row['shipping_country_id'],
-					'shipping_country'        => $order_query->row['shipping_country'],	
-					'shipping_iso_code_2'     => $shipping_iso_code_2,
-					'shipping_iso_code_3'     => $shipping_iso_code_3,
-					'shipping_address_format' => $order_query->row['shipping_address_format'],
-					'shipping_method'         => $order_query->row['shipping_method'],
-					'shipping_code'           => $order_query->row['shipping_code'],
-					'comment'                 => $order_query->row['comment'],
-					'total'                   => $order_query->row['total'],
-					'total_national'          => $order_query->row['total_national'],
-					'order_status_id'         => $order_query->row['order_status_id'],
-					'order_status'            => $order_query->row['order_status'],
-					'language_id'             => $order_query->row['language_id'],
-					'language_code'           => $language_code,
-					'language_filename'       => $language_filename,
-					'language_directory'      => $language_directory,
-					'currency_id'             => $order_query->row['currency_id'],
-					'currency_code'           => $order_query->row['currency_code'],
-					'currency_value'          => $order_query->row['currency_value'],
-					'ip'                      => $order_query->row['ip'],
-					'forwarded_ip'            => $order_query->row['forwarded_ip'], 
-					'user_agent'              => $order_query->row['user_agent'],	
-					'accept_language'         => $order_query->row['accept_language'],				
-					'date_modified'           => $order_query->row['date_modified'],
-					'date_added'              => $order_query->row['date_added'],
-					'pay_equire'			  => $order_query->row['pay_equire'],
-					'customer_confirm_url'    => $this->url->link('checkout/customer_confirm', 'order_id='.$order_query->row['order_id'].'&confirm='.md5(sin($order_query->row['order_id']+2))),
-					'changed'				  => $order_query->row['changed'],
-				];
+	public function getOrder($order_id) {
+		$order_query = $this->db->non_cached_query("SELECT *, (SELECT os.name FROM `order_status` os WHERE os.order_status_id = o.order_status_id AND os.language_id = o.language_id) AS order_status FROM `order` o WHERE o.order_id = '" . (int)$order_id . "'");
+
+		if ($order_query->num_rows) {
+			$country_query = $this->db->ncquery("SELECT * FROM `country` WHERE country_id = '" . (int)$order_query->row['payment_country_id'] . "'");
+
+			if ($country_query->num_rows) {
+				$payment_iso_code_2 = $country_query->row['iso_code_2'];
+				$payment_iso_code_3 = $country_query->row['iso_code_3'];
+			} else {
+				$payment_iso_code_2 = '';
+				$payment_iso_code_3 = '';				
+			}
+
+			$zone_query = $this->db->ncquery("SELECT * FROM `zone` WHERE zone_id = '" . (int)$order_query->row['payment_zone_id'] . "'");
+
+			if ($zone_query->num_rows) {
+				$payment_zone_code = $zone_query->row['code'];
+			} else {
+				$payment_zone_code = '';
+			}			
+
+			$country_query = $this->db->ncquery("SELECT * FROM `country` WHERE country_id = '" . (int)$order_query->row['shipping_country_id'] . "'");
+
+			if ($country_query->num_rows) {
+				$shipping_iso_code_2 = $country_query->row['iso_code_2'];
+				$shipping_iso_code_3 = $country_query->row['iso_code_3'];
+			} else {
+				$shipping_iso_code_2 = '';
+				$shipping_iso_code_3 = '';				
+			}
+
+			$zone_query = $this->db->ncquery("SELECT * FROM `zone` WHERE zone_id = '" . (int)$order_query->row['shipping_zone_id'] . "'");
+
+			if ($zone_query->num_rows) {
+				$shipping_zone_code = $zone_query->row['code'];
+			} else {
+				$shipping_zone_code = '';
+			}
+
+			$this->load->model('localisation/language');
+
+			$language_info = $this->model_localisation_language->getLanguage($order_query->row['language_id']);
+
+			if ($language_info) {
+				$language_code = $language_info['code'];
+				$language_filename = $language_info['filename'];
+				$language_directory = $language_info['directory'];
+			} else {
+				$language_code = '';
+				$language_filename = '';
+				$language_directory = '';
+			}
+
+			return [
+				'order_id'                => $order_query->row['order_id'],
+				'pwa'               	  => $order_query->row['pwa'],	
+				'yam'               	  => $order_query->row['yam'],
+				'yam_id'               	  => $order_query->row['yam_id'],
+				'yam_shipment_date'       => $order_query->row['yam_shipment_date'],
+				'yam_shipment_id'         => $order_query->row['yam_shipment_id'],
+				'yam_box_id'         	  => $order_query->row['yam_box_id'],
+				'yam_status'              => $order_query->row['yam_status'],
+				'yam_substatus'           => $order_query->row['yam_substatus'],
+				'yam_fake'           	  => $order_query->row['yam_fake'],
+				'affiliate_id' 			  => $order_query->row['affiliate_id'],
+				'commission' 			  => $order_query->row['commission'],
+				'invoice_no'              => $order_query->row['invoice_no'],
+				'invoice_prefix'          => $order_query->row['invoice_prefix'],
+				'store_id'                => $order_query->row['store_id'],
+				'store_name'              => $order_query->row['store_name'],
+				'store_url'               => $order_query->row['store_url'],				
+				'customer_id'             => $order_query->row['customer_id'],
+				'customer_group_id' 		=> (isset($order_query->row['customer_group_id'])) ? $order_query->row['customer_group_id'] : '',
+				'affiliate_id' 				=> (isset($order_query->row['affiliate_id'])) ? $order_query->row['affiliate_id'] : '',
+				'weight' 					=> (isset($order_query->row['weight'])) ? $order_query->row['weight'] : 0,
+				'firstname'               => $order_query->row['firstname'],
+				'lastname'                => $order_query->row['lastname'],
+				'telephone'               => $order_query->row['telephone'],
+				'fax'                     => $order_query->row['fax'],
+				'email'                   => $order_query->row['email'],
+				'payment_firstname'       => $order_query->row['payment_firstname'],
+				'payment_lastname'        => $order_query->row['payment_lastname'],				
+				'payment_company'         => $order_query->row['payment_company'],
+				'payment_company_id'      => $order_query->row['payment_company_id'],
+				'payment_tax_id'          => $order_query->row['payment_tax_id'],
+				'payment_address_1'       => $order_query->row['payment_address_1'],
+				'payment_address_2'       => $order_query->row['payment_address_2'],
+				'payment_postcode'        => $order_query->row['payment_postcode'],
+				'payment_city'            => $order_query->row['payment_city'],
+				'payment_zone_id'         => $order_query->row['payment_zone_id'],
+				'payment_zone'            => $order_query->row['payment_zone'],
+				'payment_zone_code'       => $payment_zone_code,
+				'payment_country_id'      => $order_query->row['payment_country_id'],
+				'payment_country'         => $order_query->row['payment_country'],	
+				'payment_iso_code_2'      => $payment_iso_code_2,
+				'payment_iso_code_3'      => $payment_iso_code_3,
+				'payment_address_format'  => $order_query->row['payment_address_format'],
+				'payment_method'          => $order_query->row['payment_method'],
+				'payment_code'            => $order_query->row['payment_code'],
+				'payment_secondary_method'=> $order_query->row['payment_secondary_method'],
+				'payment_secondary_code'  => $order_query->row['payment_secondary_code'],
+				'concardis_id'  		  => $order_query->row['concardis_id'],
+				'shipping_firstname'      => $order_query->row['shipping_firstname'],
+				'shipping_lastname'       => $order_query->row['shipping_lastname'],				
+				'shipping_company'        => $order_query->row['shipping_company'],
+				'shipping_address_1'      => $order_query->row['shipping_address_1'],
+				'shipping_address_2'      => $order_query->row['shipping_address_2'],
+				'shipping_postcode'       => $order_query->row['shipping_postcode'],
+				'shipping_city'           => $order_query->row['shipping_city'],
+				'shipping_zone_id'        => $order_query->row['shipping_zone_id'],
+				'shipping_zone'           => $order_query->row['shipping_zone'],
+				'shipping_zone_code'      => $shipping_zone_code,
+				'shipping_country_id'     => $order_query->row['shipping_country_id'],
+				'shipping_country'        => $order_query->row['shipping_country'],	
+				'shipping_iso_code_2'     => $shipping_iso_code_2,
+				'shipping_iso_code_3'     => $shipping_iso_code_3,
+				'shipping_address_format' => $order_query->row['shipping_address_format'],
+				'shipping_method'         => $order_query->row['shipping_method'],
+				'shipping_code'           => $order_query->row['shipping_code'],
+				'comment'                 => $order_query->row['comment'],
+				'total'                   => $order_query->row['total'],
+				'total_national'          => $order_query->row['total_national'],
+				'order_status_id'         => $order_query->row['order_status_id'],
+				'order_status'            => $order_query->row['order_status'],
+				'language_id'             => $order_query->row['language_id'],
+				'language_code'           => $language_code,
+				'language_filename'       => $language_filename,
+				'language_directory'      => $language_directory,
+				'currency_id'             => $order_query->row['currency_id'],
+				'currency_code'           => $order_query->row['currency_code'],
+				'currency_value'          => $order_query->row['currency_value'],
+				'ip'                      => $order_query->row['ip'],
+				'forwarded_ip'            => $order_query->row['forwarded_ip'], 
+				'user_agent'              => $order_query->row['user_agent'],	
+				'accept_language'         => $order_query->row['accept_language'],				
+				'date_modified'           => $order_query->row['date_modified'],
+				'date_added'              => $order_query->row['date_added'],
+				'pay_equire'			  => $order_query->row['pay_equire'],
+				'customer_confirm_url'    => $this->url->link('checkout/customer_confirm', 'order_id='.$order_query->row['order_id'].'&confirm='.md5(sin($order_query->row['order_id']+2))),
+				'changed'				  => $order_query->row['changed'],
+			];
 		} else {
 			return false;	
 		}
 	}
 
-public function getLegalPersonForOrder(){
-
-	$query = $this->db->ncquery("SELECT * FROM legalperson WHERE legalperson_legal = 0 AND legalperson_desc <> '' AND legalperson_country_id = '" . $this->config->get('config_country_id') . "'");
-	if ($query->num_rows){
-		return $query->row['legalperson_desc'];
-	} else {
-		return false;
-	}
-}
-
-public function setUkrcreditsOrderId($order_id, $paymenttype, $mono_order_id, $mono_order_status, $mono_order_substatus = false) {
-	$order_info = $this->getOrder($order_id);
-
-	if ($order_info && !$order_info['order_status_id']) {
-		$this->db->query("INSERT INTO order_ukrcredits SET order_id = '" . (int)$order_id . "', ukrcredits_payment_type = '" . $this->db->escape($paymenttype) . "', ukrcredits_order_id = '" . $this->db->escape($mono_order_id) . "', ukrcredits_order_status = '" . $this->db->escape($mono_order_status) . "', ukrcredits_order_substatus = '" . $this->db->escape($mono_order_substatus) . "'");
-	}		
-}			
-
-
-public function getOrderMb($mono_order_id) {
-	$ordermb_query = $this->db->query("SELECT * FROM `order_ukrcredits` WHERE ukrcredits_order_id = '" . $this->db->escape($mono_order_id) . "'");
-	if ($ordermb_query->num_rows) {
-		return $ordermb_query->row;			
-	} else {
-		return false;
-	}
-}
-
-public function updateUkrcreditsOrderMono($order_id, $state, $substate) {
-	$this->db->query("UPDATE order_ukrcredits SET ukrcredits_order_status = '" . $this->db->escape($state) . "', ukrcredits_order_substatus = '" . $this->db->escape($substate) . "' WHERE order_id = '" . (int)$order_id . "'");
-}	
-
-public function updateUkrcreditsOrderPrivat($order_id, $privat_order_status) {
-	$this->db->query("UPDATE order_ukrcredits SET ukrcredits_order_status = '" . $this->db->escape($privat_order_status) . "' WHERE order_id = '" . (int)$order_id . "'");
-}
-
-public function getOrderProducts($order_id) {
-	$query = $this->db->ncquery("SELECT * FROM order_product WHERE order_id = '" . (int)$order_id ."'");
-
-	return $query->rows;
-}
-
-public function confirm($order_id, $order_status_id, $comment = '', $notify = false, $user_id = false) {
-
-	$order_info = $this->getOrder($order_id);
-
-	if ($order_info && !$order_info['order_status_id']) {
-
-		$this->load->model('module/affiliate');
-		$this->model_module_affiliate->validate($order_id, $order_info, $order_status_id);
-
-		if ($this->config->get('config_fraud_detection')) {
-			$this->load->model('checkout/fraud');
-
-			$risk_score = $this->model_checkout_fraud->getFraudScore($order_info);
-
-			if ($risk_score > $this->config->get('config_fraud_score')) {
-				$order_status_id = $this->config->get('config_fraud_status_id');
-			}
-		}
-
-		$status = false;
-
-		$this->load->model('account/customer');
-
-		if ($order_info['customer_id']) {
-			$results = $this->model_account_customer->getIps($order_info['customer_id']);
-
-			foreach ($results as $result) {
-				if ($this->model_account_customer->isBanIp($result['ip'])) {
-					$status = true;
-
-					break;
-				}
-			}
+	public function getLegalPersonForOrder(){
+		$query = $this->db->ncquery("SELECT * FROM legalperson WHERE legalperson_legal = 0 AND legalperson_desc <> '' AND legalperson_country_id = '" . $this->config->get('config_country_id') . "'");
+		if ($query->num_rows){
+			return $query->row['legalperson_desc'];
 		} else {
-			$status = $this->model_account_customer->isBanIp($order_info['ip']);
-		}
-
-		if ($status) {
-			$order_status_id = $this->config->get('config_order_status_id');
-		}		
-
-		$this->db->ncquery("UPDATE `order` SET order_status_id = '" . (int)$order_status_id . "', date_added = NOW(), date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
-		$this->db->ncquery("INSERT INTO order_history SET order_id = '" . (int)$order_id . "', order_status_id = '" . (int)$order_status_id . "', notify = '" . (int)$notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW(), user_id = '" . (int)$user_id . "'");
-
-		$order_product_query = $this->db->ncquery("SELECT * FROM order_product WHERE order_id = '" . (int)$order_id . "'");
-
-		foreach ($order_product_query->rows as $order_product) {
-			$this->db->ncquery("UPDATE product SET quantity = (quantity - " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
-				$order_option_query = $this->db->ncquery("SELECT * FROM order_option WHERE order_id = '" . (int)$order_id . "' AND order_product_id = '" . (int)$order_product['order_product_id'] . "'");
-				foreach ($order_option_query->rows as $option) {
-					$this->db->ncquery("UPDATE product_option_value SET quantity = (quantity - " . (int)$order_product['quantity'] . ") WHERE product_option_value_id = '" . (int)$option['product_option_value_id'] . "' AND subtract = '1'");
-				}
-			}
-
-			$customer_group_info = array();
-			if(isset($order_info['customer_group_id']) && $order_info['customer_group_id']){
-				$this->load->model('account/customer_group');
-				$customer_group_info = $this->model_account_customer_group->getCustomerGroup($order_info['customer_group_id']);
-			}
-
-			$affiliate_info = array();
-			if(isset($order_info['affiliate_id']) && $order_info['affiliate_id']){
-				$this->load->model('affiliate/affiliate');
-				$affiliate_info = $this->model_affiliate_affiliate->getAffiliate($order_info['affiliate_id']);
-			}
-
-			if(!isset($passArray) || empty($passArray)){ $passArray = null; }											
-			$order_download_query = $this->db->ncquery("SELECT * FROM order_download WHERE order_id = '" . (int)$order_id . "'");
-
-				// Gift Voucher
-			$this->load->model('checkout/voucher');
-
-			$order_voucher_query = $this->db->ncquery("SELECT * FROM order_voucher WHERE order_id = '" . (int)$order_id . "'");
-
-			foreach ($order_voucher_query->rows as $order_voucher) {
-				$voucher_id = $this->model_checkout_voucher->addVoucher($order_id, $order_voucher);
-
-				$this->db->ncquery("UPDATE order_voucher SET voucher_id = '" . (int)$voucher_id . "' WHERE order_voucher_id = '" . (int)$order_voucher['order_voucher_id'] . "'");
-			}			
-
-			if ($this->config->get('config_complete_status_id') == $order_status_id) {
-				$this->model_checkout_voucher->confirm($order_id);
-			}
-		
-			$order_total_query = $this->db->non_cached_query("SELECT * FROM `order_total` WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order ASC");
-
-			foreach ($order_total_query->rows as $order_total) {
-				$this->load->model('total/' . $order_total['code']);
-
-				if (method_exists($this->{'model_total_' . $order_total['code']}, 'confirm')) {
-					$this->{'model_total_' . $order_total['code']}->confirm($order_info, $order_total);
-				}
-			}
-
-				// Send out order confirmation mail
-			$language = new Language($order_info['language_directory']);
-			$language->load($order_info['language_filename']);
-			$language->load('mail/order');
-
-			$order_status_query = $this->db->ncquery("SELECT * FROM order_status WHERE order_status_id = '" . (int)$order_status_id . "' AND language_id = '" . (int)$order_info['language_id'] . "'");
-
-			if ($order_status_query->num_rows) {
-				$order_status = $order_status_query->row['name'];	
-			} else {
-				$order_status = '';
-			}
-
-			if ($order_status_id == $this->config->get('config_order_status_id')) {
-
-				$data = array(
-					'type' => 'success',
-					'text' => 'Ура! Новый заказ', 
-					'entity_type' => 'order', 
-					'entity_id'=> $order_id
-				);
-
-				$this->mAlert->insertAlertForGroup('sales', $data);
-				$this->mAlert->insertAlertForGroup('buyers', $data);
-				$this->mAlert->insertAlertForGroup('admins', $data);
-
-			} else {
-				$data = array(
-					'type' => 'success',
-					'text' => 'Новый статус заказа: '.$order_status, 
-					'entity_type' => 'order', 
-					'entity_id'=> $order_id
-				);
-
-				$this->mAlert->insertAlertForGroup('sales', $data);								
-			}
-
-			$subject = sprintf($language->get('text_new_subject'), $order_info['store_name'], $order_id);
-
-				// HTML Mail
-			$this->load->model('tool/image');
-			$this->load->model('catalog/product');
-
-			$template = new EmailTemplate($this->request, $this->registry);
-
-			$template->addData($this->request->post, 'post_data');
-
-			$template->addData($order_info);
-
-			$template->data['affiliate'] = $affiliate_info;
-
-			$template->data['customer_group'] = $customer_group_info;
-
-			$template->data['new_order_status'] = $order_status; 
-
-			$template->data['title'] = sprintf($language->get('text_new_subject'), html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8'), $order_id);
-
-			$template->data['text_greeting'] = sprintf($language->get('text_new_greeting'), html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8'));
-			$template->data['text_link'] = $language->get('text_new_link');
-			$template->data['text_download'] = $language->get('text_new_download');
-			$template->data['text_order_detail'] = $language->get('text_new_order_detail');
-			$template->data['text_instruction'] = $language->get('text_new_instruction');
-			$template->data['text_order_id'] = $language->get('text_new_order_id');
-			$template->data['text_date_added'] = $language->get('text_new_date_added');
-			$template->data['text_payment_method'] = $language->get('text_new_payment_method');	
-			$template->data['text_shipping_method'] = $language->get('text_new_shipping_method');
-			$template->data['text_email'] = $language->get('text_new_email');
-			$template->data['text_telephone'] = $language->get('text_new_telephone');
-			$template->data['text_ip'] = $language->get('text_new_ip');
-			$template->data['text_payment_address'] = $language->get('text_new_payment_address');
-			$template->data['text_shipping_address'] = $language->get('text_new_shipping_address');
-			$template->data['text_product'] = $language->get('text_new_product');
-			$template->data['text_model'] = $language->get('text_new_model');
-			$template->data['text_quantity'] = $language->get('text_new_quantity');
-			$template->data['text_price'] = $language->get('text_new_price');
-			$template->data['text_total'] = $language->get('text_new_total');
-			$template->data['text_footer'] = $language->get('text_new_footer');
-			$template->data['text_powered'] = $language->get('text_new_powered');
-
-				//	$template->data['logo'] = $this->config->get('config_url') . 'image/' . $this->config->get('config_logo');		
-			$template->data['store_name'] = $order_info['store_name'];
-			$template->data['store_url'] = $order_info['store_url'];
-			$template->data['customer_id'] = $order_info['customer_id'];
-			$template->data['link'] = $order_info['store_url'] . 'index.php?route=account/order/info&order_id=' . $order_id;
-			$template->data['link_tracking'] = $template->getTracking($template->data['link']);
-
-			if ($order_download_query->num_rows) {
-				$template->data['download'] = $order_info['store_url'] . 'index.php?route=account/download';
-				$template->data['download_tracking'] = $template->getTracking($template->data['download']);
-			} else {
-				$template->data['download'] = '';
-				$template->data['download_tracking'] = '';
-			}
-
-			$template->data['order_id'] = $order_id;
-			$template->data['date_added'] = date($language->get('date_format_short'), strtotime($order_info['date_added']));    	
-			$template->data['payment_method'] = $order_info['payment_method'];
-			$template->data['shipping_method'] = $order_info['shipping_method'];
-			$template->data['shipping_code'] = $order_info['shipping_code'];
-			$template->data['payment_code'] = $order_info['payment_code'];
-			$template->data['payment_secondary_code'] = $order_info['payment_secondary_code'];
-			if (in_array($order_info['payment_code'], explode(',',$this->config->get('config_confirmed_delivery_payment_ids')))){
-				$template->data['payment_will_be_done_on_delivery'] = true;
-			} else {
-					//Есть какая-либо предоплата
-				$template->data['payment_will_be_done_on_delivery'] = false;
-			}
-			$template->data['email'] = $order_info['email'];
-			$template->data['telephone'] = $order_info['telephone'];
-			$template->data['ip'] = $order_info['ip'];
-
-			if ($comment && $notify) {
-				$template->data['comment'] = $comment;
-			} else {
-				$template->data['comment'] = '';
-			}
-
-			if ($order_info['comment']) {
-				$template->data['comment'] = str_replace(array("\r\n", "\r", "\n"), "<br />", $order_info['comment']);
-			} else {
-				$template->data['comment'] = '';
-			}
-
-			if ($comment && $notify && $template->data['comment'] != $comment) {
-				$template->data['instruction'] = str_replace(array("\r\n", "\r", "\n"), "<br />", $comment);
-			} else {
-				$template->data['instruction'] = '';
-			}
-
-			if ($order_info['payment_address_format']) {
-				$format = $order_info['payment_address_format'];
-			} else {
-				$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
-			}
-
-			$find = array(
-				'{firstname}',
-				'{lastname}',
-				'{company}',
-				'{address_1}',
-				'{address_2}',
-				'{city}',
-				'{postcode}',
-				'{zone}',
-				'{zone_code}',
-				'{country}'
-			);
-
-			$replace = array(
-				'firstname' => $order_info['payment_firstname'],
-				'lastname'  => $order_info['payment_lastname'],
-				'company'   => $order_info['payment_company'],
-				'address_1' => $order_info['payment_address_1'],
-				'address_2' => $order_info['payment_address_2'],
-				'city'      => $order_info['payment_city'],
-				'postcode'  => $order_info['payment_postcode'],
-				'zone'      => $order_info['payment_zone'],
-				'zone_code' => $order_info['payment_zone_code'],
-				'country'   => $order_info['payment_country']  
-			);
-
-			$template->data['payment_address'] = str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format))));						
-
-			if ($order_info['shipping_address_format']) {
-				$format = $order_info['shipping_address_format'];
-			} else {
-				$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
-			}
-
-			$find = array(
-				'{firstname}',
-				'{lastname}',
-				'{company}',
-				'{address_1}',
-				'{address_2}',
-				'{city}',
-				'{postcode}',
-				'{zone}',
-				'{zone_code}',
-				'{country}'
-			);
-
-			$replace = array(
-				'firstname' => $order_info['shipping_firstname'],
-				'lastname'  => $order_info['shipping_lastname'],
-				'company'   => $order_info['shipping_company'],
-				'address_1' => $order_info['shipping_address_1'],
-				'address_2' => $order_info['shipping_address_2'],
-				'city'      => $order_info['shipping_city'],
-				'postcode'  => $order_info['shipping_postcode'],
-				'zone'      => $order_info['shipping_zone'],
-				'zone_code' => $order_info['shipping_zone_code'],
-				'country'   => $order_info['shipping_country']  
-			);
-
-			$template->data['shipping_address'] = str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format))));
-
-				// Products
-			$template->data['products'] = array();
-
-			foreach ($order_product_query->rows as $product) {
-				$option_data = array();
-
-				$order_option_query = $this->db->ncquery("SELECT oo.*, pov.* FROM order_option oo LEFT JOIN product_option_value pov ON (pov.product_option_value_id = oo.product_option_value_id) WHERE oo.order_id = '" . (int)$order_id . "' AND oo.order_product_id = '" . (int)$product['order_product_id'] . "'");
-
-				foreach ($order_option_query->rows as $option) {
-					if ($option['type'] != 'file') {
-						$value = $option['value'];
-					} else {
-						$value = utf8_substr($option['value'], 0, utf8_strrpos($option['value'], '.'));
-					}
-
-					$option_data[] = array(
-						'name'  => $option['name'],
-						'price'  => $price,
-						'price_prefix'  => $option['price_prefix'],
-						'stock_quantity'  => $option['quantity'],
-						'stock_subtract'  => $option['subtract'],
-						'value' => (utf8_strlen($value) > 120 ? utf8_substr($value, 0, 120) . '..' : $value)
-					);					
-				}
-
-				if ($product['price_national'] > 0){
-					$price = $this->currency->format($product['price_national'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], '1');
-				} else {
-					$price = $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']);
-				}
-
-				if ($product['total_national'] > 0){
-					$total = $this->currency->format($product['total_national'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], '1');					
-				} elseif ($product['price_national'] > 0) {
-					$total = $this->currency->format($product['price_national']  * $product['quantity']  + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], '1');
-				} else {
-					$total = $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']);
-				}
-
-
-
-				$product_data = $this->model_catalog_product->getProduct($product['product_id']);
-
-				if (isset($product_data['image'])) {
-					$image = $this->model_tool_image->resize($product_data['image'], 50, 50);
-				} else {
-					$image = '';
-				}
-
-				$url = $this->url->link('product/product', 'product_id='.$product['product_id'], 'SSL');
-
-				$template->data['products'][] = array(
-					'product_id'       => $product_data['product_id'],
-					'url'     		   => $url,
-					'url_tracking' 	   => $template->getTracking($url),
-					'image'     	   => $image,
-					'weight'		   => ($product_data['weight'] > 0) ? $this->weight->format($product_data['weight'], $product_data['weight_class_id']) : 0, 
-					'description'      => $product_data['description'],
-					'manufacturer'     => $product_data['manufacturer'],
-					'sku'              => $product_data['sku'],
-					'stock_status'     => $product_data['stock_status'],
-					'stock_subtract'   => $product_data['subtract'],
-					'stock_quantity'   => ($product_data['quantity'] - $product['quantity']),
-					'name'     => $product['name'],
-					'model'    => $product['model'],
-					'option'   => $option_data,
-					'quantity' => $product['quantity'],
-					'price'    => $price,
-					'total'    => $total,
-				);
-			}
-
-				// Vouchers
-			$template->data['vouchers'] = array();
-
-			foreach ($order_voucher_query->rows as $voucher) {
-				$template->data['vouchers'][] = array(
-					'description' => $voucher['description'],
-					'amount'      => $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']),
-				);
-			}
-
-			$template->data['totals'] = $order_total_query->rows;
-
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/mail/order.tpl')) {
-					//	$html = $template->fetch($this->config->get('config_template') . '/template/mail/order.tpl');
-			} else {
-					//	$html = $template->fetch('default/template/mail/order.tpl');
-			}
-
-			$template->data['customer_id'] = $order_info['customer_id'];
-			$template->data['customer_name'] = $order_info['firstname'] . ' ' . $order_info['lastname'];
-			$template->data['customer_firstname'] = $order_info['firstname'];
-			$template->data['customer_lastname'] = $order_info['lastname'];
-
-					// Text Mail
-			$text = sprintf($language->get('text_new_greeting'), html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8')) . "\n\n";
-			$text .= $language->get('text_new_order_id') . ' ' . $order_id . "\n";
-			$text .= $language->get('text_new_date_added') . ' ' . date($language->get('date_format_short'), strtotime($order_info['date_added'])) . "\n";
-			$text .= $language->get('text_new_order_status') . ' ' . $order_status . "\n\n";
-
-			if ($comment && $notify) {
-				$text .= $language->get('text_new_instruction') . "\n\n";
-				$text .= $comment . "\n\n";
-			}
-
-					// Products
-			$text .= $language->get('text_new_products') . "\n";
-
-			foreach ($order_product_query->rows as $product) {
-				$text .= $product['quantity'] . 'x ' . $product['name'] . ' (' . $product['model'] . ') ' . html_entity_decode($this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8') . "\n";
-
-				$order_option_query = $this->db->ncquery("SELECT * FROM order_option WHERE order_id = '" . (int)$order_id . "' AND order_product_id = '" . $product['order_product_id'] . "'");
-
-				foreach ($order_option_query->rows as $option) {
-					$text .= chr(9) . '-' . $option['name'] . ' ' . (utf8_strlen($option['value']) > 20 ? utf8_substr($option['value'], 0, 20) . '..' : $option['value']) . "\n";
-				}
-			}
-
-			foreach ($order_voucher_query->rows as $voucher) {
-				$text .= '1x ' . $voucher['description'] . ' ' . $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']);
-			}
-
-			$text .= "\n";
-
-			$text .= $language->get('text_new_order_total') . "\n";
-
-			foreach ($order_total_query->rows as $total) {
-				$text .= $total['title'] . ': ' . html_entity_decode($total['text'], ENT_NOQUOTES, 'UTF-8') . "\n";
-			}
-
-			$text .= "\n";
-
-			if ($order_info['customer_id']) {
-				$text .= $language->get('text_new_link') . "\n";
-				$text .= $order_info['store_url'] . 'index.php?route=account/order/info&order_id=' . $order_id . "\n\n";
-			}
-
-			if ($order_download_query->num_rows) {
-				$text .= $language->get('text_new_download') . "\n";
-				$text .= $order_info['store_url'] . 'index.php?route=account/download' . "\n\n";
-			}
-
-					// Comment
-			if ($order_info['comment']) {
-				$text .= $language->get('text_new_comment') . "\n\n";
-				$text .= $order_info['comment'] . "\n\n";
-			}
-
-			$text .= $language->get('text_new_footer') . "\n\n";
-
-			$mail = new Mail($this->registry);
-			$mail->setTo($order_info['email']);
-			$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
-			$template_data = array(
-				'key' => 'order.customer',
-				'order_status_id' => $order_status_id
-			);
-
-			$template->load($template_data);
-
-			$mail = $template->hook($mail); 
-			if(!empty($template->data['emailtemplate']) && $template->data['emailtemplate']['attach_invoice'] && ($this->config->get('config_complete_status_id') == $order_status_id) && $order_info && $order_info['invoice_no'] == '') {
-				$query = $this->db->ncquery("SELECT MAX(invoice_no) AS invoice_no FROM `order` WHERE invoice_prefix = '" . $this->db->escape($order_info['invoice_prefix']) . "'");
-
-				if ($query->row['invoice_no']) {
-					$invoice_no = $query->row['invoice_no'] + 1;
-				} else {
-					$invoice_no = 1;
-				}
-
-				$this->db->ncquery("UPDATE `order` SET invoice_no = '" . (int)$invoice_no . "', invoice_prefix = '" . $this->db->escape($order_info['invoice_prefix']) . "' WHERE order_id = '" . (int)$order_id . "'");
-
-				$order_info['invoice_no'] = $invoice_no;
-			}
-			$mail->setText(html_entity_decode($text, ENT_QUOTES, 'UTF-8'));
-			$mail->send();
-			$template->sent();
-
-			$order_product_query = $this->db->ncquery("SELECT * FROM order_product WHERE order_id = '" . (int)$order_id . "'");
-
-			$this->smsAdaptor->sendNewOrder($order_info);
-
-			if ($this->config->get('config_alert_mail')) {
-
-				$template->data['order_link'] = (defined('HTTP_ADMIN') ? HTTP_ADMIN : HTTP_SERVER.'admin/') . 'index.php?route=sale/order/info&order_id=' . $order_id;					
-				$template->data['order_weight'] = $this->weight->format($order_info['weight'], $this->config->get('config_weight_class_id'), $this->language->get('decimal_point'), $this->language->get('thousand_point'));
-
-				$subject = sprintf($language->get('text_new_subject'), html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'), $order_id);
-				$subject = sprintf($language->get('text_new_subject_admin'), $order_id, html_entity_decode($template->data['customer_name'], ENT_QUOTES, 'UTF-8'), html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
-
-					// Text 
-				$text  = $language->get('text_new_received') . "\n\n";
-				$text .= $language->get('text_new_order_id') . ' ' . $order_id . "\n";
-				$text .= $language->get('text_new_date_added') . ' ' . date($language->get('date_format_short'), strtotime($order_info['date_added'])) . "\n";
-				$text .= $language->get('text_new_order_status') . ' ' . $order_status . "\n\n";
-				$text .= $language->get('text_new_products') . "\n";
-
-				foreach ($order_product_query->rows as $product) {
-					$text .= $product['quantity'] . 'x ' . $product['name'] . ' (' . $product['model'] . ') ' . html_entity_decode($this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8') . "\n";
-
-					$order_option_query = $this->db->ncquery("SELECT * FROM order_option WHERE order_id = '" . (int)$order_id . "' AND order_product_id = '" . $product['order_product_id'] . "'");
-
-					foreach ($order_option_query->rows as $option) {
-						if ($option['type'] != 'file') {
-							$value = $option['value'];
-						} else {
-							$value = utf8_substr($option['value'], 0, utf8_strrpos($option['value'], '.'));
-						}
-
-						$text .= chr(9) . '-' . $option['name'] . ' ' . (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value) . "\n";
-					}
-				}
-
-				foreach ($order_voucher_query->rows as $voucher) {
-					$text .= '1x ' . $voucher['description'] . ' ' . $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']);
-				}
-
-				$text .= "\n";
-
-				$text .= $language->get('text_new_order_total') . "\n";
-
-				foreach ($order_total_query->rows as $total) {
-					$text .= $total['title'] . ': ' . html_entity_decode($total['text'], ENT_NOQUOTES, 'UTF-8') . "\n";
-				}			
-
-				$text .= "\n";
-
-				if ($order_info['comment']) {
-					$text .= $language->get('text_new_comment') . "\n\n";
-					$text .= $order_info['comment'] . "\n\n";
-				}
-
-				$mail = new Mail($this->registry); 
-				$mail->setTo($this->config->get('config_email'));
-				$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
-				$mail->setText(html_entity_decode($text, ENT_QUOTES, 'UTF-8'));
-				$template->load('order.admin');
-				$template->build();
-				$mail = $template->hook($mail);
-				$mail->send();					
-				$template->sent();
-
-				if ($this->config->get('config_alert_emails')){
-					$emails = explode(',', $this->config->get('config_alert_emails'));
-
-					foreach ($emails as $email) {
-						if ($email && preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $email)) {
-							$mail->setTo($email);
-							$mail->send();
-						}
-					}	
-				}
-							
-			}
-
-			if ($this->config->get('config_show_profitability_in_order_list')){
-				$this->registry->get('rainforestAmazon')->offersParser->PriceLogic->countOrderProfitablility($order_id);
-			}
-				
+			return false;
 		}
 	}
 
-
-	public function update($order_id, $order_status_id, $comment = '', $notify = false, $user_id = false) {
+	public function setUkrcreditsOrderId($order_id, $paymenttype, $mono_order_id, $mono_order_status, $mono_order_substatus = false) {
 		$order_info = $this->getOrder($order_id);
 
-		if ($order_info && $order_info['order_status_id']) {
+		if ($order_info && !$order_info['order_status_id']) {
+			$this->db->query("INSERT INTO order_ukrcredits SET order_id = '" . (int)$order_id . "', ukrcredits_payment_type = '" . $this->db->escape($paymenttype) . "', ukrcredits_order_id = '" . $this->db->escape($mono_order_id) . "', ukrcredits_order_status = '" . $this->db->escape($mono_order_status) . "', ukrcredits_order_substatus = '" . $this->db->escape($mono_order_substatus) . "'");
+		}		
+	}			
+
+	public function getOrderMb($mono_order_id) {
+		$ordermb_query = $this->db->query("SELECT * FROM `order_ukrcredits` WHERE ukrcredits_order_id = '" . $this->db->escape($mono_order_id) . "'");
+		if ($ordermb_query->num_rows) {
+			return $ordermb_query->row;			
+		} else {
+			return false;
+		}
+	}
+
+	public function updateUkrcreditsOrderMono($order_id, $state, $substate) {
+		$this->db->query("UPDATE order_ukrcredits SET ukrcredits_order_status = '" . $this->db->escape($state) . "', ukrcredits_order_substatus = '" . $this->db->escape($substate) . "' WHERE order_id = '" . (int)$order_id . "'");
+	}	
+
+	public function updateUkrcreditsOrderPrivat($order_id, $privat_order_status) {
+		$this->db->query("UPDATE order_ukrcredits SET ukrcredits_order_status = '" . $this->db->escape($privat_order_status) . "' WHERE order_id = '" . (int)$order_id . "'");
+	}
+
+	public function getOrderProducts($order_id) {
+		$query = $this->db->ncquery("SELECT * FROM order_product WHERE order_id = '" . (int)$order_id ."'");
+
+		return $query->rows;
+	}
+
+	public function confirm($order_id, $order_status_id, $comment = '', $notify = false, $user_id = false) {
+		$this->load->model('module/affiliate');
+		$this->load->model('catalog/product');
+		$this->load->model('account/customer');
+
+		$order_info = $this->getOrder($order_id);
+
+		if ($order_info && !$order_info['order_status_id']) {
+			$this->model_module_affiliate->validate($order_id, $order_info, $order_status_id);
+
 			if ($this->config->get('config_fraud_detection')) {
 				$this->load->model('checkout/fraud');
 
@@ -1695,17 +1156,17 @@ public function confirm($order_id, $order_status_id, $comment = '', $notify = fa
 				if ($risk_score > $this->config->get('config_fraud_score')) {
 					$order_status_id = $this->config->get('config_fraud_status_id');
 				}
-			}			
+			}
 
 			$status = false;
 
-			$this->load->model('account/customer');
-
 			if ($order_info['customer_id']) {
 				$results = $this->model_account_customer->getIps($order_info['customer_id']);
+
 				foreach ($results as $result) {
 					if ($this->model_account_customer->isBanIp($result['ip'])) {
 						$status = true;
+
 						break;
 					}
 				}
@@ -1717,100 +1178,634 @@ public function confirm($order_id, $order_status_id, $comment = '', $notify = fa
 				$order_status_id = $this->config->get('config_order_status_id');
 			}		
 
-			$this->db->ncquery("UPDATE `order` SET order_status_id = '" . (int)$order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
-
+			$this->db->ncquery("UPDATE `order` SET order_status_id = '" . (int)$order_status_id . "', date_added = NOW(), date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
 			$this->db->ncquery("INSERT INTO order_history SET order_id = '" . (int)$order_id . "', order_status_id = '" . (int)$order_status_id . "', notify = '" . (int)$notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW(), user_id = '" . (int)$user_id . "'");
 
+			$order_product_query = $this->db->ncquery("SELECT * FROM order_product WHERE order_id = '" . (int)$order_id . "'");
+
+			foreach ($order_product_query->rows as $order_product) {
+				if ($this->config->get('config_drop_special_prices_not_in_warehouses')){
+					$stock_warehouse_query = $this->db->ncquery("SELECT `" . $this->config->get('config_warehouse_identifier') . "` as stock_in_warehouse FROM product WHERE product_id = '" . (int)$order_product['product_id'] . "'");
+
+					if ((int)$stock_warehouse_query->row['stock_in_warehouse'] > 0 && (int)$stock_warehouse_query->row['stock_in_warehouse'] <= (int)$order_product['quantity']){				
+							$this->db->ncquery("DELETE FROM product_special_backup WHERE product_id = '" . (int)$order_product['product_id'] . "'");
+							$this->db->ncquery("INSERT INTO product_special_backup (SELECT * FROM product_special WHERE product_id = '" . (int)$order_product['product_id'] . "')");				
+
+							$this->db->ncquery("DELETE FROM product_special WHERE product_id = '" . (int)$order_product['product_id'] . "'");
+						}
+					}
+
+					$this->db->ncquery("UPDATE product SET `" . $this->config->get('config_warehouse_identifier') . "` = (`" . $this->config->get('config_warehouse_identifier') . "` - ". (int)$order_product['quantity'] .") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND `" . $this->config->get('config_warehouse_identifier') . "` > 0");
+
+						$this->db->ncquery("UPDATE product SET quantity = (quantity - " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
+						$this->db->ncquery("UPDATE product SET quantity = 0 WHERE product_id = '" . (int)$order_product['product_id'] . "' AND quantity < 0");
+
+						$order_option_query = $this->db->ncquery("SELECT * FROM order_option WHERE order_id = '" . (int)$order_id . "' AND order_product_id = '" . (int)$order_product['order_product_id'] . "'");
+						foreach ($order_option_query->rows as $option) {
+							$this->db->ncquery("UPDATE product_option_value SET quantity = (quantity - " . (int)$order_product['quantity'] . ") WHERE product_option_value_id = '" . (int)$option['product_option_value_id'] . "' AND subtract = '1'");
+						}
+					}
+
+					$customer_group_info = array();
+					if(isset($order_info['customer_group_id']) && $order_info['customer_group_id']){
+						$this->load->model('account/customer_group');
+						$customer_group_info = $this->model_account_customer_group->getCustomerGroup($order_info['customer_group_id']);
+					}
+
+					$affiliate_info = array();
+					if(isset($order_info['affiliate_id']) && $order_info['affiliate_id']){
+						$this->load->model('affiliate/affiliate');
+						$affiliate_info = $this->model_affiliate_affiliate->getAffiliate($order_info['affiliate_id']);
+					}
+
+					if(!isset($passArray) || empty($passArray)){ $passArray = null; }											
+					$order_download_query = $this->db->ncquery("SELECT * FROM order_download WHERE order_id = '" . (int)$order_id . "'");
+
+					$this->load->model('checkout/voucher');
+					$order_voucher_query = $this->db->ncquery("SELECT * FROM order_voucher WHERE order_id = '" . (int)$order_id . "'");
+
+					foreach ($order_voucher_query->rows as $order_voucher) {
+						$voucher_id = $this->model_checkout_voucher->addVoucher($order_id, $order_voucher);
+
+						$this->db->ncquery("UPDATE order_voucher SET voucher_id = '" . (int)$voucher_id . "' WHERE order_voucher_id = '" . (int)$order_voucher['order_voucher_id'] . "'");
+					}			
+
+					if ($this->config->get('config_complete_status_id') == $order_status_id) {
+						$this->model_checkout_voucher->confirm($order_id);
+					}
+
+					$order_total_query = $this->db->non_cached_query("SELECT * FROM `order_total` WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order ASC");
+
+					foreach ($order_total_query->rows as $order_total) {
+						$this->load->model('total/' . $order_total['code']);
+
+						if (method_exists($this->{'model_total_' . $order_total['code']}, 'confirm')) {
+							$this->{'model_total_' . $order_total['code']}->confirm($order_info, $order_total);
+						}
+					}
+
+					$language = new Language($order_info['language_directory']);
+					$language->load($order_info['language_filename']);
+					$language->load('mail/order');
+
+					$order_status_query = $this->db->ncquery("SELECT * FROM order_status WHERE order_status_id = '" . (int)$order_status_id . "' AND language_id = '" . (int)$order_info['language_id'] . "'");
+
+					if ($order_status_query->num_rows) {
+						$order_status = $order_status_query->row['name'];	
+					} else {
+						$order_status = '';
+					}
+
+					if ($order_status_id == $this->config->get('config_order_status_id')) {
+
+						$data = array(
+							'type' => 'success',
+							'text' => 'Ура! Новый заказ', 
+							'entity_type' => 'order', 
+							'entity_id'=> $order_id
+						);
+
+						$this->mAlert->insertAlertForGroup('sales', $data);
+						$this->mAlert->insertAlertForGroup('buyers', $data);
+						$this->mAlert->insertAlertForGroup('admins', $data);
+
+					} else {
+						$data = array(
+							'type' => 'success',
+							'text' => 'Новый статус заказа: '.$order_status, 
+							'entity_type' => 'order', 
+							'entity_id'=> $order_id
+						);
+
+						$this->mAlert->insertAlertForGroup('sales', $data);								
+					}
+
+					$subject = sprintf($language->get('text_new_subject'), $order_info['store_name'], $order_id);
+
+					$template = new EmailTemplate($this->request, $this->registry);
+					$template->addData($this->request->post, 'post_data');
+					$template->addData($order_info);
+
+					$template->data['affiliate'] 			= $affiliate_info;
+					$template->data['customer_group'] 		= $customer_group_info;
+					$template->data['new_order_status'] 	= $order_status; 
+					$template->data['title'] 				= sprintf($language->get('text_new_subject'), html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8'), $order_id);
+					$template->data['text_greeting'] 		= sprintf($language->get('text_new_greeting'), html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8'));
+					$template->data['text_link'] 			= $language->get('text_new_link');
+					$template->data['text_download'] 		= $language->get('text_new_download');
+					$template->data['text_order_detail'] 	= $language->get('text_new_order_detail');
+					$template->data['text_instruction'] 	= $language->get('text_new_instruction');
+					$template->data['text_order_id'] 		= $language->get('text_new_order_id');
+					$template->data['text_date_added'] 		= $language->get('text_new_date_added');
+					$template->data['text_payment_method'] 	= $language->get('text_new_payment_method');	
+					$template->data['text_shipping_method'] = $language->get('text_new_shipping_method');
+					$template->data['text_email'] 			= $language->get('text_new_email');
+					$template->data['text_telephone'] 		= $language->get('text_new_telephone');
+					$template->data['text_ip'] 				= $language->get('text_new_ip');
+					$template->data['text_payment_address'] = $language->get('text_new_payment_address');
+					$template->data['text_shipping_address'] 	= $language->get('text_new_shipping_address');
+					$template->data['text_product'] 			= $language->get('text_new_product');
+					$template->data['text_model'] 			= $language->get('text_new_model');
+					$template->data['text_quantity'] 		= $language->get('text_new_quantity');
+					$template->data['text_price'] 			= $language->get('text_new_price');
+					$template->data['text_total'] 			= $language->get('text_new_total');
+					$template->data['text_footer'] 			= $language->get('text_new_footer');
+					$template->data['text_powered'] 		= $language->get('text_new_powered');	
+					$template->data['store_name'] 			= $order_info['store_name'];
+					$template->data['store_url'] 			= $order_info['store_url'];
+					$template->data['customer_id'] 			= $order_info['customer_id'];
+					$template->data['link'] 				= $order_info['store_url'] . 'index.php?route=account/order/info&order_id=' . $order_id;
+					$template->data['link_tracking'] 		= $template->getTracking($template->data['link']);
+
+					if ($order_download_query->num_rows) {
+						$template->data['download'] 			= $order_info['store_url'] . 'index.php?route=account/download';
+						$template->data['download_tracking'] 	= $template->getTracking($template->data['download']);
+					} else {
+						$template->data['download'] = '';
+						$template->data['download_tracking'] = '';
+					}
+
+					$template->data['order_id'] 		= $order_id;
+					$template->data['date_added'] 		= date($language->get('date_format_short'), strtotime($order_info['date_added']));    	
+					$template->data['payment_method'] 	= $order_info['payment_method'];
+					$template->data['shipping_method'] 	= $order_info['shipping_method'];
+					$template->data['shipping_code'] 	= $order_info['shipping_code'];
+					$template->data['payment_code'] 	= $order_info['payment_code'];
+					$template->data['payment_secondary_code'] = $order_info['payment_secondary_code'];
+					if (in_array($order_info['payment_code'], explode(',',$this->config->get('config_confirmed_delivery_payment_ids')))){
+						$template->data['payment_will_be_done_on_delivery'] = true;
+					} else {
+						$template->data['payment_will_be_done_on_delivery'] = false;
+					}
+					$template->data['email'] 		= $order_info['email'];
+					$template->data['telephone'] 	= $order_info['telephone'];
+					$template->data['ip'] 			= $order_info['ip'];
+
+					if ($comment && $notify) {
+						$template->data['comment'] = $comment;
+					} else {
+						$template->data['comment'] = '';
+					}
+
+					if ($order_info['comment']) {
+						$template->data['comment'] = str_replace(array("\r\n", "\r", "\n"), "<br />", $order_info['comment']);
+					} else {
+						$template->data['comment'] = '';
+					}
+
+					if ($comment && $notify && $template->data['comment'] != $comment) {
+						$template->data['instruction'] = str_replace(array("\r\n", "\r", "\n"), "<br />", $comment);
+					} else {
+						$template->data['instruction'] = '';
+					}
+
+					if ($order_info['payment_address_format']) {
+						$format = $order_info['payment_address_format'];
+					} else {
+						$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
+					}
+
+					$find = array(
+						'{firstname}',
+						'{lastname}',
+						'{company}',
+						'{address_1}',
+						'{address_2}',
+						'{city}',
+						'{postcode}',
+						'{zone}',
+						'{zone_code}',
+						'{country}'
+					);
+
+					$replace = array(
+						'firstname' => $order_info['payment_firstname'],
+						'lastname'  => $order_info['payment_lastname'],
+						'company'   => $order_info['payment_company'],
+						'address_1' => $order_info['payment_address_1'],
+						'address_2' => $order_info['payment_address_2'],
+						'city'      => $order_info['payment_city'],
+						'postcode'  => $order_info['payment_postcode'],
+						'zone'      => $order_info['payment_zone'],
+						'zone_code' => $order_info['payment_zone_code'],
+						'country'   => $order_info['payment_country']  
+					);
+
+					$template->data['payment_address'] = str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format))));						
+
+					if ($order_info['shipping_address_format']) {
+						$format = $order_info['shipping_address_format'];
+					} else {
+						$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
+					}
+
+					$find = array(
+						'{firstname}',
+						'{lastname}',
+						'{company}',
+						'{address_1}',
+						'{address_2}',
+						'{city}',
+						'{postcode}',
+						'{zone}',
+						'{zone_code}',
+						'{country}'
+					);
+
+					$replace = array(
+						'firstname' => $order_info['shipping_firstname'],
+						'lastname'  => $order_info['shipping_lastname'],
+						'company'   => $order_info['shipping_company'],
+						'address_1' => $order_info['shipping_address_1'],
+						'address_2' => $order_info['shipping_address_2'],
+						'city'      => $order_info['shipping_city'],
+						'postcode'  => $order_info['shipping_postcode'],
+						'zone'      => $order_info['shipping_zone'],
+						'zone_code' => $order_info['shipping_zone_code'],
+						'country'   => $order_info['shipping_country']  
+					);
+
+					$template->data['shipping_address'] = str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format))));
+
+				// Products
+					$template->data['products'] = array();
+
+					foreach ($order_product_query->rows as $product) {
+						$option_data = array();
+
+						$order_option_query = $this->db->ncquery("SELECT oo.*, pov.* FROM order_option oo LEFT JOIN product_option_value pov ON (pov.product_option_value_id = oo.product_option_value_id) WHERE oo.order_id = '" . (int)$order_id . "' AND oo.order_product_id = '" . (int)$product['order_product_id'] . "'");
+
+						foreach ($order_option_query->rows as $option) {
+							if ($option['type'] != 'file') {
+								$value = $option['value'];
+							} else {
+								$value = utf8_substr($option['value'], 0, utf8_strrpos($option['value'], '.'));
+							}
+
+							$option_data[] = array(
+								'name'  => $option['name'],
+								'price'  => $price,
+								'price_prefix'  => $option['price_prefix'],
+								'stock_quantity'  => $option['quantity'],
+								'stock_subtract'  => $option['subtract'],
+								'value' => (utf8_strlen($value) > 120 ? utf8_substr($value, 0, 120) . '..' : $value)
+							);					
+						}
+
+						if ($product['price_national'] > 0){
+							$price = $this->currency->format($product['price_national'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], '1');
+						} else {
+							$price = $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']);
+						}
+
+						if ($product['total_national'] > 0){
+							$total = $this->currency->format($product['total_national'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], '1');					
+						} elseif ($product['price_national'] > 0) {
+							$total = $this->currency->format($product['price_national']  * $product['quantity']  + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], '1');
+						} else {
+							$total = $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']);
+						}
+
+						$product_data = $this->model_catalog_product->getProduct($product['product_id']);
+
+						if (isset($product_data['image'])) {
+							$image = $this->model_tool_image->resize($product_data['image'], 50, 50);
+						} else {
+							$image = '';
+						}
+
+						$url = $this->url->link('product/product', 'product_id='.$product['product_id'], 'SSL');
+
+						$template->data['products'][] = array(
+							'product_id'       => $product_data['product_id'],
+							'url'     		   => $url,
+							'url_tracking' 	   => $template->getTracking($url),
+							'image'     	   => $image,
+							'weight'		   => ($product_data['weight'] > 0) ? $this->weight->format($product_data['weight'], $product_data['weight_class_id']) : 0, 
+							'description'      => $product_data['description'],
+							'manufacturer'     => $product_data['manufacturer'],
+							'sku'              => $product_data['sku'],
+							'stock_status'     => $product_data['stock_status'],
+							'stock_subtract'   => $product_data['subtract'],
+							'stock_quantity'   => ($product_data['quantity'] - $product['quantity']),
+							'name'     => $product['name'],
+							'model'    => $product['model'],
+							'option'   => $option_data,
+							'quantity' => $product['quantity'],
+							'price'    => $price,
+							'total'    => $total,
+						);
+					}
+
+					$template->data['vouchers'] = array();
+
+					foreach ($order_voucher_query->rows as $voucher) {
+						$template->data['vouchers'][] = array(
+							'description' => $voucher['description'],
+							'amount'      => $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']),
+						);
+					}
+
+					$template->data['totals'] 				= $order_total_query->rows;
+					$template->data['customer_id'] 			= $order_info['customer_id'];
+					$template->data['customer_name'] 		= $order_info['firstname'] . ' ' . $order_info['lastname'];
+					$template->data['customer_firstname'] 	= $order_info['firstname'];
+					$template->data['customer_lastname'] 	= $order_info['lastname'];
+
+					$text = sprintf($language->get('text_new_greeting'), html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8')) . "\n\n";
+					$text .= $language->get('text_new_order_id') . ' ' . $order_id . "\n";
+					$text .= $language->get('text_new_date_added') . ' ' . date($language->get('date_format_short'), strtotime($order_info['date_added'])) . "\n";
+					$text .= $language->get('text_new_order_status') . ' ' . $order_status . "\n\n";
+
+					if ($comment && $notify) {
+						$text .= $language->get('text_new_instruction') . "\n\n";
+						$text .= $comment . "\n\n";
+					}
+
+					// Products
+					$text .= $language->get('text_new_products') . "\n";
+
+					foreach ($order_product_query->rows as $product) {
+						$text .= $product['quantity'] . 'x ' . $product['name'] . ' (' . $product['model'] . ') ' . html_entity_decode($this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8') . "\n";
+
+						$order_option_query = $this->db->ncquery("SELECT * FROM order_option WHERE order_id = '" . (int)$order_id . "' AND order_product_id = '" . $product['order_product_id'] . "'");
+
+						foreach ($order_option_query->rows as $option) {
+							$text .= chr(9) . '-' . $option['name'] . ' ' . (utf8_strlen($option['value']) > 20 ? utf8_substr($option['value'], 0, 20) . '..' : $option['value']) . "\n";
+						}
+					}
+
+					foreach ($order_voucher_query->rows as $voucher) {
+						$text .= '1x ' . $voucher['description'] . ' ' . $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']);
+					}
+
+					$text .= "\n";
+
+					$text .= $language->get('text_new_order_total') . "\n";
+
+					foreach ($order_total_query->rows as $total) {
+						$text .= $total['title'] . ': ' . html_entity_decode($total['text'], ENT_NOQUOTES, 'UTF-8') . "\n";
+					}
+
+					$text .= "\n";
+
+					if ($order_info['customer_id']) {
+						$text .= $language->get('text_new_link') . "\n";
+						$text .= $order_info['store_url'] . 'index.php?route=account/order/info&order_id=' . $order_id . "\n\n";
+					}
+
+					if ($order_download_query->num_rows) {
+						$text .= $language->get('text_new_download') . "\n";
+						$text .= $order_info['store_url'] . 'index.php?route=account/download' . "\n\n";
+					}
+
+					// Comment
+					if ($order_info['comment']) {
+						$text .= $language->get('text_new_comment') . "\n\n";
+						$text .= $order_info['comment'] . "\n\n";
+					}
+
+					$text .= $language->get('text_new_footer') . "\n\n";
+
+					$mail = new Mail($this->registry);
+					$mail->setTo($order_info['email']);
+					$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
+					$template_data = array(
+						'key' => 'order.customer',
+						'order_status_id' => $order_status_id
+					);
+
+					$template->load($template_data);
+
+					$mail = $template->hook($mail); 
+					if(!empty($template->data['emailtemplate']) && $template->data['emailtemplate']['attach_invoice'] && ($this->config->get('config_complete_status_id') == $order_status_id) && $order_info && $order_info['invoice_no'] == '') {
+						$query = $this->db->ncquery("SELECT MAX(invoice_no) AS invoice_no FROM `order` WHERE invoice_prefix = '" . $this->db->escape($order_info['invoice_prefix']) . "'");
+
+						if ($query->row['invoice_no']) {
+							$invoice_no = $query->row['invoice_no'] + 1;
+						} else {
+							$invoice_no = 1;
+						}
+
+						$this->db->ncquery("UPDATE `order` SET invoice_no = '" . (int)$invoice_no . "', invoice_prefix = '" . $this->db->escape($order_info['invoice_prefix']) . "' WHERE order_id = '" . (int)$order_id . "'");
+
+						$order_info['invoice_no'] = $invoice_no;
+					}
+					$mail->setText(html_entity_decode($text, ENT_QUOTES, 'UTF-8'));
+					$mail->send();
+					$template->sent();
+
+					$order_product_query = $this->db->ncquery("SELECT * FROM order_product WHERE order_id = '" . (int)$order_id . "'");
+
+					$this->smsAdaptor->sendNewOrder($order_info);
+
+					if ($this->config->get('config_alert_mail')) {
+						$template->data['order_link'] = (defined('HTTP_ADMIN') ? HTTP_ADMIN : HTTP_SERVER.'admin/') . 'index.php?route=sale/order/info&order_id=' . $order_id;					
+						$template->data['order_weight'] = $this->weight->format($order_info['weight'], $this->config->get('config_weight_class_id'), $this->language->get('decimal_point'), $this->language->get('thousand_point'));
+
+						$subject = sprintf($language->get('text_new_subject'), html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'), $order_id);
+						$subject = sprintf($language->get('text_new_subject_admin'), $order_id, html_entity_decode($template->data['customer_name'], ENT_QUOTES, 'UTF-8'), html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
+
+					// Text 
+						$text  = $language->get('text_new_received') . "\n\n";
+						$text .= $language->get('text_new_order_id') . ' ' . $order_id . "\n";
+						$text .= $language->get('text_new_date_added') . ' ' . date($language->get('date_format_short'), strtotime($order_info['date_added'])) . "\n";
+						$text .= $language->get('text_new_order_status') . ' ' . $order_status . "\n\n";
+						$text .= $language->get('text_new_products') . "\n";
+
+						foreach ($order_product_query->rows as $product) {
+							$text .= $product['quantity'] . 'x ' . $product['name'] . ' (' . $product['model'] . ') ' . html_entity_decode($this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8') . "\n";
+
+							$order_option_query = $this->db->ncquery("SELECT * FROM order_option WHERE order_id = '" . (int)$order_id . "' AND order_product_id = '" . $product['order_product_id'] . "'");
+
+							foreach ($order_option_query->rows as $option) {
+								if ($option['type'] != 'file') {
+									$value = $option['value'];
+								} else {
+									$value = utf8_substr($option['value'], 0, utf8_strrpos($option['value'], '.'));
+								}
+
+								$text .= chr(9) . '-' . $option['name'] . ' ' . (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value) . "\n";
+							}
+						}
+
+						foreach ($order_voucher_query->rows as $voucher) {
+							$text .= '1x ' . $voucher['description'] . ' ' . $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']);
+						}
+
+						$text .= "\n";
+
+						$text .= $language->get('text_new_order_total') . "\n";
+
+						foreach ($order_total_query->rows as $total) {
+							$text .= $total['title'] . ': ' . html_entity_decode($total['text'], ENT_NOQUOTES, 'UTF-8') . "\n";
+						}			
+
+						$text .= "\n";
+
+						if ($order_info['comment']) {
+							$text .= $language->get('text_new_comment') . "\n\n";
+							$text .= $order_info['comment'] . "\n\n";
+						}
+
+						$mail = new Mail($this->registry); 
+						$mail->setTo($this->config->get('config_email'));
+						$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
+						$mail->setText(html_entity_decode($text, ENT_QUOTES, 'UTF-8'));
+						$template->load('order.admin');
+						$template->build();
+						$mail = $template->hook($mail);
+						$mail->send();					
+						$template->sent();
+
+						if ($this->config->get('config_alert_emails')){
+							$emails = explode(',', $this->config->get('config_alert_emails'));
+
+							foreach ($emails as $email) {
+								if ($email && preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $email)) {
+									$mail->setTo($email);
+									$mail->send();
+								}
+							}	
+						}
+
+					}
+
+					if ($this->config->get('config_show_profitability_in_order_list')){
+						$this->registry->get('rainforestAmazon')->offersParser->PriceLogic->countOrderProfitablility($order_id);
+					}				
+				}
+			}
+
+
+			public function update($order_id, $order_status_id, $comment = '', $notify = false, $user_id = false) {
+				$order_info = $this->getOrder($order_id);
+
+				if ($order_info && $order_info['order_status_id']) {
+					if ($this->config->get('config_fraud_detection')) {
+						$this->load->model('checkout/fraud');
+
+						$risk_score = $this->model_checkout_fraud->getFraudScore($order_info);
+
+						if ($risk_score > $this->config->get('config_fraud_score')) {
+							$order_status_id = $this->config->get('config_fraud_status_id');
+						}
+					}			
+
+					$status = false;
+
+					$this->load->model('account/customer');
+
+					if ($order_info['customer_id']) {
+						$results = $this->model_account_customer->getIps($order_info['customer_id']);
+						foreach ($results as $result) {
+							if ($this->model_account_customer->isBanIp($result['ip'])) {
+								$status = true;
+								break;
+							}
+						}
+					} else {
+						$status = $this->model_account_customer->isBanIp($order_info['ip']);
+					}
+
+					if ($status) {
+						$order_status_id = $this->config->get('config_order_status_id');
+					}		
+
+					$this->db->ncquery("UPDATE `order` SET order_status_id = '" . (int)$order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
+
+					$this->db->ncquery("INSERT INTO order_history SET order_id = '" . (int)$order_id . "', order_status_id = '" . (int)$order_status_id . "', notify = '" . (int)$notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW(), user_id = '" . (int)$user_id . "'");
+
 				// Send out any gift voucher mails
-			if ($this->config->get('config_complete_status_id') == $order_status_id) {
-				$this->load->model('checkout/voucher');
+					if ($this->config->get('config_complete_status_id') == $order_status_id) {
+						$this->load->model('checkout/voucher');
 
-				$this->model_checkout_voucher->confirm($order_id);
+						$this->model_checkout_voucher->confirm($order_id);
+					}
+
+					$order_status_query = $this->db->ncquery("SELECT * FROM order_status WHERE order_status_id = '" . (int)$order_status_id . "' AND language_id = '" . (int)$order_info['language_id'] . "'");
+
+					if ($order_status_query->num_rows) {
+						$order_status = $order_status_query->row['name'];	
+					} else {
+						$order_status = '';
+					}
+
+					$data = array(
+						'type' => 'success',
+						'text' => 'Новый статус заказа: '.$order_status, 
+						'entity_type' => 'order', 
+						'entity_id'=> $order_id
+					);
+
+					$this->mAlert->insertAlertForGroup('sales', $data);		
+
+					if ($notify) {
+						$language = new Language($order_info['language_directory']);
+						$language->load($order_info['language_filename']);
+						$language->load('mail/order');
+
+						$subject = sprintf($language->get('text_update_subject'), html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8'), $order_id);
+
+						$template = new EmailTemplate($this->request, $this->registry);
+
+						$template->addData($order_info);
+						$template->addData('comment', $comment);
+
+						$template->data['order_url'] = ($order_info['customer_id']) ? ($order_info['store_url'] . 'index.php?route=account/order/info&order_id=' . $order_id) : '';
+						$template->data['order_url_tracking'] = $template->getTracking($template->data['order_url']);
+						$template->data['date_added'] = date($language->get('date_format_short'), strtotime($order_info['date_added']));
+
+						$message  = $language->get('text_update_order') . ' ' . $order_id . "\n";
+						$message .= $language->get('text_update_date_added') . ' ' . date($language->get('date_format_short'), strtotime($order_info['date_added'])) . "\n\n";
+
+						$order_status_query = $this->db->ncquery("SELECT * FROM order_status WHERE order_status_id = '" . (int)$order_status_id . "' AND language_id = '" . (int)$order_info['language_id'] . "'");
+
+						if ($order_status_query->num_rows) {
+							$message .= $language->get('text_update_order_status') . "\n\n";
+							$message .= $order_status_query->row['name'] . "\n\n";
+							$template->data['order_status'] = $order_status_query->row['name'];
+						}
+
+						if ($order_info['customer_id']) {
+							$message .= $language->get('text_update_link') . "\n";
+							$message .= $order_info['store_url'] . 'index.php?route=account/order/info&order_id=' . $order_id . "\n\n";
+						}
+
+						if ($comment) { 
+							$message .= $language->get('text_update_comment') . "\n\n";
+							$message .= $comment . "\n\n";
+						}
+
+						$message .= $language->get('text_update_footer');
+
+						$mail = new Mail($this->registry);			
+						$mail->setTo($order_info['email']);										
+						$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
+						$mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
+						$template_data = array(
+							'key' => 'order.customer_update',
+							'order_status_id' => $order_status_id
+						);					
+						$template->load($template_data);
+						$mail = $template->hook($mail);
+						$mail->send();
+						$template->sent();
+					}
+				}
 			}
 
-			$order_status_query = $this->db->ncquery("SELECT * FROM order_status WHERE order_status_id = '" . (int)$order_status_id . "' AND language_id = '" . (int)$order_info['language_id'] . "'");
-
-			if ($order_status_query->num_rows) {
-				$order_status = $order_status_query->row['name'];	
-			} else {
-				$order_status = '';
+			public function addOrderToQueue($order_id){
+				$this->Fiscalisation->addOrderToQueue($order_id);
 			}
 
-			$data = array(
-				'type' => 'success',
-				'text' => 'Новый статус заказа: '.$order_status, 
-				'entity_type' => 'order', 
-				'entity_id'=> $order_id
-			);
-
-			$this->mAlert->insertAlertForGroup('sales', $data);		
-
-			if ($notify) {
-				$language = new Language($order_info['language_directory']);
-				$language->load($order_info['language_filename']);
-				$language->load('mail/order');
-
-				$subject = sprintf($language->get('text_update_subject'), html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8'), $order_id);
-
-				$template = new EmailTemplate($this->request, $this->registry);
-
-				$template->addData($order_info);
-				$template->addData('comment', $comment);
-
-				$template->data['order_url'] = ($order_info['customer_id']) ? ($order_info['store_url'] . 'index.php?route=account/order/info&order_id=' . $order_id) : '';
-				$template->data['order_url_tracking'] = $template->getTracking($template->data['order_url']);
-				$template->data['date_added'] = date($language->get('date_format_short'), strtotime($order_info['date_added']));
-
-				$message  = $language->get('text_update_order') . ' ' . $order_id . "\n";
-				$message .= $language->get('text_update_date_added') . ' ' . date($language->get('date_format_short'), strtotime($order_info['date_added'])) . "\n\n";
-
-				$order_status_query = $this->db->ncquery("SELECT * FROM order_status WHERE order_status_id = '" . (int)$order_status_id . "' AND language_id = '" . (int)$order_info['language_id'] . "'");
-
-				if ($order_status_query->num_rows) {
-					$message .= $language->get('text_update_order_status') . "\n\n";
-					$message .= $order_status_query->row['name'] . "\n\n";
-					$template->data['order_status'] = $order_status_query->row['name'];
+			public function getOrderTotals($order_id, $code = false) {
+				if ($code){
+					$query = $this->db->ncquery("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' AND code = '" . $this->db->escape(trim($code)) . "' ORDER BY sort_order");
+					return $query->row;
 				}
 
-				if ($order_info['customer_id']) {
-					$message .= $language->get('text_update_link') . "\n";
-					$message .= $order_info['store_url'] . 'index.php?route=account/order/info&order_id=' . $order_id . "\n\n";
-				}
-
-				if ($comment) { 
-					$message .= $language->get('text_update_comment') . "\n\n";
-					$message .= $comment . "\n\n";
-				}
-
-				$message .= $language->get('text_update_footer');
-
-				$mail = new Mail($this->registry);			
-				$mail->setTo($order_info['email']);										
-				$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
-				$mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
-				$template_data = array(
-					'key' => 'order.customer_update',
-					'order_status_id' => $order_status_id
-				);					
-				$template->load($template_data);
-				$mail = $template->hook($mail);
-				$mail->send();
-				$template->sent();
+				$query = $this->db->ncquery("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");			
+				return $query->rows;
 			}
-		}
-	}
-
-	public function addOrderToQueue($order_id){
-		$this->Fiscalisation->addOrderToQueue($order_id);
-	}
-
-	public function getOrderTotals($order_id, $code = false) {
-		if ($code){
-			$query = $this->db->ncquery("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' AND code = '" . $this->db->escape(trim($code)) . "' ORDER BY sort_order");
-			return $query->row;
-		}
-
-		$query = $this->db->ncquery("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");			
-		return $query->rows;
-	}
 }																										
