@@ -26,6 +26,19 @@ function buildRelativeDate($string){
 	}			
 }
 
+function buildUpdateStatement(array $array, \DB $db):string{
+	$sql = 'SET ';
+
+	$updates = [];
+	foreach ($array as $key => $value){
+		$updates[] = " `$key` = '" . $db->escape($value) . "' ";
+	}
+
+	$sql .= implode(',', $updates);
+
+	return $sql;
+}
+
 function buildDateMagicSQL($date_from, $date_to, $param, $remove_year = false){
 	$sql = "";
 

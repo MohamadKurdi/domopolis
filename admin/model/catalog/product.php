@@ -2610,6 +2610,23 @@
 			
 			return $query->rows;
 		}
+
+		public function deleteProductSpecialsBackup($product_id) {
+			$this->db->query("DELETE FROM product_special_backup WHERE product_id = '" . (int)$product_id . "'");						
+		}
+
+		public function restoreProductSpecialsBackup($product_id) {
+			$query = $this->db->query("SELECT * FROM product_special_backup WHERE product_id = '" . (int)$product_id . "'");						
+
+			foreach ($query->rows as &$row){
+				unset($row['product_special_id']);
+
+				$sql = "INSERT INTO product_special " . buildUpdateStatement($row, $this->db);
+			}
+
+			$this->db->query($sql);		
+			$this->deleteProductSpecialsBackup($product_id);
+		}
 		
 		public function getProductSpecialsWithRecalc($product_id) {
 			$query = $this->db->query("SELECT * FROM product_special WHERE product_id = '" . (int)$product_id . "' ORDER BY priority, price");

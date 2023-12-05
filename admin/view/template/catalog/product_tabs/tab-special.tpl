@@ -71,7 +71,7 @@
 	</table>
 
 	<?php if ($product_specials_backup) { ?>
-		<h2><i class="fa fa-save"></i> Есть автосохраненные скидки</h2>
+		<h2 id="special-backup-result"><i class="fa fa-save"></i> Есть автосохраненные скидки</h2>
 
 		<table id="special-backup" class="list">
 		<thead>
@@ -127,14 +127,24 @@
 		<tfoot>
 			<tr>
 				<td class="right" colspan="7">
-					<a onclick="removeAllHistories();" class="button">Очистить</a>
-					<a onclick="restoreAllHistories();" class="button">Восстановить</a>
+					<a onclick="removeSpecialBackup();" class="button">Очистить</a>
+					<a onclick="restoreSpecialBackup();" class="button">Восстановить</a>
 				</td>
 			</tr>
 		</tfoot>
 	</table>
 	<?php } ?>
 </div>
+
+<script type="text/javascript">
+	function removeSpecialBackup(){
+		$('#special-backup-result').load('index.php?route=catalog/product/remove_special_backup&token=<?php echo $token; ?>&product_id=<?php echo $product_id;?>', function(){ $('#special-backup').remove(); });
+	}
+
+	function restoreSpecialBackup(){
+		$('#special-backup-result').load('index.php?route=catalog/product/restore_special_backup&token=<?php echo $token; ?>&product_id=<?php echo $product_id;?>', function(){ $('#special-backup').remove(); window.location.reload(); });
+	}
+</script>
 
 <script type="text/javascript">
 	var special_row = <?php echo $special_row; ?>;

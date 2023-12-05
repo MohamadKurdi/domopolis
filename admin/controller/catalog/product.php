@@ -32,6 +32,20 @@ class ControllerCatalogProduct extends Controller {
 		$this->response->setOutput(json_encode($product_data));		
 	}
 
+	public function restore_special_backup() {
+		$this->load->model('catalog/product');
+		$this->model_catalog_product->restoreProductSpecialsBackup($this->request->get['product_id']);
+
+		$this->response->setOutput('Ok');
+	}
+
+	public function remove_special_backup() {
+		$this->load->model('catalog/product');
+		$this->model_catalog_product->deleteProductSpecialsBackup($this->request->get['product_id']);
+
+		$this->response->setOutput('Ok');
+	}
+
 	public function parsevariantnames(){
 		$this->load->model('kp/product');
 
