@@ -375,6 +375,18 @@
 
 			<table class="form">
 				<tr>
+				<td width="33%">
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3f6ad8; color:#FFF">Включить Zadarma</span></p>
+						<select name="config_zadarma_api_enable">
+							<?php if ($config_zadarma_api_enable) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+					</td>
 					<td width="33%">
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ключ API</span></p>
 						<input type="text" name="config_zadarma_api_key" value="<?php echo $config_zadarma_api_key; ?>" size="40" style="width:300px;" />	
@@ -383,8 +395,6 @@
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Секрет API</span></p>
 						<input type="text" name="config_zadarma_secret_key" value="<?php echo $config_zadarma_secret_key; ?>" size="40" style="width:300px;" />	
 					</td>
-					<td width="33%">
-					</td>
 				</tr>
 			</table>							
 
@@ -392,7 +402,7 @@
 
 			<table class="form">
 				<tr>
-					<td width="25%">
+					<td width="20%">
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Режим работы API</span></p>
 						<select name="config_dadata">
 							<option value="0" <?php if ($config_dadata == 0) { ?>selected="selected"<?php } ?>>Отключить вообще</option>
@@ -401,16 +411,29 @@
 						</select>	
 					</td>
 
-					<td width="25%">
+					<td width="20%">
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ключ API</span></p>
 						<input type="text" name="config_dadata_api_key" value="<?php echo $config_dadata_api_key; ?>" size="40" style="width:300px;" />	
 					</td>
-					<td width="25%">
+					<td width="20%">
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Секрет API</span></p>
 						<input type="text" name="config_dadata_secret_key" value="<?php echo $config_dadata_secret_key; ?>" size="40" style="width:300px;" />	
 					</td>
 
-					<td width="25%">
+					<td width="20%">						
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3f6ad8; color:#FFF">Включить IP-API</span></p>
+						<select name="config_ip_api_enable">
+							<?php if ($config_ip_api_enable) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>					
+					</td>
+
+					<td width="20%">
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ключ IP - API</span></p>
 						<input type="text" name="config_ip_api_key" value="<?php echo $config_ip_api_key; ?>" size="40" style="width:300px;" />	
 					</td>

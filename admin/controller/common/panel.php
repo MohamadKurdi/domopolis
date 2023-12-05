@@ -164,7 +164,6 @@ class ControllerCommonPanel extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
-
 	public function getNovaPoshtaInfo(){
 		$body = '';
 		$class= 'good';
@@ -700,17 +699,22 @@ class ControllerCommonPanel extends Controller {
 		$body = '';
 		$class= 'good';
 
+		if ($this->config->get('config_ip_api_enable')){
+			$ipapi = new maciejkrol\ipapicom\ipapi ($this->config->get('config_ip_api_key'));
+			$result = $ipapi->locate ($this->request->server['REMOTE_ADDR']);
 
-		$ipapi = new maciejkrol\ipapicom\ipapi ($this->config->get('config_ip_api_key'));
-		$result = $ipapi->locate ($this->request->server['REMOTE_ADDR']);
-
-		if (!empty($result['city'])){
-			$body = $result['city'];
-			$class= 'good';
+			if (!empty($result['city'])){
+				$body = $result['city'];
+				$class= 'good';
+			} else {
+				$body = 'FAIL';
+				$class= 'bad';
+			}			
 		} else {
-			$body = 'FAIL';
-			$class= 'bad';
+			$body = 'OFF';
+			$class= 'warn';
 		}
+		
 
 
 		$json = [
@@ -857,28 +861,27 @@ public function getDadataInfo(){
 	$body = 'OK';
 	$class = 'good';
 
-	try{
+	if ($this->config->get('config_dadata')){
+		try{
 
-		$dadata = new \Dadata\DadataClient($this->config->get('config_dadata_api_key'), $this->config->get('config_dadata_secret_key'));
-		$result = $dadata->getDailyStats();
+			$dadata = new \Dadata\DadataClient($this->config->get('config_dadata_api_key'), $this->config->get('config_dadata_secret_key'));
+			$result = $dadata->getDailyStats();
 
-		if (isset($result['services']) && isset($result['services']['suggestions'])){
+			if (isset($result['services']) && isset($result['services']['suggestions'])){
+				$body = (int)$result['services']['suggestions'] . 'Q';
+				$class = 'good';
+			} else {
+				$body = 'FAIL: ERR';
+				$class = 'bad';
+			}
 
-			$body = (int)$result['services']['suggestions'] . 'Q';
-			$class = 'good';
-
-		} else {
-
-			$body = 'FAIL: ERR';
+		} catch (\GuzzleHttp\Exception\ConnectException $e){
+			$body = $e->getMessage();
 			$class = 'bad';
-
 		}
-
-	} catch (\GuzzleHttp\Exception\ConnectException $e){
-
-		$body = $e->getMessage();
-		$class = 'bad';
-
+	} else {
+		$body = 'OFF';
+		$class= 'warn';
 	}
 
 	
@@ -942,25 +945,30 @@ public function getZadarmaBalance(){
 	$key = $this->config->get('config_zadarma_api_key');
 	$secret = $this->config->get('config_zadarma_secret_key');
 
-	$zd = new \Zadarma_API\Api($key, $secret);
-	$answerObject = $zd->getBalance();
+	if ($this->config->get('config_zadarma_api_enable')){
 
+		$zd = new \Zadarma_API\Api($key, $secret);
+		$answerObject = $zd->getBalance();
 
-	if ($answerObject->balance) {
-		$body = (int)$answerObject->balance . ' ' . $answerObject->currency;
-		$class = 'good';
+		if ($answerObject->balance) {
+			$body = (int)$answerObject->balance . ' ' . $answerObject->currency;
+			$class = 'good';
 
-		if ((int)$answerObject->balance < 10){
-			$class = 'bad';
+			if ((int)$answerObject->balance < 10){
+				$class = 'bad';
+			}
+
+			if ((int)$answerObject->balance > 10 && (int)$answerObject->balance < 30){
+				$class = 'warn';
+			}
+
+		} else {
+			$body = 'FAIL: ERR';
+			$class='bad';
 		}
-
-		if ((int)$answerObject->balance > 10 && (int)$answerObject->balance < 30){
-			$class = 'warn';
-		}
-
 	} else {
-		$body = 'FAIL: ERR';
-		$class='bad';
+		$body = 'OFF';
+		$class='warn';
 	}
 
 	$json = [
