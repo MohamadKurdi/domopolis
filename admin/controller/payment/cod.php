@@ -121,4 +121,3 @@ class ControllerPaymentCod extends Controller {
 		}	
 	}
 }
-?>

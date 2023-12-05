@@ -687,10 +687,22 @@ class ControllerSettingSetting extends Controller
             $this->data['config_dadata_secret_key'] = $this->config->get('config_dadata_secret_key');
         }
 
+        if (isset($this->request->post['config_ip_api_enable'])) {
+            $this->data['config_ip_api_enable'] = $this->request->post['config_ip_api_enable'];
+        } else {
+            $this->data['config_ip_api_enable'] = $this->config->get('config_ip_api_enable');
+        }
+
         if (isset($this->request->post['config_ip_api_key'])) {
             $this->data['config_ip_api_key'] = $this->request->post['config_ip_api_key'];
         } else {
             $this->data['config_ip_api_key'] = $this->config->get('config_ip_api_key');
+        }
+
+        if (isset($this->request->post['config_zadarma_api_enable'])) {
+            $this->data['config_zadarma_api_enable'] = $this->request->post['config_zadarma_api_enable'];
+        } else {
+            $this->data['config_zadarma_api_enable'] = $this->config->get('config_zadarma_api_enable');
         }
 
         if (isset($this->request->post['config_zadarma_api_key'])) {
