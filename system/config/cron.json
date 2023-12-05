@@ -1,0 +1,555 @@
+{
+	"dp/rainforest/addnewproductscron": {
+		"name"		:"Парсер новых товаров Amazon",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		:true,
+		"args"		: []
+	},
+	"dp/rainforest/editfullproductscron": {
+		"name"		:"Парсер данных о товарах Amazon",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		:true,
+		"args"		: []
+	},
+	"dp/rainforest/parsetechcategory": {
+		"name"		:"Разгребатель технической категории",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		:true,
+		"args"		: []
+	},
+	"dp/rainforest/addasinsqueuecron": {
+		"name"		:"Очередь ручного добавления товаров с Amazon",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		:true,
+		"args"		: []
+	},
+	"dp/rainforest/addvariantsqueuecron": {
+		"name"		:"Очередь добавления вариантов с Amazon",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		:true,
+		"args"		: []
+	},
+	"dp/rainforest/recoverasinscron": {
+		"name"		:"Поиск и обновление измененных ASIN",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		:false,
+		"args"		: []
+	},
+	"dp/rainforest/cleardatabasecron": {
+		"name"		:"Очистка товаров Amazon по условиям",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		:false,
+		"args"		: []
+	},
+	"dp/rainforest/editfullproductscronl2": {
+		"name"		:"Парсер данных о товарах Amazon второго уровня",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		:true,
+		"args"		: []
+	},
+	"dp/rainforest/fixunexistentcategoriescron": {
+		"name"		:"Переобход дерева категорий Amazon",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		: false,
+		"args"		: []
+	},
+	"dp/rainforest/addcategoriescron": {
+		"name"		:"Первичное заполнение дерева категорий Amazon",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		: false,
+		"args"		: []
+	},
+	"dp/rainforest/fixvariants": {
+		"name"		:"Коррекция привязок вариантов",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		:false,
+		"args"		: []
+	},
+	"dp/rainforest/fixtranslations": {
+		"name"		:"Пост-исправление пустых переводов",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		:false,
+		"args"		: []
+	},
+	"dp/rainforest/fixreviews": {
+		"name"		:"Добавление отзывов (временное)",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/rainforest/parseofferscron": {
+		"name"		:"Получение офферов с Amazon",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		:true,
+		"args"		: []
+	},
+	"dp/rainforest/reprice": {
+		"name"		:"Принудительный репрайс",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		:true,
+		"args"		: []
+	},
+	"kp/rainforest/parsenoofferscron": {
+		"name"		:"Повторное получение офферов с Amazon (временное)",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/rainforest/parseoffersqueuecron": {
+		"name"		:"Получение офферов вне основной очереди",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		:true,
+		"args"		: []
+	},
+	"dp/rainforest/setpricesfast": {
+		"name"		:"Установка цен вариантов",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		: true,
+		"args"		: []
+	},
+	"kp/rainforest/parseasinscron": {
+		"name"		:"Сверка ASIN и удаление несуществующих",
+		"config"	:"config.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		:false,
+		"args"		: []
+	},
+	"feed/exchange1c/getDeliveriesAndShippings": {
+		"name"		:"Выгрузка информации о доставках и оплатах для 1С",
+		"config"	:"config.php",
+		"group"		:"Синхронизация с 1С",
+		"main"		:false,
+		"args"		: []
+	},
+	"feed/exchange1c/getOrderStatusCodes": {
+		"name"		:"Выгрузка информации статусах заказов для 1С",
+		"config"	:"config.php",
+		"group"		:"Синхронизация с 1С",
+		"main"		:false,
+		"args"		: []
+	},
+	"api/info1c/updateLocalPricesXML": {
+		"name"		:"Получение информации о ценах локальных поставщиков",
+		"config"	:"config.php",
+		"group"		:"Синхронизация с 1С",
+		"main"		:false,
+		"args"		: []
+	},
+	"api/info1c/getStocksFrom1C": {
+		"name"		:"Получение информации об остатках товаров",
+		"config"	:"config.php",
+		"group"		:"Синхронизация с 1С",
+		"main"		:false,
+		"args"		: []
+	},
+	"api/info1c/exportCatalogCron": {
+		"name"		:"Выгрузка структуры каталога для 1С",
+		"config"	:"config.slave.php",
+		"group"		:"Синхронизация с 1С",
+		"main"		:false,
+		"args"		: []
+	},
+	"feed/exchange1c/getCategoriesTree": {
+		"name"		:"Выгрузка полного дерева категорий для 1С",
+		"config"	:"config.php",
+		"group"		:"Синхронизация с 1С",
+		"main"		:false,
+		"args"		: []
+	},
+	"api/info1c/exportOrdersCron": {
+		"name"		:"Выгрузка заказов в XML для 1С",
+		"config"	:"config.php",
+		"group"		:"Синхронизация с 1С",
+		"main"		:false,
+		"args"		: []
+	},
+	"feed/exchange1c/getCurrencies": {
+		"name"		:"Выгрузка курсов валют в XML для 1С",
+		"config"	:"config.php",
+		"group"		:"Синхронизация с 1С",
+		"main"		:false,
+		"args"		: []
+	},
+	"api/info1c/updateLegalPersonAccountsCron": {
+		"name"		:"Выгрузка информации о юридических лицах для 1С",
+		"config"	:"config.slave.php",
+		"group"		:"Синхронизация с 1С",
+		"main"		:false,
+		"args"		: []
+	},
+	"api/info1c/ping1CToUpdateProducts": {
+		"name"		:"Синхронизация цен товаров с 1С",
+		"config"	:"config.php",
+		"group"		:"Синхронизация с 1С",
+		"main"		:false,
+		"args"		: []
+	},
+	"feed/refeedmaker2/makefeed": {
+		"name"		:"Создание фида данных для Google Merchant и FB v2",
+		"config"	:"config.dp.uncached",
+		"group"		:"Фиды и сайтмапы",
+		"main"		:false,
+		"args"		: []
+	},
+	"feed/refeedmaker2/supplemental": {
+		"name"		:"Создание фида данных наличия для Google Merchant и FB v2",
+		"config"	:"config.uncached.php",
+		"group"		:"Фиды и сайтмапы",
+		"main"		:false,
+		"args"		: []
+	},
+	"feed/yandex_kp/makeStockFeed": {
+		"name"		:"Создание фида данных c наличием для Яндекс",
+		"config"	:"config.php",
+		"group"		:"Фиды и сайтмапы",
+		"main"		:false,
+		"args"		: []
+	},
+	"feed/yandex_kp/makeFullFeed": {
+		"name"		:"Создание полного фида данных для Яндекс",
+		"config"	:"config.php",
+		"group"		:"Фиды и сайтмапы",
+		"main"		:false,
+		"args"		: []
+	},
+	"feed/yandex_kp/makeOzonFeed": {
+		"name"		:"Создание полного фида данных для Озон",
+		"config"	:"config.php",
+		"group"		:"Фиды и сайтмапы",
+		"main"		:false,
+		"args"		: []
+	},
+	"feed/google_sitemap/makeFeedsCron": {
+		"name"		:"Создание Google Sitemap",
+		"config"	:"config.php",
+		"group"		:"Фиды и сайтмапы",
+		"main"		:false,
+		"args"		: []
+	},
+	"feed/google_sitemap/makeAllExceptExcludedLanguageCron": {
+		"name"		:"Создание Google Sitemap для всех языков",
+		"config"	:"config.php",
+		"group"		:"Фиды и сайтмапы",
+		"main"		:false,
+		"args"		: []
+	},
+	"feed/yandex_feed/hotline": {
+		"name"		:"Создание полного фида данных для Хотлайн",
+		"config"	:"config.balancer.php",
+		"group"		:"Фиды и сайтмапы",
+		"main"		:false,
+		"args"		: []
+	},
+	"feed/yandex_kp/makePricevaFeeds": {
+		"name"		:"Создание полного фида данных для Priceva",
+		"config"	:"config.slave.php",
+		"group"		:"Фиды и сайтмапы",
+		"main"		:false,
+		"args"		: []
+	},
+	"feed/refeedmaker/makeFeedsCron": {
+		"name"		:"Создание полного фида данных для Google и FB",
+		"config"	:"config.balancer.php",
+		"group"		:"Фиды и сайтмапы",
+		"main"		:false,
+		"args"		: []
+	},
+	"feed/refeedmaker/makeAllExceptExcludedLanguageCron": {
+		"name"		:"Создание полного фида данных для Google и FB для всех языков",
+		"config"	:"config.balancer.php",
+		"group"		:"Фиды и сайтмапы",
+		"main"		:false,
+		"args"		: []
+	},
+	"feed/refeedmaker/supplemental": {
+		"name"		:"Создание полного фида с наличием для Google",
+		"config"	:"config.balancer.php",
+		"group"		:"Фиды и сайтмапы",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/triggers/cancelledOrders": {
+		"name"		:"Триггерная рассылка по отмененным заказам",
+		"config"	:"config.php",
+		"group"		:"Триггерные рассылки",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/triggers/cancelledByTerms": {
+		"name"		:"Триггерная рассылка по отмененным по срокам заказам",
+		"config"	:"config.php",
+		"group"		:"Триггерные рассылки",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/triggers/completed": {
+		"name"		:"Триггерная рассылка по выполненным заказам",
+		"config"	:"config.php",
+		"group"		:"Триггерные рассылки",
+		"main"		:false,
+		"args"		: []
+	},
+	"sale/firstorder_action/cron": {
+		"name"		:"Воркер действия первого заказа",
+		"config"	:"config.php",
+		"group"		:"Триггерные рассылки",
+		"main"		:false,
+		"args"		: []
+	},
+	"catalog/collection/collectionBuilder": {
+		"name"		:"Построитель коллекций",
+		"config"	:"config.php",
+		"group"		:"Нормализация и обслуживание базы данных",
+		"main"		:false,
+		"args"		: []
+	},
+	"api/seogen/fullcron": {
+		"name"		:"Генерация SEO-данных",
+		"config"	:"config.php",
+		"group"		:"Нормализация и обслуживание базы данных",
+		"main"		:false,
+		"args"		: []
+	},
+	"api/seogen/cron": {
+		"name"		:"Создание мультиязычных ЧПУ для каталога",
+		"config"	:"config.php",
+		"group"		:"Нормализация и обслуживание базы данных",
+		"main"		:false,
+		"args"		: []
+	},
+	"dp/service": {
+		"name"		:"Регулярное обслуживание и нормализация каталога",
+		"config"	:"config.php",
+		"group"		:"Нормализация и обслуживание базы данных",
+		"main"		:false,
+		"args"		: []
+	},
+	"localisation/currency/updaterates": {
+		"name"		:"Регулярное обновление курсов валют",
+		"config"	:"config.php",
+		"group"		:"Нормализация и обслуживание базы данных",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/service/optimizeDB": {
+		"name"		:"Регулярная оптимизация таблиц БД",
+		"config"	:"config.php",
+		"group"		:"Нормализация и обслуживание базы данных",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/service/optimizeProductsDB": {
+		"name"		:"Регулярная оптимизация таблиц товаров в БД",
+		"config"	:"config.php",
+		"group"		:"Нормализация и обслуживание базы данных",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/service/optimizeCustomerDB": {
+		"name"		:"Регулярная оптимизация таблиц клиентов в БД",
+		"config"	:"config.php",
+		"group"		:"Нормализация и обслуживание базы данных",
+		"main"		:false,
+		"args"		: []
+	},
+	"sale/segments/updateCustomerSegmentsCron": {
+		"name"		:"Обработчик данных сегментации клиентов",
+		"config"	:"config.php",
+		"group"		:"Нормализация и обслуживание базы данных",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/search/fullindexer": {
+		"name"		:"Переиндексация поиска Elastic",
+		"config"	:"config.balancer.php",
+		"group"		:"Нормализация и обслуживание базы данных",
+		"main"		:false,
+		"args"		: []
+	},
+	"localisation/currency/updateCron": {
+		"name"		:"Получение и установка курсов валют",
+		"config"	:"config.php",
+		"group"		:"Нормализация и обслуживание базы данных",
+		"main"		:false,
+		"args"		: []
+	},
+	"yamarket/api/ordertoyamqueue": {
+		"name"		:"Очередь отправки заказов в Яндекс Маркет",
+		"config"	:"config.php",
+		"group"		:"Интеграция с Яндекс Маркет API и мониторинг цен",
+		"main"		:false,
+		"args"		: []
+	},
+	"yamarket/api/skustatscron": {
+		"name"		:"Сбор статистики о SKU от Яндекс Маркета",
+		"config"	:"config.php",
+		"group"		:"Интеграция с Яндекс Маркет API и мониторинг цен",
+		"main"		:false,
+		"args"		: []
+	},
+	"yamarket/data/parsecategoriescron": {
+		"name"		:"Информация о категориях Яндекс Маркета",
+		"config"	:"config.php",
+		"group"		:"Интеграция с Яндекс Маркет API и мониторинг цен",
+		"main"		:false,
+		"args"		: []
+	},
+	"yamarket/api/offerpricescron": {
+		"name"		:"Получение рекомендуемых цен от Яндекс Маркета",
+		"config"	:"config.php",
+		"group"		:"Интеграция с Яндекс Маркет API и мониторинг цен",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/priceva/cron": {
+		"name"		:"Получение данных о ценах конкурентов от Priceva",
+		"config"	:"config.php",
+		"group"		:"Интеграция с Яндекс Маркет API и мониторинг цен",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/translate/cronCollectionsUA": {
+		"name"		:"Перевод коллекций на Украинский язык",
+		"config"	:"config.php",
+		"group"		:"Автоматический перевод",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/translate/cronReviewsUA": {
+		"name"		:"Перевод отзывов на Украинский язык",
+		"config"	:"config.php",
+		"group"		:"Автоматический перевод",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/translate/cronAttributesUA": {
+		"name"		:"Перевод атрибутов на Украинский язык",
+		"config"	:"config.php",
+		"group"		:"Автоматический перевод",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/translate/cronProductsUA": {
+		"name"		:"Перевод товаров на Украинский язык",
+		"config"	:"config.php",
+		"group"		:"Автоматический перевод",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/salary/kpicounterCron": {
+		"name"		:"Подсчёт KPI менеджеров и РОП",
+		"config"	:"config.php",
+		"group"		:"Контроль работы отдела продаж",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/service/dailyWork": {
+		"name"		:"Подсчёт суточной работы менеджеров и РОП",
+		"config"	:"config.php",
+		"group"		:"Контроль работы отдела продаж",
+		"main"		:false,
+		"args"		: []
+	},
+	"api/bitrixbot/countNewOrdersCron": {
+		"name"		:"Подсчёт и уведомления о новых заказах в Bitrix24",
+		"config"	:"config.php",
+		"group"		:"Контроль работы отдела продаж",
+		"main"		:false,
+		"args"		: []
+	},
+	"api/bitrixbot/countMissedCallsCron": {
+		"name"		:"Подсчёт и уведомления о пропущенных звонках в Bitrix24",
+		"config"	:"config.php",
+		"group"		:"Контроль работы отдела продаж",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/reward/cron": {
+		"name"		:"Воркер бонусной системы (начисление, списание)",
+		"config"	:"config.php",
+		"group"		:"Очереди и воркеры",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/mailwizz/cron": {
+		"name"		:"Воркер синхронизации с сервисом почтовых рассылок",
+		"config"	:"config.php",
+		"group"		:"Очереди и воркеры",
+		"main"		:false,
+		"args"		: []
+	},
+	"sale/receipt/cron": {
+		"name"		:"Воркер очереди фискализации",
+		"config"	:"config.php",
+		"group"		:"Очереди и воркеры",
+		"main"		:false,
+		"args"		: []
+	},
+	"api/deliveryservices/references": {
+		"name"		:"Получение справочников служб доставки",
+		"config"	:"config.php",
+		"group"		:"Очереди и воркеры",
+		"main"		:false,
+		"args"		: []
+	},
+	"api/deliveryservices/track": {
+		"name"		:"Трекер накладных служб доставки",
+		"config"	:"config.php",
+		"group"		:"Очереди и воркеры",
+		"main"		:false,
+		"args"		: []
+	},
+	"kp/service/smsQueue": {
+		"name"		:"Воркер очереди отправки SMS",
+		"config"	:"config.php",
+		"group"		:"Очереди и воркеры",
+		"main"		:false,
+		"args"		: []
+	},
+	"api/binotel/missed": {
+		"name"		:"Воркер получения пропущенных звонков Binotel",
+		"config"	:"config.php",
+		"group"		:"Очереди и воркеры",
+		"main"		:false,
+		"args"		: []
+	},
+	"payment/concardis/cron": {
+		"name"		:"Воркер получения данных оплат с Concardis",
+		"config"	:"config.php",
+		"group"		:"Платежки и фискализация",
+		"main"		:false,
+		"args"		: []
+	},
+	"payment/mono/cron": {
+		"name"		:"Воркер получения данных оплат с Монобанка",
+		"config"	:"config.php",
+		"group"		:"Платежки и фискализация",
+		"main"		:false,
+		"args"		: []
+	},
+	"payment/wayforpay/updatedata": {
+		"name"		:"Воркер получения данных оплат с Wayforpay",
+		"config"	:"config.php",
+		"group"		:"Платежки и фискализация",
+		"main"		:false,
+		"args"		: []
+	}
+}
