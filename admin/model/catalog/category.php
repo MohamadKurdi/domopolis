@@ -44,6 +44,8 @@ class ModelCatalogCategory extends Model {
 			overload_max_wc_multiplier 			= '" . (float)$data['overload_max_wc_multiplier'] . "',
 			overload_max_multiplier 			= '" . (float)$data['overload_max_multiplier'] . "', 
 			overload_ignore_volumetric_weight 	= '" . (float)$data['overload_ignore_volumetric_weight'] . "',
+			need_reprice 						= '" . (int)$data['need_reprice'] . "',
+			last_reprice 						= '" . $this->db->escape($data['last_reprice']) . "',
 			date_modified 			= NOW(), 
 			date_added 				= NOW()");
 		
@@ -194,6 +196,8 @@ class ModelCatalogCategory extends Model {
 			overload_max_wc_multiplier 			= '" . (float)$data['overload_max_wc_multiplier'] . "',
 			overload_max_multiplier 			= '" . (float)$data['overload_max_multiplier'] . "',
 			overload_ignore_volumetric_weight 	= '" . (float)$data['overload_ignore_volumetric_weight'] . "',
+			need_reprice 						= '" . (int)$data['need_reprice'] . "',
+			last_reprice 						= '" . $this->db->escape($data['last_reprice']) . "',
 			date_modified = NOW() 
 			WHERE
 			category_id = '" . (int)$category_id . "'");
@@ -631,6 +635,8 @@ class ModelCatalogCategory extends Model {
 		cd2.alternate_name,
 		cd1.name as simple_name, 
 		c.parent_id, 
+		c.need_reprice, 
+		c.last_reprice, 
 		c.sort_order,
 		(SELECT menu_icon FROM category c4 WHERE c4.category_id = cp.category_id) as menu_icon, 
 		(SELECT image FROM category c5 WHERE c5.category_id = cp.category_id) as image, 

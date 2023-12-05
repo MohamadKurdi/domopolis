@@ -72,6 +72,7 @@
 								<td class="left" style="width:30px;">Amzn Final</td>
 								<td class="left" style="width:30px;">Amzn Allow Full</td>	
 								<td class="left" style="width:30px;"><i class="fa fa-refresh"></i>ЦО</td>							
+								<td class="left" style="width:30px;"><i class="fa fa-refresh"></i>Репрайс</td>
 							<?php } ?>
 							<td class="left" style="width:100px;">Google</td>
 							<?php if ($this->config->get('config_country_id') == 220 && $this->config->get('config_hotline_feed_enable')) { ?>	
@@ -122,7 +123,8 @@
 											<td class="left" style="width:30px;">Amzn Synced</td>
 											<td class="left" style="width:30px;">Amzn Final</td>
 											<td class="left" style="width:30px;">Amzn Allow Full</td>
-											<td class="left" style="width:30px;"><i class="fa fa-refresh"></i>ЦО</td>								
+											<td class="left" style="width:30px;"><i class="fa fa-refresh"></i>ЦО</td>
+											<td class="left" style="width:30px;"><i class="fa fa-refresh"></i>Репрайс</td>								
 										<?php } ?>
 										<td class="left" style="width:100px;">Google</td>
 										<?php if ($this->config->get('config_country_id') == 220 && $this->config->get('config_hotline_feed_enable')) { ?>	
@@ -270,7 +272,19 @@
 														<? } else { ?>
 															<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 														<? } ?>
-													</td>														
+													</td>
+
+													<td class="center">
+														<? if ($category['need_reprice']) { ?>
+															<i class="fa fa-refresh" style="color:#cf4a61"></i>
+														<? } else { ?>
+															<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+														<? } ?>
+
+														<?php if ($category['last_reprice']) { ?>
+															<small><?php echo $category['last_reprice'];?></small>
+														<?php } ?>
+													</td>																	
 												<?php } ?>
 
 												<td class="center">

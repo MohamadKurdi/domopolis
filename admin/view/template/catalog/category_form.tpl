@@ -884,15 +884,24 @@
 							<td style="width:25%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Дата последней синхронизации</span>
 							</td>
-							<td style="width:15%">
-								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Синхронизировано</span>
-							</td>						
+							<td style="width:25%">
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Синхронизированы товары</span>
+								<br /><span class="help">Синхронизирована категория или нет в рамках текущей итерации обновления</span>						
+							</td>	
+							<td style="width:25%">
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Нужен репрайс</span>
+								<br /><span class="help">Поставить "да" в случае любых изменений перезначений ценообразования</span>
+							</td>	
+							<td style="width:25%">
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Репрайс выполнен</span>
+
+							</td>				
 						</tr>
 						<tr style="border-bottom:1px dashed gray">
 							<td style="width:25%">
 								<input type="text" name="amazon_last_sync" value="<?php echo $amazon_last_sync; ?>" style="width:150px;"  />
 							</td>
-							<td style="width:15%">
+							<td style="width:25%">
 								<select name="amzn_synced">
 									<?php if ($amzn_synced) { ?>
 										<option value="1" selected="selected">Да</option>
@@ -901,9 +910,22 @@
 										<option value="1">Да</option>
 										<option value="0" selected="selected">Нет</option>
 									<?php } ?>
-								</select>
-								<br /><span class="help">Синхронизирована категория или нет в рамках текущей итерации обновления</span>
-							</td>							
+								</select>								
+							</td>	
+							<td style="width:25%">
+								<select name="need_reprice">
+									<?php if ($need_reprice) { ?>
+										<option value="1" selected="selected">Да</option>
+										<option value="0">Нет</option>
+										<?php } else { ?>
+										<option value="1">Да</option>
+										<option value="0" selected="selected">Нет</option>
+									<?php } ?>
+								</select>								
+							</td>	
+							<td style="width:25%">
+								<input type="text" name="last_reprice" value="<?php echo $last_reprice; ?>" style="width:150px;"  />
+							</td>								
 						</tr>
 					</table>
 

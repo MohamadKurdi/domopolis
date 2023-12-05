@@ -280,6 +280,8 @@ class ControllerCatalogCategory extends Controller {
 					'overload_max_wc_multiplier' 		=> $result['overload_max_wc_multiplier'],
 					'overload_max_multiplier' 			=> $result['overload_max_multiplier'],
 					'overload_ignore_volumetric_weight' => $result['overload_ignore_volumetric_weight'],
+					'need_reprice' 						=> $result['need_reprice'],
+					'last_reprice' 						=> ($result['last_reprice'] != '0000-00-00 00:00:00')?date('m-d', strtotime($result['last_reprice'])):'',
 					'filter'					=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_category=' . $result['category_id']),
 					'filter_filled'				=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_filled_from_amazon=1&filter_category=' . $result['category_id']),
 					'filter_has_price'			=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_price=>0&filter_category=' . $result['category_id']),
@@ -755,6 +757,22 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['overprice'] = $category_info['overprice'];
 		} else {
 			$this->data['overprice'] = '';
+		}
+
+		if (isset($this->request->post['need_reprice'])) {
+			$this->data['need_reprice'] = $this->request->post['need_reprice'];
+		} elseif (!empty($category_info)) {
+			$this->data['need_reprice'] = $category_info['need_reprice'];
+		} else {
+			$this->data['need_reprice'] = '';
+		}
+
+		if (isset($this->request->post['last_reprice'])) {
+			$this->data['last_reprice'] = $this->request->post['last_reprice'];
+		} elseif (!empty($category_info)) {
+			$this->data['last_reprice'] = $category_info['last_reprice'];
+		} else {
+			$this->data['last_reprice'] = '';
 		}
 
 		if (isset($this->request->post['virtual_path'])) {
