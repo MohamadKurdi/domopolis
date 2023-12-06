@@ -27,7 +27,7 @@
 					<? foreach ($stats as $group => $users) { ?>
 						
 						<tr class="blue">
-							<td colspan="17" class="left" style="font-size:16px; background-color:#99CCFF; color:#FFF;"><? echo $group; ?></td>
+							<td colspan="18" class="left" style="font-size:16px; background-color:#99CCFF!important; color:#FFF!important;"><? echo $group; ?></td>
 						</tr>
 						
 						<tr class="hovered">
@@ -60,6 +60,9 @@
 								<span class="ktooltip_hover" title="Количество полученных Дней Рождения"><i class="fa fa-birthday-cake" aria-hidden="true"></i><br />измен. др</span>
 							</td>
 							<td class="center">
+								<span class="ktooltip_hover" title="Количество ручных обзвонов"><i class="fa fa-phone" aria-hidden="true"></i><br />обзвон</span>
+							</td>
+							<td class="center">
 								<span class="ktooltip_hover" title="Количество отправленных писем"><i class="fa fa-envelope-o" aria-hidden="true"></i><br />отпр. mail</span>
 							</td>
 							<td class="center">
@@ -85,11 +88,12 @@
 							<tr>
 								<td class="left">
 									<? echo $user['user_name']; ?>
+									<a href="<? echo $user['edit'] ?>" target='_blank'><i class="fa fa-edit"></i></a>
 								</td>
-								<td class="center <? if (!$user['worktime_start']) { ?>td_alert<? } ?>"   >
+								<td class="center"   >
 									<? echo $user['worktime_start']; ?>
 								</td>
-								<td class="center <? if (!$user['worktime_finish']) { ?>td_alert<? } ?>">
+								<td class="center">
 									<? echo $user['worktime_finish']; ?>
 								</td>
 								<td class="center">
@@ -114,6 +118,9 @@
 								</td>
 								<td class="center">
 									<? echo $user['edit_birthday_count']; ?>
+								</td>
+								<td class="center">
+									<? echo $user['customer_manual_count']; ?>
 								</td>
 								<td class="center">
 									<? echo $user['sent_mail_count']; ?>

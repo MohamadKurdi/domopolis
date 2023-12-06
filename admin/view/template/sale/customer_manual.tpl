@@ -152,11 +152,8 @@
 				<div class="pagination" style="margin-bottom:5px;"><?php echo $pagination; ?></div>					
 				<table class="list">
 					<thead>
-						<td class="left"><?php if ($sort == 'name') { ?>
-								<a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>">Клиент</a>
-								<?php } else { ?>
-								<a href="<?php echo $sort_name; ?>">Клиент</a>
-							<?php } ?>
+						<td class="left">
+							Клиент
 						</td>
 
 						<td class="left">
@@ -176,11 +173,7 @@
 						</td>							
 
 						<td class="left">
-							<i class="fa fa-envelope-o"></i>&nbsp;<?php if ($sort == 'c.email') { ?>
-								<a href="<?php echo $sort_email; ?>" class="<?php echo strtolower($order); ?>">Почта</a>
-							<?php } else { ?>
-								<a href="<?php echo $sort_email; ?>">Почта</a>
-							<?php } ?>
+							Почта
 						</td>
 
 						<td class="left">

@@ -26,8 +26,58 @@
 			if (!$date){
 				$date = date('Y-m-d', strtotime("-$i day"));
 			}
+
+			$sql = "SELECT 
+				SUM(inbound_call_count) as inbound_call_count,
+				SUM(inbound_call_duration) as inbound_call_duration,
+				SUM(outbound_call_count) as outbound_call_count,
+				SUM(outbound_call_duration) as outbound_call_duration,
+				SUM(owned_order_count) as owned_order_count,
+				SUM(edit_order_count) as edit_order_count,
+				SUM(edit_birthday_count) as edit_birthday_count,
+				SUM(edit_customer_count) as edit_customer_count,
+				SUM(sent_mail_count) as sent_mail_count,
+				SUM(daily_actions) as daily_actions,
+				SUM(success_order_count) as success_order_count,
+				SUM(cancel_order_count) as cancel_order_count,
+				SUM(treated_order_count) as treated_order_count,
+				SUM(confirmed_order_count) as confirmed_order_count,
+				SUM(problem_order_count) as problem_order_count,
+				SUM(edit_csi_count) as edit_csi_count,
+				SUM(customer_manual_count) as customer_manual_count,
+				SEC_TO_TIME(AVG(TIME_TO_SEC(worktime_start))) as worktime_start,
+				SEC_TO_TIME(AVG(TIME_TO_SEC(worktime_finish))) as worktime_finish,
+				uw.user_id as user_id,
+				u.user_id as uid, 
+				ug.name as group_name, 
+				ug.user_group_id as user_group_id 
+				FROM user_worktime uw 
+				LEFT JOIN user u ON uw.user_id = u.user_id 
+				LEFT JOIN user_group ug ON ug.user_group_id = u.user_group_id 
+				WHERE u.status = 1 AND u.count_worktime = 1 ";
+
+			switch ($date){
+				case 'week':
+					$sql .= " AND DATE(uw.date) >= '" . $this->db->escape(date('Y-m-d', strtotime('-1 week'))) . "'";
+					break;
+
+				case '2week':
+					$sql .= " AND DATE(uw.date) >= '" . $this->db->escape(date('Y-m-d',strtotime('-2 week'))) . "'";
+					break;
+
+				case 'month':
+					$sql .= " AND DATE(uw.date) >= '" . $this->db->escape(date('Y-m-d',strtotime('-1 month'))) . "'";
+					break;
+
+				default:
+					$sql .= " AND DATE(uw.date) = '" . $this->db->escape($date) . "'";
+					break;
+			}
+
+			$sql .= " GROUP BY uw.user_id";
 			
-			$query = $this->db->query("SELECT uw.*, u.user_id as uid, ug.name as group_name, ug.user_group_id as user_group_id FROM user_worktime uw LEFT JOIN user u ON uw.user_id = u.user_id LEFT JOIN user_group ug ON ug.user_group_id = u.user_group_id WHERE DATE(uw.date) = '" . $this->db->escape($date) . "' AND u.status = 1 AND u.count_worktime = 1");		
+			$query = $this->db->query($sql);		
+			
 			return $query->rows;		
 		}	
 		

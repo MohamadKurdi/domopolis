@@ -541,6 +541,9 @@
 			if (!$this->config->get('config_customer_manual_test_mode')){
 				$this->model_sale_customer->setSentManualLetter($data['customer_id'], true);
 			}
+
+			$this->load->model('kp/work');
+			$this->model_kp_work->updateFieldPlusOne('customer_manual_count');
 			
 			$json = [
 					'transmission_id' => $transmission_id,

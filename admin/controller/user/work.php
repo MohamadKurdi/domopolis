@@ -33,15 +33,33 @@
 			if (empty($this->request->get['period'])){
 				$period = date('Y-m-d');				
 				} else {
-				$period = date('Y-m-d', strtotime($this->request->get['period']));
+				$period = $this->request->get['period'];
 			}
 			
 			$this->data['current_period'] = $period;
 			
-			$this->data['periods'] = array();
+			$this->data['periods'] = [
+				[
+					'name' => 'Неделя',
+					'date' => 'week',
+					'href' => $this->url->link('user/work', 'period=week&token=' . $this->session->data['token']),
+				],
+
+				[
+					'name' => '2 недели',
+					'date' => '2week',
+					'href' => $this->url->link('user/work', 'period=2week&token=' . $this->session->data['token']),
+				],	
+
+				[
+					'name' => 'Месяц',
+					'date' => 'month',
+					'href' => $this->url->link('user/work', 'period=month&token=' . $this->session->data['token']),
+				],			
+
+			];
 			
-			for ($i = 0; $i <= 10; $i++) {
-				
+			for ($i = 0; $i <= 10; $i++) {				
 				switch ($i) {
 					
 					case 0 : $_name = 'Сегодня';break;
@@ -51,11 +69,11 @@
 					default : $_name = date('d.m', strtotime("-$i day"));break;
 				}
 				
-				$this->data['periods'][] = array(
-				'name' => $_name,
-				'date' =>  date('Y-m-d', strtotime("-$i day")),
-				'href' => $this->url->link('user/work', 'period='. date('Y-m-d', strtotime("-$i day")) .'&token=' . $this->session->data['token']),
-				);				
+				$this->data['periods'][] = [
+					'name' => $_name,
+					'date' =>  date('Y-m-d', strtotime("-$i day")),
+					'href' => $this->url->link('user/work', 'period='. date('Y-m-d', strtotime("-$i day")) .'&token=' . $this->session->data['token']),
+				];				
 			}
 			
 			$results = $this->model_kp_work->getAllUserStatsForDate($period);
@@ -65,14 +83,11 @@
 			
 			foreach ($results as $result){
 			
-				if (!$this->user->getIsAV()){
-					
-					if ($this->user->getIsMM()){
-					
+				if (!$this->user->getIsAV()){					
+					if ($this->user->getIsMM()){					
 						if ($result['user_group_id'] != 12) {
 							continue;
-						}
-						
+						}						
 					} elseif ($this->user->getID() != $result['user_id']) {
 						continue;
 					}
@@ -82,28 +97,30 @@
 					$this->data['stats'][$result['group_name']] = array();					
 				}
 												
-				$this->data['stats'][$result['group_name']][] = array(
+				$this->data['stats'][$result['group_name']][] = [
 				'user_name' 				=> $this->model_user_user->getRealUserNameById($result['user_id']),
 				'user_id'   				=> $result['user_id'],
-				'inbound_call_count' 		=> $result['inbound_call_count'],
-				'inbound_call_duration' 	=> secToHR($result['inbound_call_duration']),
-				'outbound_call_count' 		=> $result['outbound_call_count'],
-				'outbound_call_duration' 	=> secToHR($result['outbound_call_duration']),
-				'owned_order_count' 		=> $result['owned_order_count'],
-				'edit_order_count' 			=> $result['edit_order_count'],
-				'edit_csi_count' 			=> $result['edit_csi_count'],
-				'edit_birthday_count' 		=> $result['edit_birthday_count'],
-				'edit_customer_count' 		=> $result['edit_customer_count'],
-				'sent_mail_count' 			=> $result['sent_mail_count'],
-				'worktime_start' 			=> $result['worktime_start'],
-				'worktime_finish' 			=> $result['worktime_finish'],
-				'daily_actions' 			=> $result['daily_actions'],
-				'problem_order_count' 		=> $result['problem_order_count'],
-				'success_order_count' 		=> $result['success_order_count'],
-				'cancel_order_count' 		=> $result['cancel_order_count'],
-				'treated_order_count' 		=> $result['treated_order_count'],
-				'confirmed_order_count' 	=> $result['confirmed_order_count']
-				);
+				'inbound_call_count' 		=> $result['inbound_call_count']?$result['inbound_call_count']:'',
+				'inbound_call_duration' 	=> $result['inbound_call_duration']?secToHR($result['inbound_call_duration']):'',
+				'outbound_call_count' 		=> $result['outbound_call_count']?$result['outbound_call_count']:'',
+				'outbound_call_duration' 	=> $result['outbound_call_duration']?secToHR($result['outbound_call_duration']):'',
+				'owned_order_count' 		=> $result['owned_order_count']?$result['owned_order_count']:'',
+				'edit_order_count' 			=> $result['edit_order_count']?$result['edit_order_count']:'',
+				'edit_csi_count' 			=> $result['edit_csi_count']?$result['edit_csi_count']:'',
+				'edit_birthday_count' 		=> $result['edit_birthday_count']?$result['edit_birthday_count']:'',
+				'edit_customer_count' 		=> $result['edit_customer_count']?$result['edit_customer_count']:'',
+				'customer_manual_count' 	=> $result['customer_manual_count']?$result['customer_manual_count']:'',
+				'sent_mail_count' 			=> $result['sent_mail_count']?$result['sent_mail_count']:'',
+				'worktime_start' 			=> $result['worktime_start']?date('H:i:s', strtotime($result['worktime_start'])):'',
+				'worktime_finish' 			=> $result['worktime_finish']?date('H:i:s', strtotime($result['worktime_finish'])):'',
+				'daily_actions' 			=> $result['daily_actions']?$result['daily_actions']:'',
+				'problem_order_count' 		=> $result['problem_order_count']?$result['problem_order_count']:'',
+				'success_order_count' 		=> $result['success_order_count']?$result['success_order_count']:'',
+				'cancel_order_count' 		=> $result['cancel_order_count']?$result['cancel_order_count']:'',
+				'treated_order_count' 		=> $result['treated_order_count']?$result['treated_order_count']:'',
+				'confirmed_order_count' 	=> $result['confirmed_order_count']?$result['confirmed_order_count']:'',
+				'edit'  					=> $this->url->link('user/user/update', 'token=' . $this->session->data['token'] . '&user_id=' . $result['user_id'], 'SSL')
+				];
 				
 				
 			}
