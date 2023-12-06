@@ -714,23 +714,27 @@
 
 <script>
 
-	function hDescripionMob() {
-		let _hDescripion = $('.manufacturer-info').innerHeight();
-		if( _hDescripion > 150){
+	let buttonAdded = false;
 
-			$('.colaction_description').css({'height':'auto'})
+    function hDescripionMob() {
+        let _hDescripion = $('.manufacturer-info').innerHeight();
+        if (_hDescripion > 150 && !buttonAdded) {
 
-			$('.manufacturer-info').css({'height':'70px','overflow':'hidden'}).addClass('manufacturer-info-hide');
+            $('.colaction_description').css({ 'height': 'auto' });
 
-			$('.manufacturer-info').parent().append('<button class="btn-open-desc"><i class="fas fa-angle-down"></button>');
+            $('.manufacturer-info').css({ 'height': '70px', 'overflow': 'hidden' }).addClass('manufacturer-info-hide');
 
-			$('.btn-open-desc').on('click', function(){
-				$('.manufacturer-info').parent().toggleClass('open-btn');
-				return false;
-			});	
-		
-		}
-	}
+            $('.manufacturer-info').parent().append('<button class="btn-open-desc"><i class="fas fa-angle-down"></button>');
+
+            $('.btn-open-desc').on('click', function () {
+                $('.manufacturer-info').parent().toggleClass('open-btn');
+                return false;
+            });
+
+            buttonAdded = true;
+
+        }
+    }
 
 	function hDescripionDesc() {
 		let _hDescripion = $('.manufacturer-info').innerHeight();
