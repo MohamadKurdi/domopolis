@@ -599,6 +599,64 @@
 
 						<tr>
 							<td colspan="3" class="left" style="color:#00ad07;">
+								<i class="fa fa-cogs"></i> <b>Сервисные категории</b>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								Техническая категория
+							</td>
+							<td>
+								<input type="number" name="config_rainforest_default_technical_category_id" value="<?php echo $config_rainforest_default_technical_category_id; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> При быстром добавлении товара мы не можем определить его категорию сразу, поэтому товар присваивается изначально категории с этим ID
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								Сканировать ТК
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_check_technical_category_id" type="checkbox" class="checkbox" name="config_rainforest_check_technical_category_id" <? if ($config_rainforest_check_technical_category_id){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_check_technical_category_id"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Сканировать ли соответствия категориям каталога, если товар в технической категории
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								Неопределенная категория
+							</td>
+							<td>
+								<input type="number" name="config_rainforest_default_unknown_category_id" value="<?php echo $config_rainforest_default_unknown_category_id; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Товар будет присвоен этой категории, если при первой попытке обработки мы не смогли найти соответствия категории Amazon категориям каталога
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								Сканировать НК
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_check_unknown_category_id" type="checkbox" class="checkbox" name="config_rainforest_check_unknown_category_id" <? if ($config_rainforest_check_unknown_category_id){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_check_unknown_category_id"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Сканировать ли соответствия категориям каталога, если товар в неопределенной категории
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td colspan="3" class="left" style="color:#00ad07;">
 								<i class="fa fa-cogs"></i> <b>Блоки связей товаров</b>
 							</td>
 						</tr>

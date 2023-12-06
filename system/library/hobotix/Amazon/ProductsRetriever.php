@@ -99,12 +99,12 @@ class ProductsRetriever extends RainforestRetriever
 		$real_language_code = $language_code;
 		if (!empty($this->mapLanguages[$language_code])){							
 			$real_language_code = $this->mapLanguages[$language_code];
-		}
+		}		
 
 		if ($language_code == $this->config->get('config_rainforest_source_language')){
 			$text = $text;	
 		} else {
-			if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $real_language_code)){
+			if ($this->config->get('config_rainforest_enable_translation') && ($this->config->get('config_rainforest_enable_language_' . $real_language_code) || $this->config->get('config_rainforest_enable_language_' . $language_code))){
 				$text = $this->translateAdaptor->translate($text, $detect?false:$this->config->get('config_rainforest_source_language'), $real_language_code, true);
 			} else {
 				$text = '';
@@ -758,12 +758,28 @@ class ProductsRetriever extends RainforestRetriever
 
 	public function parseProductCategories($product_id, $product){
 		if (!empty($product['categories'])){
-			if ($this->model_product_get->getCurrentProductCategory($product_id) == $this->config->get('config_rainforest_default_technical_category_id')){
-				$name = $product['categories'][count($product['categories']) - 1]['name'];
+			$current_category_id = $this->model_product_get->getCurrentProductCategory($product_id);
+			echoLine('[ProductsRetriever::parseProductCategories] Current product category is: ' . $current_category_id, 's');
 
-				if ($category_id = $this->model_product_cached_get->getCategory(atrim($name))){
+			$check_category = false;
+			if ($this->config->get('config_rainforest_check_technical_category_id') && ($current_category_id == $this->config->get('config_rainforest_default_technical_category_id'))){
+				$check_category = true;
+			}
 
-					echoLine('[ProductsRetriever::parseProductCategories] Found category: ' . $name . ': ' . $category_id, 's');
+			if ($this->config->get('config_rainforest_check_unknown_category_id') && ($current_category_id == $this->config->get('config_rainforest_default_unknown_category_id'))){
+				$check_category = true;
+			}
+
+			if ($check_category){
+				echoLine('[ProductsRetriever::parseProductCategories] Product in Technical or Unknown category, continuing', 's');
+
+				$name 				= $product['categories'][count($product['categories']) - 1]['name'];
+				$amazon_category_id = $product['categories'][count($product['categories']) - 1]['category_id'];
+				$path 				= $product['categories_flat'];
+
+				if ($category_id = $this->model_product_cached_get->getCategory(atrim($name), atrim($path), atrim($amazon_category_id))){
+
+					echoLine('[ProductsRetriever::parseProductCategories] Found category: ' . $path . ': ' . $category_id, 's');
 					$this->model_product_edit->editProductCategory($product_id, [$category_id]);
 
 				} else {
@@ -1213,12 +1229,12 @@ class ProductsRetriever extends RainforestRetriever
 	public function addSimpleProductWithOnlyAsin($data) {			
 
 		if ($this->model_product_get->checkIfAsinIsDeleted($data['asin'])){
-			echoLine('[RainforestRetriever] ASIN . ' . $data['asin'] . ' . deleted, skipping!', 'w');				
+			echoLine('[RainforestRetriever::addSimpleProductWithOnlyAsin] ASIN . ' . $data['asin'] . ' . deleted, skipping!', 'w');				
 			return 0;
 		}	
 
 		if ($this->getProductsByAsin($data['asin'])){
-			echoLine('[RainforestRetriever] ASIN ' . $data['asin'] . ' exists, skipping!', 'w');
+			echoLine('[RainforestRetriever::addSimpleProductWithOnlyAsin] ASIN ' . $data['asin'] . ' exists, skipping!', 'w');
 			return 0;
 		}
 
@@ -1226,14 +1242,14 @@ class ProductsRetriever extends RainforestRetriever
 			$this->model_product_edit->deleteASINFromQueue($data['asin']);				
 			$this->model_product_edit->addAsinToIgnored($data['asin'], $data['name']);
 
-			echoLine('[RainforestRetriever] NAME ' . $data['name'] . ' is excluded, skipping!', 'w');
+			echoLine('[RainforestRetriever::addSimpleProductWithOnlyAsin] NAME ' . $data['name'] . ' is excluded, skipping!', 'w');
 			return 0;
 		}
 
 		if (!empty($data['amazon_best_price'])){
 			if ($this->config->get('config_rainforest_skip_low_price_products')){
 				if ((float)$data['amazon_best_price'] < (float)$this->config->get('config_rainforest_skip_low_price_products')){
-					echoLine('[RainforestRetriever] Price '. $data['amazon_best_price'] .' too low, skipping!', 'w');				
+					echoLine('[RainforestRetriever::addSimpleProductWithOnlyAsin] Price '. $data['amazon_best_price'] .' too low, skipping!', 'w');				
 					return 0;
 				}
 			}
@@ -1273,9 +1289,10 @@ class ProductsRetriever extends RainforestRetriever
 		}
 
 		$this->db->query("DELETE FROM product_to_category WHERE product_id 	= '" . (int)$product_id . "'");
-		$this->db->query("INSERT INTO product_to_category SET product_id 	= '" . (int)$product_id . "', category_id = '" . (int)$data['category_id'] . "', main_category = 1");		
-		$this->db->query("DELETE FROM product_description WHERE product_id 	= '" . (int)$product_id . "'");
+		$this->db->query("INSERT INTO product_to_category SET product_id 	= '" . (int)$product_id . "', category_id = '" . (int)$data['category_id'] . "', main_category = 1");
+		echoLine('[RainforestRetriever::addSimpleProductWithOnlyAsin] Adding product to category ' . $data['category_id'], 'i');
 
+		$this->db->query("DELETE FROM product_description WHERE product_id 	= '" . (int)$product_id . "'");
 		if ($this->config->get('config_openai_enable') && $this->config->get('config_openai_enable_shorten_names') && $this->config->get('config_rainforest_short_names_with_openai') && $this->config->get('config_openai_enable_shorten_names_before_translation')){
 			$data['name'] = $this->registry->get('openaiAdaptor')->shortenName($data['name'], $this->config->get('config_rainforest_source_language'));
 		}

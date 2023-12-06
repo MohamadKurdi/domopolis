@@ -76,6 +76,11 @@ class ControllerSettingRnf extends Controller {
 		'config_display_subcategory_in_all_categories',
 		'config_rainforest_show_only_filled_products_in_catalog',
 
+		'config_rainforest_check_technical_category_id',
+		'config_rainforest_check_unknown_category_id',
+		'config_rainforest_default_technical_category_id',
+		'config_rainforest_default_unknown_category_id',
+
 		'config_rainforest_test_asin',
 
 		'config_no_zeroprice',

@@ -373,8 +373,8 @@ class ControllerLocalisationLengthClass extends Controller {
 
 		if (isset($this->request->post['variants'])) {
 			$this->data['variants'] = $this->request->post['variants'];
-		} elseif (!empty($weight_class_info)) {
-			$this->data['variants'] = $weight_class_info['variants'];
+		} elseif (!empty($length_class_info)) {
+			$this->data['variants'] = $length_class_info['variants'];
 		} else {
 			$this->data['variants'] = '';
 		}

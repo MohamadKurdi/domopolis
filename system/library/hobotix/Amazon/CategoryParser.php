@@ -73,7 +73,32 @@ class CategoryParser
 	}
 
 	public function getTopCategories(){
-		$result = $this->doRequest();
+		$result = [];
+
+		$categories = $this->doRequest();
+
+		foreach ($categories['categories'] as $category){
+			echoLine('[CategoryParser::getTopCategories] Got top category: ' . $category['name'], 'i');
+		}
+
+		$result['request_info'] = $categories['request_info'];
+		$result['categories'] 	= [];
+
+		if ($this->config->get('config_rainforest_root_categories')){
+			$config_rainforest_root_categories = prepareEOLArray(str_replace('&amp;', '&', $this->config->get('config_rainforest_root_categories')));
+			foreach ($categories['categories'] as $category){
+				if (in_array($category['name'], $config_rainforest_root_categories)){
+					$result['categories'][] = $category;
+				}
+			}
+		} else {
+			$result = $categories;
+		}
+
+
+		foreach ($result['categories'] as $category){
+			echoLine('[CategoryParser::getTopCategories] After excluding, have only those: ' . $category['name'], 's');
+		}
 
 		return $result;
 	}
@@ -238,8 +263,31 @@ class CategoryParser
 			$data['store_parent_id'] = 0;
 		}
 
-		$data['name_native'] 		= $this->translateAdaptor->translate($data['name'], $this->config->get('config_rainforest_source_language'), $this->config->get('config_language'), true);
-		$data['full_name_native'] 	= $this->translateAdaptor->translate($data['path'], $this->config->get('config_rainforest_source_language'), $this->config->get('config_language'), true);
+		$query = $this->db->ncquery("SELECT * FROM $this->table WHERE category_id = '" . (int)$data['id'] . "' LIMIT 1");
+
+		$data['name_native'] = '';
+		$data['full_name_native'] = '';
+
+		if ($query->num_rows){
+			echoLine('[CategoryParser::createCategory] Category exists with name ' . $data['name'], 's');
+
+			if (!$query->row['name_native']){
+				if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $this->config->get('config_language'))){
+					$data['name_native'] 		= $this->translateAdaptor->translate($data['name'], $this->config->get('config_rainforest_source_language'), $this->config->get('config_language'), true);
+				}
+			}
+
+			if (!$query->row['full_name_native']){
+				if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $this->config->get('config_language'))){
+					$data['full_name_native'] 		= $this->translateAdaptor->translate($data['path'], $this->config->get('config_rainforest_source_language'), $this->config->get('config_language'), true);
+				}
+			}
+		} else {
+			if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $this->config->get('config_language'))){
+				$data['name_native'] 		= $this->translateAdaptor->translate($data['name'], $this->config->get('config_rainforest_source_language'), $this->config->get('config_language'), true);
+				$data['full_name_native'] 	= $this->translateAdaptor->translate($data['path'], $this->config->get('config_rainforest_source_language'), $this->config->get('config_language'), true);			
+			}	
+		}		
 
 		$this->db->ncquery("INSERT IGNORE INTO " . $this->table . " SET 
 			category_id 		= '" . $this->db->escape($data['id']) . "', 
@@ -252,11 +300,9 @@ class CategoryParser
 			ON DUPLICATE KEY UPDATE
 			link				= '" . $this->db->escape($data['link']) . "',
 			name_native 		= '" . $this->db->escape($data['name_native']) . "',
-			full_name_native 	= '" . $this->db->escape($data['full_name_native']) . "'
-		");
+			full_name_native 	= '" . $this->db->escape($data['full_name_native']) . "'");
 
 		if ($this->config->get('config_rainforest_enable_auto_tree')){
-
 			if (!$this->checkIfCategoryExists($data['id'])){
 				echoLine('[CategoryParser] Категория ' . $data['id'] . ' не существует');
 

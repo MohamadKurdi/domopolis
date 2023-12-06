@@ -193,7 +193,7 @@
             $.ajax({
                 type: 'POST',
                 dataType: 'html',
-                url: 'index.php?route=kp/amazon/add&hello=world&token=<?php echo $token; ?>',
+                url: 'index.php?route=kp/amazon/add&token=<?php echo $token; ?>',
                 data: {
                     asin:   asin,
                     category_id: category_id,
@@ -220,7 +220,7 @@
             $.ajax({
                 type: 'POST',
                 dataType: 'html',
-                url: 'index.php?route=kp/amazon/ignore&hello=world&token=<?php echo $token; ?>',
+                url: 'index.php?route=kp/amazon/ignore&token=<?php echo $token; ?>',
                 data: {
                     asin:   asin
                 },
@@ -364,7 +364,7 @@
             $.ajax({
                 type: 'POST',
                 dataType: 'html',
-                url: 'index.php?route=kp/amazon/getRainforestPage&hello=world&token=<?php echo $token; ?>',
+                url: 'index.php?route=kp/amazon/getRainforestPage&token=<?php echo $token; ?>',
                 data: {
                     type:       type,
                     url:        url,

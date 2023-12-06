@@ -491,6 +491,19 @@
 				</div>	
 
 				<div>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Наполнять AlsoBought товары</span></p>
+					<select name="config_also_bought_auto_enable">
+						<?php if ($config_also_bought_auto_enable) { ?>
+							<option value="1" selected="selected">Включить</option>
+							<option value="0">Отключить</option>
+						<?php } else { ?>													
+							<option value="1">Включить</option>
+							<option value="0"  selected="selected">Отключить</option>
+						<? } ?>
+					</select>
+				</div>
+
+				<div>
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Автоматически создавать бренды</span></p>
 					<select name="config_rainforest_auto_create_manufacturers">
 						<?php if ($config_rainforest_auto_create_manufacturers) { ?>
@@ -512,14 +525,9 @@
 				</div>
 
 				<div>
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ID неопределенной категории</span></p>
-					<input type="number" name="config_rainforest_default_unknown_category_id" value="<?php echo $config_rainforest_default_unknown_category_id; ?>" size="50" style="width:90px;" />
-				</div>
-
-				<div>
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Наполнять AlsoBought товары</span></p>
-					<select name="config_also_bought_auto_enable">
-						<?php if ($config_also_bought_auto_enable) { ?>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Сканировать ТК</span></p>
+					<select name="config_rainforest_check_technical_category_id">
+						<?php if ($config_rainforest_check_technical_category_id) { ?>
 							<option value="1" selected="selected">Включить</option>
 							<option value="0">Отключить</option>
 						<?php } else { ?>													
@@ -529,6 +537,25 @@
 					</select>
 				</div>
 
+				<div>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ID неопределенной категории</span></p>
+					<input type="number" name="config_rainforest_default_unknown_category_id" value="<?php echo $config_rainforest_default_unknown_category_id; ?>" size="50" style="width:90px;" />
+				</div>
+
+				<div>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Сканировать НК</span></p>
+					<select name="config_rainforest_check_unknown_category_id">
+						<?php if ($config_rainforest_check_unknown_category_id) { ?>
+							<option value="1" selected="selected">Включить</option>
+							<option value="0">Отключить</option>
+						<?php } else { ?>													
+							<option value="1">Включить</option>
+							<option value="0"  selected="selected">Отключить</option>
+						<? } ?>
+					</select>
+				</div>
+
+				
 				<div>
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Наполнять Related категории</span></p>
 					<select name="config_related_categories_auto_enable">
@@ -541,19 +568,7 @@
 						<? } ?>
 					</select>
 				</div>
-
-				<div>
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Ограничить описание</span></p>
-					<select name="config_rainforest_description_symbol_limit">
-						<?php if ($config_rainforest_description_symbol_limit) { ?>
-							<option value="1" selected="selected">Включить</option>
-							<option value="0">Отключить</option>
-						<?php } else { ?>													
-							<option value="1">Включить</option>
-							<option value="0"  selected="selected">Отключить</option>
-						<? } ?>
-					</select>
-				</div>
+				
 			</td>
 
 			<td style="width:20%">
@@ -582,6 +597,11 @@
 							<option value="0"  selected="selected">Отключить</option>
 						<? } ?>
 					</select>	
+				</div>
+
+				<div>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Ограничить описание до перевода</span></p>
+					<input type="number" name="config_rainforest_description_symbol_limit" value="<?php echo $config_rainforest_description_symbol_limit; ?>" size="50" style="width:100px;" />
 				</div>
 			</td>
 			
@@ -983,7 +1003,7 @@
 
 			<td style="width:20%">
 				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Корневые категории Amazon</span></p>
-				<textarea name="config_rainforest_root_categories" rows="3"><?php echo $config_rainforest_root_categories; ?></textarea>
+				<textarea name="config_rainforest_root_categories" rows="10"><?php echo $config_rainforest_root_categories; ?></textarea>
 			</td>
 
 		</tr>
