@@ -22,7 +22,7 @@ class ControllerKPMailWizz extends Controller {
 		parent::__construct($registry);
 
 		if (!$this->config->get('config_mailwizz_enable')){
-			echoLine('[ControllerKPMailWizz] MailWizz is disabled!', 'i');
+			echoLine('[ControllerKPMailWizz::__construct] MailWizz is disabled!', 'i');
 			die();
 		}
 
@@ -44,16 +44,17 @@ class ControllerKPMailWizz extends Controller {
 		echoLine('[ControllerKPMailWizz] MailWizz setting:' . $this->config->get('config_mailwizz_enable'), 'i');
 
 
-		$endpoint = new EmsApi\Endpoint\Lists();
-		foreach ($this->listConfigs as $listConfig){
+		$endpoint = new EmsApi\Endpoint\Lists();				
+		foreach ($this->listConfigs as $listConfig){						
 			echoLine("[ControllerKPMailWizz] List $listConfig: " . $this->config->get($listConfig), 's');
-			$response = $endpoint->getList($this->config->get($listConfig));								
+			$response = $endpoint->getList($this->config->get($listConfig));									
 
 			if ($response->body['status'] == 'error'){
-				throw new \Exception ("[ControllerKPMailWizz] INIT FAIL: $listConfig NOT FOUND IN EMA", 'e');
+				echoLine("[ControllerKPMailWizz::__construct] INIT FAIL: " . $listConfig . " NOT FOUND IN EMA, " . $response->body['error'], 'e');
+				throw new \Exception ('List config not found in EMA ' . $response->body['error']);
 				die();
 			} else {
-				echoLine('OK');
+				echoLine('[ControllerKPMailWizz::__construct] List exists, continuing', 's');
 			}
 		}		
 
