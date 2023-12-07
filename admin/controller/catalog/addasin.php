@@ -127,6 +127,13 @@
 
 		protected function getList() {
 			$this->load->language('report/product_viewed');
+						
+			$this->load->model('report/product');
+			$this->load->model('catalog/product');
+			$this->load->model('catalog/category');
+			$this->load->model('user/user');
+			$this->load->model('tool/image');
+			$this->load->model('kp/product');
 			
 			$this->document->setTitle('Добавление товаров с Amazon');
 			$this->data['heading_title'] = 'Добавление товаров с Amazon';
@@ -176,14 +183,7 @@
 			$this->data['breadcrumbs'][] = array(
 			'text' => 'Добавление товаров с Amazon',
 			'href' => $this->url->link('catalog/addasin', 'token=' . $this->session->data['token'] . $url, true)
-			);
-			
-			
-			$this->load->model('report/product');
-			$this->load->model('catalog/product');
-			$this->load->model('catalog/category');
-			$this->load->model('user/user');
-			$this->load->model('tool/image');
+			);			
 			
 			$filter_data = array(
 			'filter_asin' 		=> $filter_asin,
@@ -208,7 +208,14 @@
 				if (!empty($filter_name)){
 					$result['name'] = str_replace($filter_name, '<b>' . $filter_name . '</b>', $result['name']);
 				}
-			
+				
+				$amazon_product_data = $this->model_kp_product->getProductAmazonFullData($result['asin']);
+				$amazon_product_json = false;
+				if ($this->config->get('config_enable_amazon_asin_file_cache')){	
+					if ($amazon_product_data && file_exists(DIR_CACHE . $amazon_product_data['file'])){
+						$amazon_product_json = HTTPS_CATALOG . 'system/' . DIR_CACHE_NAME . $amazon_product_data['file'];				
+					}
+				}
 			
 				$this->data['products'][] = array(
 				'asin'    		=> $result['asin'],
@@ -217,6 +224,9 @@
 				'time_added'	=> date('H:i:s', strtotime($result['date_added'])),
 				'product_id'	=> $result['product_id'],
 				'brand_logic'	=> $result['brand_logic'],
+				'amazon_product_json' 	=> $amazon_product_json,
+				'amazon_best_price' 	=> (float)$result['amazon_best_price'],
+				'amazon_best_price_eur'	=> $this->currency->format($result['amazon_best_price'], 'EUR', 1),
 				'status'		=> ($result['product_id'] > 0)?$result['status']:false,
 				'edit'			=> ($result['product_id'] > 0)?$this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'], 'SSL'):false,
 				'view'			=> ($result['product_id'] > 0)?(HTTP_CATALOG . 'index.php?route=product/product&product_id=' . $result['product_id']):false,

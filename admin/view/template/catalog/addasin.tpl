@@ -145,8 +145,10 @@
                         <tr>
                             <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
                             <td class="center" style="width:1px;"></td>
+                            <td class="center" style="width:30px;">JSON</td>
                             <td class="center" style="width:100px;">ASIN</td>
                             <td class="left" style="width:50px;" >Картинка</td>
+                            <td class="center" style="width:60px;">Цена</td>
                             <td class="left" style="width:70px;" >Код товара</td>
                             <td class="left" style="width:1px;" >Статус</td>
                             <td class="left">Название</td>
@@ -164,7 +166,7 @@
                                 <tr>
 
                                     <td class="text-center">
-                                        <input type="checkbox" name="selected[]" value="<?php echo $product['asin']; ?>" />
+                                        <input type="checkbox" name="selected[]" value="<?php echo $product['asin']; ?>" />                                        
                                     </td>
 
                                     <td class="center">
@@ -175,8 +177,14 @@
                                        <? } ?>
                                     </td>
 
+                                     <td class="center">
+                                         <?php if (!empty($product['amazon_product_json'])) { ?>
+                                            <a href="<?php echo $product['amazon_product_json']; ?>" target="_blank"><i class="fa fa-download"></i></a>
+                                        <?php } ?>                                                                                           
+                                    </td>
+
                                     <td class="center">
-                                        <span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF"><?php echo $product['asin']; ?></span>                    
+                                        <span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF"><?php echo $product['asin']; ?></span>                                                                       
                                     </td>
 
                                     <td class="center">
@@ -185,6 +193,16 @@
                                        <? } elseif ($product['product_id'] == '-1') { ?>
                                             <span style="color:#CF4A61; font-size:18px; font-weight: 700;"><i class="fa fa-times"></i></span>
                                        <? } else { ?>
+                                            <span style="color:#FF9243; font-size:18px; font-weight: 700;"><i class="fa fa-refresh"></i></span>
+                                       <? } ?>
+                                    </td>
+
+                                    <td class="center">
+                                       <?php if ($product['amazon_best_price']) { ?>
+                                            <span style="color:#00ad07; font-weight: 700;"><? echo $product['amazon_best_price_eur']; ?></span>                                        
+                                       <? } elseif ($product['product_id'] == '-1') { ?>
+                                            <span style="color:#CF4A61; font-size:18px; font-weight: 700;"><i class="fa fa-times"></i></span>
+                                       <?php } else { ?>
                                             <span style="color:#FF9243; font-size:18px; font-weight: 700;"><i class="fa fa-refresh"></i></span>
                                        <? } ?>
                                     </td>
