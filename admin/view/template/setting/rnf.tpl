@@ -2144,7 +2144,7 @@
 					$.ajax({
 						type: 'POST',
 						dataType: 'html',
-						url: 'index.php?route=setting/rnf/calculate&hello=world&token=<?php echo $token; ?>',
+						url: 'index.php?route=setting/rnf/calculate&token=<?php echo $token; ?>',
 						data: {
 							main_formula: 					mainFormula,
 							<?php for ($crmfc = 1; $crmfc <= $this->data['config_rainforest_main_formula_count']; $crmfc++){ ?>	

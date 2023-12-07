@@ -922,7 +922,7 @@ class ProductsRetriever extends RainforestRetriever
 
 		if ($this->config->get('config_rainforest_delay_queue_variants') && !$this_is_queue){
 			if (!empty($product['variants']) && $do_adding_new_variants){
-				$this->model_product_edit->addProductToAmazonOffersQueue($product_id, $product['asin']);
+				$this->model_product_edit->addProductToAmazonVariantsQueue($product_id, $product['asin']);
 				echoLine('[ProductsRetriever::parseProductVariants] Skipped adding variants, added to variants queue!', 's');
 			}
 		} else {			
@@ -932,7 +932,8 @@ class ProductsRetriever extends RainforestRetriever
 				//У нас 2 варианта, либо текущий товар - основной, либо текущий - не основной
 				//В любом случае в табличке вариантов уже есть записи, они добавлены либо из текущего товара, либо из не_текущего, в любом случае мы отбираем все варианты
 				//И да, список всегда будет одинаковый, потому что записан, сука
-				$variants = $this->model_product_get->getOtherProductVariantsByAsin($product['asin']);				
+				$variants = $this->model_product_get->getOtherProductVariantsByAsin($product['asin']);
+				echoLine('[ProductsRetriever::parseProductVariants] Got ' . count($variants) . ' for asin ' . $product['asin'], 'i');
 				$new_product_data = [];
 				foreach ($variants as $variant){
 					//Товар уже существует
@@ -956,8 +957,6 @@ class ProductsRetriever extends RainforestRetriever
 					} else {
 
 						if (!$this->getProductsByAsin($variant['asin'])){
-
-						//Товара не существует вообще
 							echoLine('[ProductsRetriever::parseProductVariants] New variant:' . $variant['asin'], 'w');
 
 							$new_product_name = $this->trimProductNameWithoutVariant($product['title'], $this->getCurrentVariantDimensions($product['variants']), $this->getVariantDimensionsByAsin($product['variants'], $variant['asin']));
@@ -967,6 +966,8 @@ class ProductsRetriever extends RainforestRetriever
 								'asin' 				=> $variant['asin'], 
 								'category_id' 		=> $this->model_product_get->getCurrentProductCategory($product_id), 
 								'main_variant_id'	=> $product_id,
+								'amazon_best_price' => (float)$this->model_product_get->getProductPriceByAsin($product['asin']), 
+								'status'  			=> 1,
 								'name' 				=> $new_product_name,
 								'image' 			=> $this->getImage($this->getVariantImageByAsin($product['variants'], $variant['asin'])), 
 								'added_from_amazon' => 1
@@ -978,8 +979,8 @@ class ProductsRetriever extends RainforestRetriever
 
 
 						$new_product_data[] = [
-							'product_id' => $new_product_id,
-							'asin' => $variant['asin']
+							'product_id' 	=> $new_product_id,
+							'asin' 			=> $variant['asin']
 						];						
 					}
 				}
@@ -1216,9 +1217,7 @@ class ProductsRetriever extends RainforestRetriever
 						echoLine('[ProductsRetriever::editFullProductsWNP] Product ' . $product_id . ', found, ASIN ' . $result['asin'], 's');				
 
 						$this->editFullProduct($product_id, $result, false);
-
 					} else {
-
 						echoLine('[ProductsRetriever::editFullProductsWNP] Product ' . $product_id . ', not found', 'e');
 					}
 				}
@@ -1255,6 +1254,12 @@ class ProductsRetriever extends RainforestRetriever
 			}
 		}		
 
+		if (!empty($data['status'])){
+			$status = $data['status'];
+		} else {
+			$status = 0;
+		}
+
 		$this->db->query("INSERT INTO product SET 
 			model 					= '" . $this->db->escape($data['asin']) . "', 
 			asin 					= '" . $this->db->escape($data['asin']) . "', 
@@ -1268,7 +1273,7 @@ class ProductsRetriever extends RainforestRetriever
 			amazon_product_image 	= '" . (!empty($data['amazon_product_image'])?$this->db->escape($data['amazon_product_image']):'') . "',
 			stock_status_id 		= '" . (int)$this->config->get('config_stock_status_id') . "',
 			quantity 				= '9999',
-			status 					= '0',
+			status 					= '" . (int)$status . "',
 			date_added 				= NOW()");
 		
 		$product_id = $this->db->getLastId();
@@ -1336,6 +1341,5 @@ class ProductsRetriever extends RainforestRetriever
 		}			
 		
 		return $product_id;
-	}
-	
+	}	
 }	

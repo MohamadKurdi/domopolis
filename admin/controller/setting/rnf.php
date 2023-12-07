@@ -621,14 +621,10 @@ class ControllerSettingRnf extends Controller {
 		$this->data['results'] = $results;
 
 		if (defined('API_SESSION')){
-
 			$this->response->setOutput(json_encode($results));
-
 		} else {
-
 			$this->template = 'setting/rnfpricetest.tpl';
 			$this->response->setOutput($this->render());
-
 		}
 	}
 

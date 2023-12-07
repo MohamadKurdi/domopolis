@@ -435,9 +435,14 @@ class productModelGet extends hoboModel{
 		$sql = "SELECT COUNT(DISTINCT p.product_id) as total FROM category_path cp 
 			LEFT JOIN product_to_category p2c ON (cp.category_id = p2c.category_id) 
 			LEFT JOIN product p ON (p2c.product_id = p.product_id)
-			WHERE amazon_best_price > 0 
+			WHERE amazon_best_price > 0
 			AND asin <> 'INVALID' 
 			AND cp.path_id = '" . (int)$category_id . "'";		
+
+
+		if ($this->config->get('config_rainforest_enable_offers_for_added_from_amazon')) {
+			$sql .= " AND added_from_amazon = 1";
+		}
 
 		return $this->db->ncquery($sql)->row['total'];		
 	}	
@@ -450,8 +455,14 @@ class productModelGet extends hoboModel{
 			LEFT JOIN product p ON (p2c.product_id = p.product_id)
 			WHERE amazon_best_price > 0 
 			AND asin <> 'INVALID' 
-			AND cp.path_id = '" . (int)$category_id . "'
-			ORDER BY p.product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
+			AND cp.path_id = '" . (int)$category_id . "'";
+		
+
+		if ($this->config->get('config_rainforest_enable_offers_for_added_from_amazon')) {
+			$sql .= " AND added_from_amazon = 1";
+		}	
+
+		$sql .= " ORDER BY p.product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;	
 
 		$query = $this->db->ncquery($sql);
 
@@ -470,7 +481,13 @@ class productModelGet extends hoboModel{
 	public function getTotalProductsWithFastPriceFull(){
 		$result = [];
 
-		$sql = "SELECT COUNT(product_id) as total FROM product WHERE amazon_best_price > 0 AND asin <> 'INVALID'";		
+		$sql = "SELECT COUNT(product_id) as total 
+			FROM product 
+			WHERE amazon_best_price > 0 AND asin <> 'INVALID'";		
+
+		if ($this->config->get('config_rainforest_enable_offers_for_added_from_amazon')) {
+			$sql .= " AND added_from_amazon = 1";
+		}
 
 		return $this->db->ncquery($sql)->row['total'];		
 	}	
@@ -478,7 +495,13 @@ class productModelGet extends hoboModel{
 	public function getProductsWithFastPriceFull($start){
 		$result = [];
 
-		$sql = "SELECT * FROM product WHERE amazon_best_price > 0 AND asin <> 'INVALID' ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
+		$sql = "SELECT * FROM product WHERE amazon_best_price > 0 AND asin <> 'INVALID' ";
+
+		if ($this->config->get('config_rainforest_enable_offers_for_added_from_amazon')) {
+			$sql .= " AND added_from_amazon = 1";
+		}	
+
+		$sql .= " ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
 
 		$query = $this->db->ncquery($sql);
 
@@ -522,7 +545,11 @@ class productModelGet extends hoboModel{
 	public function getTotalProductsWithFastPrice(){
 		$result = [];
 
-		$sql = "SELECT COUNT(product_id) as total FROM product WHERE amazon_best_price > 0 AND asin <> 'INVALID' AND price = 0";		
+		$sql = "SELECT COUNT(product_id) as total FROM product WHERE amazon_best_price > 0 AND asin <> 'INVALID' AND price = 0";	
+
+		if ($this->config->get('config_rainforest_enable_offers_for_added_from_amazon')) {
+			$sql .= " AND added_from_amazon = 1";
+		}		
 
 		return $this->db->ncquery($sql)->row['total'];		
 	}	
@@ -530,7 +557,13 @@ class productModelGet extends hoboModel{
 	public function getProductsWithFastPrice($start){
 		$result = [];
 
-		$sql = "SELECT * FROM product WHERE amazon_best_price > 0 AND price = 0 AND asin <> 'INVALID' ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
+		$sql = "SELECT * FROM product WHERE amazon_best_price > 0 AND price = 0 AND asin <> 'INVALID' ";
+
+		if ($this->config->get('config_rainforest_enable_offers_for_added_from_amazon')) {
+			$sql .= " AND added_from_amazon = 1";
+		}	
+
+		$sql .= " ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
 
 		$query = $this->db->ncquery($sql);
 
@@ -730,6 +763,8 @@ class productModelGet extends hoboModel{
 			
 			if ($this->config->get('config_use_separate_table_for_features')){
 				$product_attribute_description_query = $this->db->ncquery("SELECT * FROM product_feature WHERE product_id = '" . (int)$product_id . "' AND feature_id = '" . (int)$product_attribute['attribute_id'] . "'");
+			} else {
+				$product_attribute_description_query = $this->db->ncquery("SELECT * FROM product_attribute WHERE product_id = '" . (int)$product_id . "' AND attribute_id = '" . (int)$product_attribute['attribute_id'] . "'");
 			}
 
 			foreach ($product_attribute_description_query->rows as $product_attribute_description) {
@@ -842,7 +877,6 @@ class productModelGet extends hoboModel{
 	}	
 
 	public function getProductIdByAsin($asin){
-		$results = [];
 		$query = $this->db->ncquery("SELECT product_id FROM product WHERE asin LIKE ('" . $this->db->escape($asin) . "') LIMIT 1");
 			
 		if ($query->num_rows){
@@ -850,7 +884,17 @@ class productModelGet extends hoboModel{
 		}
 
 		return false;
-	}	
+	}
+
+	public function getProductPriceByAsin($asin){
+		$query = $this->db->ncquery("SELECT amazon_best_price FROM product WHERE asin LIKE ('" . $this->db->escape($asin) . "') LIMIT 1");
+			
+		if ($query->num_rows){
+			return $query->row['amazon_best_price'];
+		}
+
+		return false;
+	}		
 
 	public function checkIfProductWasAddedFromAmazon($product_id){
 		$query = $this->db->ncquery("SELECT added_from_amazon FROM product WHERE product_id = '" . (int)$product_id . "' LIMIT 1");

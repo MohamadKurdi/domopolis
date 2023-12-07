@@ -81,7 +81,7 @@ class productModelEdit extends hoboModel{
 	/*
 		Variants queue Functions
 	*/
-	public function addProductToAmazonOffersQueue($product_id, $asin){
+	public function addProductToAmazonVariantsQueue($product_id, $asin){
 		if ($product_id && $asin){
 			$this->db->query("INSERT IGNORE INTO amzn_add_variants_queue SET product_id = '" . (int)$product_id . "', asin = '" . $this->db->escape($asin) . "', date_added = NOW()");	
 		}	
