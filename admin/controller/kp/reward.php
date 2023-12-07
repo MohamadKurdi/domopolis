@@ -145,11 +145,18 @@
 			if ($this->config->get('rewardpoints_birthday')){
 				echoLine('[ControllerKPReward::cron] Birthday greeting started', 'i');
 				$this->db->query("UPDATE customer SET birthday_date = DAY(DATE(birthday)) WHERE LENGTH(birthday) > 4 AND birthday <> '0000-00-00';");
-				$this->db->query("UPDATE customer SET birthday_month = MONTH(DATE(birthday)) WHERE LENGTH(birthday) > 4 AND birthday <> '0000-00-00';");			
+				$this->db->query("UPDATE customer SET birthday_month = MONTH(DATE(birthday)) WHERE LENGTH(birthday) > 4 AND birthday <> '0000-00-00';");
+
+				$strtotime = strtotime('now');
+				if ($this->config->get('rewardpoints_birthday_days_to') > 0){
+					$strtotime = strtotime('-' . (int)$this->config->get('rewardpoints_birthday_days_to') . ' day');
+				} elseif ($this->config->get('rewardpoints_birthday_days_to') < 0){
+					$strtotime = strtotime('+' . (int)(-1 * $this->config->get('rewardpoints_birthday_days_to')) . ' day');
+				}
 				
-				$sql = "SELECT DISTINCT(customer_id), store_id, language_id, firstname, lastname, telephone, email FROM customer WHERE birthday_month = '" . (int)date('n', strtotime('-1 day')) . "' AND birthday_date = '" . (int)date('j', strtotime('-1 day')) . "'";
+				$sql = "SELECT DISTINCT(customer_id), store_id, language_id, firstname, lastname, telephone, email FROM customer WHERE birthday_month = '" . (int)date('n', $strtotime) . "' AND birthday_date = '" . (int)date('j', $strtotime) . "'";
 				$query = $this->db->query($sql);
-				
+
 				if ($query->num_rows){
 					foreach ($query->rows as $row){
 						$validate_query = $this->db->query("SELECT * FROM customer_reward WHERE customer_id = '" . $row['customer_id'] . "' AND reason_code = 'BIRTHDAY_GREETING_REWARD' AND DATE(date_added) >= '" . date('Y-m-d', strtotime('-11 month')) . "'");

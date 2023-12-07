@@ -252,9 +252,16 @@
 			</td>
 
 			<td style="width:20%">
-				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бонусов на день рождения</span></p>
-				<input type="number" step="1"  name="rewardpoints_birthday" value="<?php echo $rewardpoints_birthday; ?>" size="10" />
-				<span class="help">количество бонусов в национальной валюте, начисляемое на день рождения, код <b>BIRTHDAY_GREETING_REWARD</b>, бонусы с этим кодом могут быть начислены не чаще чем раз в 365 дней</span>
+				<div>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бонусов на день рождения</span></p>
+					<input type="number" step="1"  name="rewardpoints_birthday" value="<?php echo $rewardpoints_birthday; ?>" size="10" />
+					<span class="help">количество бонусов в национальной валюте, начисляемое на день рождения, код <b>BIRTHDAY_GREETING_REWARD</b>, бонусы с этим кодом могут быть начислены не чаще чем раз в 365 дней</span>
+				</div>
+				<div>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Когда отправлять</span></p>
+					<input type="number" step="1"  name="rewardpoints_birthday_days_to" value="<?php echo $rewardpoints_birthday_days_to; ?>" size="10" />
+					<span class="help">+Х или -Х дней от дня рождения. 0 означает в тот же день</span>
+				</div>
 			</td>
 
 			<td style="width:20%">
