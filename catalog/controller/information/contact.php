@@ -22,9 +22,8 @@
 				}
 			}
 			
-			if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-				
-			/*	$template = new EmailTemplate($this->request, $this->registry);
+			if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {				
+				$template = new EmailTemplate($this->request, $this->registry);
 				
 				$tracking = array();
 				$tracking['ip_address'] = $this->request->server['REMOTE_ADDR'];
@@ -53,44 +52,43 @@
 				$mail = $template->hook($mail);
 				$mail->send();
 				$template->sent();
-				*/
 				
-				$this->load->model('kp/bitrixBot');	
-				$this->model_kp_bitrixBot->sendMessage($message = ':!: [B] Кто-то заполнил форму на странице контактов или поддержки[/B]', 
-					$attach = Array(
-					Array("DELIMITER" => Array(
-					'SIZE' => 200,
-					'COLOR' => "#c6c6c6"
-					)),
-					Array(
-					'MESSAGE' =>  "
-					[B]Имя:[/B] ". $this->request->post['name'] ."
-					[B]Email:[/B] ". $this->request->post['email'] ."
-					[B]Customer ID:[/B]" .  $this->customer->getID() . "
-					[B]Сообщение:[/B] " . strip_tags(html_entity_decode($this->request->post['enquiry'], ENT_QUOTES, 'UTF-8')),
-					'COLOR' => '#FF0000',
-					),
-					Array("DELIMITER" => Array(
-					'SIZE' => 200,
-					'COLOR' => "#c6c6c6"
-					)),
-					Array(
-					'MESSAGE' =>  "[B]IP:[/B] " . $_SERVER['REMOTE_ADDR'] . "
-					[B]UA:[/B] " . $_SERVER['HTTP_USER_AGENT'] . "
-					[B]Страница:[/B] " . $_SERVER['HTTP_REFERER'] . "
-					",
-					'COLOR' => '#FF0000',
-					),
-					Array("DELIMITER" => Array(
-					'SIZE' => 200,
-					'COLOR' => "#c6c6c6"
-					)),
-					), 
-					'chat9667');
-		
+				if ($this->config->get('config_bitrix_bot_enable')){
+					$this->load->model('kp/bitrixBot');	
+					$this->model_kp_bitrixBot->sendMessage($message = ':!: [B] Кто-то заполнил форму на странице контактов или поддержки[/B]', 
+						$attach = Array(
+							Array("DELIMITER" => Array(
+								'SIZE' => 200,
+								'COLOR' => "#c6c6c6"
+							)),
+							Array(
+								'MESSAGE' =>  "
+								[B]Имя:[/B] ". $this->request->post['name'] ."
+								[B]Email:[/B] ". $this->request->post['email'] ."
+								[B]Customer ID:[/B]" .  $this->customer->getID() . "
+								[B]Сообщение:[/B] " . strip_tags(html_entity_decode($this->request->post['enquiry'], ENT_QUOTES, 'UTF-8')),
+								'COLOR' => '#FF0000',
+							),
+							Array("DELIMITER" => Array(
+								'SIZE' => 200,
+								'COLOR' => "#c6c6c6"
+							)),
+							Array(
+								'MESSAGE' =>  "[B]IP:[/B] " . $_SERVER['REMOTE_ADDR'] . "
+								[B]UA:[/B] " . $_SERVER['HTTP_USER_AGENT'] . "
+								[B]Страница:[/B] " . $_SERVER['HTTP_REFERER'] . "
+								",
+								'COLOR' => '#FF0000',
+							),
+							Array("DELIMITER" => Array(
+								'SIZE' => 200,
+								'COLOR' => "#c6c6c6"
+							)),
+						), 
+						'chat9667');
+				}
 				
-					$this->data['success'] = $this->language->get('text_thanks_for_enquiry');
-				//	$this->redirect('information/contact');
+				$this->data['success'] = $this->language->get('text_thanks_for_enquiry');				
 			}
 			
 			$this->data['breadcrumbs'] = array();
@@ -102,23 +100,20 @@
 			);
 			
 			
-			$this->data['heading_title'] = $this->language->get('heading_title');
-			$this->data['hb_snippets_local_enable'] = $this->config->get('hb_snippets_local_enable');
-			$this->data['hb_snippets_local_snippet'] = $this->config->get('hb_snippets_local_snippet');
-			
-			$this->data['text_location'] = $this->language->get('text_location');
-			$this->data['text_contact'] = $this->language->get('text_contact');
-			$this->data['text_address'] = $this->language->get('text_address');
-			$this->data['text_h1_title_name'] = $this->language->get('h1_title_name');
-			
-			
-			$this->data['text_telephone'] = $this->language->get('text_telephone');
-			$this->data['text_fax'] = $this->language->get('text_fax');
-			
-			$this->data['entry_name'] = $this->language->get('entry_name');
-			$this->data['entry_email'] = $this->language->get('entry_email');
-			$this->data['entry_enquiry'] = $this->language->get('entry_enquiry');
-			$this->data['entry_captcha'] = $this->language->get('entry_captcha');
+			$this->data['heading_title'] 			= $this->language->get('heading_title');
+			$this->data['hb_snippets_local_enable'] 	= $this->config->get('hb_snippets_local_enable');
+			$this->data['hb_snippets_local_snippet'] 	= $this->config->get('hb_snippets_local_snippet');			
+			$this->data['text_location'] 		= $this->language->get('text_location');
+			$this->data['text_contact'] 		= $this->language->get('text_contact');
+			$this->data['text_address'] 		= $this->language->get('text_address');
+			$this->data['text_h1_title_name'] 	= $this->language->get('h1_title_name');						
+			$this->data['text_telephone'] 		= $this->language->get('text_telephone');
+			$this->data['text_fax'] 			= $this->language->get('text_fax');			
+			$this->data['entry_name'] 			= $this->language->get('entry_name');
+			$this->data['entry_email'] 			= $this->language->get('entry_email');
+			$this->data['entry_enquiry'] 		= $this->language->get('entry_enquiry');
+			$this->data['entry_captcha'] 		= $this->language->get('entry_captcha');						
+			$this->data['button_continue'] 		= $this->language->get('button_continue');
 			
 			if (isset($this->error['name'])) {
 				$this->data['error_name'] = $this->error['name'];
@@ -144,27 +139,23 @@
 				$this->data['error_captcha'] = '';
 			}	
 			
-			$this->data['button_continue'] = $this->language->get('button_continue');
-			
-			$this->data['action'] = $this->url->link('information/contact');
-			$this->data['store'] = $this->config->get('config_name');
+			$this->data['action'] 	= $this->url->link('information/contact');
+			$this->data['store'] 	= $this->config->get('config_name');
 
 			if (!empty($this->config->get('config_address'))){
 				$this->data['address'] = nl2br($this->config->get('config_address'));
 			} else {
 				$this->data['address'] = '';
 			}
-			$this->data['telephone'] = $this->config->get('config_telephone');
-			$this->data['telephone2'] = $this->config->get('config_telephone2');
-			$this->data['telephone3'] = $this->config->get('config_telephone3');
-			$this->data['telephone4'] = $this->config->get('config_telephone4');
-			
-			$this->data['contact_email'] = $this->config->get('config_display_email');
-			
-			//opt
-			$this->data['opt_telephone'] = $this->config->get('config_opt_telephone');
-			$this->data['opt_telephone2'] = $this->config->get('config_opt_telephone2');
-			$this->data['opt_email'] = $this->config->get('config_opt_email');
+
+			$this->data['telephone'] 		= $this->config->get('config_telephone');
+			$this->data['telephone2'] 		= $this->config->get('config_telephone2');
+			$this->data['telephone3'] 		= $this->config->get('config_telephone3');
+			$this->data['telephone4'] 		= $this->config->get('config_telephone4');		
+			$this->data['contact_email'] 	= $this->config->get('config_display_email');
+			$this->data['opt_telephone'] 	= $this->config->get('config_opt_telephone');
+			$this->data['opt_telephone2'] 	= $this->config->get('config_opt_telephone2');
+			$this->data['opt_email'] 		= $this->config->get('config_opt_email');
 			
 			$this->data['fax'] = $this->config->get('config_fax');
 			
@@ -193,7 +184,7 @@
 			}		
 	
 			
-			$this->template = $this->config->get('config_template') . '/template/information/contact.tpl';
+			$this->template = 'information/contact.tpl';
 			
 			$this->children = array(
 			'common/column_left',
@@ -222,14 +213,18 @@
 			}
 			
 			if ($this->config->get('config_google_recaptcha_contact_enable')){
-				$this->load->model('kp/recaptcha');
 				
-				if (!empty($this->request->post['g-recaptcha-response']) && $this->model_kp_recaptcha->validate($this->request->post['g-recaptcha-response'])){
-					//Ок
-				} else {
-					$this->error['captcha'] = $this->language->get('error_captcha');
-				}
-				
+				$this->error['captcha'] = $this->language->get('error_captcha');
+				if (!empty($this->request->post['g-recaptcha-response'])){
+					$reCaptcha 			= new \ReCaptcha\ReCaptcha($this->config->get('config_google_recaptcha_contact_secret'));
+					$reCaptchaResponse 	= $reCaptcha->setScoreThreshold(0.5)->verify($this->request->post['g-recaptcha-response']);
+
+					if ($reCaptchaResponse->isSuccess()){
+						unset($this->error['captcha']);
+					} else {
+						$this->error['captcha'] .= ' ' . json_encode($reCaptchaResponse->getErrorCodes());
+					}
+				}				
 			}
 			
 			if (!$this->error) {

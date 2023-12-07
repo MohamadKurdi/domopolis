@@ -136,7 +136,6 @@ class ControllerCatalogStocks extends Controller {
 	}
 
 	public function stockDynamics(){
-
 		$this->load->model('tool/image');		
 		$this->load->model('localisation/country');	
 		$this->load->model('catalog/product');
@@ -305,8 +304,8 @@ class ControllerCatalogStocks extends Controller {
 						$this->data['stocks'][$result['manufacturer_name']] = [];
 
 						$this->data['counts'][$result['manufacturer_name']] = array(
-							'total_items' => 0,
-							'total_amount' => 0,
+							'total_items' 	=> 0,
+							'total_amount' 	=> 0,
 						);
 					}
 
@@ -326,8 +325,8 @@ class ControllerCatalogStocks extends Controller {
 				}
 
 				$this->data['manufacturers'][$result['manufacturer_id']] = [
-					'manufacturer_id' => $result['manufacturer_id'],
-					'name' => $result['manufacturer_name']
+					'manufacturer_id' 	=> $result['manufacturer_id'],
+					'name' 				=> $result['manufacturer_name']
 				];
 			}
 		} else {
@@ -380,12 +379,10 @@ class ControllerCatalogStocks extends Controller {
 				}
 
 				$this->data['manufacturers'][$result['manufacturer_id']] = [
-					'manufacturer_id' => $result['manufacturer_id'],
-					'name' => $result['manufacturer_name']
+					'manufacturer_id' 	=> $result['manufacturer_id'],
+					'name' 				=> $result['manufacturer_name']
 				];
 			}
-
-
 		}		
 
 		$this->data['total_amount_eur'] 		= $this->currency->format_with_left($this->data['total_amount'], 'EUR', 1);
@@ -406,6 +403,32 @@ class ControllerCatalogStocks extends Controller {
 			'common/footer'
 		);
 
-		$this->response->setOutput($this->render());
+
+		if (!empty($this->request->get['filter_download_csv'])){
+			$csv_data = [];
+
+			foreach ($this->data['stocks'] as $manufacturer => $stocks){
+				foreach ($stocks as $stock){
+
+					$tmp_stock = [];
+					foreach ($stock as $key => $value){
+						if (bool_real_stripos($key, 'quantity_stock')){
+							if ($key == $this->config->get('config_warehouse_identifier')){
+								$tmp_stock[$key] = $value;
+							}
+						} else {
+							$tmp_stock[$key] = $value;
+						}
+					}
+
+
+					$csv_data[] = $tmp_stock;
+				}
+			}
+
+			$this->response->outputCSV($csv_data, [], 'products_stocks');
+		} else {
+			$this->response->setOutput($this->render());
+		}
 	}
 }		

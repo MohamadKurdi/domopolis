@@ -16,7 +16,7 @@
 			
 			if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 				
-			/*	$template = new EmailTemplate($this->request, $this->registry);
+				$template = new EmailTemplate($this->request, $this->registry);
 				
 				$tracking = array();
 				$tracking['ip_address'] = $this->request->server['REMOTE_ADDR'];
@@ -45,44 +45,44 @@
 				$mail = $template->hook($mail);
 				$mail->send();
 				$template->sent();
-				*/
-				
-				$this->load->model('kp/bitrixBot');	
-				$this->model_kp_bitrixBot->sendMessage($message = ':!: [B] Кто-то заполнил форму на странице контактов или поддержки[/B]', 
-					$attach = Array(
-					Array("DELIMITER" => Array(
-					'SIZE' => 200,
-					'COLOR' => "#c6c6c6"
-					)),
-					Array(
-					'MESSAGE' =>  "
-					[B]Имя:[/B] ". $this->request->post['name'] ."
-					[B]Email:[/B] ". $this->request->post['email'] ."
-					[B]Customer ID:[/B]" .  $this->customer->getID() . "
-					[B]Сообщение:[/B] " . strip_tags(html_entity_decode($this->request->post['enquiry'], ENT_QUOTES, 'UTF-8')),
-					'COLOR' => '#FF0000',
-					),
-					Array("DELIMITER" => Array(
-					'SIZE' => 200,
-					'COLOR' => "#c6c6c6"
-					)),
-					Array(
-					'MESSAGE' =>  "[B]IP:[/B] " . $_SERVER['REMOTE_ADDR'] . "
-					[B]UA:[/B] " . $_SERVER['HTTP_USER_AGENT'] . "
-					[B]Страница:[/B] " . $_SERVER['HTTP_REFERER'] . "
-					",
-					'COLOR' => '#FF0000',
-					),
-					Array("DELIMITER" => Array(
-					'SIZE' => 200,
-					'COLOR' => "#c6c6c6"
-					)),
-					), 
-					'chat9667');
+			
+				if ($this->config->get('config_bitrix_bot_enable')){
+					$this->load->model('kp/bitrixBot');	
+					$this->model_kp_bitrixBot->sendMessage($message = ':!: [B] Кто-то заполнил форму на странице контактов или поддержки[/B]', 
+						$attach = Array(
+							Array("DELIMITER" => Array(
+								'SIZE' => 200,
+								'COLOR' => "#c6c6c6"
+							)),
+							Array(
+								'MESSAGE' =>  "
+								[B]Имя:[/B] ". $this->request->post['name'] ."
+								[B]Email:[/B] ". $this->request->post['email'] ."
+								[B]Customer ID:[/B]" .  $this->customer->getID() . "
+								[B]Сообщение:[/B] " . strip_tags(html_entity_decode($this->request->post['enquiry'], ENT_QUOTES, 'UTF-8')),
+								'COLOR' => '#FF0000',
+							),
+							Array("DELIMITER" => Array(
+								'SIZE' => 200,
+								'COLOR' => "#c6c6c6"
+							)),
+							Array(
+								'MESSAGE' =>  "[B]IP:[/B] " . $_SERVER['REMOTE_ADDR'] . "
+								[B]UA:[/B] " . $_SERVER['HTTP_USER_AGENT'] . "
+								[B]Страница:[/B] " . $_SERVER['HTTP_REFERER'] . "
+								",
+								'COLOR' => '#FF0000',
+							),
+							Array("DELIMITER" => Array(
+								'SIZE' => 200,
+								'COLOR' => "#c6c6c6"
+							)),
+						), 
+						'chat9667');
+				}
 		
 				
-					$this->data['success'] = $this->language->get('text_thanks_for_enquiry');
-				//	$this->redirect('information/contact');
+				$this->data['success'] = $this->language->get('text_thanks_for_enquiry');
 			}
 			
 			$this->data['breadcrumbs'] = array();
@@ -166,7 +166,7 @@
 			}		
 	
 			
-			$this->template = $this->config->get('config_template') . '/template/account/support.tpl';
+			$this->template = 'account/support.tpl';
 			
 			$this->children = array(
 			'common/column_left',
@@ -194,14 +194,18 @@
 			}
 			
 			if ($this->config->get('config_google_recaptcha_contact_enable')){
-				$this->load->model('kp/recaptcha');
 				
-				if (!empty($this->request->post['g-recaptcha-response']) && $this->model_kp_recaptcha->validate($this->request->post['g-recaptcha-response'])){
-					//Ок
-				} else {
-					$this->error['captcha'] = $this->language->get('error_captcha');
-				}
-				
+				$this->error['captcha'] = $this->language->get('error_captcha');
+				if (!empty($this->request->post['g-recaptcha-response'])){
+					$reCaptcha 			= new \ReCaptcha\ReCaptcha($this->config->get('config_google_recaptcha_contact_secret'));
+					$reCaptchaResponse 	= $reCaptcha->setScoreThreshold(0.5)->verify($this->request->post['g-recaptcha-response']);
+
+					if ($reCaptchaResponse->isSuccess()){
+						unset($this->error['captcha']);
+					} else {
+						$this->error['captcha'] .= ' ' . json_encode($reCaptchaResponse->getErrorCodes());
+					}
+				}				
 			}
 			
 			if (!$this->error) {
@@ -210,5 +214,4 @@
 				return false;
 			}  	  
 		}
-
 	}

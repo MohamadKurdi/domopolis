@@ -185,7 +185,7 @@ class Response {
     if (!$filename){
       $filename = HTTP_DOMAIN . '_csv_export_' . date('Y_m_d') . '.csv';
     } else {
-      $filename = HTTP_DOMAIN . $filename . date('Y_m_d') . '.csv';
+      $filename = HTTP_DOMAIN . '_' . $filename . '_' . date('Y_m_d') . '.csv';
     }
 
     if (!$header){

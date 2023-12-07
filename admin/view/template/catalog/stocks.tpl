@@ -162,7 +162,8 @@
 
 						<td align="right">
 							<p>	&#160;</p>
-							<a onclick="filter();" class="button">Фильтр</a>
+							<a onclick="filter(0);" class="button"><i class="fa fa-filter"></i> Фильтр</a>
+							<a onclick="filter(1);" class="button"><i class="fa fa-file-excel-o"></i> CSV + фильтр</a>
 						</td>
 					</tr>								
 				</table>
@@ -470,7 +471,7 @@
 		</script>
 
 		<script type="text/javascript">
-			function filter() {
+			function filter(csv) {
 				url = 'index.php?route=catalog/stocks&token=<?php echo $token; ?>';
 
 				var filter_manufacturer_id = $('select[name=\'filter_manufacturer_id\']').children("option:selected").val();
@@ -496,6 +497,10 @@
 				if (filter_sort != '*') {
 					url += '&filter_sort=' + encodeURIComponent(filter_sort);
 				}
+
+				if (csv){
+    				url += '&filter_download_csv=1';
+  				}
 
 				location = url;
 			}
