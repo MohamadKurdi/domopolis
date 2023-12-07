@@ -2843,8 +2843,8 @@ class ControllerCatalogProduct extends Controller {
 
 
 		$this->load->model('design/layout');
-
-		$this->data['layouts'] = $this->model_design_layout->getLayouts();
+		$this->data['layouts'] 			= $this->model_design_layout->getLayouts();
+		$this->data['easyphoto_form'] 	= $this->getChild('module/easyphoto/getForm', $this->data);
 
 		$this->template = 'catalog/product_form.tpl';
 		$this->children = array(
