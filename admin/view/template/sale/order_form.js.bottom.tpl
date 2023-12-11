@@ -1201,7 +1201,7 @@
 	<? if ($can_delete) { ?>
 		function setHistoryDeleteTriggers(){
 			console.log('setHistoryDeleteTriggers');
-			$('body').on('click', '#delete-history', function() {
+			$('body').on('click', '.delete-history', function() {
 				var ohd = $(this).attr("data-number")
 				swal({
 					title: "Вы уверены?",

@@ -52,7 +52,7 @@
 					<td class="center" style="padding:4px 8px;"><i class="fa fa-bell" aria-hidden="true"  style="font-size:18px;<?php if($history['notify']) { ?>color:#4ea24e<? } ?>"></i></td>
 					<td class="center" style="padding:4px 8px;"><i class="fa fa-truck change_courier_in_history" data-field-name="courier" data-value="<? echo (int)$history['courier']; ?>" aria-hidden="true" data-order-history-id="<?php echo $history['order_history_id']; ?>"  style="cursor:pointer;font-size:18px;<?php if($history['courier']) { ?>color:#4ea24e<? } ?>"></i></td>
 					<? if ($can_delete) { ?>
-						<td class="left"><a id="delete-history" class="button save_button" data-number="<?php echo $history['order_history_id']; ?>"><?php echo $button_remove; ?></a></td>
+						<td class="left"><a id="delete-history" class="delete-history button save_button" data-number="<?php echo $history['order_history_id']; ?>"><?php echo $button_remove; ?></a></td>
 					<? } ?>	  				
 				</tr>
 			<?php } ?>
