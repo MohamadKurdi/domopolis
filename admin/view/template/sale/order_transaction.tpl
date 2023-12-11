@@ -47,9 +47,9 @@
 					<td class="right" style="white-space: nowrap;"><b id="transaction_text_<?php echo $transaction['transaction_id']; ?>"><?php echo $transaction['amount_national']; ?></b>
 					<input type="text" style="display:none;" data-id="<?php echo $transaction['transaction_id']; ?>" id="transaction_amount_<?php echo $transaction['transaction_id']; ?>" name="transaction_amount_<?php echo $transaction['transaction_id']; ?>" value="<?php echo $transaction['amount_national_value']; ?>"></td>
 					<? if ($has_rights) { ?>
-						<td class="right" style="width:1px;"><a id="change-transaction" class="button save_button" data-number="<?php echo $transaction['transaction_id']; ?>">Изм.</a><a id="change-transaction-real" class="button" style="display:none;" data-number="<?php echo $transaction['transaction_id']; ?>">ОК</a></td>
+						<td class="right" style="width:1px;"><a id="change-transaction" class="button save_button change-transaction" data-number="<?php echo $transaction['transaction_id']; ?>">Изм.</a><a id="change-transaction-real" class="button" style="display:none;" data-number="<?php echo $transaction['transaction_id']; ?>">ОК</a></td>
 						
-						<td class="right" style="width:1px;"><a id="delete-transaction" class="button save_button" data-number="<?php echo $transaction['transaction_id']; ?>">Удалить</a></td>
+						<td class="right" style="width:1px;"><a id="delete-transaction" class="button save_button delete-transaction" data-number="<?php echo $transaction['transaction_id']; ?>">Удалить</a></td>
 					<? } ?>
 				</tr>
 			<?php } ?>   

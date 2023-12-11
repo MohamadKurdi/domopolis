@@ -1612,7 +1612,7 @@
 		
 		function setTransactionEditTriggers(){
 			console.log('setTransactionEditTriggers');			
-			$('body').on('click', '#delete-transaction', function(){
+			$('body').on('click', '.delete-transaction', function(){
 				var tid = $(this).attr('data-number');
 				swal({ title: "Точно удалить транзакцию?", text: "Это действие нельзя отменить!", type: "warning", showCancelButton: true,  confirmButtonColor: "#F96E64",  confirmButtonText: "Да, удалить!", cancelButtonText: "Отмена",  closeOnConfirm: true }, function() {
 					$.ajax({
@@ -1635,7 +1635,7 @@
 				});
 			});
 			
-			$('body').on('click', '#change-transaction', function(){
+			$('body').on('click', '.change-transaction', function(){
 				$('#transaction_amount_'+$(this).attr('data-number')).show();
 				console.log($(this).attr('data-number'));
 				$('#transaction_text_'+$(this).attr('data-number')).hide();
