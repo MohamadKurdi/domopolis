@@ -538,7 +538,7 @@ class productModelEdit extends hoboModel{
 	}
 
 	public function addManufacturer($name){		
-		$this->db->query("INSERT INTO manufacturer SET name = '" . $this->db->escape($name) . "'");
+		$this->db->query("INSERT INTO manufacturer SET name = '" . $this->db->escape($name) . "', new = 1, date_added = NOW()");
 		$manufacturer_id = $this->db->getLastId();
 
 		$this->db->query("DELETE FROM manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");

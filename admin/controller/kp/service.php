@@ -118,7 +118,9 @@
 			$this->db->query("DELETE FROM category_related WHERE category_id NOT IN (SELECT category_id FROM category)");
 			$this->db->query("DELETE FROM category_related WHERE related_category_id NOT IN (SELECT category_id FROM category)");
 
-			$this->db->query("DELETE FROM product_amzn_data WHERE product_id NOT IN (SELECT product_id FROM product)");			
+			$this->db->query("DELETE FROM product_amzn_data WHERE product_id NOT IN (SELECT product_id FROM product)");		
+
+			$this->db->query("UPDATE manufacturer SET new = '0' WHERE new = '1' AND date_added <= DATE_SUB(NOW(), INTERVAL 3 MONTH)");		
 
 			echoLine('[optimizeProductsDB] Нормализация рейтинга товаров', 'i');
 			$this->db->query("UPDATE product SET xrating = (SELECT AVG(rating) as xrating FROM review WHERE status = 1 AND product_id = product.product_id GROUP BY product_id)");

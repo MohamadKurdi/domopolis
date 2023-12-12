@@ -8,10 +8,12 @@
 				show_goods 		= '" . (int)$data['show_goods'] . "', 
 				priceva_enable 	= '" . (int)$data['priceva_enable'] . "', 
 				priceva_feed 	= '" . $this->db->escape($data['priceva_feed']) . "', 
-				hotline_enable 	= '" . (int)$data['hotline_enable'] . "',  
+				hotline_enable 	= '" . (int)$data['hotline_enable'] . "',
+				new 			= '" . (int)$data['new'] . "',   
 				sort_order 		= '" . (int)$data['sort_order'] . "', 
 				banner_width 	= '" . (int)$data['banner_width'] . "', 
-				banner_height 	= '" . (int)$data['banner_height'] . "'");
+				banner_height 	= '" . (int)$data['banner_height'] . "',
+				date_added = NOW()");
 			
 			$manufacturer_id = $this->db->getLastId();
 			
@@ -91,7 +93,8 @@
 				tip 			= '" . $this->db->escape($data['tip']) . "', 
 				menu_brand 		= '" . (int)$data['menu_brand'] . "', 
 				show_goods 		= '" . (int)$data['show_goods'] . "', 
-				sort_order 		= '" . (int)$data['sort_order'] . "', 
+				sort_order 		= '" . (int)$data['sort_order'] . "',
+				new 			= '" . (int)$data['new'] . "',  
 				priceva_enable 	= '" . (int)$data['priceva_enable'] . "', 
 				priceva_feed 	= '" . $this->db->escape($data['priceva_feed']) . "', 
 				hotline_enable 	= '" . (int)$data['hotline_enable'] . "',  

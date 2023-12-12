@@ -204,11 +204,13 @@ class ControllerCatalogManufacturer extends Controller {
 				'stores'		  => $this->model_catalog_manufacturer->getManufacturerStores($result['manufacturer_id']),
 				'total_products'  => $this->model_catalog_manufacturer->getTotalProductsByManufacturer($result['manufacturer_id']),
 				'name'            => $result['name'],
+				'new'             => $result['new'],
 				'image'			  => $image,
 				'menu_brand'      => $result['menu_brand'],
 				'hotline_enable'  => $result['hotline_enable'],
 				'show_goods'      => $result['show_goods'],
 				'sort_order'      => $result['sort_order'],
+				'date_added'      => date('Y-m-d', strtotime($result['date_added'])),
 				'selected'        => isset($this->request->post['selected']) && in_array($result['manufacturer_id'], $this->request->post['selected']),
 				'action'          => $action
 			);
@@ -264,12 +266,12 @@ class ControllerCatalogManufacturer extends Controller {
 			$url .= '&order=' . $this->request->get['order'];
 		}
 		
-		$pagination = new Pagination();
-		$pagination->total = $manufacturer_total;
-		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_admin_limit');
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url . '&page={page}');
+		$pagination 		= new Pagination();
+		$pagination->total 	= $manufacturer_total;
+		$pagination->page 	= $page;
+		$pagination->limit 	= $this->config->get('config_admin_limit');
+		$pagination->text 	= $this->language->get('text_pagination');
+		$pagination->url 	= $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 		
 		$this->data['pagination'] = $pagination->render();
 		
@@ -427,6 +429,14 @@ class ControllerCatalogManufacturer extends Controller {
 			$this->data['hotline_enable'] = $manufacturer_info['hotline_enable'];
 		} else {
 			$this->data['hotline_enable'] = 0;
+		}
+
+		if (isset($this->request->post['new'])) {
+			$this->data['new'] = $this->request->post['new'];
+		} elseif (!empty($manufacturer_info)) {
+			$this->data['new'] = $manufacturer_info['new'];
+		} else {
+			$this->data['new'] = 0;
 		}
 				
 		$this->load->model('catalog/product');

@@ -40,16 +40,19 @@
 							<td style="width:20%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Название</span>
 							</td>
-							<td style="width:20%">
+							<td style="width:15%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Подсказка</span>
 							</td>
-							<td style="width:20%">
+							<td style="width:15%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Показывать в меню брендов</span>
 							</td>
-							<td style="width:20%">
+							<td style="width:10%">
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Новинка</span>
+							</td>
+							<td style="width:15%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Показать список товаров в каталоге</span>
 							</td>
-							<td style="width:20%">
+							<td style="width:10%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Сортировка</span>
 							</td>
 						</tr>
@@ -60,7 +63,7 @@
 							</td>
 							<td>
 								<input type="text" name="tip" value="<?php echo $tip; ?>" size="30" />
-							</td>
+							</td>							
 							<td>
 								<select name="menu_brand">
 									<?php if ($menu_brand) { ?>
@@ -71,6 +74,18 @@
 										<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
 									<?php } ?>
 								</select>
+							</td>
+							<td>
+								<select name="new">
+									<?php if ($new) { ?>
+										<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+										<option value="0"><?php echo $text_disabled; ?></option>
+										<?php } else { ?>
+										<option value="1"><?php echo $text_enabled; ?></option>
+										<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+									<?php } ?>
+								</select>
+								<span class="help">Если включено, то отображается маркер NEW на странице списка брендов</span>
 							</td>
 							<td>
 								<select name="show_goods">
