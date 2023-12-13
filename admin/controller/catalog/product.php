@@ -832,7 +832,8 @@ class ControllerCatalogProduct extends Controller {
 
 	protected function getForm() {
 		$this->load->model('tool/image');
-
+		$this->load->model('setting/store');		
+		$this->load->model('sale/supplier');		
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -1442,8 +1443,21 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['amzn_ignore'] = false;
 		}				
 
+		$this->data['product_suppliers'] = [];
+		if (!empty($this->request->get['product_id'])){
+			$product_suppliers = $this->model_sale_supplier->getProductSuppliers($this->request->get['product_id']);
 
-		$this->load->model('setting/store');			
+			foreach ($product_suppliers as $product_supplier){
+				$this->data['product_suppliers'][] = [
+					'name' 			=> $product_supplier['supplier_name'],
+					'currency' 		=> $product_supplier['currency'],
+					'price' 		=> $this->currency->format_with_left($product_supplier['price'], $product_supplier['currency'], 1),
+					'price_special' => $this->currency->format_with_left($product_supplier['price_special'], $product_supplier['currency'], 1),
+					'stock' 		=> $product_supplier['stock']
+				];
+			}
+		}
+		
 		$this->data['stores'] = $this->model_setting_store->getStores();
 
 		$this->data['priceva'] = [];

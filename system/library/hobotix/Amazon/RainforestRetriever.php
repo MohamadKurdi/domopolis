@@ -106,7 +106,6 @@
 					$httpResponse = $httpClient->request('GET', $amazonImage, ['stream' => true]);	
 
 					if (!is_dir($localImagePath)){
-					//	echoLine('RainforestRetriever: директория ' . $localImagePath);
 						mkdir($localImagePath, 0775, true);
 					}
 

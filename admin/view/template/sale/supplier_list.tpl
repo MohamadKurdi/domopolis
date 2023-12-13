@@ -93,6 +93,7 @@
 							<td class="left">Фид</td>
 							<td class="left">РРЦ</td>
 							<td class="left">Парсер</td>
+							<td class="left">Статус</td>
 							<td class="left">Нал</td>
 							<td class="left">Цены</td>
 							<td class="right">
@@ -120,10 +121,11 @@
 											<b><?php echo $supplier['supplier_id']; ?></b>
 										</td>        
 
-										<td class="left">
+										<td class="left" width="300px">
 											<span style="font-size:16px;"><b><?php echo $supplier['supplier_name']; ?></b></span>
-											<br /><span style="font-size:10px;"><?php echo $supplier['supplier_type']; ?></span>
-											<br /><span style="font-size:10px;"><?php echo $supplier['business_type']; ?></span>
+											<?php if ($supplier['business_type']) { ?>
+												<br /><span style="font-size:10px;"><?php echo $supplier['business_type']; ?></span>
+											<?php } ?>
 										</td>
 
 										<td class="center" style="font-size:11px;">
@@ -254,6 +256,14 @@
 												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 											<? } ?>
 										</td>	
+
+										<td class="center" style="padding:8px;">
+											<? if ($supplier['auto_enable']) { ?>
+												<i class="fa fa-check-circle" style="color:#00AD07"></i>
+											<? } else { ?>
+												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+											<? } ?>
+										</td>
 
 										<td class="center" style="padding:8px;">
 											<? if ($supplier['stock']) { ?>

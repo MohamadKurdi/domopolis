@@ -13,12 +13,44 @@ class ControllerSaleSupplier extends Controller {
 		$this->getList();
 	}
 
-	public function field() {
+	public function field_category() {
 		$this->load->model('sale/supplier');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST')){
 			$this->model_sale_supplier->updateSupplierCategoryField($this->request->post['supplier_category_id'], $this->request->post['field'], $this->request->post['value']);
 		}
+	}
+
+	public function field_attribute() {
+		$this->load->model('sale/supplier');
+
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')){
+			$this->model_sale_supplier->updateSupplierAttributeField($this->request->post['supplier_attribute_id'], $this->request->post['field'], $this->request->post['value']);
+		}
+	}
+
+	public function clear_categories($supplier_id = null) {
+		$this->load->model('sale/supplier');
+
+		if (!$supplier_id){
+			$supplier_id = $this->request->get['supplier_id'];
+		}
+
+		$supplier = $this->model_sale_supplier->getSupplier($supplier_id);		
+
+		if ($supplier && $supplier['parser']){
+			$this->supplierAdaptor->use($supplier['parser'], $supplier);
+			$this->supplierAdaptor->SupplierCategory->clearCategories($this->supplierAdaptor->getCategories());
+		}
+
+		if (!is_cli()){
+			$this->session->data['success'] = $this->language->get('text_success');
+
+			$url .= '&supplier_id=' . $this->request->get['supplier_id'];
+
+			$this->redirect($this->url->link('sale/supplier/update', 'token=' . $this->session->data['token'] . $url, 'SSL'));			
+		}		
+
 	}
 
 	public function update_categories($supplier_id = null) {
@@ -44,6 +76,29 @@ class ControllerSaleSupplier extends Controller {
 		}		
 	}
 
+	public function update_attributes($supplier_id = null) {
+		$this->load->model('sale/supplier');
+
+		if (!$supplier_id){
+			$supplier_id = $this->request->get['supplier_id'];
+		}
+
+		$supplier = $this->model_sale_supplier->getSupplier($supplier_id);		
+
+		if ($supplier && $supplier['parser']){
+			$this->supplierAdaptor->use($supplier['parser'], $supplier);
+			$this->supplierAdaptor->SupplierAttribute->updateAttributes($this->supplierAdaptor->getAttributes());
+		}
+
+		if (!is_cli()){
+			$this->session->data['success'] = $this->language->get('text_success');
+
+			$url .= '&supplier_id=' . $this->request->get['supplier_id'];
+
+			$this->redirect($this->url->link('sale/supplier/update', 'token=' . $this->session->data['token'] . $url, 'SSL'));			
+		}		
+	}
+
 	public function cron(){
 		$suppliers = $this->supplierAdaptor->getSuppliers();
 
@@ -56,9 +111,11 @@ class ControllerSaleSupplier extends Controller {
 			$products = $this->supplierAdaptor->getProducts();
 			echoLine('[ControllerSaleSupplier::cron] Got ' . count($products) . ' products', 'w');
 
-			foreach ($products as $product){
-				
-				$this->supplierAdaptor->SupplierProduct->addProductToSupplierTable($product);
+			$i=0;
+			foreach ($products as $product){					
+				$this->supplierAdaptor->SupplierProduct->parseProduct($product);
+				$i++;
+				if ($i==10){die();}
 			}
 		}
 
@@ -563,6 +620,7 @@ class ControllerSaleSupplier extends Controller {
 				'path_to_feed'     		=> $result['path_to_feed'],
 				'stock'     			=> $result['stock'],
 				'prices'     			=> $result['prices'],
+				'auto_enable'     		=> $result['auto_enable'],
 				'parser'     			=> $result['parser'],
 				'parser_status'     	=> $result['parser_status'],
 				'rrp_in_feed'     		=> $result['rrp_in_feed'],
@@ -669,23 +727,23 @@ class ControllerSaleSupplier extends Controller {
 	protected function getForm() {
 		$this->load->model('sale/supplier');
 		$this->load->model('catalog/category');
+		$this->load->model('localisation/language');        
 
-		$this->data['heading_title'] = $this->language->get('heading_title');
+        $this->data['languages'] = $this->model_localisation_language->getLanguages();
 
-		$this->data['text_enabled'] = $this->language->get('text_enabled');
-		$this->data['text_disabled'] = $this->language->get('text_disabled');
-
-		$this->data['entry_name'] = $this->language->get('entry_name');
-		$this->data['entry_code'] = $this->language->get('entry_code');
-		$this->data['entry_locale'] = $this->language->get('entry_locale');
-		$this->data['entry_image'] = $this->language->get('entry_image');
-		$this->data['entry_directory'] = $this->language->get('entry_directory');
-		$this->data['entry_filename'] = $this->language->get('entry_filename');
+		$this->data['heading_title'] 	= $this->language->get('heading_title');
+		$this->data['text_enabled'] 	= $this->language->get('text_enabled');
+		$this->data['text_disabled'] 	= $this->language->get('text_disabled');
+		$this->data['entry_name'] 		= $this->language->get('entry_name');
+		$this->data['entry_code'] 		= $this->language->get('entry_code');
+		$this->data['entry_locale'] 	= $this->language->get('entry_locale');
+		$this->data['entry_image'] 		= $this->language->get('entry_image');
+		$this->data['entry_directory'] 	= $this->language->get('entry_directory');
+		$this->data['entry_filename'] 	= $this->language->get('entry_filename');
 		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
-		$this->data['entry_status'] = $this->language->get('entry_status');
-
-		$this->data['button_save'] = $this->language->get('button_save');
-		$this->data['button_cancel'] = $this->language->get('button_cancel');
+		$this->data['entry_status'] 	= $this->language->get('entry_status');
+		$this->data['button_save'] 		= $this->language->get('button_save');
+		$this->data['button_cancel'] 	= $this->language->get('button_cancel');
 
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
@@ -698,7 +756,6 @@ class ControllerSaleSupplier extends Controller {
 		} else {
 			$this->data['error_name'] = '';
 		}
-
 
 		$url = '';
 
@@ -909,6 +966,30 @@ class ControllerSaleSupplier extends Controller {
 			$this->data['rrp_in_feed'] = 0;
 		}
 
+		if (isset($this->request->post['language_in_feed'])) {
+			$this->data['language_in_feed'] = $this->request->post['language_in_feed'];
+		} elseif (!empty($supplier_info)) {
+			$this->data['language_in_feed'] = $supplier_info['language_in_feed'];
+		} else {
+			$this->data['language_in_feed'] = '';
+		}
+
+		if (isset($this->request->post['sync_field'])) {
+			$this->data['sync_field'] = $this->request->post['sync_field'];
+		} elseif (!empty($supplier_info)) {
+			$this->data['sync_field'] = $supplier_info['sync_field'];
+		} else {
+			$this->data['sync_field'] = 'sku';
+		}
+
+		if (isset($this->request->post['auto_enable'])) {
+			$this->data['auto_enable'] = $this->request->post['auto_enable'];
+		} elseif (!empty($supplier_info)) {
+			$this->data['auto_enable'] = $supplier_info['auto_enable'];
+		} else {
+			$this->data['auto_enable'] = 0;
+		}
+
 		if (isset($this->request->post['stock'])) {
 			$this->data['stock'] = $this->request->post['stock'];
 		} elseif (!empty($supplier_info)) {
@@ -930,7 +1011,7 @@ class ControllerSaleSupplier extends Controller {
 		} elseif (!empty($supplier_info)) {
 			$this->data['currency'] = $supplier_info['currency'];
 		} else {
-			$this->data['currency'] = 0;
+			$this->data['currency'] = '';
 		}
 
 		$this->data['supplier_categories'] 			= [];
@@ -967,15 +1048,59 @@ class ControllerSaleSupplier extends Controller {
 				array_multisort($sort_order, SORT_ASC, $guessed_data);
 
 				$this->data['supplier_categories'][] = [
-					'supplier_category_id' 	=> $supplier_category['supplier_category_id'],
-					'supplier_category' 	=> $supplier_category['supplier_category'],
-					'category_id' 			=> $supplier_category['category_id'],
-					'products' 				=> $supplier_category['products'],
-					'stocks' 				=> $supplier_category['stocks'],
-					'prices' 				=> $supplier_category['prices'],
-					'category' 				=> $category,
-					'path' 					=> $path,
-					'guessed' 				=> $guessed_data
+					'supplier_category_id' 		=> $supplier_category['supplier_category_id'],
+					'supplier_category' 		=> $supplier_category['supplier_category'],
+					'supplier_category_full' 	=> $supplier_category['supplier_category_full'],
+					'category_id' 				=> $supplier_category['category_id'],
+					'products' 					=> $supplier_category['products'],
+					'stocks' 					=> $supplier_category['stocks'],
+					'prices' 					=> $supplier_category['prices'],
+					'category' 					=> $category,
+					'path' 						=> $path,
+					'guessed' 					=> $guessed_data
+				];
+			}
+		}
+
+		$this->data['supplier_attributes'] 			= [];
+		$this->data['supplier_attributes_total'] 	= 0;
+		if (!empty($supplier_info)){
+			$this->data['supplier_attributes_total'] = $this->model_sale_supplier->getTotalSupplierAttributes($supplier_info['supplier_id']);
+			$supplier_attributes = $this->model_sale_supplier->getSupplierAttributes($supplier_info['supplier_id']);
+
+			foreach ($supplier_attributes as $supplier_attribute){
+				if ($supplier_attribute['attribute_id']){
+					$attribute = $this->model_catalog_attribute->getAttribute($supplier_attribute['attribute_id']);
+					$name      = $attribute['name'];			
+				} else {
+					$attribute 	= false;
+					$name 		= false;					
+				}
+
+				$guessed_data = [];
+				$guessed =  $this->model_sale_supplier->tryToGuessAttribute($supplier_attribute['supplier_attribute']);
+
+				foreach ($guessed as $guesse){
+					$guessed_data[] = [
+						'attribute_id' 	=> $guesse['attribute_id'], 
+						'name'        	=> strip_tags(html_entity_decode($guesse['name'], ENT_QUOTES, 'UTF-8'))
+					];
+				}
+
+				$sort_order = [];
+
+				foreach ($guessed_data as $key => $value) {
+					$sort_order[$key] = $value['name'];
+				}
+
+				array_multisort($sort_order, SORT_ASC, $guessed_data);
+
+				$this->data['supplier_attributes'][] = [
+					'supplier_attribute_id' 	=> $supplier_attribute['supplier_attribute_id'],
+					'supplier_attribute' 		=> $supplier_attribute['supplier_attribute'],
+					'attribute_id' 				=> $supplier_attribute['attribute_id'],
+					'name' 						=> $name,
+					'guessed' 					=> $guessed_data
 				];
 			}
 		}
@@ -1000,7 +1125,7 @@ class ControllerSaleSupplier extends Controller {
 			} elseif (!empty($supplier_info)) {
 				$this->data[$amazon_key_char] = $supplier_info[$amazon_key_char];
 			} else {
-				$this->data[$amazon_key_char] = 0;
+				$this->data[$amazon_key_char] = '';
 			}
 		}
 
@@ -1034,6 +1159,10 @@ class ControllerSaleSupplier extends Controller {
 
 		if (!empty($supplier_info)){
 			$this->data['update_categories'] = $this->url->link('sale/supplier/update_categories', 'token=' . $this->session->data['token'] . '&supplier_id=' . $supplier_info['supplier_id']);
+			$this->data['clear_categories'] = $this->url->link('sale/supplier/clear_categories', 'token=' . $this->session->data['token'] . '&supplier_id=' . $supplier_info['supplier_id']);
+
+			$this->data['update_attributes'] = $this->url->link('sale/supplier/update_attributes', 'token=' . $this->session->data['token'] . '&supplier_id=' . $supplier_info['supplier_id']);
+			$this->data['clear_attributes'] = $this->url->link('sale/supplier/clear_attributes', 'token=' . $this->session->data['token'] . '&supplier_id=' . $supplier_info['supplier_id']);
 		}
 
 		$this->data['token'] = $this->session->data['token'];

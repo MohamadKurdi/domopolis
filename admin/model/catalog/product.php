@@ -873,7 +873,7 @@
 				$this->load->model('setting/setting');												
 				foreach ($data['product_price_national_to_store'] as $key => $value){
 					if ($value && (!empty($value['price']) || !empty($value['dot_not_overload_1c']))) {										
-						$this->db->query("INSERT INTO product_price_national_to_store SET store_id = '" . (int)$key . "', product_id = '" . (int)$product_id . "', price = '" . (float)$value['price'] . "', dot_not_overload_1c = '" . (int)$value['dot_not_overload_1c'] . "', settled_from_1c = '" . (int)$value['settled_from_1c'] . "',  currency = '" . $this->db->escape($this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', (int)$key)) . "'");						
+						$this->db->query("INSERT INTO product_price_national_to_store SET store_id = '" . (int)$key . "', product_id = '" . (int)$product_id . "', price = '" . (float)$value['price'] . "', price_delayed = '" . (float)$value['price_delayed'] . "', dot_not_overload_1c = '" . (int)$value['dot_not_overload_1c'] . "', settled_from_1c = '" . (int)$value['settled_from_1c'] . "',  currency = '" . $this->db->escape($this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', (int)$key)) . "'");						
 					}
 				}				
 			}

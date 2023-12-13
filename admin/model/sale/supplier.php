@@ -17,7 +17,7 @@ class ModelSaleSupplier extends Model {
 		supplier_inner 		= '" . (int)$data['supplier_inner'] . "',
 		amzn_good			= '" . (int)$data['amzn_good'] . "',
 		amzn_bad			= '" . (int)$data['amzn_bad'] . "',
-		amzn_coefficient 	= '" . (int)$data['amzn_coefficient'] . "'
+		amzn_coefficient 	= '" . (int)$data['amzn_coefficient'] . "',
 		amazon_seller_id  	= '" . $this->db->escape($data['amazon_seller_id']) . "',
 		store_link  		= '" . $this->db->escape($data['store_link']) . "',
 		business_name  		= '" . $this->db->escape($data['business_name']) . "',
@@ -34,9 +34,12 @@ class ModelSaleSupplier extends Model {
 		positive_ratings100 	= '" . (int)$data['positive_ratings100'] . "',
 		path_to_feed 			= '" . $this->db->escape($data['path_to_feed']) . "',
 		rrp_in_feed 			= '" . (int)$data['rrp_in_feed'] . "',
+		language_in_feed 		= '" . $this->db->escape($data['language_in_feed']) . "',
+		sync_field 				= '" . $this->db->escape($data['sync_field']) . "',
 		parser 					= '" . $this->db->escape($data['parser']) . "',
 		currency 				= '" . $this->db->escape($data['currency']) . "',
 		parser_status 			= '" . (int)$data['parser_status'] . "',
+		auto_enable 			= '" . (int)$data['auto_enable'] . "',
 		stock 					= '" . (int)$data['stock'] . "',
 		prices 					= '" . (int)$data['prices'] . "'");
 		
@@ -78,10 +81,13 @@ class ModelSaleSupplier extends Model {
 		ratings_total 			= '" . (int)$data['ratings_total'] . "',
 		positive_ratings100 	= '" . (int)$data['positive_ratings100'] . "',
 		path_to_feed 			= '" . $this->db->escape($data['path_to_feed']) . "',
+		language_in_feed 		= '" . $this->db->escape($data['language_in_feed']) . "',
+		sync_field 				= '" . $this->db->escape($data['sync_field']) . "',
 		parser 					= '" . $this->db->escape($data['parser']) . "',
 		currency 				= '" . $this->db->escape($data['currency']) . "',
 		rrp_in_feed 			= '" . (int)$data['rrp_in_feed'] . "',
 		parser_status 			= '" . (int)$data['parser_status'] . "',
+		auto_enable 			= '" . (int)$data['auto_enable'] . "',
 		stock 					= '" . (int)$data['stock'] . "',
 		prices 					= '" . (int)$data['prices'] . "'
 		WHERE supplier_id = '" . (int)$supplier_id . "'");				
@@ -143,6 +149,38 @@ class ModelSaleSupplier extends Model {
 
 	public function updateSupplierCategoryField($supplier_category_id, $field, $value) {
 		$query = $this->db->query("UPDATE supplier_categories SET `" . $this->db->escape($field) . "` = '" . (int)$value . "' WHERE supplier_category_id = '" . (int)$supplier_category_id . "'");		
+	}
+
+	public function tryToGuessAttribute($name) {
+		$this->load->model('catalog/attribute');
+
+		$data = [
+			'filter_name' 	=> $name,
+			'start' 		=> 0,
+			'limit' 		=> 5
+		];
+
+		return $this->model_catalog_attribute->getAttributes($data);
+	}
+
+	public function getSupplierAttributes($supplier_id) {
+		$query = $this->db->query("SELECT * FROM supplier_attributes WHERE supplier_id = '" . (int)$supplier_id . "'");
+
+		return $query->rows;
+	}
+
+	public function getTotalSupplierAttributes($supplier_id) {
+		$query = $this->db->query("SELECT COUNT(*) as total FROM supplier_attributes WHERE supplier_id = '" . (int)$supplier_id . "'");
+
+		return $query->row['total'];
+	}
+
+	public function updateSupplierAttribute($supplier_Attribute_id, $Attribute_id) {
+		$query = $this->db->query("UPDATE supplier_attributes SET attribute_id = '" . (int)$Attribute_id . "' WHERE supplier_attribute_id = '" . (int)$supplier_Attribute_id . "'");		
+	}
+
+	public function updateSupplierAttributeField($supplier_Attribute_id, $field, $value) {
+		$query = $this->db->query("UPDATE supplier_attributes SET `" . $this->db->escape($field) . "` = '" . (int)$value . "' WHERE supplier_attribute_id = '" . (int)$supplier_Attribute_id . "'");		
 	}
 
 	public function getTotalSellerOffers($data = []){
@@ -390,6 +428,12 @@ class ModelSaleSupplier extends Model {
 	public function getOPSupplyForSet($set_product_id){
 		$query = $this->db->query("SELECT DISTINCT * FROM order_product_supply WHERE order_set_id = '" . (int)$set_product_id . "'");
 		
+		return $query->rows;
+	}
+
+	public function getProductSuppliers($product_id){
+		$query = $this->db->query("SELECT * FROM `supplier_products` sp LEFT JOIN suppliers s ON (s.supplier_id = sp.supplier_id) WHERE product_id = '" . (int)$product_id . "'");
+
 		return $query->rows;
 	}
 	

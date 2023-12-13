@@ -638,7 +638,10 @@ class PriceLogic
 			$this->updateProfitability();	
 
 			$this->db->query("UPDATE product_price_to_store SET price = price_delayed WHERE price_delayed > 0");	
-			$this->db->query("UPDATE product_price_to_store SET price_delayed = 0 WHERE price_delayed > 0");					
+			$this->db->query("UPDATE product_price_to_store SET price_delayed = 0 WHERE price_delayed > 0");	
+
+			$this->db->query("UPDATE product_price_national_to_store SET price = price_delayed WHERE price_delayed > 0");	
+			$this->db->query("UPDATE product_price_national_to_store SET price_delayed = 0 WHERE price_delayed > 0");				
 		} else {
 			echoLine('[PriceLogic::updatePricesFromDelayed] DELAYED PRICES IS OFF, UPDATING IN LIVE!', 'w');
 		}

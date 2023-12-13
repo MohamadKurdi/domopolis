@@ -66,7 +66,8 @@
 		<div class="content">		
 				<div id="tabs" class="htabs">
 					<a href="#tab-info"><i class="fa fa-info"></i> Поставщик</a>
-					<a href="#tab-categories"><i class="fa fa-refresh"></i> Сопоставление категорий парсера <?php if (!empty($supplier_categories_total)) { ?>(<?php echo $supplier_categories_total; ?>)<?php } ?></a>		
+					<a href="#tab-categories"><i class="fa fa-refresh"></i> Сопоставление категорий парсера <?php if (!empty($supplier_categories_total)) { ?>(<?php echo $supplier_categories_total; ?>)<?php } ?></a>	
+					<a href="#tab-attributes"><i class="fa fa-refresh"></i> Сопоставление атрибутов парсера <?php if (!empty($supplier_attributes_total)) { ?>(<?php echo $supplier_attributes_total; ?>)<?php } ?></a>			
 					<div class="clr"></div>
 				</div>
 				<div class="th_style"></div>
@@ -327,13 +328,12 @@
 					<table class="form">
 						<tr>
 							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Фид данных</span></td>
-							<td width="15%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Библиотека разбора</span></td>
-							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Парсить</span></td>
-							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">В фиде РРЦ</span></td>
-							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Обновлять наличие</span></td>
-							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Обновлять цену</span></td>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Библиотека разбора</span></td>
+							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Поле</span></td>
+							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Язык в фиде</span></td>
+							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Парсить</span></td>													
 							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Валюта</span></td>
-							<td width="15%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Загрузить категории</span></td>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Загрузить категории</span></td>
 						</tr>
 						<tr>
 							<td>
@@ -352,6 +352,20 @@
 								</select>
 							</td>
 							<td>
+								<input type="text" name="sync_field" value="<?php echo $sync_field; ?>" style="width:50px"/>
+							</td>
+							<td>
+								<select name="language_in_feed">
+									<?php foreach ($languages as $language) { ?>
+										<?php if ($language['code'] == $language_in_feed) { ?>
+											<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
+										<?php } else { ?>
+											<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
+										<?php } ?>
+									<?php } ?>
+								</select>
+							</td>
+							<td>
 								<select name="parser_status">
 									<?php if ($parser_status) { ?>
 										<option value="1" selected="selected">Включить</option>
@@ -361,7 +375,28 @@
 										<option value="0"  selected="selected">Отключить</option>
 									<? } ?>
 								</select>
+							</td>														
+							<td>
+								<input type="text" name="currency" value="<?php echo $currency; ?>" style="width:50px"/>
+							</td>							
+							<td>
+								<?php if (!empty($update_categories)) { ?>
+									<a class="button" href="<?php echo $update_categories; ?>">Загрузить</a>
+									<a class="button" href="<?php echo $clear_categories; ?>">Очистить</a>
+								<?php } ?>
 							</td>
+						</tr>
+					</table>
+
+					<table class="form">
+						<tr>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">В фиде РРЦ</span></td>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Обновлять наличие</span></td>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Обновлять цену</span></td>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Сразу включать товары</span></td>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Загрузить Атрибуты</span></td>
+						</tr>
+						<tr>
 							<td>
 								<select name="rrp_in_feed">
 									<?php if ($rrp_in_feed) { ?>
@@ -396,10 +431,21 @@
 								</select>
 							</td>
 							<td>
-								<input type="text" name="currency" value="<?php echo $currency; ?>" style="width:50px"/>
+								<select name="auto_enable">
+									<?php if ($auto_enable) { ?>
+										<option value="1" selected="selected">Включить</option>
+										<option value="0">Отключить</option>
+									<?php } else { ?>													
+										<option value="1">Включить</option>
+										<option value="0"  selected="selected">Отключить</option>
+									<? } ?>
+								</select>
 							</td>
 							<td>
-								<a class="button" href="<?php echo $update_categories; ?>">Загрузить</a>
+								<?php if (!empty($update_attributes)) { ?>
+									<a class="button" href="<?php echo $update_attributes; ?>">Загрузить</a>
+									<a class="button" href="<?php echo $clear_attributes; ?>">Очистить</a>
+								<?php } ?>
 							</td>
 						</tr>
 					</table>
@@ -422,6 +468,9 @@
 						<tr>
 							<td class="left" style="font-size:20px; width:400px;">
 								<?php echo $supplier_category['supplier_category']; ?>
+								<?php if ($supplier_category['supplier_category_full']) { ?>
+									<br /><small style="font-size:10px;"><?php echo $supplier_category['supplier_category_full']; ?></small>
+								<?php } ?>
 							</td>
 							<td class="left" style="padding:5px;">
 								<div>
@@ -456,13 +505,121 @@
 					<?php } ?>
 				</table>
 			</div>
+
+			<div id="tab-attributes">
+				<table class="list">
+					<tr>
+						<td class="left">Поставщик</td>
+						<td class="left">Магазин</td>						
+					</tr>
+					<?php foreach ($supplier_attributes as $supplier_attribute) { ?>
+						<tr>
+							<td class="left" style="font-size:20px; width:400px;">
+								<?php echo $supplier_attribute['supplier_attribute']; ?>
+
+							</td>
+							<td class="left" style="padding:5px;">
+								<div>
+									<input type="text" style="width:95%;" class="supplier_attribute_autocomplete" data-supplier-attribute-id="<?php echo $supplier_attribute['supplier_attribute_id']; ?>" id="attribute_<?php echo $supplier_attribute['supplier_attribute_id']; ?>" value="<?php echo $supplier_attribute['name']; ?>" placeholder="Автоподбор" />			
+									<input type="hidden" class="supplier_attribute_id" id="attribute_id_<?php echo $supplier_attribute['supplier_attribute_id']; ?>" data-field="attribute_id"  data-supplier-attribute-id="<?php echo $supplier_attribute['supplier_attribute_id']; ?>" value="<?php echo $supplier_attribute['attribute_id']; ?>">
+
+									<a class="button" onclick="$('#attribute_id_<?php echo $supplier_attribute['supplier_attribute_id']; ?>').val('').trigger('change'); $('#attribute_<?php echo $supplier_attribute['supplier_attribute_id']; ?>').val(''); return false;"><i class="fa fa-times"></i></a>								
+								</div>
+								<div style="text-align:left;">
+									<?php if ($supplier_attribute['guessed']) { ?>
+										<?php foreach ($supplier_attribute['guessed'] as $guessed) { ?>
+											<span style="border-bottom:1px dashed grey; cursor:pointer; margin-right:10px; font-size:10px;" onclick="$('#attribute_id<?php echo $supplier_attribute['supplier_attribute_id']; ?>').val('<?php echo $guessed['attribute_id']; ?>').trigger('change'); $('#attribute_<?php echo $supplier_attribute['supplier_attribute_id']; ?>').val('<?php echo $guessed['name']; ?>'); ">
+												<?php echo $guessed['name']; ?>
+											</span>
+										<?php } ?>
+									<?php } ?>
+								</div>
+							</td>
+						</tr>
+					<?php } ?>
+				</table>
+			</div>
+
+
 		</div>
 	</div>
 </div>
 <script type="text/javascript">
-	$('input[type=checkbox], input[type=hidden]').bind('change', function(){save($(this)); });			
+	$('.supplier_attribute_id').bind('change', function(){save_attribute($(this)); });			
 
-	function save(elem){
+	function save_attribute(elem){
+        let supplier_attribute_id  	= elem.attr('data-supplier-attribute-id');
+        let field 					= elem.attr('data-field');
+        let value 					= elem.val();   
+
+        if (elem.attr('type') == 'checkbox'){
+        	if (elem.attr('checked')){
+        		value = 1;
+        	} else {
+        		value = 0;
+        	}
+        }           
+
+        $.ajax({
+            url : 'index.php?route=sale/supplier/field_attribute&token=<?php echo $token; ?>',
+            data: {
+                supplier_attribute_id: supplier_attribute_id,
+                field:    	  field,
+                value:    	  value,
+            },
+            type: 'POST',
+            beforeSend: function(){
+            	if (field == 'attribute_id'){
+            		$('#attribute_' + supplier_attribute_id).removeClass('process, finished').addClass('finished');
+            	} else {
+            		elem.removeClass('process, finished').addClass('finished');
+            	}               
+            },
+            success: function(){
+            	if (field == 'attribute_id'){
+                	$('#attribute_' + supplier_attribute_id).removeClass('process, finished').addClass('finished');
+                } else {
+            		elem.removeClass('process, finished').addClass('finished');
+            	} 
+            }
+        });
+    }
+
+	$('.supplier_attribute_autocomplete').each(function(index, elem){
+		elem = $(this);
+		elem.autocomplete({
+			delay: 500,
+			source: function(request, response) {		
+				$.ajax({
+					url: 'index.php?route=catalog/attribute/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+					dataType: 'json',
+					success: function(json) {				
+						response($.map(json, function(item) {
+							return {
+								label: item.name + ' (' + item.attribute_group + ')',
+								value: item.attribute_id
+							}
+						}));
+					}
+				});
+			},
+			select: function(event, ui) {
+				elem.val(ui.item.label);
+				$('#attribute_id_' + elem.attr('data-supplier-attribute-id')).val(ui.item.value).trigger('change');
+
+				return false;
+			},
+			focus: function(event, ui) {
+				return false;
+			}
+		});
+	});
+</script> 
+
+<script type="text/javascript">
+	$('.supplier_category_checkbox, .supplier_category_id').bind('change', function(){save_category($(this)); });			
+
+	function save_category(elem){
         let supplier_category_id  	= elem.attr('data-supplier-category-id');
         let field 					= elem.attr('data-field');
         let value 					= elem.val();   
@@ -529,7 +686,6 @@
 			}
 		});
 	});
-
 </script> 
 
 <script type="text/javascript">
