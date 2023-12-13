@@ -8,7 +8,6 @@ class SupplierProduct extends SupplierFrameworkClass {
 			$supplier_id = $this->supplier_id;
 		}
 
-		echoLine('');
 		echoLine('[SupplierProduct::parseProduct] Working with product: ' . $product['sku'], 'w');
 
 		if (!empty($product['category'])){
@@ -54,8 +53,28 @@ class SupplierProduct extends SupplierFrameworkClass {
 			$this->parseProductAttributes($product_id, $product);
 		}
 		
+		$this->parseProductStatus($product_id, $product);
 		$this->parseProductStock($product_id, $product);		
 		$this->parseProductPrice($product_id, $product);		
+	}
+
+
+	public function parseProductStatus($product_id, $product, $supplier_id = null){
+		if (!$supplier_id){
+			$supplier_id = $this->supplier_id;
+		}
+
+		if (isset($product['status'])){
+			if ($this->getSupplierSetting('auto_enable')){
+				if ($product['status']){
+					echoLine('[SupplierProduct::parseProductStatus] Status is ON, enabling product!', 's');
+					$this->model_edit->enableProduct($product_id);
+				} else {
+					echoLine('[SupplierProduct::parseProductStatus] Status is OFF, disabling product!', 'e');
+					$this->model_edit->disableProduct($product_id);
+				}
+			}
+		}
 	}
 
 	public function parseProductStock($product_id, $product, $supplier_id = null){
@@ -90,7 +109,7 @@ class SupplierProduct extends SupplierFrameworkClass {
 			$supplier_id = $this->supplier_id;
 		}
 		
-		if ($this->getSupplierSetting('prices')){
+		if ($this->getSupplierSetting('prices')){			
 			echoLine('[SupplierProduct::parseProductPrice] General pricing logic for supplier in ON', 's');
 
 			$category = $this->registry->get('supplierAdaptor')->SupplierCategory->getCategoryMatchFull($product['category']);			
@@ -102,6 +121,21 @@ class SupplierProduct extends SupplierFrameworkClass {
 
 			if ($this->getSupplierSetting('rrp_in_feed')){
 				echoLine('[SupplierProduct::parseProductPrice] We have RRP in feed, updating prices', 's');
+
+				$product_current_info = $this->model_get->getProductPriceStatus($product_id);
+
+				if (!(float)$product['price']){
+					if (!(float)$product_current_info['price']){
+						echoLine('[SupplierProduct::parseProductPrice] Price is zero, prev is zero too, disabling product!', 'e');
+						$this->model_edit->disableProduct($product_id);
+						return false;
+					}
+				} else {
+					if (!(float)$product_current_info['price']){
+						echoLine('[SupplierProduct::parseProductPrice] Price is non zero, prev is zero, enabling product!', 'e');
+						$this->model_edit->enableProduct($product_id);
+					}
+				}							
 
 				$price 			= $this->currency->convert($product['price'], $this->getSupplierSetting('currency'), $this->config->get('config_currency'));
 				$price_special 	= $this->currency->convert($product['price_special'], $this->getSupplierSetting('currency'), $this->config->get('config_currency'));
@@ -266,7 +300,7 @@ class SupplierProduct extends SupplierFrameworkClass {
 	}
 
 	public function addProductSimple($product){
-		if (!empty($product['status'])){
+		if (isset($product['status'])){
 			$status = $product['status'];
 		} else {
 			$status = $this->getSupplierSetting('auto_enable');
@@ -283,6 +317,7 @@ class SupplierProduct extends SupplierFrameworkClass {
 		$this->db->query("INSERT INTO product SET 
 			model 					= '" . $this->db->escape($product['model']) . "', 
 			sku 					= '" . $this->db->escape($product['sku']) . "', 		
+			ean 					= '" . $this->db->escape($product['ean']) . "',
 			added_from_amazon 		= '0', 			
 			stock_status_id 		= '" . (int)$stock_status_id . "',
 			manufacturer_id 		= '" . (int)$product['manufacturer_id'] . "',

@@ -94,6 +94,22 @@ class SuppliersGeneralClass {
 				}
 			}
 
+			unset($ftpFile);
+			if ($mostRecent['file']){
+				foreach ($ftpListing as $ftpFile){
+					if ($ftpFile != $mostRecent['file']){
+						echoLine('[SuppliersGeneralClass::getFTP] Deleting file ' . $ftpFile, 'e');
+
+						try{
+							$ftpClient->removeFile($ftpFile);
+						} catch (\Exception $e){
+							echoLine('[SuppliersGeneralClass::getFTP] Could not delete file ' . $ftpFile . ', ' . $e->getMessage() , 'e');
+							continue;
+						}
+					}
+				}
+			}
+
 			if ($mostRecent['file']){
 				echoLine('[SuppliersGeneralClass::getFTP] Last file is: ' . $mostRecent['file'], 's');
 				$content = $ftpClient->getFileContent($mostRecent['file']);

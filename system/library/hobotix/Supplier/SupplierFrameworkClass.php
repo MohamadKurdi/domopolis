@@ -132,8 +132,8 @@ class SupplierFrameworkClass {
 
 		if (!file_exists($fullLocalImagePath)){
 			try{
-				$httpClient = new \GuzzleHttp\Client();
-				$httpResponse = $httpClient->request('GET', $supplierImage, ['stream' => true]);	
+				$httpClient 	= new \GuzzleHttp\Client();
+				$httpResponse 	= $httpClient->request('GET', $supplierImage, ['stream' => true]);	
 
 				if (!is_dir($localImagePath)){
 					mkdir($localImagePath, 0775, true);
@@ -142,17 +142,21 @@ class SupplierFrameworkClass {
 				file_put_contents($fullLocalImagePath, $httpResponse->getBody()->getContents());					
 
 			} catch (GuzzleHttp\Exception\ValueError $e){
-				echoLine('[SupplierClass::getImage]: Could not get picture: ' . $e->getMessage(), 'e');
-				return '';
+				echoLine('[SupplierClass::getImage]: Could not get picture, ValueError: ' . $e->getMessage(), 'e');
+				return false;
 			} catch (GuzzleHttp\Exception\ClientException $e){
-				echoLine('[SupplierClass::getImage]: Could not get picture: ' . $e->getMessage(), 'e');
-				return '';
+				echoLine('[SupplierClass::getImage]: Could not get picture, ClientException: ' . $e->getMessage(), 'e');
+				return false;
 			} catch (\Exception $re){
-				if (!$secondAttempt){
-					echoLine('[SupplierClass::getImage]: Could not get picture ' . $re->getMessage(), 'e');
-					sleep(mt_rand(3, 5));
-					$this->getImage($supplierImage, true);
+				if (stripos($re->getMessage(), '404 Not Found') !== false){
+					echoLine('[SupplierClass::getImage]: Got 404 error, returning false', 'e');
+					return false;
+				}
 
+				if (!$secondAttempt){
+					echoLine('[SupplierClass::getImage]: Could not get picture, Exception: ' . $re->getMessage(), 'e');
+					sleep(mt_rand(3, 5));
+					return $this->getImage($supplierImage, true);
 				} else {
 					echoLine('[SupplierClass::getImage]: Finally could not get image, returning false', 'e');
 					return false;

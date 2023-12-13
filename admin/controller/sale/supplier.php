@@ -111,11 +111,12 @@ class ControllerSaleSupplier extends Controller {
 			$products = $this->supplierAdaptor->getProducts();
 			echoLine('[ControllerSaleSupplier::cron] Got ' . count($products) . ' products', 'w');
 
-			$i=0;
-			foreach ($products as $product){					
+			$i = 1;
+			foreach ($products as $product){		
+				echoLine('');
+				echoLine('[ControllerSaleSupplier::cron] Now working with product ' . $i . ' of ' . count($products), 'w');			
 				$this->supplierAdaptor->SupplierProduct->parseProduct($product);
 				$i++;
-				if ($i==10){die();}
 			}
 		}
 

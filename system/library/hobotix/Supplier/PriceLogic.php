@@ -46,7 +46,7 @@ class PriceLogic extends SupplierFrameworkClass {
 	public function setProductIsOnStock($product_id, $product){
 		$query = $this->db->query("SELECT `" . $this->config->get('config_warehouse_identifier') . "` FROM product WHERE product_id = '" . (int)$product_id . "'");
 		
-		if ($query->row[$this->config->get('config_warehouse_identifier')] > 0){
+		if ((int)$query->row[$this->config->get('config_warehouse_identifier')] > 0){
 			echoLine('[PriceLogic::setProductIsOnStock] Product is in warehouse, setting status config_in_stock_status_id', 's');
 			$stock_status_id = (int)$this->config->get('config_in_stock_status_id');						
 		} else {
@@ -73,11 +73,11 @@ class PriceLogic extends SupplierFrameworkClass {
 	public function setProductIsNotOnStock($product_id, $product){
 		$query = $this->db->query("SELECT `" . $this->config->get('config_warehouse_identifier') . "` FROM product WHERE product_id = '" . (int)$product_id . "'");
 		
-		if ($query->row[$this->config->get('config_warehouse_identifier')] > 0){
-			echoLine('[PriceLogic::setProductIsOnStock] Product is in warehouse, setting status config_in_stock_status_id', 's');
+		if ((int)$query->row[$this->config->get('config_warehouse_identifier')] > 0){
+			echoLine('[PriceLogic::setProductIsNotOnStock] Product is in warehouse, setting status config_in_stock_status_id', 's');
 			$stock_status_id = (int)$this->config->get('config_in_stock_status_id');
 		} else {
-			echoLine('[PriceLogic::setProductIsOnStock] Product is not in warehouse, setting status config_not_in_stock_status_id', 'e');
+			echoLine('[PriceLogic::setProductIsNotOnStock] Product is not in warehouse, setting status config_not_in_stock_status_id', 'e');
 			$this->db->query("UPDATE product SET quantity = '0' WHERE product_id = '" . (int)$product_id . "'");
 
 			$stock_status_id = (int)$this->config->get('config_not_in_stock_status_id');

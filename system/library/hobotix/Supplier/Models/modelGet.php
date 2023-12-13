@@ -26,7 +26,6 @@ class modelGet extends hoboModel{
 		return $product_id;
 	}
 
-
 	public function getProductBySKU($data){
 		if (!empty($data['manufacturer_id'])){
 			$query = $this->db->query("SELECT product_id FROM product WHERE sku = '" . $this->db->escape($data['sku']) . "' AND manufacturer_id = '" . (int)$data['manufacturer_id'] . "' LIMIT 1");
@@ -66,6 +65,12 @@ class modelGet extends hoboModel{
 		}
 			
 		return $product_description_data;
+	}
+
+	public function getProductPriceStatus($product_id){
+		$query = $this->db->query("SELECT price, status FROM product WHERE product_id = '" . (int)$product_id . "'");
+
+		return $query->row;
 	}
 
 	public function getProductIdByAsin($asin){
