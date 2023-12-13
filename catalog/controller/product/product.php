@@ -1164,7 +1164,7 @@ public function index($product_id = false, $just_price = false)
                                 'thumb'         => $this->model_tool_image->resize($result['image'], 700, 400),
                                 'title'         => $result['title'],
                                 'video'         => $this->model_tool_video->getPath($result['video']),
-                                'date_added'    => date(DATE_ISO8601, strtotime($product_info['date_added']))
+                                'date_added'    => !empty($product_info['date_added'])?date(DATE_ISO8601, strtotime($product_info['date_added'])):''
                             );
                         }
 
