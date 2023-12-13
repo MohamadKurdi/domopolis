@@ -20,6 +20,17 @@ class Language {
 		}
 	}
 
+	public function mapCode($language_code){
+		$mappings = loadJsonConfig('language_mapping');
+
+		if (!empty($mappings[$language_code])){
+			//echoLine('[Language::mapCode] Mapping ' . $language_code . ' to ' . $mappings[$language_code], 'w');
+			return $mappings[$language_code];
+		}
+
+		return $language_code;
+	}
+
 	private function mergeOrReturn($fileOverload, $fileDefault, $merge = false, $return = false){
 		$_ = [];
 

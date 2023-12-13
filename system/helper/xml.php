@@ -1,5 +1,37 @@
 <?php
 
+function checkValueXMLItem($item){
+	if (!empty($item['@value'])){
+		return [$item];
+	}
+
+	return $item;
+}
+
+function checkSingleXMLItem($item){
+	if (!is_array($item)){
+		return [$item];
+	}
+
+	return $item;
+}
+
+function checkSingleXMLItemByField($item, $field){
+	if (!empty($item[$field])){
+		return [$item];
+	}
+
+	return $item;
+}
+
+function checkCDATA($item){
+	if (!empty($item['@cdata'])){
+		return $item['@cdata'];
+	}
+
+	return $item;
+}
+
 if (!function_exists('array_to_xml')) {
 	function array_to_xml($data, &$xml) {			
 		foreach($data as $key => $value) {
