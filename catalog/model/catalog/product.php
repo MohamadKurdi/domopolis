@@ -289,6 +289,7 @@
 						'ecommerceData'				=> $ecommerceData,
 						'amazon_data'				=> $amazonData,
 						'current_in_stock' 			=> $result['current_in_stock'],
+						'local_supplier_in_stock' 	=> $result['local_supplier_in_stock'],
 						'stock_type'  				=> $stock_data['stock_type'],
 						'stock_text'  				=> $result['stock_text'],						
 						'show_delivery_terms' 		=> $stock_data['show_delivery_terms'],
@@ -439,6 +440,8 @@
 					$sql .= " (SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as overload_stock_status_id, ";
 					$sql .= "(SELECT name FROM stock_status sst WHERE sst.stock_status_id = (SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) AND sst.language_id = '" . (int)$this->config->get('config_language_id') . "') as overload_stock_status,	";
 				}
+
+				$sql .= " (SELECT SUM(stock) FROM supplier_products lsp WHERE lsp.product_id = p.product_id LIMIT 1) as local_supplier_in_stock, ";
 
 				$sql .= "(SELECT ss.name FROM stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, ";
 				$sql .= "(SELECT pdde.name FROM product_description pdde WHERE p.product_id = pdde.product_id AND pdde.language_id = '" . (int)$this->registry->get('languages_all')[$this->config->get('config_de_language')] . "') AS de_name ";
@@ -689,6 +692,7 @@
 							'current_in_stock'		   => $this->config->get('config_warehouse_identifier')?($query->row[$this->config->get('config_warehouse_identifier')]>0):false,
 							'current_in_stock_q'	   => $query->row[$this->config->get('config_warehouse_identifier')],
 							'quantity'                 => $query->row['quantity'],							
+							'local_supplier_in_stock'  => $query->row['local_supplier_in_stock'],
 							'quantity_stock'           => $query->row['quantity_stock'],
 							'quantity_stockM'          => $query->row['quantity_stockM'],
 							'quantity_stockK'          => $query->row['quantity_stockK'],
@@ -3440,8 +3444,7 @@
 			return trim($result);
 		}
 		
-		public function parseStockTermToArray($term){
-			
+		public function parseStockTermToArray($term){			
 			if (!$term){
 				return false;
 			}
@@ -3555,23 +3558,18 @@
 			return $result;
 		}
 		
-		public function parseProductStockData($result){
-			
-			//НАЛИЧИЕ 
+		public function parseProductStockData($result){ 
 			$stock_data = [];
 			if ($result[$this->config->get('config_warehouse_identifier')]) {
 				
 				if (in_array($this->config->get('config_store_id'),array(0, 1))){			
 					$stock_data['stock_type'] = 'in_stock_in_country';					
-					//Белоруссия
 					} elseif (in_array($this->config->get('config_store_id'),array(5))) {
 					$stock_data['stock_type'] = 'in_stock_in_moscow_for_by';
-					//Козохстон
 					} else {
 					$stock_data['stock_type'] = 'in_stock_in_moscow_for_kzby';
 				}
 				
-				//есть на складе в Москве
 				}	elseif ($result['quantity_stockM']) {
 				
 				if ($this->config->get('config_store_id') == 0){
@@ -3601,7 +3599,7 @@
 				$stock_data['stock_type'] = 'shit_knows_this_status:' . $result['stock_status_id'] . ':' . $result['stock_status'];
 			}								
 			
-			//Условие не показывать сроки доставки если нет на складе 06.06.2019
+			
 			$stock_data['show_delivery_terms'] = true;
 			if (!$result['quantity_stockM'] && !$result['quantity_stock'] && !$result['quantity_stockK']){
 				if (!in_array($stock_data['stock_type'], array('supplier_has', 'supplier_has', 'need_ask_about_stock', 'supplier_has_no_can_not_buy', 'shit_knows_this_status:' . $result['stock_status_id'] . ':' . $result['stock_status']))){
@@ -3610,9 +3608,9 @@
 			}
 			
 			
-			$stock_data['stock'] = $result['stock_status'];
-			$stock_data['stock_status_id'] = $result['stock_status_id'];					
-			$stock_data['stock_color'] = ($result['stock_status_id'] == $this->config->get('config_stock_status_id')) ? '#4C6600' : '#BA0000';
+			$stock_data['stock'] 			= $result['stock_status'];
+			$stock_data['stock_status_id'] 	= $result['stock_status_id'];					
+			$stock_data['stock_color'] 		= ($result['stock_status_id'] == $this->config->get('config_stock_status_id')) ? '#4C6600' : '#BA0000';
 			
 			return $stock_data;		
 		}
