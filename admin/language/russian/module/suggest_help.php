@@ -5,7 +5,7 @@ $_['heading_title']    = 'Подсказки DaData';
 // Text
 $_['text_extension']   = 'Модули';
 $_['text_success']     = 'Настройки модуля обновлены!';
-$_['text_edit']        = 'Редактирование модуля';
+$_['text_edit']        = '<i class="fa fa-edit"></i>';
 
 // Entry
 $_['entry_key']        = 'Получить - Api ключ';

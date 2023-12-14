@@ -17,7 +17,7 @@ $_['text_default']           		= 'По умолчанию';
 $_['text_image_manager'] 			= 'Менеджер изображений';
 $_['text_browse']            		= 'Обзор файлов';
 $_['text_clear']             		= 'Очистить изображения';
-$_['text_edit']	       				= 'Изменить';
+$_['text_edit']	       				= '<i class="fa fa-edit"></i>';
 $_['text_total_set']   				= 'Стоимость комплекта:';
 $_['text_remove']   				= 'Удалить';
 $_['text_enable_productcard']   	= 'Cоздавать карточку товара';

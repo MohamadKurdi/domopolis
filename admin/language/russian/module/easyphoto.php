@@ -3,11 +3,11 @@
 $_['module']     	     = 'Easyphoto';
 $_['version']          = '3.1';
 // Heading
-$_['heading_title']    = '<span style="color:#00b32d;font-weight:bold;">Easyphoto 3.1</span> - простое добавление изображений товара!';
+$_['heading_title']    = 'Простое добавление изображений товара!';
 // Text
 $_['text_module']      = 'Модули';
 $_['text_success']     = 'Easyphoto успешно установлен!';
-$_['text_edit']        = 'Настройки Easyphoto';
+$_['text_edit']        = '<i class="fa fa-edit"></i>';
 $_['text_manual']      = '';
 // Entry
 $_['entry_direct']     = 'Папка для фото';

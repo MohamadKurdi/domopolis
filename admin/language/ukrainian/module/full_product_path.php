@@ -40,4 +40,3 @@ $_['text_success']       = 'Success: You have modified the module!';
 
 // Error
 $_['error_permission'] 	 = 'Warning: You do not have permission to modify this module';
-?>

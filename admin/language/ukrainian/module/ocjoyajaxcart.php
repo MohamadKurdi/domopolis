@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']         			= 'Ajax Shopping Cart v1.4'; 
+$_['heading_title']         			= 'Всплывающая корзина'; 
 
 //Text
 $_['text_module']         				= 'Модули';
@@ -24,11 +24,6 @@ $_['text_ocjoyajaxcart_no']   			= 'Нет';
 $_['text_none']        					= 'Нет результатов поиска';
 $_['text_main_tab_setting']   			= 'Основная настройка';
 $_['text_success']						= 'Настройки модуля обновлены!';
-$_['text_licence']						= 'Лицензия';
-$_['text_copyright']      				= 'Модуль &copy; "Ajax Shopping Cart v1.4"';
-$_['text_activationcode']   			= 'Активация лицензии:<br /><span style="font-size:11px;color:#555;">Вставьте сюда код активации для модуля.</span>';
-$_['text_youruidcode']   				= 'UID-ключ:';
 
 // Error
 $_['error_permission']    				= 'У Вас нет прав для изменения модуля Ajax Shopping Cart v1.4!';
-?>

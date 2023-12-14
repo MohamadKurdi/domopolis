@@ -50,4 +50,3 @@ $_['standard_total']			= 'Order Totals';
 $_['standard_feed']				= 'Product Feeds';
 $_['standard_success']			= 'Отлично: изменили модуль ' . $_['heading_title'] . '!';
 $_['standard_error']			= 'Warning: You do not have permission to modify ' . $_['heading_title'] . '!';
-?>

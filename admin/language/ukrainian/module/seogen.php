@@ -43,14 +43,14 @@ $_['text_informations_title']     = 'Статьи (HTML-тег&nbsp;Title)';
 $_['text_informations_meta_keyword']     = 'Статьи (Мета-тег&nbsp;Keywords)';
 $_['text_informations_meta_description']     = 'Статьи (Мета-тег&nbsp;Description)';
 
-$_['text_categories_tags']     = '[category_id], [category_name]';
+$_['text_categories_tags']     = '[category_name]';
 $_['text_categories_h1_tags']     = '[category_name]';
 $_['text_categories_title_tags']     = '[category_name]';
 $_['text_categories_meta_keyword_tags']     = '[category_name]';
 $_['text_categories_meta_description_tags']     = '[category_name], [category_description]';
 $_['text_categories_description_tags']     = '[category_name]';
 
-$_['text_products_tags']       = '[product_id], [product_name], [sku], [price], [model_name], [manufacturer_name], [category_name], [location], [type], [madeof]';
+$_['text_products_tags']       = '[product_name], [sku], [price], [model_name], [manufacturer_name], [category_name], [location], [type], [madeof]';
 $_['text_products_h1_tags']    = '[product_name], [sku], [price], [model_name], [manufacturer_name], [category_name], [location], [type], [madeof]';
 $_['text_products_title_tags']    = '[product_name], [sku], [price], [model_name], [manufacturer_name], [category_name], [location], [type], [madeof]';
 $_['text_products_meta_keyword_tags']       = '[product_name], [sku], [price], [model_name], [manufacturer_name], [category_name], [location], [type], [madeof]';
@@ -113,3 +113,4 @@ $_['entry_category']     = 'Включить в категориях<span class=
 
 // Error
 $_['error_permission']    = 'У Вас нет прав для изменения модуля SeoGen!';
+?>

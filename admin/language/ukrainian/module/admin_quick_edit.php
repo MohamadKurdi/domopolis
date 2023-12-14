@@ -216,4 +216,3 @@ $_['error_vqmod']                                   = 'vQmod does not seem to be
 $_['error_unsaved_settings']                        = 'There are unsaved settings! Please save the settings.';
 $_['error_image']                                   = 'Image width &amp; height dimensions required!';
 $_['error_image_size']                              = 'Image width &amp; height must be positive integers greater than 0!';
-?>
