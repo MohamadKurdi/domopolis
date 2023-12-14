@@ -192,11 +192,11 @@
 			<div class="brand-slider">
 				<div class="swiper-container">
 					<div class="swiper-wrapper">
-						<?php foreach ($brands as $b): ?>
-							<?php if (!$b['thumb']) continue; ?>
+						<?php foreach ($brands as $brand): ?>
+							<?php if (!$brand['thumb']) continue; ?>
 							<div class="swiper-slide">							
-								<a href="<?=$b['url'] ?>">
-									<img data-src="<?=$b['thumb'] ?>" width="100" height="100" class="swiper-lazy" title="<?=$b['name'] ?>" alt="<?=$b['name'] ?>">
+								<a href="<?php echo $brand['url'] ?>">
+									<img data-src="<?php echo $brand['thumb'] ?>" width="100" height="100" class="swiper-lazy" title="<?php echo $brand['name'] ?>" alt="<? echo $brand['name']; ?>">
 									<div class="swiper-lazy-preloader"></div>
 								</a>
 							</div>

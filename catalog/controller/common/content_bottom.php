@@ -7,6 +7,7 @@ class ControllerCommonContentBottom extends Controller {
 		$this->load->model('catalog/information');
 		$this->load->model('catalog/manufacturer');
 		$this->load->model('catalog/actions');
+		$this->load->model('setting/extension');
 
 		if (isset($this->request->get['route'])) {
 			$route = (string)$this->request->get['route'];
@@ -18,7 +19,6 @@ class ControllerCommonContentBottom extends Controller {
 
 		if ($route == 'product/category' && isset($this->request->get['path'])) {
 			$path = explode('_', (string)$this->request->get['path']);
-
 			$layout_id = $this->model_catalog_category->getCategoryLayoutId(end($path));			
 		}
 
@@ -55,11 +55,10 @@ class ControllerCommonContentBottom extends Controller {
 			$layout_id = $this->config->get('config_layout_id');
 		}
 
-		$module_data = array();
+		$module_data = [];
 
-		$this->load->model('setting/extension');
-		$extensions = $this->model_setting_extension->getExtensions('module');		
-		$all_pages_layout_id = $this->model_design_layout->getLayoutForAllPages();			
+		$extensions 			= $this->model_setting_extension->getExtensions('module');		
+		$all_pages_layout_id 	= $this->model_design_layout->getLayoutForAllPages();			
 
 		foreach ($extensions as $extension) {
 			$modules = $this->config->get($extension['code'] . '_module');
@@ -67,17 +66,17 @@ class ControllerCommonContentBottom extends Controller {
 			if ($modules) {
 				foreach ($modules as $module) {
 					if (($module['layout_id'] == $layout_id || $module['layout_id'] == $all_pages_layout_id) && $module['position'] == 'content_bottom' && $module['status']) {
-						$module_data[] = array(
+						$module_data[] = [
 							'code'       => $extension['code'],
 							'setting'    => $module,
 							'sort_order' => $module['sort_order']
-						);
+						];
 					}
 				}
 			}
 		}
 
-		$sort_order = array(); 
+		$sort_order = []; 
 
 		foreach ($module_data as $key => $value) {
 			$sort_order[$key] = $value['sort_order'];
@@ -85,7 +84,7 @@ class ControllerCommonContentBottom extends Controller {
 
 		array_multisort($sort_order, SORT_ASC, $module_data);
 
-		$this->data['modules'] = array();			
+		$this->data['modules'] = [];			
 
 		foreach ($module_data as $module) {				
 			$module = $this->getChild('module/' . $module['code'], $module['setting']);

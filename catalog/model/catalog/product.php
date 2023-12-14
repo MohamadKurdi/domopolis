@@ -1326,7 +1326,6 @@
 				$sql .= " AND p.is_markdown = 0 ";
 			}
 
-
 			if (!empty($data['sort']) && $data['sort'] == 'rand'){
 				$sql .= " AND (" . mt_rand() . ")";
 			}
