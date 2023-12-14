@@ -61,14 +61,11 @@
 									<input type="text" id="product_<?php echo $module_row; ?>" value="" style="width: 294px;" placeholder="<?php echo $text_product_placeholder; ?>" />
 									<br><div class="scrollbox" id="hit-product_<?php echo $module_row; ?>" style="height:200px;max-height:200px;">
 										<?php $class = 'odd'; ?>
-										<?php $products = explode(',', $module['products']); ?>
-										<?php foreach ($products as $product_id) {
-											$product = $this->model_catalog_product->getProduct($product_id);
-										?>
-										<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-										<div id="hit-product_<?php echo $module_row; ?><?php echo $product['product_id']; ?>" class="<?php echo $class; ?>"><?php echo $product['name']; ?> <img src="view/image/delete.png" />
-											<input type="hidden" value="<?php echo $product['product_id']; ?>" />
-										</div>
+										<?php foreach ($module['product_infos'] as $product) { ?>
+											<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+											<div id="hit-product_<?php echo $module_row; ?><?php echo $product['product_id']; ?>" class="<?php echo $class; ?>"><?php echo $product['name']; ?> <img src="view/image/delete.png" />
+												<input type="hidden" value="<?php echo $product['product_id']; ?>" />
+											</div>
 										<?php } ?>
 									</div>
 									<input type="hidden" id='hit_product_i_<?php echo $module_row; ?>' name="customproduct_module[<?php echo $module_row; ?>][products]" value="<?php echo $module['products']; ?>" />

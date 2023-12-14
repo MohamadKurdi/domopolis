@@ -23,30 +23,30 @@ class ControllerModulecustomproduct extends Controller {
                 
         $this->data['heading_title'] = strip_tags($this->language->get('heading_title'));
 
-        $this->data['text_enabled'] = $this->language->get('text_enabled');
-        $this->data['text_disabled'] = $this->language->get('text_disabled');
-        $this->data['text_content_top'] = $this->language->get('text_content_top');
-        $this->data['text_content_bottom'] = $this->language->get('text_content_bottom');        
-        $this->data['text_column_left'] = $this->language->get('text_column_left');
-        $this->data['text_column_right'] = $this->language->get('text_column_right');
-        $this->data['text_name'] = $this->language->get('text_name');
+        $this->data['text_enabled']         = $this->language->get('text_enabled');
+        $this->data['text_disabled']        = $this->language->get('text_disabled');
+        $this->data['text_content_top']     = $this->language->get('text_content_top');
+        $this->data['text_content_bottom']  = $this->language->get('text_content_bottom');        
+        $this->data['text_column_left']     = $this->language->get('text_column_left');
+        $this->data['text_column_right']    = $this->language->get('text_column_right');
+        $this->data['text_name']            = $this->language->get('text_name');
         $this->data['text_product_placeholder'] = $this->language->get('text_product_placeholder');
-        $this->data['text_copyright'] = sprintf($this->language->get('text_copyright'), $this->version);
-        $this->data['text_all'] = $this->language->get('text_all');
+        $this->data['text_copyright']           = sprintf($this->language->get('text_copyright'), $this->version);
+        $this->data['text_all']                 = $this->language->get('text_all');
         
-        $this->data['entry_name'] = $this->language->get('entry_name');
-        $this->data['entry_product'] = $this->language->get('entry_product');
-        $this->data['entry_image'] = $this->language->get('entry_image');
-        $this->data['entry_layout'] = $this->language->get('entry_layout');
-        $this->data['entry_position'] = $this->language->get('entry_position');
-        $this->data['entry_status'] = $this->language->get('entry_status');
-        $this->data['entry_category'] = $this->language->get('entry_category');
+        $this->data['entry_name']       = $this->language->get('entry_name');
+        $this->data['entry_product']    = $this->language->get('entry_product');
+        $this->data['entry_image']      = $this->language->get('entry_image');
+        $this->data['entry_layout']     = $this->language->get('entry_layout');
+        $this->data['entry_position']   = $this->language->get('entry_position');
+        $this->data['entry_status']     = $this->language->get('entry_status');
+        $this->data['entry_category']   = $this->language->get('entry_category');
         $this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
         
-        $this->data['button_save'] = $this->language->get('button_save');
-        $this->data['button_cancel'] = $this->language->get('button_cancel');
-        $this->data['button_add_module'] = $this->language->get('button_add_module');
-        $this->data['button_remove'] = $this->language->get('button_remove');
+        $this->data['button_save']          = $this->language->get('button_save');
+        $this->data['button_cancel']        = $this->language->get('button_cancel');
+        $this->data['button_add_module']    = $this->language->get('button_add_module');
+        $this->data['button_remove']        = $this->language->get('button_remove');
         
          if (isset($this->error['warning'])) {
             $this->data['error_warning'] = $this->error['warning'];
@@ -102,8 +102,7 @@ class ControllerModulecustomproduct extends Controller {
             $products = explode(',', $this->config->get('customproduct_product'));
         }
         
-        $this->data['products'] = array();
-        
+        $this->data['products'] = [];        
         foreach ($products as $product_id) {
             $product_info = $this->model_catalog_product->getProduct($product_id);
             
@@ -121,17 +120,33 @@ class ControllerModulecustomproduct extends Controller {
             $this->data['modules'] = $this->request->post['customproduct_module'];
         } elseif ($this->config->get('customproduct_module')) { 
             $this->data['modules'] = $this->config->get('customproduct_module');
-        }  
-		
-		
+        }  				
 
-		foreach ($this->data['modules'] as &$module){
-			if (isset($module['image']) && $module['image']){
-				$module['thumb'] = $this->model_tool_image->resize($module['image'], 100, 100);
-			} else {
-				$module['thumb'] = $this->data['no_image'];
-			}		
-		}
+        foreach ($this->data['modules'] as &$module){
+           if (isset($module['image']) && $module['image']){
+                $module['thumb'] = $this->model_tool_image->resize($module['image'], 100, 100);
+            } else {
+                $module['thumb'] = $this->data['no_image'];
+            }
+        }
+
+        foreach ($this->data['modules'] as &$module){
+            if (!empty($module['products'])){
+                $products = explode(',', $module['products']);
+
+                $module['product_infos'] = [];
+                foreach ($products as $product_id) {
+                    $product_info = $this->model_catalog_product->getProduct($product_id);
+
+                    if ($product_info) {
+                        $module['product_infos'][] = [
+                            'product_id' => $product_info['product_id'],
+                            'name'       => $product_info['name']
+                        ];
+                    }
+                }    
+            }
+        }
 		
 		foreach ($this->data['modules'] as &$module){
 			if (isset($module['image2']) && $module['image2']){
@@ -141,16 +156,13 @@ class ControllerModulecustomproduct extends Controller {
 			}		
 		}
         
-        $this->data['module_copyright'] = 'KitchenProfi';
-            
-        $this->data['category_array'] = $this->model_catalog_category->getAllCategories();
+        $this->data['module_copyright'] = 'KitchenProfi';            
+        $this->data['category_array']   = $this->model_catalog_category->getAllCategories();
                 
-        $this->load->model('design/layout');
-        
+        $this->load->model('design/layout');        
         $this->data['layouts'] = $this->model_design_layout->getLayouts();
         
-        $this->load->model('localisation/language');
-        
+        $this->load->model('localisation/language');        
         $this->data['languages'] = $this->model_localisation_language->getLanguages();
 
         $this->template = 'module/customproduct.tpl';
