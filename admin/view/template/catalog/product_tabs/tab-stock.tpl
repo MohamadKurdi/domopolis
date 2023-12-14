@@ -1,4 +1,5 @@
 <div id="tab-stock">
+	<div style="float:left; width:49%;">
 	<table>
 		<tr>
 			<td>
@@ -15,14 +16,10 @@
 			</td>
 			<td>
 				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3f6ad8; color:#FFF">Наличие</span></p>
-
 				<input type="number" step="1" name="quantity" value="<?php echo $quantity; ?>" />
-
 			</td>
-
 		</tr>
 	</table>
-
 	<table class="form">
 		<tr>
 			<?php foreach ($stores as $store) { ?>
@@ -48,9 +45,7 @@
 			<?php } ?>
 		</tr>
 	</table>
-
 	<table class="form">
-
 		<tr>																	
 			<?php foreach ($stores as $store) { ?>
 				<td width="<?php echo (int)(100/(count($stores))) ?>%">
@@ -60,9 +55,7 @@
 				</td>
 			<?php }	?>
 		</tr>
-
 		<tr>
-
 			<?php foreach ($stores as $store) { ?>
 				<td width="<?php echo (int)(100/(count($stores))) ?>%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Едет: <?php echo $store['name']; ?></span></p>
@@ -71,21 +64,63 @@
 				</td>
 			<?php }	?>
 		</tr>
-
 	</table>
+	</div>
+
+	<div style="float:left; width:49%;">
+		<h2><span class="status_color" style="display:inline-block; padding:3px 5px; background:#CF4A61; color:#FFF">Наличие локальных поставщиков</span></h2>
+		<table class="list">
+			<thead>
+				<tr>
+					<td class="center">Поставщик</td>
+					<td class="center">Цена</td>
+					<td class="center">Скидка</td>
+					<td class="center">Наличие</td>
+					<td class="center">Количество</td>
+				</tr>
+			</thead>
+			<?php foreach ($product_suppliers as $product_supplier) { ?>
+				<tr>
+					<td class="center">
+						<?php echo $product_supplier['name']; ?>									
+					</td>
+					<td class="center">
+						<?php echo $product_supplier['price']; ?>									
+					</td>
+					<td class="center">
+						<?php echo $product_supplier['price_special']; ?>									
+					</td>
+					<td class="center">
+						<? if ($product_supplier['stock']) { ?>
+							<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+						<? } else { ?>
+							<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+						<? } ?>
+					</td>
+					<td class="center">
+						<?php echo $product_supplier['quantity']; ?>									
+					</td>
+				</td>
+			</tr>
+		<?php } ?>
+	</table>
+
+	<h2><span class="status_color" style="display:inline-block; padding:3px 5px; background:#CF4A61; color:#FFF">Обеспечение склада</span></h2>
 	<table class="form">
-		<tr><th colspan='4'>Необходимость обеспечения наличия на складе</th></tr>
 		<tr>
 			<? $i=1; ?>			
 			<? unset($store); foreach ($stores as $store) { ?>				
-				<td><? echo $store['name']; ?><br /><span class="help">минимальное и рекомендуемое наличие</span></td>
+				<td><? echo $store['name']; ?><br /><span class="help">Минимальное и рекомендуемое наличие</span></td>
 				<td>
-					<input type="text" name="product_stock_limits[<? echo $store['store_id']; ?>][min_stock]" value="<?php echo isset($product_stock_limits[$store['store_id']])?$product_stock_limits[$store['store_id']]['min_stock']:0; ?>" style="width:50px;" />[Мин]&nbsp;&nbsp;
-					<input type="text" name="product_stock_limits[<? echo $store['store_id']; ?>][rec_stock]" value="<?php echo isset($product_stock_limits[$store['store_id']])?$product_stock_limits[$store['store_id']]['rec_stock']:0; ?>" style="width:50px;" />[Рек]
+					<input type="number" step="1" name="product_stock_limits[<? echo $store['store_id']; ?>][min_stock]" value="<?php echo isset($product_stock_limits[$store['store_id']])?$product_stock_limits[$store['store_id']]['min_stock']:0; ?>" style="width:50px;" /> Минимальное
+					<input type="number" step="1" name="product_stock_limits[<? echo $store['store_id']; ?>][rec_stock]" value="<?php echo isset($product_stock_limits[$store['store_id']])?$product_stock_limits[$store['store_id']]['rec_stock']:0; ?>" style="width:50px;" /> Рекомендуемое
 				</td>
 				<? $i++; ?>
 				<? if ($i%2==0) { ?></tr><tr><? } ?>
 			<? } ?>
 		</tr>
 	</table>
+</div>
+
+
 </div>

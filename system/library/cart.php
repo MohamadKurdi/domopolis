@@ -97,65 +97,57 @@
 							
 				
 				foreach ($this->session->data['cart'] as $key => $quantity) {
-					$product = explode(':', $key);
+					$product 	= explode(':', $key);
 					$product_id = $product[0];
-					$stock = true;
+					$stock 		= true;
 					
-					// Options
 					if (!empty($product[1])) {
-						$temp = explode('-', $product[1]);
-						$options = unserialize(base64_decode($temp[0]));
-						} else {
-						$options = [];
+						$temp 		= explode('-', $product[1]);
+						$options 	= unserialize(base64_decode($temp[0]));
+					} else {
+						$options 	= [];
 					}
-					
-					// Profile
+
 					if (!empty($product[2])) {
 						$profile_id = $product[2];
-						} else {
+					} else {
 						$profile_id = 0;
 					}
-					
-					
-					// Комплект
+
 					if (!empty($product[3])) {
 						$set_id = $product[3];
-						} else {
+					} else {
 						$set_id = 0;
 					}
 					
-					//product stock overload id
 					$stock_tmp_query = $this->db->ncquery("SELECT stock_product_id FROM product WHERE product_id = '" . (int)$product_id . "' LIMIT 1");
 					
 					$real_product_id = false;
 					if ($stock_tmp_query->num_rows){
-						//реальный товар
 						if ($stock_tmp_query->row['stock_product_id']){
 							$real_product_id = $stock_tmp_query->row['stock_product_id'];
 						}
 					}
 					
-					
-					$product_query = $this->db->ncquery(
-					"SELECT *, p.image as image,			
-					(SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price,
-					(SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price_national,
-					m.name as manufacturer
-					FROM product p 
-					LEFT JOIN manufacturer m ON (p.manufacturer_id = m.manufacturer_id)
-					LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
-					WHERE p.product_id = '" . (int)$product_id . "' 
-					AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
-					AND p.date_available <= NOW() AND p.status = '1'");								
+					$sql = "SELECT *, p.image as image, m.name as manufacturer,	";
+					$sql .=	" (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND pp2s.price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price, ";
+					$sql .=	" (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND ppn2s.price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price_national, ";
+					$sql .= " (SELECT SUM(lsp.quantity) FROM supplier_products lsp WHERE lsp.product_id = p.product_id) as local_supplier_in_stock, ";
+					$sql .= " (SELECT SUM(lsp1.quantity) FROM supplier_products lsp1 LEFT JOIN suppliers s ON (s.supplier_id = lsp1.supplier_id) WHERE lsp1.product_id = p.product_id AND same_as_warehouse = 1) as local_supplier_warehouse_quantity ";
+					$sql .= " FROM product p ";
+					$sql .= "	LEFT JOIN manufacturer m ON (p.manufacturer_id = m.manufacturer_id) ";
+					$sql .= "	LEFT JOIN product_description pd ON (p.product_id = pd.product_id) ";
+					$sql .= "	WHERE p.product_id = '" . (int)$product_id . "' ";
+					$sql .= "	AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' ";
+					$sql .= "	AND p.date_available <= NOW() AND p.status = '1'";
+
+					$product_query = $this->db->ncquery($sql);								
 					
 					if ($product_query->num_rows) {
-						
-						//overloading price
 						if (isset($product_query->row['store_overload_price']) && $product_query->row['store_overload_price']){
 							$product_query->row['price']  = $product_query->row['store_overload_price'];
 						}
 						
-						//second overloading price
 						$do_percent = true;
 						$overload_price_national = false;
 						if (isset($product_query->row['store_overload_price_national']) && $product_query->row['store_overload_price_national']){
@@ -163,12 +155,12 @@
 							$do_percent = false;							
 						}
 						
-						$option_price = 0;
-						$option_points = 0;
-						$option_weight = 0;
+						$option_price 	= 0;
+						$option_points 	= 0;
+						$option_weight 	= 0;
 						
-						$option_data = [];
-						$prod_image = $product_query->row['image'];	
+						$option_data 	= [];
+						$product_image 	= $product_query->row['image'];	
 						
 						if ($this->config->get('config_product_options_enable')){						
 							$option_price_only = false;																	
@@ -235,7 +227,7 @@
 											}																				
 
 											if (isset($option_value_query->row['ob_image']) && $option_value_query->row['ob_image']) {
-												$prod_image = $option_value_query->row['ob_image'];
+												$product_image = $option_value_query->row['ob_image'];
 											}
 
 											$option_data[] = array(
@@ -325,8 +317,7 @@
 								}
 							}
 						}
-						
-						
+												
 						$this->load->model('catalog/group_price');
 						$model_catalog_group_price = $this->registry->get('model_catalog_group_price');
 						
@@ -395,8 +386,7 @@
 						}
 						
 						$this->load->model('catalog/product');				
-						$reward = $this->getCurrentProductReward($this->registry->get('model_catalog_product')->getProduct($product_id));
-						
+						$reward = $this->getCurrentProductReward($this->registry->get('model_catalog_product')->getProduct($product_id));						
 						
 						$this_is_special_offer = false;
 						$this_is_special_offer_present = false;					
@@ -411,28 +401,24 @@
 								$ao_main_product_id = $ao_query->row['product_id'];
 								
 								//и код основного товара есть в корзине
-								if (isset($just_products_ids[$ao_main_product_id])){
-									//количество = количеству основного товара
-									$quantity = $just_products_ids[$ao_main_product_id] * $ao_query->row['quantity'];
-									//ставим флаги, цену перечитаем потом
-									$this_is_special_offer = true;
-									$this_is_special_offer_present = ($ao_query->row['percent'] == 100);	
+								if (isset($just_products_ids[$ao_main_product_id])){									
+									$quantity 						= $just_products_ids[$ao_main_product_id] * $ao_query->row['quantity'];
+									$this_is_special_offer 			= true;
+									$this_is_special_offer_present 	= ($ao_query->row['percent'] == 100);	
 									
 									
 									//пересчитываем цену
 									if ($ao_query->row['price'] && $ao_query->row['price'] > 0 ){
-																	
-										//Считаем процентное соотношение цены акционной и обычной
-										$percent = ($ao_query->row['price'] / $price) * 100;
-										$reward = ($reward) / 100 * $percent;
+										$percent 	= ($ao_query->row['price'] / $price) * 100;
+										$reward 	= ($reward) / 100 * $percent;
 									
 										$price = $ao_query->row['price'];
 										
 										} else {
 										if ($this_is_special_offer_present){
-											$price = 0;
+											$price 	= 0;
 											} else {
-											$price = $price - ($price * $ao_query->row['percent'] / 100);
+											$price 	= $price - ($price * $ao_query->row['percent'] / 100);
 											$reward = $reward - ($reward * $ao_query->row['percent'] / 100);
 										}
 									}
@@ -440,7 +426,6 @@
 							}					
 						}
 						
-						//OVERLOADING REWARD TO ZERO
 						if ($price == 0){
 							$reward = 0;
 						}
@@ -464,24 +449,23 @@
 							$stock = false;
 						}
 						
-						$recurring = false;
-						$recurring_frequency = 0;
-						$recurring_price = 0;
-						$recurring_cycle = 0;
-						$recurring_duration = 0;
-						$recurring_trial_status = 0;
-						$recurring_trial_price = 0;
-						$recurring_trial_cycle = 0;
-						$recurring_trial_duration = 0;
-						$recurring_trial_frequency = 0;
+						$recurring 					= false;
+						$recurring_frequency 		= 0;
+						$recurring_price 			= 0;
+						$recurring_cycle 			= 0;
+						$recurring_duration 		= 0;
+						$recurring_trial_status 	= 0;
+						$recurring_trial_price 		= 0;
+						$recurring_trial_cycle 		= 0;
+						$recurring_trial_duration 	= 0;
+						$recurring_trial_frequency 	= 0;
 						$profile_name = '';
 						
-						if ($profile_id) {
+						if ($this->config->get('config_product_profiles_enable') && $profile_id) {
 							$profile_info = $this->db->ncquery("SELECT * FROM `profile` `p` JOIN `product_profile` `pp` ON `pp`.`profile_id` = `p`.`profile_id` AND `pp`.`product_id` = " . (int)$product_query->row['product_id'] . " JOIN `profile_description` `pd` ON `pd`.`profile_id` = `p`.`profile_id` AND `pd`.`language_id` = " . (int)$this->config->get('config_language_id') . " WHERE `pp`.`profile_id` = " . (int)$profile_id . " AND `status` = 1 AND `pp`.`customer_group_id` = " . (int)$customer_group_id)->row;
 							
 							if ($profile_info) {
-								$profile_name = $profile_info['name'];
-								
+								$profile_name 			= $profile_info['name'];								
 								$recurring 				= true;
 								$recurring_frequency 	= $profile_info['frequency'];
 								$recurring_price 		= $profile_info['price'];
@@ -603,17 +587,20 @@
 							$saving = round((($priceOptional - $price_old)/($price_old + 0.01))*100, 0);
 						}
 						
-						$stock_field_identifier = 'quantity_stock';
-						
+						$stock_field_identifier = 'quantity_stock';						
 						if ($this->config->get('config_warehouse_identifier')){
 							$stock_field_identifier = trim($this->config->get('config_warehouse_identifier'));
-						}						
+						}
+
+						if (($product_query->row['local_supplier_warehouse_quantity'] > 0)){
+							$product_query->row[$stock_field_identifier] = ($product_query->row[$stock_field_identifier] + $product_query->row['local_supplier_warehouse_quantity']);
+						}
 						
 						$this->data[$key] = [
 						'key'                       => $key,
 						'product_id'                => ($real_product_id)?$real_product_id:$product_query->row['product_id'],
 						'from_stock'				=> ($real_product_id)?true:false,
-						'current_in_stock'		    => (int)($product_query->row[$stock_field_identifier]>0),
+						'current_in_stock'		    => (int)($product_query->row[$stock_field_identifier] > 0),
 						'fully_in_stock'			=> (int)($product_query->row[$stock_field_identifier] >= $quantity),
 						'amount_in_stock'			=> (int)($product_query->row[$stock_field_identifier]),
 						'amazon_offers_type' 		=> $product_query->row['amazon_offers_type'],
@@ -629,7 +616,7 @@
 						'manufacturer_id'           => $product_query->row['manufacturer_id'],
 						'manufacturer'           	=> $product_query->row['manufacturer'],
 						'shipping'                  => $product_query->row['shipping'],
-						'image'       				=> $prod_image,
+						'image'       				=> $product_image,
 						'option'                    => $option_data,
 						'download'                  => $download_data,
 						'quantity'                  => $quantity,

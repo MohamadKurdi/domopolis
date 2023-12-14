@@ -699,6 +699,12 @@ class PriceLogic
 			settled_from_1c 	= '0',
 			dot_not_overload_1c = '0'");
 
+		$this->db->query("UPDATE product_price_to_store SET 
+			price 				= '" . (float)$price . "'		
+			WHERE store_id = '" . (int)$store_id . "'
+			AND product_id = '" . (int)$product_id . "'
+			AND price = '0'");
+
 		$this->priceUpdaterQueue->addToQueue($product_id);
 	}
 

@@ -76,6 +76,7 @@
 								<td class="center">Цена</td>
 								<td class="center">Скидка</td>
 								<td class="center">Наличие</td>
+								<td class="center">Количество</td>
 							</tr>
 						</thead>
 						<?php foreach ($product_suppliers as $product_supplier) { ?>
@@ -95,6 +96,9 @@
 									<? } else { ?>
 										<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 									<? } ?>
+								</td>
+								<td class="center">
+									<?php echo $product_supplier['quantity']; ?>									
 								</td>
 							</td>
 						</tr>

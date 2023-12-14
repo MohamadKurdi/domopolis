@@ -622,6 +622,7 @@ class ControllerSaleSupplier extends Controller {
 				'stock'     			=> $result['stock'],
 				'prices'     			=> $result['prices'],
 				'auto_enable'     		=> $result['auto_enable'],
+				'same_as_warehouse'     => $result['same_as_warehouse'],
 				'parser'     			=> $result['parser'],
 				'parser_status'     	=> $result['parser_status'],
 				'rrp_in_feed'     		=> $result['rrp_in_feed'],
@@ -989,6 +990,14 @@ class ControllerSaleSupplier extends Controller {
 			$this->data['auto_enable'] = $supplier_info['auto_enable'];
 		} else {
 			$this->data['auto_enable'] = 0;
+		}
+		
+		if (isset($this->request->post['same_as_warehouse'])) {
+			$this->data['same_as_warehouse'] = $this->request->post['same_as_warehouse'];
+		} elseif (!empty($supplier_info)) {
+			$this->data['same_as_warehouse'] = $supplier_info['same_as_warehouse'];
+		} else {
+			$this->data['same_as_warehouse'] = 0;
 		}
 
 		if (isset($this->request->post['stock'])) {

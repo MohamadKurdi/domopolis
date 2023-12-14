@@ -4,8 +4,7 @@ class ControllerProductProduct extends Controller
 {
     private $error = [];
 
-    public function getPriceInfo()
-    {
+    public function getPriceInfo(){
         if (isset($this->request->get['x'])) {
             $product_id = (int)$this->request->get['x'];
         } else {
@@ -18,8 +17,7 @@ class ControllerProductProduct extends Controller
         $this->response->setOutput($this->render());
     }
 
-    public function getProductsArrayDataJSON()
-    {
+    public function getProductsArrayDataJSON(){
         $json           = [];
         $product_ids    = [];
 
@@ -53,8 +51,7 @@ class ControllerProductProduct extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getEcommerceInfo()
-    {
+    public function getEcommerceInfo(){
         $json = [];
 
         if (isset($this->request->get['product_id'])) {
@@ -86,8 +83,7 @@ class ControllerProductProduct extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getDeliveryInfo()
-    {
+    public function getDeliveryInfo(){
         $this->load->model('catalog/product');
         $this->load->model('tool/simpleapicustom');        
 

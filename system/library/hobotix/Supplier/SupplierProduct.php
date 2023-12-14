@@ -288,12 +288,14 @@ class SupplierProduct extends SupplierFrameworkClass {
 			price 				= '" . (float)$product['price'] . "',
 			price_special 		= '" . (float)$product['price_special'] . "',
 			stock 				= '" . (int)$product['stock'] . "',
+			quantity 			= '" . (int)$product['quantity'] . "',
 			raw 				= '" . $this->db->escape($product['raw']) . "'
 			ON DUPLICATE KEY UPDATE
 			product_id 			= '" . (int)$product['product_id'] . "',
 			price 				= '" . (float)$product['price'] . "',
 			price_special 		= '" . (float)$product['price_special'] . "',
 			stock 				= '" . (int)$product['stock'] . "',
+			quantity 			= '" . (int)$product['quantity'] . "',
 			raw 				= '" . $this->db->escape($product['raw']) . "'");
 
 		return $this->db->getLastId();

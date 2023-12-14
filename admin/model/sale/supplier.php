@@ -40,6 +40,7 @@ class ModelSaleSupplier extends Model {
 		currency 				= '" . $this->db->escape($data['currency']) . "',
 		parser_status 			= '" . (int)$data['parser_status'] . "',
 		auto_enable 			= '" . (int)$data['auto_enable'] . "',
+		same_as_warehouse 		= '" . (int)$data['same_as_warehouse'] . "',
 		stock 					= '" . (int)$data['stock'] . "',
 		prices 					= '" . (int)$data['prices'] . "'");
 		
@@ -88,6 +89,7 @@ class ModelSaleSupplier extends Model {
 		rrp_in_feed 			= '" . (int)$data['rrp_in_feed'] . "',
 		parser_status 			= '" . (int)$data['parser_status'] . "',
 		auto_enable 			= '" . (int)$data['auto_enable'] . "',
+		same_as_warehouse 		= '" . (int)$data['same_as_warehouse'] . "',
 		stock 					= '" . (int)$data['stock'] . "',
 		prices 					= '" . (int)$data['prices'] . "'
 		WHERE supplier_id = '" . (int)$supplier_id . "'");				
@@ -432,7 +434,7 @@ class ModelSaleSupplier extends Model {
 	}
 
 	public function getProductSuppliers($product_id){
-		$query = $this->db->query("SELECT * FROM `supplier_products` sp LEFT JOIN suppliers s ON (s.supplier_id = sp.supplier_id) WHERE product_id = '" . (int)$product_id . "'");
+		$query = $this->db->query("SELECT sp.*, s.supplier_name, s.currency FROM `supplier_products` sp LEFT JOIN suppliers s ON (s.supplier_id = sp.supplier_id) WHERE product_id = '" . (int)$product_id . "'");
 
 		return $query->rows;
 	}

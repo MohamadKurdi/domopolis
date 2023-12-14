@@ -441,7 +441,8 @@
 					$sql .= "(SELECT name FROM stock_status sst WHERE sst.stock_status_id = (SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) AND sst.language_id = '" . (int)$this->config->get('config_language_id') . "') as overload_stock_status,	";
 				}
 
-				$sql .= " (SELECT SUM(stock) FROM supplier_products lsp WHERE lsp.product_id = p.product_id LIMIT 1) as local_supplier_in_stock, ";
+				$sql .= " (SELECT SUM(lsp.stock) FROM supplier_products lsp WHERE lsp.product_id = p.product_id) as local_supplier_in_stock, ";
+				$sql .= " (SELECT SUM(lsp1.stock) FROM supplier_products lsp1 LEFT JOIN suppliers s ON (s.supplier_id = lsp1.supplier_id) WHERE lsp1.product_id = p.product_id AND same_as_warehouse = 1) as local_supplier_warehouse_in_stock, ";
 
 				$sql .= "(SELECT ss.name FROM stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, ";
 				$sql .= "(SELECT pdde.name FROM product_description pdde WHERE p.product_id = pdde.product_id AND pdde.language_id = '" . (int)$this->registry->get('languages_all')[$this->config->get('config_de_language')] . "') AS de_name ";
@@ -609,9 +610,20 @@
 						$query->row['stock_status'] 	= $query->row['overload_stock_status'];
 					}
 
+
+					if ($query->row['local_supplier_warehouse_in_stock']){						
+						$query->row['quantity_stock'] 			= $query->row['local_supplier_warehouse_in_stock'] + $query->row[$this->config->get('config_warehouse_identifier')];						
+						$query->row['quantity'] 				= $query->row['local_supplier_warehouse_in_stock'] + $query->row[$this->config->get('config_warehouse_identifier')];
+						$query->row[$this->config->get('config_warehouse_identifier')] 	= $query->row['local_supplier_warehouse_in_stock'] + $query->row[$this->config->get('config_warehouse_identifier')];	
+											
+						$query->row['stock_status_id']			= $this->config->get('config_in_stock_status_id');
+						$overload_stock_status_query 			= $this->db->ncquery("SELECT name FROM stock_status WHERE stock_status_id = '" . (int)$this->config->get('config_in_stock_status_id') . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "' LIMIT 1");
+						$query->row['stock_status']				= $overload_stock_status_query->row['name'];
+					}
+
 					//Логика работы только со складом, отменяет переназначение статуса на складе
 					if ($this->config->get('config_warehouse_only')){
-						if (!$query->row[$this->config->get('config_warehouse_identifier')]){
+						if (!$query->row[$this->config->get('config_warehouse_identifier')] && !$query->row['local_supplier_warehouse_in_stock']){
 							$query->row['quantity_stock'] 			= 0;
 							$query->row['quantity'] 				= 0;
 							$query->row['stock_status_id']			= $this->config->get('config_overload_stock_status_id');
@@ -637,6 +649,8 @@
 							'asin' 			   		   => $query->row['asin'],
 							'special_date_end'         => $query->row['special_date_end'],
 							'quantity'                 => $query->row['quantity'],							
+							'local_supplier_in_stock'  			=> $query->row['local_supplier_in_stock'],
+							'local_supplier_warehouse_in_stock' => $query->row['local_supplier_warehouse_in_stock'],
 							'quantity_stock'           => $query->row['quantity_stock'],
 							'current_in_stock'		   => $this->config->get('config_warehouse_identifier')?($query->row[$this->config->get('config_warehouse_identifier')]>0):false,
 							'current_in_stock_q'	   => $query->row[$this->config->get('config_warehouse_identifier')]
@@ -692,7 +706,8 @@
 							'current_in_stock'		   => $this->config->get('config_warehouse_identifier')?($query->row[$this->config->get('config_warehouse_identifier')]>0):false,
 							'current_in_stock_q'	   => $query->row[$this->config->get('config_warehouse_identifier')],
 							'quantity'                 => $query->row['quantity'],							
-							'local_supplier_in_stock'  => $query->row['local_supplier_in_stock'],
+							'local_supplier_in_stock'  				=> $query->row['local_supplier_in_stock'],
+							'local_supplier_warehouse_in_stock'  	=> $query->row['local_supplier_warehouse_in_stock'],
 							'quantity_stock'           => $query->row['quantity_stock'],
 							'quantity_stockM'          => $query->row['quantity_stockM'],
 							'quantity_stockK'          => $query->row['quantity_stockK'],

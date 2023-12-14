@@ -1453,7 +1453,8 @@ class ControllerCatalogProduct extends Controller {
 					'currency' 		=> $product_supplier['currency'],
 					'price' 		=> $this->currency->format_with_left($product_supplier['price'], $product_supplier['currency'], 1),
 					'price_special' => $this->currency->format_with_left($product_supplier['price_special'], $product_supplier['currency'], 1),
-					'stock' 		=> $product_supplier['stock']
+					'stock' 		=> $product_supplier['stock'],
+					'quantity' 		=> $product_supplier['quantity']
 				];
 			}
 		}

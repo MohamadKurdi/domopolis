@@ -275,11 +275,12 @@
 					
 					<table class="form">
 						<tr>
-							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Коэффициент - 1</span></td>
-							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Коэффициент - 2</span></td>
-							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Коэффициент - 3</span></td>
+							<td width="15%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Коэффициент - 1</span></td>
+							<td width="15%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Коэффициент - 2</span></td>
+							<td width="15%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Коэффициент - 3</span></td>
 							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Сроки доставки - 1</span></td>
 							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Сроки доставки - 2</span></td>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Склад</span></td>
 						</tr>
 						<tr>							
 							<td>
@@ -305,6 +306,19 @@
 							<td>
 								<input type="text" name="terms_outstock" value="<?php echo $terms_outstock; ?>" />
 								<br /><span class="help">если нет в наличии у поставщика и на локальном складе, дней от-до, или одно число</span>
+							</td>
+
+							<td>
+								<select name="same_as_warehouse">
+									<?php if ($same_as_warehouse) { ?>
+										<option value="1" selected="selected">Включить</option>
+										<option value="0">Отключить</option>
+									<?php } else { ?>													
+										<option value="1">Включить</option>
+										<option value="0"  selected="selected">Отключить</option>
+									<? } ?>
+								</select>
+								<br /><span class="help">приравнивает наличие у поставщика к наличию на локальном складе</span>
 							</td>
 						</tr>
 					</table>

@@ -87,15 +87,16 @@
 							<td class="left">VAT</td>
 							<td class="left">Телефон</td>
 							<td class="left">Мейл</td>
-							<td class="left">Хороший</td>
-							<td class="left">Плохой</td>
-							<td class="left">Коэфф</td>
+							<td class="left"><i class="fa fa-thumbs-up"></i></td>
+							<td class="left"><i class="fa fa-thumbs-down"></i></td>
+							<td class="left"><i class="fa fa-thumbs-up"></i><i class="fa fa-thumbs-down"></i></td>
 							<td class="left">Фид</td>
 							<td class="left">РРЦ</td>
 							<td class="left">Парсер</td>
 							<td class="left">Статус</td>
 							<td class="left">Нал</td>
 							<td class="left">Цены</td>
+							<td class="left">Склад</td>
 							<td class="right">
 								<?php if ($sort == 'sort_order') { ?>
 								<a href="<?php echo $sort_sort_order; ?>" class="<?php echo strtolower($order); ?>">Сортировка</a>
@@ -275,6 +276,14 @@
 
 										<td class="center" style="padding:8px;">
 											<? if ($supplier['prices']) { ?>
+												<i class="fa fa-check-circle" style="color:#00AD07"></i>
+											<? } else { ?>
+												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+											<? } ?>
+										</td>
+
+										<td class="center" style="padding:8px;">
+											<? if ($supplier['same_as_warehouse']) { ?>
 												<i class="fa fa-check-circle" style="color:#00AD07"></i>
 											<? } else { ?>
 												<i class="fa fa-times-circle" style="color:#cf4a61"></i>

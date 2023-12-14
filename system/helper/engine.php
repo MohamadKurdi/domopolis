@@ -44,9 +44,9 @@ function addQueryArgs(array $args, string $url){
 
 function reparseCartProductsByStock($products){
 	$results = array(
-		'in_stock' => array(),
-		'not_in_stock' => array(),
-		'certificates' => array(),	
+		'in_stock' 		=> [],
+		'not_in_stock' 	=> [],
+		'certificates' 	=> [],	
 	);
 
 	foreach ($products as $product){

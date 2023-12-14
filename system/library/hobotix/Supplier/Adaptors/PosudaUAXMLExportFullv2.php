@@ -236,6 +236,7 @@ class PosudaUAXMLExportFullv2 extends SuppliersGeneralClass {
 						'image' 				=> $image,
 						'images' 				=> $images,
 						'stock' 				=> ($item['stock_status'] == 'In Stock')?true:false,
+						'quantity' 				=> (int)$item['quantity'],
 						'price' 				=> (float)$item['price'],						
 						'vendor' 				=> $this->vendor($item['manufacturer'], 'vendor'),
 						'vendor_country'		=> $this->vendor($item['manufacturer'], 'country'),
