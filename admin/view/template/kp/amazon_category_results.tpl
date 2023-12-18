@@ -163,7 +163,9 @@
 	<div class="products-container-buttons">
 
 		<div class="buttons">
-            <a class="button" onclick="add_all();"><i class="fa fa-plus"></i> Добавить все</a>                
+			<?php if (!$this->config->get('config_rainforest_disable_add_all_button')) { ?>
+            	<a class="button" onclick="add_all();"><i class="fa fa-plus"></i> Добавить все</a>                
+        	<?php } ?>
             <a class="button" onclick="reload();"><i class="fa fa-refresh"></i> Обновить</a>
         </div> 
 

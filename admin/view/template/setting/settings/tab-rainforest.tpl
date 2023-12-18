@@ -246,6 +246,33 @@
 						</select>
 					</div>
 
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Убрать кнопку "добавить всё"</span></p>
+						<select name="config_rainforest_disable_add_all_button">
+							<?php if ($config_rainforest_disable_add_all_button) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+						<span class="help">Если включить опцию, возможность массово добавлять будет отключена</span>
+					</div>
+
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Не разрешать добавление без категорий</span></p>
+						<select name="config_rainforest_do_not_add_without_category">
+							<?php if ($config_rainforest_do_not_add_without_category) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+					</div>
+
 				</td>
 
 

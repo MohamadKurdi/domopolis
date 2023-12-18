@@ -4411,6 +4411,9 @@ class ControllerSettingSetting extends Controller
         'config_rainforest_delay_queue_offers',
         'config_rainforest_delay_queue_variants',
 
+        'config_rainforest_disable_add_all_button',
+        'config_rainforest_do_not_add_without_category',
+
         'config_rainforest_enable_add_variants_queue_parser',
         'config_rainforest_add_variants_queue_parser_time_start',
         'config_rainforest_add_variants_queue_parser_time_end',

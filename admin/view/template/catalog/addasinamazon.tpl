@@ -31,9 +31,10 @@
                 <a href="<?php echo $queue; ?>" class="button" style="margin-left:100px;"><i class="fa fa-backward"></i> Вернуться в очередь</a>
                 <a class="button" onclick="clear_cat();"><i class="fa fa-eraser"></i> Очистить категорию магазина</a>
                 <a class="button" onclick="clear_all();"><i class="fa fa-eraser"></i> Очистить всё</a>
-
-                <a class="button" onclick="add_all();"><i class="fa fa-plus"></i> Добавить все</a>                
-                <a class="button" onclick="reload();"><i class="fa fa-refresh"></i> Обновить</a>
+                <?php if (!$this->config->get('config_rainforest_disable_add_all_button')) { ?>
+                    <a class="button" onclick="add_all();"><i class="fa fa-plus"></i> Добавить все</a>  
+                <?php } ?>              
+                <a class="button" onclick="reload();"><i class="fa fa-refresh"></i> Загрузить / Обновить</a>
             </div>     
         </div>
         <div class="content">        
@@ -123,7 +124,12 @@
 
                     <td class="left" style="width:40%">
                         <div>
-                            <p class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56; color:#FFF;"><i class="fa fa-bars"></i> Заполнить и привязать к категории магазина</p><br />
+                            <p class="status_color" style="display:inline-block; padding:3px 5px; background:#CF4A61; color:#FFF;">
+                                <i class="fa fa-exclamation-circle"></i> Заполнить и привязать к категории магазина.
+                                <?php if ($this->config->get('config_rainforest_do_not_add_without_category')) { ?>
+                                    ЗАПОЛНЯТЬ ОБЯЗАТЕЛЬНО!
+                                <?php } ?>
+                              </p>
                             <input type="text" name="category_shop" style="width:90%" placeholder="Начни заполнять, чтоб выбрать категорию" />                           
                             <span class="help">будет добавлен в эту категорию, если не задать, будет попытка автоматического определения, выбираются только конечные категории</span>
                         </div>
@@ -189,6 +195,14 @@
         var category_id = $('input[name=category_id]').val();
         var brand_logic = $('select[name=brand_logic]').children("option:selected").val();
 
+        <?php if ($this->config->get('config_rainforest_do_not_add_without_category')) { ?>
+            console.log(category_id);
+            if (!category_id || category_id == 0){
+                swal({ title: "Заполни категорию привязки", text: "Включен режим, запрещающий добавление товаров без привязки к категории магазина", type: "error"}, function() {  });
+                return;
+            }            
+        <?php } ?>
+
         if (asin){
             $.ajax({
                 type: 'POST',
@@ -242,11 +256,13 @@
 </script>
 
 <script type="text/javascript">
+ <?php if (!$this->config->get('config_rainforest_disable_add_all_button')) { ?> 
     function add_all(){
         $( ".products-container-product-add" ).each(function( index ) {
             $(this).trigger('click');
         });
     }
+<?php } ?>
 
     function clear_cat(){                                    
         $('input[name=category_shop]').val('');
@@ -396,7 +412,7 @@
     }
 
     $('input[name=url], input[name=category], input[name=page], select[name=sort]').bind('change', function() {
-        reload();
+      //  reload();
     }); 
 
     $('select[name=type]').bind('change', function() {
