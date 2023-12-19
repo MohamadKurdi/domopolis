@@ -258,6 +258,22 @@
 						<span class="help">если включено - список, отключено - картинки</span>
 					</div>
 
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включить уведомления в админ-части</span></p>
+						<select name="config_enable_malert_in_admin">
+							<?php if ($config_enable_malert_in_admin) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+						<br />
+						<span class="help">включает уведомления о заказах и звонках</span>
+					</div>
+
+
 				</td>
 			</tr>
 		</table>

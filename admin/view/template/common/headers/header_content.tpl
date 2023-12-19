@@ -17,9 +17,10 @@
 								<?php if ($logged) { ?>
 								<div id="menu_top">
 									<ul class="left">
-										<li id="alertlog"><a class="top" href="<? echo $user_alerts; ?>" id="alert_history_preview_click"><i class='fa fa-bell'></i></a></li>
-										<li id="notification" class="header-notifications delayed-load short-delayed-load" data-route='common/home/loadNotifications'>
-										</li>
+										<?php if ($this->config->get('config_enable_malert_in_admin')){	?>
+										<li id="alertlog"><a class="top" href="<? echo $user_alerts; ?>" id="alert_history_preview_click"><span class="label label-danger" style="font-size:16px;"><i class='fa fa-bell' style="color:#FFF"></i></span></a></li>
+									<?php } ?>
+										<li id="notification" class="header-notifications delayed-load short-delayed-load" data-route='common/home/loadNotifications'></li>
 
 										<li id="shortnames">
 											<a class="top" href="<? echo $addasin; ?>"><span class="label label-danger" style="font-size:16px;"><i class="fa fa-refresh" ></i>&nbsp;QUEUE&nbsp;<?php echo $total_product_in_asin_queue; ?></span></a>		

@@ -264,7 +264,7 @@
 			
 		});
 	</script>
-	<? if ($this->user->getAlertNameSpace()) { ?>
+	<?php if ($this->config->get('config_enable_malert_in_admin') && $this->user->getAlertNameSpace()) { ?>
 		<audio src='sounds/alert_beep.mp3' class="donotstop" id="beep_alert" style="display:none;" type="audio/mp3" preload="auto"></audio>
 		<audio src='sounds/incoming_call2.mp3' class="donotstop" id="incoming_alert" style="display:none;" type="audio/mp3" preload="auto"></audio>
 		<audio src='sounds/i_alarm.mp3' class="donotstop" id="fuck_alarm" style="display:none;" type="audio/mp3" preload="auto"></audio>
@@ -347,8 +347,7 @@
 					]
 				});				
 			}
-			
-			
+						
 			$(document).ready(function(){
 				
 				var hidden, state, visibilityChange; 
@@ -406,8 +405,7 @@
 				
 			});				
 		</script>
-	<? } ?>
-	
+	<? } ?>	
 <? } ?>
 </body>
 </html>

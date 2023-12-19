@@ -23,26 +23,24 @@
 						<?php if ($logged) { ?>
 							<div id="menu_top">
 								<ul class="left">
-									<li id="alertlog"><a class="top" href="<? echo $user_alerts; ?>" id="alert_history_preview_click"><span class="label label-danger" style="font-size:16px;"><i class='fa fa-bell' style="color:#FFF"></i></span></a></li>
-									<li id="notification" class="header-notifications delayed-load short-delayed-load" data-route='common/home/loadNotifications'>
-									</li>
-
+									<?php if ($this->config->get('config_enable_malert_in_admin')){	?>
+										<li id="alertlog">
+											<a class="top" href="<? echo $user_alerts; ?>" id="alert_history_preview_click"><span class="label label-danger" style="font-size:16px;"><i class='fa fa-bell' style="color:#FFF"></i></span></a>
+										</li>
+									<?php } ?>
+									<li id="notification" class="header-notifications delayed-load short-delayed-load" data-route='common/home/loadNotifications'></li>
 									<li id="callbacks">
 										<a class="top" href="<? echo $callback; ?>"><span class="label label-danger" style="font-size:16px;"><i class="fa fa-phone-square" ></i> &nbsp;<?php echo $total_callbacks; ?></span></a>		
-									</li>
-									
+									</li>									
 									<li id="waitlists">
 										<a class="top" href="<? echo $waitlist_ready; ?>"><span class="label label-danger" style="font-size:16px;"><i class="fa fa-thumbs-up" ></i>&nbsp;<?php echo $total_waitlist_ready; ?></span></a>
 									</li>
-
 									<li id="waitlists-pre">
 										<a class="top" href="<? echo $waitlist_pre; ?>"><span class="label label-danger" style="font-size:16px;"><i class="fa fa-hourglass-half" ></i>&nbsp;<?php echo $total_waitlist_prewaits; ?></span></a>
-									</li>
-									
-									<li id="waitlists-pre">
+									</li>									
+									<li id="courier_face2">
 										<a class="top" href="<? echo $courier_face2; ?>"><span class="label label-danger" style="font-size:16px;"><i class="fa fa-truck" ></i></span></a>
-									</li>
-									
+									</li>									
 								</ul>
 								<style>
 									#menu_top > ul li ul{

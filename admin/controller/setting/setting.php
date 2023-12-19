@@ -433,10 +433,16 @@ class ControllerSettingSetting extends Controller
             $this->data['config_admin_flags_enable'] = $this->config->get('config_admin_flags_enable');
         }
 
-         if (isset($this->request->post['config_product_lists_text_in_orders'])) {
+        if (isset($this->request->post['config_product_lists_text_in_orders'])) {
             $this->data['config_product_lists_text_in_orders'] = $this->request->post['config_product_lists_text_in_orders'];
         } else {
             $this->data['config_product_lists_text_in_orders'] = $this->config->get('config_product_lists_text_in_orders');
+        }
+
+        if (isset($this->request->post['config_enable_malert_in_admin'])) {
+            $this->data['config_enable_malert_in_admin'] = $this->request->post['config_enable_malert_in_admin'];
+        } else {
+            $this->data['config_enable_malert_in_admin'] = $this->config->get('config_enable_malert_in_admin');
         }
 
         if (isset($this->request->post['config_special_logistics_enable'])) {

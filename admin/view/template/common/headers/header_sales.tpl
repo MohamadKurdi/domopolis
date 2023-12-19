@@ -15,13 +15,11 @@
 						<?php if ($logged) { ?> 
 							<div id="menu_top" style="margin-top:5px;">
 								<ul class="left">
-									
-									<li id="alertlog"><a class="top" href="<? echo $user_alerts; ?>" id="alert_history_preview_click"><span class="label label-danger" style="font-size:16px;"><i class='fa fa-bell' style="color:#FFF"></i></span></a></li>
-									<!-- Admin Panel Notication -->
-									<li id="notification" class="header-notifications delayed-load short-delayed-load" data-route='common/home/loadNotifications'>
-									
-									</li>
-									<!-- Admin Header Notices 1.0 -->
+									<?php if ($this->config->get('config_enable_malert_in_admin')){	?>
+										<li id="alertlog"><a class="top" href="<? echo $user_alerts; ?>" id="alert_history_preview_click"><span class="label label-danger" style="font-size:16px;"><i class='fa fa-bell' style="color:#FFF"></i></span></a></li>
+									<?php } ?>
+
+									<li id="notification" class="header-notifications delayed-load short-delayed-load" data-route='common/home/loadNotifications'></li>
 									<li id="callbacks">
 										<a class="top" href="<? echo $callback; ?>"><span class="label label-danger" style="font-size:16px;"><i class="fa fa-phone-square" ></i> &nbsp;&nbsp;<?php echo $total_callbacks; ?></span></a>		
 									</li>

@@ -16,7 +16,9 @@
 							<div id="menu_top" style="margin-top:5px;">
 								<ul class="left">
 									
-									<li id="alertlog"><a class="top" href="<? echo $user_alerts; ?>" id="alert_history_preview_click"><span class="label label-danger" style="font-size:16px;"><i class='fa fa-bell' style="color:#FFF"></i></span></a></li>
+									<?php if ($this->config->get('config_enable_malert_in_admin')){	?>
+										<li id="alertlog"><a class="top" href="<? echo $user_alerts; ?>" id="alert_history_preview_click"><span class="label label-danger" style="font-size:16px;"><i class='fa fa-bell' style="color:#FFF"></i></span></a></li>
+									<?php } ?>
 									
 								</ul>
 								<style>
