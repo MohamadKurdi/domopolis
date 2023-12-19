@@ -243,6 +243,21 @@
 						<span class="help">если включено, то показывается закупка и рентабельность Amazon, иначе данные из учетной системы</span>
 					</div>
 
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Список товаров с названиями в заказах</span></p>
+						<select name="config_product_lists_text_in_orders">
+							<?php if ($config_product_lists_text_in_orders) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+						<br />
+						<span class="help">если включено - список, отключено - картинки</span>
+					</div>
+
 				</td>
 			</tr>
 		</table>

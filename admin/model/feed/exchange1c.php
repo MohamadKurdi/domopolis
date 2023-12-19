@@ -512,7 +512,6 @@
 					}
 					
 					if ($product_supplies_counter) {
-						
 						$root = '<?xml version="1.0" encoding="utf-8"?><КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . date('Y-m-d', time()) . '" />';
 						$oXML = new SimpleXMLElement($root);
 						$xml = array_to_xml($document, $oXML);
@@ -528,12 +527,8 @@
 						
 						file_put_contents(DIR_EXPORT . 'odinass/supplies/' . $_fname . '.xml', $content);
 						chmod(DIR_EXPORT . 'odinass/supplies/' . $_fname . '.xml', 0777);
-						
 					}
-					
 				}
-				
-				
 			}
 		}
 		
@@ -1942,17 +1937,35 @@
 							'ВалютаЗаказа'          => $order['currency_code'],
 							'ЭтоОбеспечениеЗаказа'  => ($product_supply['is_for_order'])?'Истина':'Ложь'
 							);
-							
-							
+														
 							$product_supplies_counter++;
+						}
+
+
+						$product_suppliers = $this->model_sale_supplier->getProductSuppliers($product['product_id']);
+						
+						$product_suppliers_counter = 0;
+						foreach ($product_suppliers as $product_supplier){
+							
+							$document['Документ' . $document_counter]['Товары']['Товар' . $product_counter]['НаличиеУПоставщиков']['Поставщик' . $product_suppliers_counter] = array(							
+							'ПоставщикИД'    		=> $product_supplier['supplier_id'],
+							'ПоставщикИмя' 		    => $product_supplier['supplier_name'],
+							'ПоставщикSKU' 		    => $product_supplier['sku'],
+							'ПоставщикНаличие'		=> ($product_supplier['stock'])?'Истина':'Ложь',
+							'ПоставщикКоличество'	=> ($product_supplier['quantity']),
+							'ПоставщикЦена'		    => $product_supplier['price'],
+							'ПоставщикВалюта'       => $product_supplier['currency'],
+							'ПоставщикRawData'      => $product_supplier['raw'],
+							);
+														
+							$product_suppliers_counter++;
 						}
 																		
 						if ($is_set){
 							$set_id = (int)$is_set['set_id'];
 							$set_products_results = $this->model_sale_order->getOrderProductsBySet($order_id, $set_id);
 							
-							$set_products_counter = 0;
-							
+							$set_products_counter = 0;							
 							foreach ($set_products_results as $set_product){
 								$real_set_product = $this->model_catalog_product->getProduct($set_product['product_id']);
 								$weight_class = $this->model_localisation_weight_class->getWeightClass($real_set_product['weight_class_id']);
@@ -2024,17 +2037,14 @@
 								,'EAN13'									=> $real_set_product['ean']
 								);							
 								
-								//EAN 13
-								$ean_counter = 0;
-								$ean_array = [];											
+								$ean_counter 	= 0;
+								$ean_array 		= [];											
 								$suppliers_eans = $this->model_sale_supplier->getSupplierEANCodes($set_product['product_id']);						
 								if ($suppliers_eans) {
-									foreach ($suppliers_eans as $_ean){																							
-										$ean_array[] = $_ean['product_ean'];
+									foreach ($suppliers_eans as $ean){																							
+										$ean_array[] = $ean['product_ean'];
 									}
 								}
-								
-								$ean_array = array_unique($ean_array);
 								
 								$ean_array = array_unique($ean_array);
 								foreach ($ean_array as $product_ean){
@@ -2044,9 +2054,8 @@
 									}
 								}
 								
-								$set_supplies = $this->model_sale_supplier->getOPSupplyForSet($set_product['order_set_id']);
-								
-								$set_supplies_counter = 0;
+								$set_supplies 			= $this->model_sale_supplier->getOPSupplyForSet($set_product['order_set_id']);								
+								$set_supplies_counter 	= 0;
 								foreach ($set_supplies  as $set_supply){
 									
 									$real_supplier = $this->model_sale_supplier->getSupplier($set_supply['supplier_id']);
@@ -2071,8 +2080,7 @@
 								}
 								
 								$set_stock_counter = 0;
-								foreach ($this->stocks as $key => $value) {
-									
+								foreach ($this->stocks as $key => $value) {									
 									$document['Документ' . $document_counter]['Товары']['Товар' . $product_counter]['ТоварыВходящиеВНабор']['ТоварВходящийВНабор' . $set_products_counter]['Остатки']['Остаток' . $set_stock_counter] = array(
 									'НаименованиеСклада' => $value
 									,'КодСклада'      => $key

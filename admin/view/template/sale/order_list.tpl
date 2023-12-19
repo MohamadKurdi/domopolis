@@ -516,25 +516,25 @@
 							<? if ($this->user->getIsAV() || $this->user->canUnlockOrders()) { ?>	
 								<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
 							<? } ?>
-							<td class="right" width="120px" style="max-width:120px; width:120px;"><?php if ($sort == 'o.order_id') { ?>
+							<td class="center" width="120px" style="max-width:120px; width:120px;"><?php if ($sort == 'o.order_id') { ?>
 								<a href="<?php echo $sort_order; ?>" class="<?php echo strtolower($order); ?>">ID / Партия</a>
 								<?php } else { ?>
 								<a href="<?php echo $sort_order; ?>">ID / Партия</a>
 							<?php } ?></td>
-							<td class="left"><?php if ($sort == 'customer') { ?>
+							<td class="center"><?php if ($sort == 'customer') { ?>
 								<a href="<?php echo $sort_customer; ?>" class="<?php echo strtolower($order); ?>">Имя / ID / Email</a>
 								<?php } else { ?>
 								<a href="<?php echo $sort_customer; ?>">Имя / ID / Email</a>
 							<?php } ?></td>
-							<td>Товары</td>
-							<td>Инфо</td>
-							<td class="left" width="150px" style="width:150px; max-width:150px;"><?php if ($sort == 'status') { ?>
+							<td class="center" width="300px">Товары</td>
+							<td class="center">Инфо</td>
+							<td class="center" width="150px" style="width:150px; max-width:150px;"><?php if ($sort == 'status') { ?>
 								<a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
 								<?php } else { ?>
 								<a href="<?php echo $sort_status; ?>">Статус / причина отказа</a>
 							<?php } ?>
 							</td>
-							<td class="left"><?php if ($sort == 'manager_id') { ?>
+							<td class="center"><?php if ($sort == 'manager_id') { ?>
 								<a href="<?php echo $sort_manager_id; ?>" class="<?php echo strtolower($order); ?>">Люди</a>
 								<?php } else { ?>
 								<a href="<?php echo $sort_manager_id; ?>">Люди</a>
@@ -542,28 +542,28 @@
 							</td>
 
 							<?php if ($this->config->get('config_show_profitability_in_order_list')){ ?>
-							<td class="right">
+							<td class="center">
 								Рентабельность
 							</td>
 							<?php } ?>
 
 							<?php if ($this->config->get('config_enable_amazon_specific_modes')){ ?>
-							<td class="right" style="width:20px;">
+							<td class="center" style="width:20px;">
 								<i class="fa fa-amazon"></i>
 							</td>
 							<?php } ?>
 
-							<td class="right">
+							<td class="center">
 								<?php if ($sort == 'o.total') { ?>
 									<a href="<?php echo $sort_total; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_total; ?></a>
 									<?php } else { ?>
 									<a href="<?php echo $sort_total; ?>"><?php echo $column_total; ?></a>
 								<?php } ?>
 							</td>
-							<td class="right">
+							<td class="center">
 								Скидки
 							</td>
-							<td class="left">							
+							<td class="center">							
 								<?php if ($sort == 'o.date_added') { ?>
 									<a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><i class="fa fa-plus"></i></a>
 									<?php } else { ?>
@@ -746,7 +746,7 @@
 
 												<?php if ($order['do_not_call']) { ?>
 													<br />										
-													<span style="color:#FFF; padding:3px; background-color:#cf4a61; font-weight:700;"><i class="fa fa-microphone-slash" aria-hidden="true"></i>&nbsp;&nbsp;Не перезванивайте мне!</span>
+													<span style="color:#FFF; padding:3px; background-color:#cf4a61; font-weight:700; margin-top:10px;display:inline-block;"><i class="fa fa-microphone-slash" aria-hidden="true"></i>&nbsp;&nbsp;Не перезванивайте мне!</span>
 												<?php } ?>
 											</div>
 											<? } ?>
@@ -786,11 +786,35 @@
 													<? } ?>
 												</div>
 											<? } ?>
-										</td>
-										<td class="left" style="color: #<?php echo $order['status_txt_color']; ?>;" aria-label="Товары">
+										</td>										
+										<td class="left" style="color: #<?php echo $order['status_txt_color']; ?>; max-width:" aria-label="Товары">
+										<?php if ($this->config->get('config_product_lists_text_in_orders')) { ?>
+											<?php $i=1; foreach ($order['products'] as $product) { ?>		
+												<div style="padding-top:3px; padding-bottom:3px; border-bottom:1px solid #ccc;">
+													<div style="float:left; margin-right:5px; width:25px;  height:25px;">
+														<img src="<?php echo $product['thumb']; ?>" id="image" loading="lazy" width="25px" height="25px" />
+													</div>
+													<div style="float:right; width:270px; font-size:10px;">
+														<?php echo $product['name']; ?> 
+														<?php if ($product['has_price']) { ?>
+															<span style="display:inline-block; padding:2px 3px; font-size:9px; margin:3px; background:#7F00FF; color:#FFF;"><?php echo $product['price']; ?></span>
+														<?php } ?>
+														<?php if ($product['on_stock']) { ?>
+															<span style="display:inline-block; padding:2px 3px; font-size:9px; margin:3px; background:#00AD07; color:#FFF;">склад</span>
+														<?php } ?>
+														<?php if ($product['suppliers']) { ?>
+															<?php foreach ($product['suppliers'] as $supplier) { ?>
+																<span style="display:inline-block; padding:2px 3px; font-size:9px; margin:3px; background:#FF7815; color:#FFF;"><?php echo $supplier['name']; ?>, <?php echo $supplier['quantity']; ?> шт</span>
+															<?php } ?>
+														<?php } ?>
+													</div>													
+													<div style="clear:both"></div>
+												</div>												
+											<?php } ?>
+										<?php } else { ?>	
 											<table>
 												<tr>
-													<?php $i=1; foreach ($order['products'] as $product) { ?>
+													<?php $i=1; foreach ($order['products'] as $product) { ?>														
 														<td style="padding:0px; border:0px;">		  
 															<div style="cursor:pointer;" class="ktooltip_product_click" data-tooltip-content="#tooltip_product_<? echo $order['order_id']; ?><? echo $product['product_id']; ?><? echo $i; ?>">
 																<img src="<?php echo $product['thumb']; ?>" id="image" loading="lazy" />
@@ -802,7 +826,8 @@
 																		<?php echo $this->config->get('config_yam_offer_id_prefix') . $product['product_id']; ?>
 																	</div><? } ?>
 																	
-																	<? if ($product['part_num']) { ?><span style="display:block;font-size:10px;"><?php echo $product['part_num']; ?></span>
+																	<? if ($product['part_num']) { ?>
+																		<span style="display:block;font-size:10px;"><?php echo $product['part_num']; ?></span>
 																	<? } ?>															
 															</div>
 															<div class="ktooltip_product_hidden">
@@ -830,7 +855,7 @@
 													<?php $i++; } ?>
 												</tr>
 											</table>
-											
+										<?php } ?>
 											
 											
 										</td>

@@ -32,16 +32,13 @@
 	<div class="box">
 		<div class="heading order_head">
 			<h1>
-				<?php echo $heading_title; ?> 
-				
+				<?php echo $heading_title; ?> 				
 				<?php if ($yam && $yam_id) { ?>
 					<span style="color:red;padding-left:10px;padding-right:10px;"><i class="fa fa-hacker-news" aria-hidden="true"></i> <?php echo $yam_id; ?></span>
 				<?php } ?>
 				
-				<span class="add2ticket" style="font-size:36px;" data-query="object=order&object_value=<?php echo $order_id; ?>"></span>&nbsp;
-				
-				<span id="pushHobotunManagers" style="font-size:28px; cursor:pointer;" data-order-id="<?php echo $order_id; ?>"><i class="fa fa-fax" aria-hidden="true"></i></span>&nbsp;
-				
+				<span class="add2ticket" style="font-size:36px;" data-query="object=order&object_value=<?php echo $order_id; ?>"></span>&nbsp;				
+				<span id="pushHobotunManagers" style="font-size:28px; cursor:pointer;" data-order-id="<?php echo $order_id; ?>"><i class="fa fa-fax" aria-hidden="true"></i></span>&nbsp;				
 				<span id="manager_of_order" style="font-weight:400; border-bottom:1px dashed black; cursor:pointer;" onclick="$('#show_manager_change').toggle();"><? if(isset($manager)) { ?><? echo $manager['realname']; ?><? } ?></span>
 				
 				<? if ($closed) { ?>
@@ -77,8 +74,7 @@
 				<?php if (!empty($last_invoice['order_invoice_id'])) { ?>
 				<h1 class="ktooltip_hover" title="Посмотреть Чек" style="margin-left:10px; font-size:20px; padding:3px 5px; border-radius:5px; border:2px solid #6A6A6A;">
 					<span style="color:#6A6A6A;" class="view-cheque" data-order_invoice-datetime="<?php echo $last_invoice['datetime']; ?>" data-order_invoice-author="<?php echo $last_invoice['realname']; ?>" data-order_invoice_id="<?php echo $last_invoice['order_invoice_id']; ?>"><i class="fa fa fa-eye"></i> ЧК</span>
-				</h1>
-				
+				</h1>				
 				
 				<h1 class="ktooltip_hover" title="Печатать Чек" style="margin-left:10px; font-size:20px; padding:3px 5px; border-radius:5px; border:2px solid #6A6A6A;">
 					<span style="color:#6A6A6A;" class="print-cheque" data-order_invoice_id="<?php echo $last_invoice['order_invoice_id']; ?>"><i class="fa fa fa-print"></i> ЧК</span>
@@ -1094,18 +1090,18 @@
 											<tr><th colspan="11">Товары, отмены и обработанные отказы</th></tr>
 											<tr>
 												<td></td>
-												<td class="left">Наличие</td>
-												<td class="left"></td>
-												<td style="width:45px;"></td>
-												<td class="left"><?php echo $column_product; ?></td>
-												<td class="left"><?php echo $column_model; ?></td>
-												<td class="right">Кол-во</td>
-												<td class="right">Склад</td>
-												<td class="right">Цена, <? echo $currency_code; ?></td>
-												<td class="right"><?php echo $column_total; ?>, <? echo $currency_code; ?></td>
+												<td class="center">Наличие</td>
+												<td class="center">Партии</td>
+												<td class="center" style="width:45px;"></td>
+												<td class="center"><?php echo $column_product; ?></td>
+												<td class="center"><?php echo $column_model; ?></td>
+												<td class="center">Кол-во</td>
+												<td class="center">Склад</td>
+												<td class="center">Цена</td>
+												<td class="center"><?php echo $column_total; ?></td>
 												<? if (!$order_products_nogood) { ?>
 													<? if ($is_buyer) { ?>
-														<td class="right" style="min-width: 55px;"><span onclick="$('.buyer-row').toggle()" style="cursor:pointer; border-bottom:1px dashed black;">показать&#160;<i class="fa fa-euro"></i></span></td>
+														<td class="right" style="min-width: 55px;"><span onclick="$('.buyer-row').toggle()" style="cursor:pointer; border-bottom:1px dashed black;">закуп</span></td>
 													<? } ?>
 												<? } else { ?>
 													<td class="right"><i class="fa fa-clock-o"></i></td>
@@ -1181,8 +1177,7 @@
 														</td>
 														<td class="right">
 															<span id="quantity_<?php echo $product_row; ?>"><?php echo $order_product['quantity']; ?></span>
-														</td>
-														
+														</td>														
 														<td>
 														</td>
 														<td class="right">
@@ -1196,15 +1191,11 @@
 															<a class="icon_product" href="<? echo $order_product['adminlink']; ?>" target="_blank" style="padding-bottom:4px; display:inline-block;"><i class="fa fa-edit" style="font-size:20px;"></i></a>
 															
 															<a class="icon_product" style="padding-bottom:4px; display:inline-block;" onclick="$('#return_dialog').load('index.php?route=sale/order/order_return_ajax&token=<? echo $token ?>', {order_id: '<? echo $order_id; ?>', order_product_id: '<? echo $order_product['order_product_id']; ?>', index: '<?php echo $product_row; ?>', 'from' : 'order_product_untaken'}, function(){ $(this).dialog({width:800, modal:true,resizable:true,position:{my: 'center', at:'center center', of: window}, closeOnEscape: true, title: 'Оформление возврата по заказу <? echo $order_id; ?>'}); } )"><i class="fa fa-mail-reply" style="font-size:20px;" ></i></a>
-														</td>
-														
-														<tr id="product-replace-row-<?php echo $product_row; ?>" style="display:none;">
-															<td id="td-replace-row-<?php echo $product_row; ?>" colspan="10" style="padding:5px;">
-																
-															</td>
-														</tr>
-														
-													</tr>											
+														</td>														
+													</tr>	
+													<tr id="product-replace-row-<?php echo $product_row; ?>" style="display:none;">
+														<td id="td-replace-row-<?php echo $product_row; ?>" colspan="10" style="padding:5px;"></td>
+													</tr>										
 												<? } ?>
 												<?php unset($order_product); ?>	
 											<? } ?>
@@ -1332,42 +1323,37 @@
 												<? } ?>
 												
 												<tr id="product-replace-row-<?php echo $product_row; ?>" style="display:none;">
-													<td id="td-replace-row-<?php echo $product_row; ?>" colspan="10" style="padding:5px;">
-														
-													</td>
+													<td id="td-replace-row-<?php echo $product_row; ?>" colspan="10" style="padding:5px;"></td>
 												</tr>
 												
 												<?php $product_row++; ?>
 											<?php } ?>											
 										<? } ?>
 										
-										<?php if ($order_products_nogood || $order_products_untaken) { ?>
-											
+										<?php if ($order_products_nogood || $order_products_untaken) { ?>											
 											<tr>
 												<td colspan="11" style="background-color:#4ea24e!important;  color:white;padding:7px;text-align:center;">Есть в наличии (учитываются в формировании сумм)</td>
 											</tr>
 											<thead>
 												<tr>
 													<td></td>
-													<td class="left">Наличие</td>
+													<td class="center">Наличие</td>
 													<!--td class="left">Доставлен</td-->
-													<td class="left">Поставка / партия</td>
-													<td style="width:45px;"></td>
-													<td class="left"><?php echo $column_product; ?></td>
-													<td class="left"><?php echo $column_model; ?></td>
-													<td class="right">Кол-во</td>
-													<td class="right">Склад</td>
-													<td class="right">Цена, <? echo $currency_code; ?></td>
-													<td class="right"><?php echo $column_total; ?>, <? echo $currency_code; ?></td>
+													<td class="center">Поставка / партия</td>
+													<td class="center" style="width:45px;"></td>
+													<td class="center"><?php echo $column_product; ?></td>
+													<td class="center"><?php echo $column_model; ?></td>
+													<td class="center">Кол-во</td>
+													<td class="center">Склад</td>
+													<td class="center">Цена, <? echo $currency_code; ?></td>
+													<td class="center"><?php echo $column_total; ?></td>
 													<td>
 														<? if ($is_buyer) { ?>
-															<span onclick="$('.buyer-row').toggle()" style="cursor:pointer; border-bottom:1px dashed black;">показать<i class="fa fa-euro"></i></span>
+															<span onclick="$('.buyer-row').toggle()" style="cursor:pointer; border-bottom:1px dashed black;">показать</span>
 														<? } ?>
 													</td>
 												</tr>
 											</thead>
-											
-											
 										<?php } ?>
 										
 										<? $delivery_num = 1; ?>
@@ -1379,7 +1365,7 @@
 											<tr>
 												<td colspan="10" style="height:1px;background:#85B200;"></td>
 											</tr>
-										<? } ?>
+											<? } ?>
 										
 										<tr id="product-row<?php echo $product_row; ?>" class="filter">
 											<td class="center" style="width: 3px;">
@@ -1444,8 +1430,7 @@
 													<?php if ($order_product['image'] != "") {?><img src="<?php echo $order_product['image'];?>" style="padding: 1px;"><?php } ?></td>
 													
 													
-													<td class="left">
-														
+													<td class="left">														
 														<? if ($order_product['real_product']['does_not_exist']) { ?>
 															<span class="help" style="color:white; background-color:#cf4a61; padding:4px; display:inline-block;">Внимание! Товара с таким кодом не существует в справочнике товаров! Рекомендуется удалить товар из заказа и добавить заново!</span>
 														<? } ?>
@@ -1625,7 +1610,7 @@
 															</table>
 															
 														</td>
-														<td width="120px">
+														<td width="130px">
 															<? if ($order_product['from_stock']) { ?>
 																<div style="margin-top:7px;">
 																	<span style="font-size:11px; display:inline-block; padding:2px 3px; background-color:#4ea24e; color:#FFF;" class="ktooltip_hover" title="Покупатель положил в корзину товар из категории СТОК"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Из Сток</span>
@@ -1636,31 +1621,38 @@
 																	<span style="font-size:11px; display:inline-block; padding:2px 3px; background-color:#4ea24e; color:#FFF;" class="ktooltip_hover" title="Товар СЕЙЧАС ЕСТЬ в категории СТОК"><i class="fa fa-info-circle" aria-hidden="true"></i> Кат. Сток</span>
 																</div>
 															<? } ?>
-															<div style="margin-top:7px;">
+
+															<div style="margin-top:7px; margin-bottom:5px;">
 																<input type="hidden" id="<?php echo $order_product['order_product_id']; ?>_from_stock" name="order_product[<?php echo $product_row; ?>][from_stock]" value="<? echo (int)$order_product['from_stock']; ?>" />
+
 																<input id="<?php echo $order_product['order_product_id']; ?>_from_stock_fake" data-fake="<?php echo $order_product['order_product_id']; ?>_from_stock" class="checkbox onchangeedit_orderproduct checkbox_from_stock" type="checkbox" data-field-name='from_stock' data-order-product-id="<?php echo $order_product['order_product_id']; ?>" value="1" <? if ($order_product['from_stock']) { ?>checked="checked"<? } ?> />
+
 																<label for="<?php echo $order_product['order_product_id']; ?>_from_stock_fake" style="color:<? if (!$order_product['from_stock']) { ?>#cf4a61<? } else { ?>#4ea24e<? } ?>">
-																	<i style="font-size:18px;" class="fa fa-rocket" aria-hidden="true"></i></label><span></span></div>
-																	<? foreach ($countries as $country) { ?>
-																		
-																		<? if ($country['iso_code_2'] == 'DE' || $country['country_id'] == $shipping_country_id) { ?>
-																			
-																			<div>
+																	Со склада</label>
+																	<span></span>
+																</div>
+
+																	<? foreach ($countries as $country) { ?>																		
+																		<? if ($country['iso_code_2'] == 'DE' || $country['country_id'] == $shipping_country_id) { ?>																			
+																			<div style="margin-bottom:4px;">
 																				<input type="hidden" id="reserve_<? echo mb_strtolower($country['iso_code_2']) ?>_<? echo $order_product['order_product_id'] ?>_quantity" name="reserve_<? echo mb_strtolower($country['iso_code_2']) ?>_<? echo $order_product['order_product_id'] ?>_quantity" value="<? echo min($order_product[$country['warehouse_identifier']], $order_product['quantity']); ?>" />
-																				<img src="<?php echo DIR_FLAGS_NAME; ?><? echo mb_strtolower($country['iso_code_2']) ?>.png" title="<? echo mb_strtolower($country['iso_code_2']) ?>" /> 
+																				<img style="margin-right:5px;" src="<?php echo DIR_FLAGS_NAME; ?><? echo mb_strtolower($country['iso_code_2']) ?>.png" title="<? echo mb_strtolower($country['iso_code_2']) ?>" /> 
 																				
 																				<? if ($order_product[$country['warehouse_identifier']] >= $order_product['quantity']) { ?>					
-																					<span style="font-size:11px; display:inline-block; padding:2px 3px; background-color:#4ea24e; color:#FFF;"><? echo $order_product[$country['warehouse_identifier']]; ?> / <? echo $order_product[$country['warehouse_identifier'] . '_onway']; ?></span>
+																					<span style="font-size:14px; display:inline-block; padding:2px 3px; background-color:#4ea24e; color:#FFF;">нал <? echo $order_product[$country['warehouse_identifier']]; ?></span> 
+																					<span style="font-size:14px; display:inline-block; padding:2px 3px; background-color:#4ea24e; color:#FFF;">едет <? echo $order_product[$country['warehouse_identifier'] . '_onway']; ?></span>
 																				<? } elseif ($order_product[$country['warehouse_identifier']] < $order_product['quantity'] && $order_product[$country['warehouse_identifier']] > 0) { ?>
-																					<span style="font-size:11px; display:inline-block; padding:2px 3px; background-color:#ffaa56; color:#FFF;"><? echo $order_product[$country['warehouse_identifier']]; ?> / <? echo $order_product[$country['warehouse_identifier'] . '_onway']; ?></span>
+																					<span style="font-size:14px; display:inline-block; padding:2px 3px; background-color:#ffaa56; color:#FFF;">нал <? echo $order_product[$country['warehouse_identifier']]; ?></span>
+																					<span style="font-size:14px; display:inline-block; padding:2px 3px; background-color:#ffaa56; color:#FFF;">едет <? echo $order_product[$country['warehouse_identifier'] . '_onway']; ?></span>
 																				<? } elseif ($order_product[$country['warehouse_identifier']] == 0) { ?>
-																					<span style="font-size:11px; display:inline-block; padding:2px 3px; background-color:#cf4a61; color:#FFF;"><? echo $order_product[$country['warehouse_identifier']]; ?> / <? echo $order_product[$country['warehouse_identifier'] . '_onway']; ?></span>
+																					<span style="font-size:14px; display:inline-block; padding:2px 3px; background-color:#cf4a61; color:#FFF;">нал <? echo $order_product[$country['warehouse_identifier']]; ?></span>
+																					<span style="font-size:14px; display:inline-block; padding:2px 3px; background-color:#cf4a61; color:#FFF;">едет <? echo $order_product[$country['warehouse_identifier'] . '_onway']; ?></span>
 																				<? } ?>																																									
 																				
 																				<? if (isset($order_product['reserves'][$country['iso_code_2']])) { ?>
 																					<input type="hidden" id="reserved_<? echo mb_strtolower($country['iso_code_2']) ?>_<? echo $order_product['order_product_id'] ?>_quantity" name="reserve_<? echo mb_strtolower($country['iso_code_2']) ?>_<? echo $order_product['order_product_id'] ?>_quantity" value="<? echo min($order_product[$country['warehouse_identifier']], $order_product['quantity']); ?>" />
 																					
-																					<span style="font-size:11px; display:inline-block; padding:2px 3px; background-color:#4ea24e; color:#FFF;">
+																					<span style="font-size:14px; display:inline-block; padding:2px 3px; background-color:#4ea24e; color:#FFF;">
 																						<i class="fa fa-lock" aria-hidden="true"></i>&nbsp;<? echo $order_product['reserves'][$country['iso_code_2']]; ?> шт.</span>
 																						
 																						&nbsp;<i class="fa fa-unlock" aria-hidden="true" style="color:#cf4a61; cursor:pointer; " onclick="remove_from_reserve('<? echo $order_product['order_product_id'] ?>', '<? echo mb_strtolower($country['iso_code_2']) ?>');"></i>
@@ -1674,18 +1666,15 @@
 																								<i class="fa fa-plus reserve-plus" style="cursor:pointer; font-size:9px;" data-elem="reserve_<? echo mb_strtolower($country['iso_code_2']) ?>_<? echo $order_product['order_product_id'] ?>"></i>
 																							<? } ?>
 																						<? } ?>
-																					</div>
-																					
+																					</div>																					
 																				<? } ?>
 																			<? } ?>		
 																			
 																			
 																			<? foreach ($countries as $country) { ?>
-																				<? if ($country['iso_code_2'] != 'DE' && $country['country_id'] != $shipping_country_id) { ?>
-																					
+																				<? $count_countries = 0; if ($country['iso_code_2'] != 'DE' && $country['country_id'] != $shipping_country_id) { $count_countries++; ?>																				
 																					<div class='hidden_reserved' style="display:none;">																		
 																						<img src="<?php echo DIR_FLAGS_NAME; ?><? echo mb_strtolower($country['iso_code_2']) ?>.png" title="<? echo mb_strtolower($country['iso_code_2']) ?>" /> 
-																						
 																						<? if ($order_product[$country['warehouse_identifier']] >= $order_product['quantity']) { ?>																		
 																							<span style="font-size:10px; display:inline-block; padding:2px 3px; background-color:#4ea24e; color:#FFF;"><? echo $order_product[$country['warehouse_identifier']]; ?> / <? echo $order_product[$country['warehouse_identifier'] . '_onway']; ?></span>
 																						<? } elseif ($order_product[$country['warehouse_identifier']] < $order_product['quantity'] && $order_product[$country['warehouse_identifier']] > 0) { ?>
@@ -1696,12 +1685,19 @@
 																					</div>
 																				<? } ?>
 																			<? } ?>
-																			<div style="font-size:10px; cursor:pointer;" onclick="$('.hidden_reserved').each(function(){$(this).toggle();});"><i class="fa fa-angle-double-down" aria-hidden="true"></i></div>
+
+																			<?php if ($count_countries) { ?>
+																			<div style="font-size:10px; cursor:pointer;" onclick="$('.hidden_reserved').each(function(){$(this).toggle();});"><i class="fa fa-angle-double-down" aria-hidden="true"></i> еще склады </div>
+																			<?php } ?>
+
+																			<? if ($order_product['product_suppliers']) { ?>		
+																				<?php foreach ($order_product['product_suppliers'] as $supplier) { ?>																		
+																					<div class="green" style="padding:3px; color:#FFF; font-size:14px;"><i class="fa fa-plus-circle"></i> <?php echo $supplier['name']; ?> <?php echo $supplier['quantity']; ?> шт.</div>
+																				<?php } ?>
+																			<? } ?>
 																			
-																			<? if ($order_product['local_stock']) { ?>
-																				
-																				<div style="color:#4ea24e;font-size:16px;"><i class="fa fa-life-ring" aria-hidden="true"></i> <b>Есть лок.</b></div>
-																				
+																			<? if ($order_product['local_stock']) { ?>																				
+																				<div style="color:#4ea24e;font-size:16px;"><b>Есть</b></div>
 																			<? } ?>
 																		</td>
 																		<td class="right" valign="top" style="vertical-align:top">

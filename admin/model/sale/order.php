@@ -2984,11 +2984,13 @@
 			AND waitlist = 1");
 			
 			return $query->row['total'];
-		}			
-		
+		}					
 		
 		public function getOrderProductsList($order_id) {
-			$query = $this->db->query("SELECT op.*, p.image, p.ean FROM order_product op LEFT JOIN product p ON op.product_id = p.product_id WHERE op.order_id = '" . (int)$order_id . "'");
+			$query = $this->db->query("SELECT op.*, p.image, p.ean, p.`" . $this->config->get('config_warehouse_identifier_local') . "` 
+				FROM order_product op 
+				LEFT JOIN product p ON (op.product_id = p.product_id)
+				WHERE op.order_id = '" . (int)$order_id . "'");
 			
 			return $query->rows;
 		}

@@ -862,6 +862,7 @@
 			$this->load->model('sale/affiliate');
 			$this->load->model('tool/simplecustom');
 			$this->load->model('setting/setting');
+			$this->load->model('sale/supplier');
 			
 			if (isset($this->request->get['filter_order_id'])) {
 				$filter_order_id = $this->request->get['filter_order_id'];
@@ -1404,6 +1405,17 @@
 					if ($product['price'] == 0){
 						$zero_price_products[$product['product_id']] = $product['quantity'];
 					}
+
+					$suppliers = $this->model_sale_supplier->getProductSuppliers($product['product_id']);
+					$product_suppliers = [];
+					foreach ($suppliers as $supplier){
+						$product_suppliers[] = [
+							'name' 			=> $supplier['supplier_name'],
+							'currency' 		=> $supplier['currency'],					
+							'stock' 		=> $supplier['stock'],
+							'quantity' 		=> $supplier['quantity']
+						];
+					}
 					
 					$order_products[] = array(
 					'order_product_id' 		=> $product['order_product_id'],
@@ -1411,15 +1423,18 @@
 					'product_id'       		=> $product['product_id'],
 					'amazon_offers_type'	=> !empty($product['amazon_offers_type'])?$product['amazon_offers_type']:false,
 					'from_stock'       		=> !empty($product['from_stock'])?$product['from_stock']:false,
+					'on_stock'       		=> !empty($product[$this->config->get('config_warehouse_identifier_local')])?$product[$this->config->get('config_warehouse_identifier_local')]:false,
 					'from_bd_gift'     		=> !empty($product['from_bd_gift'])?$product['from_bd_gift']:false,
 					'name'    	 	   		=> $product['name'],
+					'suppliers'				=> $product_suppliers,
 					'part_num'		   		=> !empty($product['part_num'])?$product['part_num']:false,
 					'lthumb'    	   		=> $this->model_tool_image->resize($product['image'], 150, 150),
-					'thumb'    	 	   		=> $this->model_tool_image->resize($product['image'], 25, 25),
+					'thumb'    	 	   		=> $this->model_tool_image->resize($product['image'], 50, 50),
 					'model'    		  		=> $product['model'],
 					'option'   		   		=> $option_data,
-					'quantity'		   		=> $product['quantity'],					
-					'price'    		   		=> $this->currency->format($product['price_national'], $result['currency_code'], 1),
+					'quantity'		   		=> $product['quantity'],
+					'has_price'				=> ((float)$product['price_national'] > 0),
+					'price'    		   		=> $this->currency->format_with_left($product['price_national'], $result['currency_code'], 1),
 					'href'     		   		=> $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL')
 					);
 				}
@@ -4555,32 +4570,20 @@
 						
 						$is_in_stock_in_country = false; 
 						
-						if ($order_info['shipping_country_id'] == 176) {
-							
+						if ($order_info['shipping_country_id'] == 176) {							
 							$is_in_stock_in_country = ($real_product['quantity_stockM'] > 0 && $real_product['quantity_stockM'] <= $order_product['quantity']);
-							
-							} elseif ($order_info['shipping_country_id'] == 220) {
-							
-							$is_in_stock_in_country = ($real_product['quantity_stockK'] > 0 && $real_product['quantity_stockK'] <= $order_product['quantity']);
-							
-							} elseif ($order_info['shipping_country_id'] == 109) {
-							
-							$is_in_stock_in_country = ($real_product['quantity_stockAS'] > 0 && $real_product['quantity_stockAS'] <= $order_product['quantity']);
-							
-							} elseif ($order_info['shipping_country_id'] == 20) {
-							
-							$is_in_stock_in_country = ($real_product['quantity_stockAS'] > 0 && $real_product['quantity_stockAS'] <= $order_product['quantity']);
-							
-							} elseif ($order_info['shipping_country_id'] == 81) {
-							
-							$is_in_stock_in_country = ($real_product['quantity_stock'] > 0 && $real_product['quantity_stock'] <= $order_product['quantity']);
-							
+						} elseif ($order_info['shipping_country_id'] == 220) {							
+							$is_in_stock_in_country = ($real_product['quantity_stockK'] > 0 && $real_product['quantity_stockK'] <= $order_product['quantity']);							
+						} elseif ($order_info['shipping_country_id'] == 109) {							
+							$is_in_stock_in_country = ($real_product['quantity_stockAS'] > 0 && $real_product['quantity_stockAS'] <= $order_product['quantity']);							
+						} elseif ($order_info['shipping_country_id'] == 20) {							
+							$is_in_stock_in_country = ($real_product['quantity_stockAS'] > 0 && $real_product['quantity_stockAS'] <= $order_product['quantity']);							
+						} elseif ($order_info['shipping_country_id'] == 81) {							
+							$is_in_stock_in_country = ($real_product['quantity_stock'] > 0 && $real_product['quantity_stock'] <= $order_product['quantity']);							
 						}
 						
-						//для закупки
 						$supplies = [];
-						$supplies = $this->model_sale_supplier->getOPSupplyForSet($set_product_result['order_set_id']);
-						
+						$supplies = $this->model_sale_supplier->getOPSupplyForSet($set_product_result['order_set_id']);						
 						foreach ($supplies as &$_supply){
 							$_sn = $this->model_sale_supplier->getSupplier($_supply['supplier_id']);
 							$_supply['supplier_name'] = $_sn['supplier_name'] . ' : ' . $_sn['supplier_type'];
@@ -4606,39 +4609,36 @@
 						'supplies'         => $supplies,
 						'is_in_stock'      => $is_in_stock,						
 						'is_in_stock_in_country' => $is_in_stock_in_country,
-						'image'    	 	   => $this->model_tool_image->resize($set_product_result['image'], 40, 40),
-						'model'            => $set_product_result['model'],
+						'image'    	 	   	=> $this->model_tool_image->resize($set_product_result['image'], 40, 40),
+						'model'            	=> $set_product_result['model'],
 						'ean'  				=> $set_product_result['ean'],
-						'quantity'         => $set_product_result['quantity'],						
-						'price_national'   => str_replace('.00','',$set_product_result['price_national']),
-						'total_national'   => str_replace('.00','',$set_product_result['total_national']),
-						'real_product'     => $real_product,
-						'quantity_stock'   => $real_product['quantity_stock'],
+						'quantity'         	=> $set_product_result['quantity'],						
+						'price_national'   	=> str_replace('.00','',$set_product_result['price_national']),
+						'total_national'   	=> str_replace('.00','',$set_product_result['total_national']),
+						'real_product'     	=> $real_product,
+						'quantity_stock'   	=> $real_product['quantity_stock'],
 						'quantity_stockM'   => $real_product['quantity_stockM'],
 						'quantity_stockK'   => $real_product['quantity_stockK'],
-						'quantity_stockMN'   => $real_product['quantity_stockMN'],
-						'quantity_stockAS'   => $real_product['quantity_stockAS'],
-						'price_in_eur'        => $price_in_eur,
-						'total_in_eur'        => $total_in_eur,
+						'quantity_stockMN'  => $real_product['quantity_stockMN'],
+						'quantity_stockAS'  => $real_product['quantity_stockAS'],
+						'price_in_eur'      => $price_in_eur,
+						'total_in_eur'      => $total_in_eur,
 						'pricewd_national_txt'	=> $this->currency->format($set_product_result['pricewd_national'] + ($this->config->get('config_tax') ? $order_product['tax'] : 0), $order_info['currency_code'], '1'),
 						'totalwd_national_txt'	=> $this->currency->format($set_product_result['totalwd_national'] + ($this->config->get('config_tax') ? $order_product['tax'] : 0), $order_info['currency_code'], '1'),
-						'price_in_base_real' => $price_in_base_real,
-						'special_in_base_real' => $special_in_base_real,
-						'price_in_eur_by_real_cource' => $price_in_eur_by_real_cource,
-						'price_changed_upon_order_start' => $price_changed_upon_order_start,
+						'price_in_base_real' 	=> $price_in_base_real,
+						'special_in_base_real' 	=> $special_in_base_real,
+						'price_in_eur_by_real_cource' 		=> $price_in_eur_by_real_cource,
+						'price_changed_upon_order_start' 	=> $price_changed_upon_order_start,
 						'buy_max_coef'		=> $buy_max_coef,
 						'buy_max_price'		=> $buy_max_price,
 						'real_difference'	=> $real_difference,
-						'adminlink'        => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $set_product_result['product_id']),
+						'adminlink'        	=> $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $set_product_result['product_id']),
 						);
 					}
 					
 					} else {
 					$set_products = false;
 				}
-				
-				//guessing prices
-				
 				
 				$price_in_base_real = $this->currency->format($this->model_catalog_product->getProductPrice($order_product['product_id']), $this->config->get('config_currency'), 1);
 				$price_in_base_real_num = $this->model_catalog_product->getProductPrice($order_product['product_id']);
@@ -4658,10 +4658,8 @@
 				
 				$total_in_eur = $this->currency->format($this->currency->convert($order_product['total_national'], $order_info['currency_code'], $this->config->get('config_currency')),  $this->config->get('config_currency'), 1);
 				$total_in_eur_by_real_cource = $this->currency->format($this->currency->convert($order_product['total_national'], $order_info['currency_code'], $this->config->get('config_currency'), true),  $this->config->get('config_currency'), 1);
-				
-				
-				$totalwd_in_eur = $this->currency->format($this->currency->convert($order_product['totalwd_national'], $order_info['currency_code'], $this->config->get('config_currency')),  $this->config->get('config_currency'), 1);
-				
+								
+				$totalwd_in_eur = $this->currency->format($this->currency->convert($order_product['totalwd_national'], $order_info['currency_code'], $this->config->get('config_currency')),  $this->config->get('config_currency'), 1);				
 				$totalwd_in_eur_by_real_cource = $this->currency->format($this->currency->convert($order_product['totalwd_national'], $order_info['currency_code'], $this->config->get('config_currency'), true),  $this->config->get('config_currency'), 1);					
 				$buy_max_coef = $this->model_kp_price->guessCostByPrice($price_in_eur_by_real_cource_num, true);
 				$buy_max_price =  $this->currency->format($this->model_kp_price->guessCostByPrice($price_in_eur_by_real_cource_num, false), $this->config->get('config_currency'), 1);
@@ -4677,49 +4675,42 @@
 				}
 				
 				if (!$special_in_base_real){
-					
-					
 					if (abs((float)$price_in_eur_numeric - round((float)$price_in_base_real_num)) >= 3){				
 						$price_changed_upon_order_start = true;									
-						} else {								
+					} else {								
 						$price_changed_upon_order_start = false;
-					}
-					
-					} else {
-					
+					}					
+				} else {					
 					if (abs((float)$price_in_eur - round((float)$special_in_base_real_num)) >= 3){				
 						$price_changed_upon_order_start = true;									
-						} else {								
+					} else {								
 						$price_changed_upon_order_start = false;
 					}																
 				}
 				
-				//additional_offer
 				if ($order_product['ao_id']){
 					$ao_info = $this->model_catalog_product->getAdditionalOfferById($order_product['ao_id'], $order_product['product_id']);
 					
 					if (!$ao_info || count($ao_info) == 0) {
 						$ao_text = '<span style="color:red">Не могу найти условия! Возможно, спецпредложение изменилось!</span>';
 						$ao_text = false;
-						} else {
-						
+					} else {						
 						$ao_main_product = $this->model_catalog_product->getProduct($ao_info['product_id']);
 						
 						$ao_text = 'Спецпредложение к товару <b>'.$ao_main_product['model'].'</b>, ';
 						if ($ao_info['price'] > 0){
 							$ao_text .= 'цена: <b>'.$this->currency->format($ao_info['price'],$order_info['currency_code'], 1).'</b>';
-							} else {
+						} else {
 							$ao_text .= 'скидка: <b>'.$ao_info['percent'].'%</b>';
 						}			
 						
 						if (in_array($ao_info['product_id'], $just_product_ids)){
 							$ao_text .= "<br /><span style='color:green'>Основной товар есть в заказе!</span>";
-							} else {
+						} else {
 							$ao_text .= "<br /><span style='color:red'>Основного товара нет в заказе!</span>";
-						}
-						
+						}						
 					}
-					} else {
+				} else {
 					$ao_text = false;
 				}
 				
@@ -4745,26 +4736,16 @@
 				
 				$is_in_stock_in_country = false; 
 				
-				if ($order_info['shipping_country_id'] == 176) {
-					
-					$is_in_stock_in_country = ($real_product['quantity_stockM'] > 0 && $real_product['quantity_stockM'] <= $order_product['quantity']);
-					
-					} elseif ($order_info['shipping_country_id'] == 220) {
-					
-					$is_in_stock_in_country = ($real_product['quantity_stockK'] > 0 && $real_product['quantity_stockK'] <= $order_product['quantity']);
-					
-					} elseif ($order_info['shipping_country_id'] == 109) {
-					
-					$is_in_stock_in_country = ($real_product['quantity_stockM'] > 0 && $real_product['quantity_stockM'] <= $order_product['quantity']);
-					
-					} elseif ($order_info['shipping_country_id'] == 20) {
-					
-					$is_in_stock_in_country = ($real_product['quantity_stockM'] > 0 && $real_product['quantity_stockM'] <= $order_product['quantity']);
-					
-					} elseif ($order_info['shipping_country_id'] == 81) {
-					
-					$is_in_stock_in_country = ($real_product['quantity_stock'] > 0 && $real_product['quantity_stock'] <= $order_product['quantity']);
-					
+				if ($order_info['shipping_country_id'] == 176) {					
+					$is_in_stock_in_country = ($real_product['quantity_stockM'] > 0 && $real_product['quantity_stockM'] <= $order_product['quantity']);					
+					} elseif ($order_info['shipping_country_id'] == 220) {					
+					$is_in_stock_in_country = ($real_product['quantity_stockK'] > 0 && $real_product['quantity_stockK'] <= $order_product['quantity']);					
+					} elseif ($order_info['shipping_country_id'] == 109) {					
+					$is_in_stock_in_country = ($real_product['quantity_stockM'] > 0 && $real_product['quantity_stockM'] <= $order_product['quantity']);					
+					} elseif ($order_info['shipping_country_id'] == 20) {					
+					$is_in_stock_in_country = ($real_product['quantity_stockM'] > 0 && $real_product['quantity_stockM'] <= $order_product['quantity']);					
+					} elseif ($order_info['shipping_country_id'] == 81) {					
+					$is_in_stock_in_country = ($real_product['quantity_stock'] > 0 && $real_product['quantity_stock'] <= $order_product['quantity']);					
 				}
 				
 				if ($order_product['from_stock']){
@@ -4782,11 +4763,8 @@
 					}
 				}
 				
-				
-				//для закупки
 				$supplies = [];
-				$supplies = $this->model_sale_supplier->getOPSupply($order_product['order_product_id']);
-				
+				$supplies = $this->model_sale_supplier->getOPSupply($order_product['order_product_id']);				
 				
 				foreach ($supplies as &$_supply){
 					$_sn = $this->model_sale_supplier->getSupplier($_supply['supplier_id']);
@@ -4803,15 +4781,22 @@
 							$_supply['total_in_order_currency'] = 0;
 						}
 					}
-				}		
-				
-				//recount pricewd's
-				$total_pricewd_total_national += $order_product['totalwd_national'];
-				
-				//do this small shit				
+				}	
+
+				$suppliers = $this->model_sale_supplier->getProductSuppliers($order_product['product_id']);
+				$order_product['product_suppliers'] = [];
+				foreach ($suppliers as $supplier){
+					$order_product['product_suppliers'][] = [
+						'name' 			=> $supplier['supplier_name'],
+						'currency' 		=> $supplier['currency'],					
+						'stock' 		=> $supplier['stock'],
+						'quantity' 		=> $supplier['quantity']
+					];
+				}					
+
+				$total_pricewd_total_national 	+= $order_product['totalwd_national'];			
 				$price_has_been_changed_by_buyer = abs((int)(($order_product['original_price_national'] - (int)$order_product['price_national']))) && $order_product['original_price_national'] > 0;
 				
-				//KS
 				if ($order_info['shipping_country_id'] == 176){
 					$is_in_stock_category = $this->model_sale_order->getIfProductIsFromStockCategoryRU($order_product['product_id']);
 					} else {
@@ -4824,28 +4809,29 @@
 				}
 				
 				$totals_json = json_decode($order_product['totals_json'], true);
-				$points_used_one = false;
-				$points_used_total = false;
-				$points_used_one_txt = false;
-				$points_used_total_txt = false;
+				$points_used_one 		= false;
+				$points_used_total 		= false;
+				$points_used_one_txt 	= false;
+				$points_used_total_txt 	= false;
 				
 				if ($totals_json){
 					foreach ($totals_json as $totals_json_line){
 						if ($totals_json_line['code'] == 'reward'){
-							$points_used_one = $totals_json_line['discount'];
-							$points_used_total = $totals_json_line['discount_total'];
+							$points_used_one 		= $totals_json_line['discount'];
+							$points_used_total 		= $totals_json_line['discount_total'];
 							
-							$points_used_one_txt = $this->currency->format($totals_json_line['discount'], $order_info['currency_code'], '1');
-							$points_used_total_txt = $this->currency->format($totals_json_line['discount_total'], $order_info['currency_code'], '1');
+							$points_used_one_txt 	= $this->currency->format($totals_json_line['discount'], $order_info['currency_code'], '1');
+							$points_used_total_txt 	= $this->currency->format($totals_json_line['discount_total'], $order_info['currency_code'], '1');
 							
 							break;
 						}					
 					}
 				}
 				
-				$this->data['order_products'][] = array(
+				$this->data['order_products'][] = [
 				'order_product_id' => $order_product['order_product_id'],
 				'product_id'       => $order_product['product_id'],
+				'product_suppliers'=> $order_product['product_suppliers'],
 				'supplies'		   => $supplies,
 				'local_suppliers'  => $local_suppliers,
 				'local_stock'      => ($local_stock >= $order_product['quantity']),
@@ -4853,11 +4839,11 @@
 				'is_in_stock'      => $is_in_stock,
 				'onsite'           => (isset($real_product['stock_status_id']) && $real_product['stock_status_id'] == $this->config->get('config_stock_status_id'))?true:false,
 				'reserves'         =>  $this->model_sale_order->getOrderProductReserves($order_product['order_product_id']),
-				'from_stock'       => $order_product['from_stock'],
-				'from_bd_gift'       => $order_product['from_bd_gift'],
-				'is_in_stock_category' => $is_in_stock_category,
-				'child_stock_product_id'       => $child_stock_product_id,
-				'is_in_stock_in_country' => $is_in_stock_in_country,
+				'from_stock'       		=> $order_product['from_stock'],
+				'from_bd_gift'       	=> $order_product['from_bd_gift'],
+				'is_in_stock_category' 			=> $is_in_stock_category,
+				'child_stock_product_id'       	=> $child_stock_product_id,
+				'is_in_stock_in_country' 		=> $is_in_stock_in_country,
 				'name'             => $order_product['name'],
 				'image'    	 	   => $this->model_tool_image->resize($order_product['image'], 40, 40),
 				'de_name'          => $this->model_catalog_product->getProductDeName($order_product['product_id']),
@@ -4876,8 +4862,8 @@
 				'download'         => $order_download,
 				'quantity'         => $order_product['quantity'],
 				'amazon_offers_type' => $order_product['amazon_offers_type'],
-				'real_product'     => $real_product,
-				'colored_similar'     => $_colored_similar,
+				'real_product'     		=> $real_product,
+				'colored_similar'     	=> $_colored_similar,
 				'quantity_stock'   		=> !empty($real_product['quantity_stock'])?$real_product['quantity_stock']:0,
 				'quantity_stockM'   	=> !empty($real_product['quantity_stockM'])?$real_product['quantity_stockM']:0,
 				'quantity_stockK'   	=> !empty($real_product['quantity_stockK'])?$real_product['quantity_stockK']:0,
@@ -4892,53 +4878,53 @@
 				'part_num'         => $order_product['part_num'],
 				'price'            => $order_product['price'] + ($this->config->get('config_tax') ? $order_product['tax'] : 0),
 				'price_national'   => $order_product['price_national'] + ($this->config->get('config_tax') ? $order_product['tax'] : 0),
-				'price_national_txt'   => $this->currency->format($order_product['price_national'] + ($this->config->get('config_tax') ? $order_product['tax'] : 0), $order_info['currency_code'], '1'),
-				'original_price_national'   => $this->currency->format($order_product['original_price_national'] + ($this->config->get('config_tax') ? $order_product['tax'] : 0), $order_info['currency_code'], '1'),
-				'price_has_been_changed_by_buyer' => $price_has_been_changed_by_buyer,
-				'price_has_been_changed_by_buyer_up' => ((int)$order_product['original_price_national'] > (int)$order_product['price_national']),
-				'total'            => $order_product['total'] + ($this->config->get('config_tax') ? ($order_product['tax'] * $order_product['quantity']) : 0),
-				'total_national'   => $order_product['total_national'] + ($this->config->get('config_tax') ? ($order_product['tax'] * $order_product['quantity']) : 0),
-				'total_national_txt'   => $this->currency->format($order_product['total_national'] + ($this->config->get('config_tax') ? $order_product['tax'] : 0), $order_info['currency_code'], '1'),
-				'price_txt'        => $price_txt,
-				'total_txt'        => $total_txt,				
-				'price_in_eur'        => $price_in_eur,
+				'price_national_txt'   					=> $this->currency->format($order_product['price_national'] + ($this->config->get('config_tax') ? $order_product['tax'] : 0), $order_info['currency_code'], '1'),
+				'original_price_national'   			=> $this->currency->format($order_product['original_price_national'] + ($this->config->get('config_tax') ? $order_product['tax'] : 0), $order_info['currency_code'], '1'),
+				'price_has_been_changed_by_buyer' 		=> $price_has_been_changed_by_buyer,
+				'price_has_been_changed_by_buyer_up' 	=> ((int)$order_product['original_price_national'] > (int)$order_product['price_national']),
+				'total'            		=> $order_product['total'] + ($this->config->get('config_tax') ? ($order_product['tax'] * $order_product['quantity']) : 0),
+				'total_national'   		=> $order_product['total_national'] + ($this->config->get('config_tax') ? ($order_product['tax'] * $order_product['quantity']) : 0),
+				'total_national_txt'   	=> $this->currency->format($order_product['total_national'] + ($this->config->get('config_tax') ? $order_product['tax'] : 0), $order_info['currency_code'], '1'),
+				'price_txt'        		=> $price_txt,
+				'total_txt'        		=> $total_txt,				
+				'price_in_eur'        	=> $price_in_eur,
 				'pricewd_in_eur'        => $pricewd_in_eur,
 				'pricewd_in_eur_by_real_cource' => $pricewd_in_eur_by_real_cource,
-				'total_in_eur'        => $total_in_eur,
+				'total_in_eur'        	=> $total_in_eur,
 				'totalwd_in_eur'        => $totalwd_in_eur,
 				'totalwd_in_eur_by_real_cource'        => $totalwd_in_eur_by_real_cource,
-				'price_in_base_real' => $price_in_base_real,
-				'special_in_base_real' => $special_in_base_real,
+				'price_in_base_real' 	=> $price_in_base_real,
+				'special_in_base_real' 	=> $special_in_base_real,
 				'price_in_eur_by_real_cource' => $price_in_eur_by_real_cource,
 				'total_in_eur_by_real_cource' => $total_in_eur_by_real_cource,
-				'price_changed_upon_order_start' => $price_changed_upon_order_start,
-				'pricewd_national'	        	=> $order_product['pricewd_national'],
-				'pricewd_national_txt'	        => $this->currency->format($order_product['pricewd_national'] + ($this->config->get('config_tax') ? $order_product['tax'] : 0), $order_info['currency_code'], '1'),
-				'totalwd_national'	        => $order_product['totalwd_national'],
-				'totalwd_national_txt'	        => $this->currency->format($order_product['totalwd_national'] + ($this->config->get('config_tax') ? $order_product['tax'] : 0), $order_info['currency_code'], '1'),
-				'buy_max_coef'		=> $buy_max_coef,
-				'buy_max_price'		=> $buy_max_price,
-				'real_difference'	=> $real_difference,
-				'tax'              	=> $order_product['tax'],
+				'price_changed_upon_order_start' 	=> $price_changed_upon_order_start,
+				'pricewd_national'	        		=> $order_product['pricewd_national'],
+				'pricewd_national_txt'	        	=> $this->currency->format($order_product['pricewd_national'] + ($this->config->get('config_tax') ? $order_product['tax'] : 0), $order_info['currency_code'], '1'),
+				'totalwd_national'	        		=> $order_product['totalwd_national'],
+				'totalwd_national_txt'	        	=> $this->currency->format($order_product['totalwd_national'] + ($this->config->get('config_tax') ? $order_product['tax'] : 0), $order_info['currency_code'], '1'),
+				'buy_max_coef'			=> $buy_max_coef,
+				'buy_max_price'			=> $buy_max_price,
+				'real_difference'		=> $real_difference,
+				'tax'              		=> $order_product['tax'],
 				'reward'           		=> $order_product['reward'],
 				'reward_one'           	=>  $order_product['reward_one']?$order_product['reward_one']:((int)($order_product['reward']/$order_product['quantity'])),
 				'points'           		=>  $order_product['reward'],
 				'points_one'           	=>  $order_product['reward_one']?$order_product['reward_one']:((int)($order_product['reward']/$order_product['quantity'])),
-				'birthday_active_product' => $birthday_active_product,
-				'coupon_active_product'    => (in_array($order_product['product_id'], $coupon_active_products)),
+				'birthday_active_product' 	=> $birthday_active_product,
+				'coupon_active_product'    	=> (in_array($order_product['product_id'], $coupon_active_products)),
 				'cumulative_discount_active_product'    => (!in_array($real_product['manufacturer_id'], $excluded_manufacturers)),
 				'totals_json' 			=> $totals_json,				
 				'points_used_one' 		=> $points_used_one,	
 				'points_used_total' 	=> $points_used_total,	
 				'points_used_one_txt' 	=> $points_used_one_txt,	
 				'points_used_total_txt' => $points_used_total_txt,	
- 				'adminlink'        	=> $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $order_product['product_id']),
+ 				'adminlink'        		=> $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $order_product['product_id']),
 				'product_waitlist_href' => $this->url->link('catalog/waitlist', 'filter_product_id='.$order_product['product_id'].'&token='.$this->session->data['token']),
-				'set' => $set_products,						
-				'ao_id' => $order_product['ao_id'],	
-				'ao_product_id' => $order_product['ao_product_id'],
-				'ao_text' => $ao_text,
-				);
+				'set'				=> $set_products,						
+				'ao_id' 			=> $order_product['ao_id'],	
+				'ao_product_id' 	=> $order_product['ao_product_id'],
+				'ao_text' 			=> $ao_text,
+				];
 			}
 			
 			unset($order_product);
