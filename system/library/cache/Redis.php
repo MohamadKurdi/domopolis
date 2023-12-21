@@ -31,7 +31,7 @@ class CacheRedis{
 		if ($explicit){
 			return $this->redis->set($key, $value);
 		} else {
-			return $this->redis->set($key, $value, ['nx']);
+			return $this->redis->set($key, $value, ['ex' => $this->ttl]);
 		}
 	}
 
@@ -53,11 +53,4 @@ class CacheRedis{
 		$this->redis->select(REDIS_DATABASE);
 		return $this->redis->flushDb();
 	}
-
-
-
-
-
-
-
 }

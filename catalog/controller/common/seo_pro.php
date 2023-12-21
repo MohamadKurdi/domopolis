@@ -242,7 +242,6 @@
 				}
 			}
 			
-			// Decode URL
 			if (!isset($this->request->get['_route_'])) {
 				$this->validate();
 				} else {

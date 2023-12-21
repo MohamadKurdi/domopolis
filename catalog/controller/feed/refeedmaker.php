@@ -309,7 +309,6 @@ class ControllerFeedReFeedMaker extends Controller
                 $file = str_replace('remarketing_full_feed_', 'merchant_stock_feed_', $file);
             }
 
-                // Settings
             $query = $this->db->non_cached_query("SELECT * FROM setting WHERE store_id = '0' OR store_id = '" . $store_id . "' ORDER BY store_id ASC");
             foreach ($query->rows as $setting) {
                 if (!$setting['serialized']) {
@@ -358,18 +357,16 @@ class ControllerFeedReFeedMaker extends Controller
 
                 $products = $this->model_catalog_product->getProducts($filter);
 
-                foreach ($products as $_product) {
-
-                    if (!isFriendlyURL($this->url->link('product/product', 'product_id=' . $_product['product_id']))){
+                foreach ($products as $product) {
+                    if (!isFriendlyURL($this->url->link('product/product', 'product_id=' . $product['product_id']))){
                         continue;
                     }
                     
-                    $product = $this->model_catalog_product->getProduct($_product['product_id']);
+                    $product = $this->model_catalog_product->getProduct($product['product_id']);
 
                     if ($stock && $this->config->get('config_googlelocal_code')) {
                         $product['region_id'] = $this->config->get('config_googlelocal_code');
                     }
-
 
                     $output .= $this->printItem($product, $google_base_category, $changeID);
                     echo '.';
