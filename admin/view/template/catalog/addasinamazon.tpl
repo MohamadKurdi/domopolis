@@ -411,9 +411,9 @@
         }           
     }
 
-    $('input[name=url], input[name=category], input[name=page], select[name=sort]').bind('change', function() {
-      //  reload();
-    }); 
+    $('input[name=page], select[name=sort]').bind('change', function() {
+       reload();
+    });
 
     $('select[name=type]').bind('change', function() {
         if ($('select[name=type]').val() == 'search'){
