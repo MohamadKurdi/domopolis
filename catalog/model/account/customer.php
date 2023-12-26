@@ -158,6 +158,13 @@
 		public function editPassword($email, $password) {
 			$this->db->non_cached_query("UPDATE customer SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "' WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
 		}
+
+		public function editPasswordByPhone($telephone, $password) {
+			$this->db->non_cached_query("UPDATE customer 
+				SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', 
+				password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "'
+				WHERE REGEXP_REPLACE(telephone, '[^0-9]', '') LIKE '" . $this->db->escape(preg_replace("([^0-9])", "", $telephone)) ."'");
+		}
 		
 		public function editViberNews($viber_news) {
 			$this->db->non_cached_query("UPDATE customer SET viber_news = '" . (int)$viber_news . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");			
@@ -254,15 +261,15 @@
 			return $query->row['customer_id'];
 		}
 		
-		public function getCustomerByPhone($phone){
-			$phone = trim(preg_replace("([^0-9])", "", $phone));
+		public function getCustomerByPhone($telephone){
+			$telephone = preg_replace("([^0-9])", "", $telephone);
 			
-			if (!$phone){
+			if (!$telephone){
 				return false;
 			}
 			
-			$sql = "SELECT customer_id, firstname, lastname FROM `customer` WHERE ";
-			$sql .= "(TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(telephone,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) LIKE '".$phone."' )";
+			$sql = "SELECT customer_id FROM `customer` WHERE ";
+			$sql .= "(REGEXP_REPLACE(telephone, '[^0-9]', '') LIKE '" . $this->db->escape($telephone) . "' )";
 			$sql .= " LIMIT 1";
 			
 			$query = $this->db->non_cached_query($sql);
@@ -271,8 +278,7 @@
 				return $query->row['customer_id'];			
 			}
 			
-			return false;
-			
+			return false;			
 		}
 		
 		public function getCustomerByToken($token) {
@@ -385,9 +391,8 @@
 		}
 		
 		public function getTotalCustomersByEmail($email) {
-
 			if (!trim($email)){
-				return 0;
+				return false;
 			}
 
 			$query = $this->db->non_cached_query("SELECT COUNT(*) AS total FROM customer WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
@@ -395,13 +400,12 @@
 			return $query->row['total'];
 		}
 
-		public function getTotalCustomersByPhone($phone) {
-
-			if (!trim($phone)){
-				return 0;
+		public function getTotalCustomersByPhone($telephone) {
+			if (!preg_replace("([^0-9])", "", $telephone)){
+				return false;
 			}
 
-			$query = $this->db->non_cached_query("SELECT COUNT(*) AS total FROM customer WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+			$query = $this->db->non_cached_query("SELECT COUNT(*) AS total FROM customer WHERE REGEXP_REPLACE(telephone, '[^0-9]', '') LIKE '" . $this->db->escape(preg_replace("([^0-9])", "", $telephone)) ."'");
 			
 			return $query->row['total'];
 		}

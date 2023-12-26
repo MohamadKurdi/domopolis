@@ -2853,9 +2853,32 @@ class ControllerSettingSetting extends Controller
 
         foreach ($sms_workers_settings as $sms_workers_setting) {
             if (isset($this->request->post[$sms_workers_setting])) {
-                $this->data[$sms_workers_settings] = $this->request->post[$sms_workers_settings];
+                $this->data[$sms_workers_setting] = $this->request->post[$sms_workers_setting];
             } else {
                 $this->data[$sms_workers_setting] = $this->config->get($sms_workers_setting);
+            }
+        }
+
+         $otp_auth_settings = [
+            'config_otp_enable',
+            'config_otp_enable_sms',
+            'config_otp_enable_viber',
+            'config_otp_enable_email',
+            'config_sms_otp_text',
+            'config_viber_otp_text',
+
+            'config_restore_password_enable_sms',
+            'config_restore_password_enable_email',
+            'config_restore_password_enable_viber',
+            'config_sms_restore_password_text',
+            'config_viber_restore_password_text'
+        ];
+
+         foreach ($otp_auth_settings as $otp_auth_setting) {
+            if (isset($this->request->post[$otp_auth_setting])) {
+                $this->data[$otp_auth_setting] = $this->request->post[$otp_auth_setting];
+            } else {
+                $this->data[$otp_auth_setting] = $this->config->get($otp_auth_setting);
             }
         }
                 

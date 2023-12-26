@@ -212,8 +212,7 @@
 				$this->error['enquiry'] = $this->language->get('error_enquiry');
 			}
 			
-			if ($this->config->get('config_google_recaptcha_contact_enable')){
-				
+			if ($this->config->get('config_google_recaptcha_contact_enable')){				
 				$this->error['captcha'] = $this->language->get('error_captcha');
 				if (!empty($this->request->post['g-recaptcha-response'])){
 					$reCaptcha 			= new \ReCaptcha\ReCaptcha($this->config->get('config_google_recaptcha_contact_secret'));

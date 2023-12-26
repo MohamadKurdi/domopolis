@@ -270,6 +270,15 @@ function generateRandomString($length = 50) {
 	return $randomString;
 }
 
+function generateRandomPin($length = 6) {
+	$characters = '0123456789';
+	$randomPin = '';
+	for ($i = 0; $i < $length; $i++) {
+		$randomPin .= $characters[rand(0, strlen($characters) - 1)];
+	}
+	return $randomPin;
+}
+
 if (!function_exists('cmp')) {
 	function cmp($a,$b){
 		return ($a['sort']<$b['sort'])?-1:1;

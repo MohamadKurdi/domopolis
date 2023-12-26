@@ -6,8 +6,8 @@ namespace hobotix;
 final class PricevaAdaptor
 {
 
-	private $db;
-	private $config;
+	private $db 	= null;
+	private $config = null;
 
 
 	private $oldLogicCompetitorFieldMapping = [

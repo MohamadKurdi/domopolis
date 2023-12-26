@@ -53,19 +53,12 @@ class ControllerAccountLogout extends Controller {
 			'separator' => $this->language->get('text_separator')
 		);
 
-		$this->data['heading_title'] = $this->language->get('heading_title');
+		$this->data['heading_title'] 		= $this->language->get('heading_title');
+		$this->data['text_message'] 		= $this->language->get('text_message');
+		$this->data['button_continue'] 		= $this->language->get('button_continue');
+		$this->data['continue'] 			= $this->url->link('common/home');
 
-		$this->data['text_message'] = $this->language->get('text_message');
-
-		$this->data['button_continue'] = $this->language->get('button_continue');
-
-		$this->data['continue'] = $this->url->link('common/home');
-
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/logout.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/common/logout.tpl';
-		} else {
-			$this->template = 'default/template/common/logout.tpl';
-		}
+		$this->template = 'common/logout.tpl';
 
 		$this->children = array(
 			'common/column_left',
@@ -79,4 +72,3 @@ class ControllerAccountLogout extends Controller {
 		$this->response->setOutput($this->render());	
 	}
 }
-?>

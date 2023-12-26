@@ -236,6 +236,68 @@ class SmsAdaptor {
 
 
 	//SMS+Viber SERVICE FUNCTIONS
+	public function sendSMSPasswordRecover($info, $data){
+		$template = [
+			'{NEW_PASSWORD}' => $data['password']
+		];
+
+		if ($this->config->get('config_restore_password_enable_viber')){
+			$viber = [
+				'viber' 		=> true,
+				'to' 			=> $info['telephone'],
+				'message' 		=> reTemplate($template, $this->config->get('config_sms_restore_password_text')),
+				'messageSms' 	=> reTemplate($template, $this->config->get('config_viber_restore_password_text')),				
+			];
+
+			$viberID = $this->sendViber($viber);
+
+			return $viberID;
+		}
+
+		if ($this->config->get('config_restore_password_enable_sms')){
+			$sms = [
+				'to' 		=> $info['telephone'],
+				'message' 	=> reTemplate($template, $this->config->get('config_sms_restore_password_text'))
+			];
+
+			$smsID = $this->sendSMS($sms);
+
+			return $smsID;
+		}
+	}
+
+
+	public function sendSMSOTP($info, $data){
+		$template = [
+			'{OTP_CODE}' => $data['otp_code']
+		];
+
+		if ($this->config->get('config_otp_enable_viber')){
+			$viber = [
+				'viber' 		=> true,
+				'to' 			=> $info['telephone'],
+				'message' 		=> reTemplate($template, $this->config->get('config_sms_otp_text')),
+				'messageSms' 	=> reTemplate($template, $this->config->get('config_viber_otp_text')),				
+			];
+
+			$viberID = $this->sendViber($viber);
+
+			return $viberID;
+		}
+
+		if ($this->config->get('config_otp_enable_sms')){
+			$sms = [
+				'to' 		=> $info['telephone'],
+				'message' 	=> reTemplate($template, $this->config->get('config_sms_otp_text'))
+			];
+
+			$smsID = $this->sendSMS($sms);
+
+			return $smsID;
+		}
+	}
+
+
 	public function sendSMSFirstOrderPromo($order_info, $data){
 		$template = [
 			'{ID}' 			=> $order_info['order_id'], 
@@ -709,8 +771,6 @@ class SmsAdaptor {
 			return $smsID;
 		}
 	}
-
-
 
 	public function setDeliveryDateSent($ttn) {
 		$this->db->query("UPDATE `order_ttns` SET sms_sent = NOW() WHERE ttn = '" . $this->db->escape($ttn) . "'");

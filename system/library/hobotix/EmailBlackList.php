@@ -194,6 +194,24 @@
 			
 			return false;		
 		}
+
+		public function check_correctness($email){
+			$email = trim($email);
+			
+			if (!filter_var($email, FILTER_VALIDATE_EMAIL)){
+				return false;
+			}
+			
+			foreach ($this->exclude as $exclude){
+				if (strpos($email, $exclude) !== false){
+					return false;
+				}
+			}
+
+
+
+			return true;
+		}
 		
 		public function check($email){
 			$email = trim($email);

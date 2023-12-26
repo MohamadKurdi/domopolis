@@ -35,6 +35,10 @@
 		private $request 	= null;
 		private $session 	= null;
 		private $user 		= null;
+
+		public const customerRelatedTablesForReplacement = ['order', 'order_sms_history', 'order_product', 'order_product_nogood', 'order_product_untaken', 'customer_ip', 'address', 'customer_segments', 'customer_calls', 'customer_reward', 'customer_reward_queue', 'customer_search_history', 'customer_segments', 'customer_simple_fields', 'customer_transaction', 'customer_viewed'];
+
+		public const customerRelatedTablesForDeletion = ['customer', 'customer_ip', 'address', 'customer_segments', 'customer_calls', 'customer_reward', 'customer_reward_queue', 'customer_search_history', 'customer_segments', 'customer_simple_fields', 'customer_transaction', 'customer_viewed'];
 		
 				
 		public function __construct($registry) {
@@ -105,19 +109,18 @@
 		
 		public function login($email, $password, $override = false, $autologin = false) {
 			if ($override) {
-
 				if (is_numeric($email)){					
 					$customer_query = $this->db->ncquery("SELECT * FROM customer WHERE customer_id = '" . (int)$email . "' AND status = '1' AND store_id = '" . $this->config->get('config_store_id') . "'");					
-					} else {
+				} else {
 					$customer_query = $this->db->ncquery("SELECT * FROM customer WHERE (LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "') AND status = '1' AND store_id = '" . $this->config->get('config_store_id') . "'");
 				}
 				
-				} else {
-					$IS_EMAIL = $IS_PHONE_OR_DISCOUNT = false;
+			} else {
+				$IS_EMAIL = $IS_PHONE_OR_DISCOUNT = false;
 				
 				if (filter_var($email, FILTER_VALIDATE_EMAIL)){
 					$IS_EMAIL = true;
-					} elseif (mb_strlen(trim(preg_replace("([^0-9])", "", $email))) > 0) {
+				} elseif (mb_strlen(preg_replace("([^0-9])", "", $email)) > 0) {
 					$IS_PHONE_OR_DISCOUNT = true;				
 				}
 				
@@ -129,22 +132,22 @@
 							AND status = '1'
 							AND approved = '1'");
 
-				} elseif ($IS_PHONE_OR_DISCOUNT) {
+					} elseif ($IS_PHONE_OR_DISCOUNT) {
 
-					$customer_query = $this->db->ncquery("SELECT * FROM customer WHERE 
-						(REPLACE(discount_card, ' ', '')  LIKE '" . $this->db->escape(str_replace(' ', '' , $email)) . "'
-							OR (TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(telephone,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) LIKE '". $this->db->escape(trim(preg_replace("([^0-9])", "", $email))) ."' )
-							OR (TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(fax,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) LIKE '". $this->db->escape(trim(preg_replace("([^0-9])", "", $email))) ."' )	
-							)  		
-							AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '". $this->db->escape($password) ."' OR password = '" . $this->db->escape(md5($password)) . "')
-							AND status = '1'
-							AND approved = '1'
-							AND store_id = '" . $this->config->get('config_store_id') . "'");
+						$customer_query = $this->db->ncquery("SELECT * FROM customer WHERE 
+							(REPLACE(discount_card, ' ', '')  LIKE '" . $this->db->escape(str_replace(' ', '' , $email)) . "'
+								OR (REGEXP_REPLACE(telephone, '[^0-9]', '') LIKE '". $this->db->escape(preg_replace("([^0-9])", "", $email)) ."' )
+								OR (REGEXP_REPLACE(fax, '[^0-9]', '') LIKE '". $this->db->escape(preg_replace("([^0-9])", "", $email)) ."' )	
+								)  		
+								AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '". $this->db->escape($password) ."' OR password = '" . $this->db->escape(md5($password)) . "')
+								AND status = '1'
+								AND approved = '1'
+								AND store_id = '" . $this->config->get('config_store_id') . "'");
 
-				} else {
-						$customer_query = $this->db->ncquery("SELECT * FROM customer WHERE customer_id = '-1'");				
-				}								
-			}
+						} else {
+							$customer_query = $this->db->ncquery("SELECT * FROM customer WHERE customer_id = '-1'");				
+						}								
+					}
 			
 			if ($customer_query->num_rows) {
 				$this->session->data['customer_id'] = $customer_query->row['customer_id'];	
@@ -214,12 +217,12 @@
 				
 				$this->db->ncquery("UPDATE customer SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
 				
-				if($autologin) {
+				if ($autologin) {
 					$salt 		= $this->db->ncquery("SELECT salt FROM customer WHERE customer_id = '".$customer_query->row['customer_id']."'")->row['salt'];
 					$password_c = sha1($salt . sha1($salt . sha1($password)));
 
-					setcookie('em', $email, time()+60 * 60 * 24 * 30);
-					setcookie('p', $password_c, time()+60 * 60 * 24 * 30);
+					setcookie('em', $email, time()+60 * 60 * 24 * 30, '/');
+					setcookie('p', $password_c, time()+60 * 60 * 24 * 30, '/');
 				}
 												
 				if($this->config->get('config_affiliate_login') && isset($this->affiliateNZ) && is_object($this->affiliateNZ) && !$this->affiliateNZ->isLogged()) {
@@ -328,8 +331,8 @@
 
 				$store_query = $this->db->ncquery("SELECT store_id FROM customer WHERE 
 					(REPLACE(discount_card,' ','')  LIKE '" . $this->db->escape(str_replace(' ','', $email)) . "'
-						OR (TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(telephone,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) LIKE '". $this->db->escape(trim(preg_replace("([^0-9])", "", $email))) ."' )
-						OR (TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(fax,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) LIKE '". $this->db->escape(trim(preg_replace("([^0-9])", "", $email))) ."' )	
+						OR (REGEXP_REPLACE(telephone, '[^0-9]', '') LIKE '". $this->db->escape(preg_replace("([^0-9])", "", $email)) ."' )
+						OR (REGEXP_REPLACE(fax, '[^0-9]', '') LIKE '". $this->db->escape(preg_replace("([^0-9])", "", $email)) ."' )	
 						)  							
 						AND status 		= '1'
 						AND approved 	= '1'");
@@ -405,12 +408,16 @@
 			return $this->telephone;
 		}
 
-		public function getCustomerByTelephone($phone){
-			$phone = trim(preg_replace("([^0-9])", "", $phone));
+		public function getCustomerByTelephone($telephone){
+			$telephone = preg_replace("([^0-9])", "", $telephone);
+
+			if (!$telephone){
+				return false;
+			}
 
 			$sql = "SELECT customer_id, firstname, lastname FROM customer WHERE ";		
-			$sql .= "(TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(telephone,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) LIKE '%" . $this->db->escape($phone) . "' )";
-			$sql .= "OR (TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(fax,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) LIKE '%" . $this->db->escape($phone) . "')";
+			$sql .= "(REGEXP_REPLACE(telephone, '[^0-9]', '') LIKE '%" . $this->db->escape($telephone) . "' )";
+			$sql .= "OR (REGEXP_REPLACE(fax, '[^0-9]', '') LIKE '%" . $this->db->escape($telephone) . "')";
 			$sql .= " LIMIT 1";
 
 			$query = $this->db->query($sql);

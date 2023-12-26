@@ -2,8 +2,7 @@
 class ControllerAccountLogin extends Controller {
 	private $error = array();
 
-	public function index() {
-		
+	public function index() {		
 		$this->load->model('account/customer');
 
 		if (!empty($this->request->get['token'])) {
@@ -65,7 +64,7 @@ class ControllerAccountLogin extends Controller {
 
 		$this->language->load('account/login');
 		$this->data['text_remember_me'] = $this->language->get('text_remember_me');
-		$this->data['text_save_me'] = $this->language->get('save_me');
+		$this->data['text_save_me'] 	= $this->language->get('save_me');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -79,13 +78,13 @@ class ControllerAccountLogin extends Controller {
 			if ($address_info) {
 				if ($this->config->get('config_tax_customer') == 'shipping') {
 					$this->session->data['shipping_country_id'] = $address_info['country_id'];
-					$this->session->data['shipping_zone_id'] = $address_info['zone_id'];
-					$this->session->data['shipping_postcode'] = $address_info['postcode'];	
+					$this->session->data['shipping_zone_id'] 	= $address_info['zone_id'];
+					$this->session->data['shipping_postcode'] 	= $address_info['postcode'];	
 				}
 
 				if ($this->config->get('config_tax_customer') == 'payment') {
-					$this->session->data['payment_country_id'] = $address_info['country_id'];
-					$this->session->data['payment_zone_id'] = $address_info['zone_id'];
+					$this->session->data['payment_country_id'] 	= $address_info['country_id'];
+					$this->session->data['payment_zone_id'] 	= $address_info['zone_id'];
 				}
 			} else {
 				unset($this->session->data['shipping_country_id']);	
@@ -142,9 +141,9 @@ class ControllerAccountLogin extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-		$this->data['action'] = $this->url->link('account/login', '');
-		$this->data['register'] = $this->url->link('account/register', '');
-		$this->data['forgotten'] = $this->url->link('account/forgotten', '');
+		$this->data['action'] 		= $this->url->link('account/login', '');
+		$this->data['register'] 	= $this->url->link('account/register', '');
+		$this->data['forgotten'] 	= $this->url->link('account/forgotten', '');
 			
 		if (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], $this->config->get('config_url')) !== false || strpos($this->request->post['redirect'], $this->config->get('config_ssl')) !== false)) {
 			$this->data['redirect'] = $this->request->post['redirect'];
@@ -180,31 +179,26 @@ class ControllerAccountLogin extends Controller {
 
 		$this->template = 'account/login.tpl';
 
-		$this->children = array(
+		$this->children = [
 			'common/column_left',
 			'common/column_right',
 			'common/content_top',
 			'common/content_bottom',
 			'common/footer',
 			'common/header'	
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
 
-	protected function validate() {
-
-		
+	protected function validate() {		
 		$autologin = (isset($this->request->post['autologin'])) ? true : false;
-
-
 		if (!$this->customer->login($this->request->post['email'], $this->request->post['password'], false, $autologin)) {
 			$this->error['warning'] = $this->language->get('error_login');
 		}
 
 		$customer_store = $this->customer->validateStore($this->request->post['email']);
-		if ($customer_store !== false){
-			
+		if ($customer_store !== false){			
 			if ($customer_store !== $this->config->get('config_store_id')){
 				$this->load->model('setting/setting');
 				$this->load->language('account/login');
@@ -212,7 +206,6 @@ class ControllerAccountLogin extends Controller {
 				$this->error['warning'] = sprintf($this->language->get('error_store'), $this->request->post['email'], $this->model_setting_setting->getKeyValue('config_name', $customer_store));
 			}
 		}
-
 
 		$customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
 

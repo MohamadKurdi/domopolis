@@ -2,6 +2,8 @@
 class ModelCheckoutOrder extends Model {
 
 	public function addOrder($data) {	
+		$this->load->model('account/customer');	
+
 		if ($double_order_id = $this->validateDoubleOrder($data)){
 			return $double_order_id;
 		}
@@ -31,7 +33,6 @@ class ModelCheckoutOrder extends Model {
 				}
 			}
 		}
-
 
 			//3. СДЭК отделение
 		if (!empty($data['shipping_code']) && $data['shipping_code'] == 'dostavkaplus.sh6'){
@@ -297,14 +298,9 @@ class ModelCheckoutOrder extends Model {
 			}
 
 			if (trim($data['telephone']) && !$customer_id){
-					//	$customer_id = $this->model_account_customer->getCustomerIDByEmail($data['telephone']);
-			}
-
-			if (trim($data['telephone']) && !$customer_id){
 				$customer_id = $this->model_account_customer->getCustomerByPhone($data['telephone']);
 			}
 
-				//TRY TO FIND CUSTOMER
 			if (trim($data['email']) && !$customer_id){
 				$customer_id = $this->model_account_customer->getCustomerIDByEmail($data['email']);
 			}
@@ -315,14 +311,18 @@ class ModelCheckoutOrder extends Model {
 
 			$this->db->ncquery("UPDATE `order` SET customer_id = '" . (int)$customer_id . "' WHERE order_id = '" . (int)$order_id . "'");
 
-		} else {
-			$this->load->model('account/customer');	
-
+		} else {			
 			if ($customer = $this->model_account_customer->getCustomer($data['customer_id'])){				
 				$customer_id = $data['customer_id'];
 			} else {
 				$customer_id = $this->createCustomer($data);
 			}
+		}
+
+
+		$customer = $this->model_account_customer->getCustomer($customer_id);		
+		if (empty($customer['telephone'])){
+			$this->db->query("UPDATE customer SET telephone = '" . $this->db->escape($data['telephone']) . "' WHERE customer_id = '" . (int)$customer_id . "'");
 		}
 
 		$data['order_id'] 		= $order_id;

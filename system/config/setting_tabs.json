@@ -78,7 +78,7 @@
   },
   {
     "tab-sms": {
-      "text": "SMS",
+      "text": "SMS, OTP",
       "icon": "fa-mobile",
       "color": ""
     }

@@ -84,7 +84,6 @@
 					</div>	
 				</td>						
 			</tr>
-
 		</table>
 
 		<h2><i class="fa fa-search"></i> Аккаунт сервиса отправки SMS</h2>
@@ -133,6 +132,153 @@
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Viber Альфа-имя</span></p>
 						<input type="text" name="config_viber_from" value="<?php echo $config_viber_from; ?>" maxlength="20" style="width:200px;" />
 					</div>										
+				</td>
+			</tr>
+		</table>
+
+		<h2><i class="fa fa-mobile"></i> OTP авторизация</h2>
+		<table class="form">
+			<tr>
+				<td width="25%">
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff007f; color:#FFF">Включить OTP-авторизацию</span></p>
+						<select name="config_otp_enable">
+							<?php if ($config_otp_enable) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+						<span class="help">One Time Password</span>
+					</div>				
+				</td>
+				<td width="25%">
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff007f; color:#FFF">EMAIL OTP</span></p>
+						<select name="config_otp_enable_email">
+							<?php if ($config_otp_enable_email) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+						<span class="help">не используется, настройка нужна для совместимости методов OTP</span>
+					</div>
+				</td>
+				<td width="25%">
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff007f; color:#FFF">SMS OTP</span></p>
+						<select name="config_otp_enable_sms">
+							<?php if ($config_otp_enable_sms) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+						<span class="help">поддерживается автопрочтение кода OTP в современных браузерах</span>
+					</div>
+				</td>
+				<td width="25%">
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff007f; color:#FFF">VIBER OTP</span></p>
+						<select name="config_otp_enable_viber">
+							<?php if ($config_otp_enable_viber) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+						<span class="help">только если библиотека отправки поддерживает viber. не поддерживается автопрочтение кода OTP.</span>
+					</div>							
+				</td>
+			</tr>
+		</table>
+		<table class="form">
+			<tr>
+				<td style="width:50%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background: #ff007f; color: #FFF; ?>;">Текст SMS с OTP-кодом</span></p>
+					<textarea name="config_sms_otp_text" rows="3" cols="100"><?php echo $config_sms_otp_text; ?></textarea>
+					<span class="help"><b>{OTP_CODE}</b></span>
+				</td>
+			
+				<td style="width:50%">
+					<p><span class="status_color" style="display:inline-block;padding:3px 5px; background: #ff007f; color: #FFF; ?>;">Текст VIBER с OTP-кодом</span></p>
+					<textarea name="config_viber_otp_text" rows="3" cols="100"><?php echo $config_viber_otp_text; ?></textarea>
+					<span class="help"><b>{OTP_CODE}</b></span>
+				</td>
+			</tr>
+		</table>
+
+		<h2><i class="fa fa-mobile"></i> Восстановление пароля</h2>
+		<table class="form">
+			<tr>
+				<td width="33%">
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7f00; color:#FFF">Восстановление пароля по почте</span></p>
+						<select name="config_restore_password_enable_email">
+							<?php if ($config_restore_password_enable_email) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+						<span class="help">Штатная логика восстановления пароля OpenCart</span>
+					</div>
+				</td>
+				<td width="33%">
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7f00; color:#FFF">Восстановление пароля по SMS</span></p>
+						<select name="config_restore_password_enable_sms">
+							<?php if ($config_restore_password_enable_sms) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+						<span class="help">Отправлять новый пароль в SMS</span>
+					</div>
+				</td>
+				<td width="33%">
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7f00; color:#FFF">Восстановление пароля по VIBER</span></p>
+						<select name="config_restore_password_enable_viber">
+							<?php if ($config_restore_password_enable_viber) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+						<span class="help">только если библиотека отправки поддерживает viber.</span>
+					</div>							
+				</td>
+			</tr>
+		</table>
+		<table class="form">
+			<tr>
+				<td style="width:50%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background: #ff7f00; color: #FFF; ?>;">Текст SMS с новым паролем</span></p>
+					<textarea name="config_sms_restore_password_text" rows="3" cols="100"><?php echo $config_sms_restore_password_text; ?></textarea>
+					<span class="help"><b>{NEW_PASSWORD}</b></span>
+				</td>
+			
+				<td style="width:50%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background: #ff7f00; color: #FFF; ?>;">Текст VIBER с новым паролем</span></p>
+					<textarea name="config_viber_restore_password_text" rows="3" cols="100"><?php echo $config_viber_restore_password_text; ?></textarea>
+					<span class="help"><b>{NEW_PASSWORD}</b></span>
 				</td>
 			</tr>
 		</table>

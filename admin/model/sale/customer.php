@@ -161,10 +161,17 @@
 		}
 		
 		public function deleteCustomer($customer_id) {
-			$this->db->query("DELETE FROM customer WHERE customer_id = '" . (int)$customer_id . "'");
-			$this->db->query("DELETE FROM customer_ip WHERE customer_id = '" . (int)$customer_id . "'");
-			$this->db->query("DELETE FROM address WHERE customer_id = '" . (int)$customer_id . "'");
-			$this->db->query("DELETE FROM customer_segments WHERE customer_id = '" . (int)$customer_id . "'");
+			foreach ((array)\hobotix\CustomerExtended::customerRelatedTablesForDeletion as $table){
+				$sql = "DELETE FROM `" . $table . "` WHERE customer_id = '" . (int)$customer_id . "'";
+				$this->db->query($sql);
+			}
+		}
+
+		public function replaceCustomer($customer_id_from, $customer_id_to) {
+			foreach ((array)\hobotix\CustomerExtended::customerRelatedTablesForReplacement as $table){
+			//	$sql = "UPDATE `" . $table . "` SET customer_id = '" . (int)$customer_id_to . "' WHERE customer_id = '" . (int)$customer_id_from . "'";
+			//	$this->db->query($sql);
+			}
 		}
 		
 		public function getCustomer($customer_id) {

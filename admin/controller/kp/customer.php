@@ -64,7 +64,52 @@
 			}
 			
 			$this->response->setOutput(json_encode($decodedResult));
-		}			
+		}
+
+
+		public function unique_telephones(){
+			$this->load->model('sale/customer');
+
+			$query = $this->db->query("SELECT DISTINCT(telephone) FROM customer WHERE telephone <> '' GROUP BY telephone HAVING COUNT(customer_id) > 1");
+
+			foreach ($query->rows as $row){								
+				echoLine('[ControllerKPCustomer::unique_telephones] Working with telephone: ' . $row['telephone'], 'i');
+
+				$customers_query = $this->db->query("SELECT *, (SELECT COUNT(order_id) FROM `order` WHERE customer_id = customer.customer_id AND order_status_id > 0) as order_count FROM customer WHERE telephone LIKE '" . $this->db->escape($row['telephone']) . "'");
+
+				$customers = [];
+				foreach ($customers_query->rows as $row){
+					$customers[] = $row;
+				}
+
+				echoLine('[ControllerKPCustomer::unique_telephones] Got customers: ' . count($customers), 'e');
+
+				$best_customer_id = $customers[0]['customer_id'];
+				$max_order_count  = 0;
+				foreach ($customers as $customer){
+					if ($customer['order_count'] > 0 && $customer['order_count'] > $max_order_count){
+						$max_order_count  = $customer['order_count'];
+						$best_customer_id = $customer['customer_id'];
+						echoLine('[ControllerKPCustomer::unique_telephones] Customer ' . $customer['customer_id'] . ' has ' . $customer['order_count'] . ' orders, making him good', 's');
+					}				
+				}
+
+				foreach ($customers as $customer){
+					if ($best_customer_id != $customer['customer_id']){
+						echoLine('[ControllerKPCustomer::unique_telephones] Updating customer in tables: ' . $customer['customer_id'] . ' -> ' . $best_customer_id, 'w');
+						$this->model_sale_customer->replaceCustomer($customer['customer_id'], $best_customer_id);
+
+						echoLine('[ControllerKPCustomer::unique_telephones] DELETING OLD CUSTOMER: ' . $customer['customer_id'] . '', 'e');
+					}
+
+				}
+
+				echoLine('');
+			}
+
+
+		}
+
 		
 		public function sendBirthDayGreetings(){
 			$this->load->model('sale/customer');

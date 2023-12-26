@@ -117,7 +117,7 @@ class ControllerCheckoutQuickorder extends Controller {
 		if ($this->request->server['REQUEST_METHOD'] == 'POST' && isset($this->request->post['product_id'])) {
 			if ($this->validateWaitListRequest()) {
 				$product_id = $this->request->post['product_id'];
-				$phone = $this->request->post['waitlist-phone'];					
+				$phone 		= $this->request->post['waitlist-phone'];					
 
 				if (!$this->error){
 					if (isset($this->request->post['product_id'])) {
