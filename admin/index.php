@@ -73,6 +73,7 @@ require_once(DIR_SYSTEM . 'library/hobotix/TranslateAdaptor.php');
 require_once(DIR_SYSTEM . 'library/hobotix/CheckBoxUA.php');		
 require_once(DIR_SYSTEM . 'library/hobotix/Fiscalisation.php');
 require_once(DIR_SYSTEM . 'library/hobotix/SupplierAdaptor.php');
+require_once(DIR_SYSTEM . 'library/hobotix/QRCodeExtender.php');
 
 $registry 	= new Registry();
 $loader 	= new Loader($registry);

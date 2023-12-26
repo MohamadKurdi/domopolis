@@ -49,6 +49,93 @@ function parseText($node, $keyword, $dom, $link, $target = '', $tooltip = 0){
 	}
 }
 
+function num2str($num, $currency_morph = array('рубль','рубля','рублей',0)) {
+	$nul='ноль';
+	$ten=array(
+		array('','один','два','три','четыре','пять','шесть','семь', 'восемь','девять'),
+		array('','одна','две','три','четыре','пять','шесть','семь', 'восемь','девять'),
+	);
+	$a20=array('десять','одиннадцать','двенадцать','тринадцать','четырнадцать' ,'пятнадцать','шестнадцать','семнадцать','восемнадцать','девятнадцать');
+	$tens=array(2=>'двадцать','тридцать','сорок','пятьдесят','шестьдесят','семьдесят' ,'восемьдесят','девяносто');
+	$hundred=array('','сто','двести','триста','четыреста','пятьсот','шестьсот', 'семьсот','восемьсот','девятьсот');
+	$unit=array();
+	$unit[] = array('копейка' ,'копейки' ,'копеек',	 1);
+	$unit[] = $currency_morph;		
+	$unit[] = array('тысяча'  ,'тысячи'  ,'тысяч'     ,1);
+	$unit[] = array('миллион' ,'миллиона','миллионов' ,0);
+	$unit[] = array('миллиард','милиарда','миллиардов',0);
+
+	list($rub,$kop) = explode('.',sprintf("%015.2f", floatval($num)));
+	$out = array();
+	if (intval($rub)>0) {
+		foreach(str_split($rub,3) as $uk=>$v) {
+			if (!intval($v)) continue;
+			$uk = sizeof($unit)-$uk-1;
+			$gender = $unit[$uk][3];
+			list($i1,$i2,$i3) = array_map('intval',str_split($v,1));
+			$out[] = $hundred[$i1];
+			if ($i2>1) $out[]= $tens[$i2].' '.$ten[$gender][$i3];
+			else $out[]= $i2>0 ? $a20[$i3] : $ten[$gender][$i3];
+
+			if ($uk>1) $out[]= morph($v,$unit[$uk][0],$unit[$uk][1],$unit[$uk][2]);
+		}
+	} else  { 
+		$out[] = $nul;
+	}
+
+	$out[] = morph(intval($rub), $unit[1][0],$unit[1][1],$unit[1][2]);
+	$_kop = ', ' . $kop.' '. morph($kop,$unit[0][0],$unit[0][1],$unit[0][2]);
+	return mb_ucfirst(trim(preg_replace('/ {2,}/', ' ', join(' ', $out) . $_kop)));
+}
+
+function num2strUA($num, $currency_morph = array('гривня','гривні','гривень',0)) {
+	$nul='нуль';
+	$ten=array(
+		array('','один','два','три','чотири','п`ять','шість','сім', 'вісім','дев`ять'),
+		array('','одна','дві','три','четыре','п`ять','шість','сім', 'вісім','дев`ять'),
+	);
+	$a20=array('десять','одиннадцять','дванадцять','тринадцять','чотирнадцять' ,'п`ятнадцять','шістнадцять','сімнадцять','вісімнадцять','дев`ятнадцять');
+	$tens=array(2=>'двадцять','тридцять','сорок','п`ятдесят','шістдесят','сімьдесят' ,'вісімдесят','дев`яносто');
+	$hundred=array('','сто','двісті','триста','чотириста','п`ятсот','шістсот', 'сімсот','вісімсот','дев`ятсот');
+	$unit=array();
+	$unit[] = array('копійка' ,'копійки' ,'копійок',	 1);
+	$unit[] = $currency_morph;		
+	$unit[] = array('тисяча'  ,'тисячі'  ,'тисяч'     ,1);
+	$unit[] = array('мільйон' ,'мильйона','мильйонів' ,0);
+	$unit[] = array('мільярд','мильярда','мильярдів',0);
+
+	list($rub,$kop) = explode('.',sprintf("%015.2f", floatval($num)));
+	$out = array();
+	if (intval($rub)>0) {
+		foreach(str_split($rub,3) as $uk=>$v) {
+			if (!intval($v)) continue;
+			$uk = sizeof($unit)-$uk-1;
+			$gender = $unit[$uk][3];
+			list($i1,$i2,$i3) = array_map('intval',str_split($v,1));
+
+			$out[] = $hundred[$i1];
+			if ($i2>1) $out[]= $tens[$i2].' '.$ten[$gender][$i3];
+			else $out[]= $i2>0 ? $a20[$i3] : $ten[$gender][$i3];
+
+			if ($uk>1) $out[]= morph($v,$unit[$uk][0],$unit[$uk][1],$unit[$uk][2]);
+		}
+	} else { 
+		$out[] = $nul;
+	}
+	$out[] = morph(intval($rub), $unit[1][0],$unit[1][1],$unit[1][2]);
+	$_kop = ', ' . $kop.' '. morph($kop,$unit[0][0],$unit[0][1],$unit[0][2]);
+	return mb_ucfirst(trim(preg_replace('/ {2,}/', ' ', join(' ', $out) . $_kop)));
+}
+
+function morph($n, $f1, $f2, $f5) {
+	$n = abs(intval($n)) % 100;
+	if ($n>10 && $n<20) return $f5;
+	$n = $n % 10;
+	if ($n>1 && $n<5) return $f2;
+	if ($n==1) return $f1;
+	return $f5;
+}
+
 function parseAmazonDeliveryDateToEnglish($date){
 	$de_months 		= ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
 	$de_months2 	= ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
@@ -119,7 +206,7 @@ function getUkrainianPluralWord($number, $titles, $show_number = false) {
 	if(empty($titles[2]) && !empty($titles[1])){
 		$titles[2] = $titles[1];
 	}
-	
+
 	$cases = [ 2, 0, 1, 1, 1, 2 ];
 
 	$intnum = abs( (int) strip_tags( $number ) );

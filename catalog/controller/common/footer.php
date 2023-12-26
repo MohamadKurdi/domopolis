@@ -37,7 +37,7 @@ class ControllerCommonFooter extends Controller {
 		return $haystack;
 	}
 	
-	private function checkIfGETRouteOnly(){		
+	private function checkIfGETRouteOnly(){
 		if (count($this->request->get) == 1 && !empty($this->request->get['route'])){
 			return true;
 		}
@@ -54,9 +54,8 @@ class ControllerCommonFooter extends Controller {
 	protected function simplefooter(){			
 		$this->index('common/footer_simple');			
 	}
-	
-	
-	protected function index($template_overload = false) {		
+		
+	protected function index($template_overload = false) {
 		$this->data['static_domain_url'] = $this->config->get('config_img_ssl');
 
 		$this->data['footerBottomScripts'] = [];
@@ -370,6 +369,7 @@ class ControllerCommonFooter extends Controller {
 
 						if ($adminSessionData){
 							$this->load->model('user/user');
+							$this->load->model('catalog/product');
 
 							$this->data['admin_user_id'] 	= !empty($adminSessionData['user_id'])?$adminSessionData['user_id']:false; 
 							$this->data['admin_token']  	= !empty($adminSessionData['token'])?$adminSessionData['token']:false;
@@ -379,25 +379,34 @@ class ControllerCommonFooter extends Controller {
 							switch (tryToGuessPageType($this->request->get)) {
 								case 'product':
 								$this->data['admin_uri'] = HTTP_ADMIN . 'index.php?route=catalog/product/update&token='. $this->data['admin_token'] .'&product_id=' . $this->request->get['product_id'];
-								$this->load->model('catalog/product');
+								$this->data['canonical'] = $this->url->link('product/product', 'product_id=' . $this->request->get['product_id']);
+								$this->data['qrcode']    = HTTP_ADMIN . 'index.php?route=kp/printer/createQRForPage&token='. $this->data['admin_token'] .'&uri=' . base64_encode($this->data['canonical']);
 								$this->data['admin_product_info'] = $this->model_catalog_product->getProduct($this->request->get['product_id']);
 								break;
 
 								case 'information':
 								$this->data['admin_uri'] = HTTP_ADMIN . 'index.php?route=catalog/information/update&token='. $this->data['admin_token'] .'&information_id=' . $this->request->get['information_id'];
+								$this->data['canonical'] = $this->url->link('information/information', 'information_id=' . $this->request->get['information_id']);
+								$this->data['qrcode']    = HTTP_ADMIN . 'index.php?route=kp/printer/createQRForPage&token='. $this->data['admin_token'] .'&uri=' . base64_encode($this->data['canonical']);
 								break;
 
 								case 'category':
 								$parts = explode('_', (string)$this->request->get['path']);
 								$this->data['admin_uri'] = HTTP_ADMIN . 'index.php?route=catalog/category/update&token='. $this->data['admin_token'] .'&category_id=' . (int)array_pop($parts);
+								$this->data['canonical'] = $this->url->link('catalog/category', 'path=' . $this->request->get['path']);
+								$this->data['qrcode']    = HTTP_ADMIN . 'index.php?route=kp/printer/createQRForPage&token='. $this->data['admin_token'] .'&uri=' . base64_encode($this->data['canonical']);
 								break;
 
 								case 'manufacturer':									
 								$this->data['admin_uri'] = HTTP_ADMIN . 'index.php?route=catalog/manufacturer/update&token='. $this->data['admin_token'] .'&manufacturer_id=' . $this->request->get['manufacturer_id'];
+								$this->data['canonical'] = $this->url->link('product/manufacturer', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
+								$this->data['qrcode']    = HTTP_ADMIN . 'index.php?route=kp/printer/createQRForPage&token='. $this->data['admin_token'] .'&uri=' . base64_encode($this->data['canonical']);
 								break;
 
 								case 'collection':									
 								$this->data['admin_uri'] = HTTP_ADMIN . 'index.php?route=catalog/collection/update&token='. $this->data['admin_token'] .'&collection_id=' . $this->request->get['collection_id'];
+								$this->data['canonical'] = $this->url->link('product/collection', 'collection_id=' . $this->request->get['collection_id']);
+								$this->data['qrcode']    = HTTP_ADMIN . 'index.php?route=kp/printer/createQRForPage&token='. $this->data['admin_token'] .'&uri=' . base64_encode($this->data['canonical']);
 								break;
 
 								default:

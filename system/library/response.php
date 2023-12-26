@@ -139,6 +139,19 @@ class Response {
   	$this->level = $level;
   }
 
+  /**
+   * Set PNG response
+   *
+   * @param string $png PNG data
+   *
+   * @return Response object for chaining
+   */
+  public function setPNG($png) {
+    $this->addHeader('Content-Type: image/png');   
+    $this->output = $png;
+
+    return $this;
+  }
 
   /**
    * Set JSON response

@@ -27,7 +27,6 @@
 			$qr_file = $_dir . 'payment_' . $code . '_qr_' . $order_id . $currency . '.png';
 			$qr_link = HTTPS_CATALOG . DIR_EXPORT_NAME . 'payment_qr/' . date('Y') . '/' . date('m') . '/' . date('d') .'/payment_' . $code . '_qr_' . $order_id . $currency . '.png';				
 
-			$this->load->library('hobotix/QRCodeExtender');
 			$hobotixQR = new \hobotix\QRCodeExtender;
 			$hobotixQR->doQR($paymentLink, $qr_file);	
 

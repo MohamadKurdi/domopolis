@@ -34,6 +34,7 @@ class AzureTranslator
 			$this->translate('hello', 'en', 'ru', true);
 			echoLine('[AzureTranslator::checkIfItIsPossibleToMakeRequest] Is ok, continue' , 's');
 		} catch (\Exception $e) {
+			echoLine('[AzureTranslator::checkIfItIsPossibleToMakeRequest] Caught Exception: ' . $e->getMessage(), 'e');
 			echoLine('[AzureTranslator::checkIfItIsPossibleToMakeRequest] Translator fail, stopping' , 'e');
 			die();
 		}		
@@ -111,7 +112,7 @@ class AzureTranslator
   			$info 	= curl_getinfo($ch);
 
   			if ($info['http_code'] != '200'){
-  				echoLine('[AzureTranslator] Azure Translator Fail, http code is not 200, but: ' . $this->resultIsBad($result), 'e');
+  				echoLine('[AzureTranslator::translate] Azure Translator Fail, http code is not 200, but: ' . $result, 'e');
   				throw new \Exception('Azure Translator Fail, http code is not 200, but ' . $info['http_code']);
   			}
 

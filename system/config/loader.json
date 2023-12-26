@@ -36,7 +36,8 @@
 		"/hobotix/PhoneValidator",		
 		"/hobotix/CheckBoxUA",
 		"/hobotix/Fiscalisation",
-		"/hobotix/SupplierAdaptor"
+		"/hobotix/SupplierAdaptor",
+		"/hobotix/QRCodeExtender"
 	],
 	"startup_libraries":[
 		"engine/action",
