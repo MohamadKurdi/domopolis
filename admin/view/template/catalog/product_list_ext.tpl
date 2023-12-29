@@ -633,6 +633,8 @@
 				return quick_update(this, value, settings, '<?php echo $update_url; ?>', $("#aqe-popup-form").serializeHash());
 				}, {
 				type      : "multiselect_edit",
+				width	  : 800,
+				height	  : 900,
 				indicator : "<?php echo $text_saving; ?>",
 				tooltip   : "<?php echo ($this->config->get('aqe_quick_edit_on') == 'dblclick') ? $text_double_click_edit : $text_click_edit; ?>",
 				event     : "<?php echo $this->config->get('aqe_quick_edit_on'); ?>",

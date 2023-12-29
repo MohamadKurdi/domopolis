@@ -144,7 +144,7 @@ var t;
                     }
                 }, function () {
                     original.reset(form);
-                }, 450, 310)
+                }, 1000, 700)
             }
         }
     });
@@ -699,7 +699,7 @@ function show_message(msg, parent, error, exception) {
 function aqe_popup(title, content, callback_save, callback_cancel, width, height) {
     var $ = jQuery,
         width = typeof width !== 'undefined' ? width : Math.min(screen.width, 950),
-        height = typeof height !== 'undefined' ? height : Math.min(screen.height, 465),
+        height = typeof height !== 'undefined' ? height : Math.min(screen.height, 800),
         cancel = true;
     $('#aqe-dialog').remove();
 
@@ -709,7 +709,7 @@ function aqe_popup(title, content, callback_save, callback_cancel, width, height
         title: title,
         bgiframe: false,
         width: width,
-        minWidth: Math.min(screen.width, 450),
+        minWidth: Math.min(screen.width, 600),
         maxWidth: screen.width,
         maxHeight: screen.height,
         height: height,

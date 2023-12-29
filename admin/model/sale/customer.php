@@ -169,8 +169,8 @@
 
 		public function replaceCustomer($customer_id_from, $customer_id_to) {
 			foreach ((array)\hobotix\CustomerExtended::customerRelatedTablesForReplacement as $table){
-			//	$sql = "UPDATE `" . $table . "` SET customer_id = '" . (int)$customer_id_to . "' WHERE customer_id = '" . (int)$customer_id_from . "'";
-			//	$this->db->query($sql);
+				$sql = "UPDATE `" . $table . "` SET customer_id = '" . (int)$customer_id_to . "' WHERE customer_id = '" . (int)$customer_id_from . "'";
+				$this->db->query($sql);
 			}
 		}
 		

@@ -100,14 +100,13 @@
 						$this->model_sale_customer->replaceCustomer($customer['customer_id'], $best_customer_id);
 
 						echoLine('[ControllerKPCustomer::unique_telephones] DELETING OLD CUSTOMER: ' . $customer['customer_id'] . '', 'e');
+						$this->model_sale_customer->deleteCustomer($customer['customer_id']);
 					}
 
 				}
 
 				echoLine('');
 			}
-
-
 		}
 
 		

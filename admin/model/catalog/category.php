@@ -618,7 +618,7 @@ class ModelCatalogCategory extends Model {
 		return $keywords;
 	}
 	
-	public function getCategories($data) {
+	public function getCategories($data = []) {
 		$sql = "SELECT cp.category_id AS category_id, 
 		c.tnved, 
 		c.priceva_enable, 
@@ -638,6 +638,7 @@ class ModelCatalogCategory extends Model {
 		c.need_reprice, 
 		c.last_reprice, 
 		c.sort_order,
+		c.status,
 		(SELECT menu_icon FROM category c4 WHERE c4.category_id = cp.category_id) as menu_icon, 
 		(SELECT image FROM category c5 WHERE c5.category_id = cp.category_id) as image, 
 		GROUP_CONCAT(cd1.name ORDER BY cp.level SEPARATOR ' &gt; ') AS name

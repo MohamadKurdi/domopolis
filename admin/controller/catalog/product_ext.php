@@ -248,7 +248,7 @@ class ControllerCatalogProductExt extends Controller {
     protected function getList() {
 		error_reporting(0);
 		
-        $this->document->addScript('view/javascript/jquery.jeditable.js');
+        $this->document->addScript('view/javascript/jeditable-1.7.3/jquery.jeditable.js');
         $this->document->addScript('view/javascript/admin.quick.edit.pro.js');
         $this->document->addScript('view/javascript/jquery/ui/jquery-ui-timepicker-addon.js');
 
@@ -938,7 +938,14 @@ class ControllerCatalogProductExt extends Controller {
             switch ($this->data['parameter']) {
                 case "category":
                     $this->load->model('catalog/category');
-                    $this->data['categories'] = $this->model_catalog_category->getCategories(['filter_status' => 1]);
+                    $this->data['categories'] = $this->model_catalog_category->getCategories();
+
+                    foreach ($this->data['categories'] as &$category){
+                        if (!$category['status']){
+                            $category['name'] .= ' [выключена]';
+                        }
+                    }
+
                     $this->load->model('catalog/product');
                     $this->data['product_category'] = $this->model_catalog_product->getProductCategories($this->data['product_id']);
                     $json['title'] = $this->language->get('entry_category');
