@@ -15,7 +15,7 @@
 		public static $debug = false;
 		public static $template_vqmod = true;
 		
-		public $data = array();
+		public $data = [];
 		
 		private $registry;
 		private $request;
@@ -119,7 +119,7 @@
 					$this->emailtemplate_config_id = intval($data['emailtemplate_config_id']);
 				}
 				
-				$filter = array();
+				$filter = [];
 				
 				if(isset($data['emailtemplate_id'])){
 					$filter['emailtemplate_id'] = intval($data['emailtemplate_id']);
@@ -231,7 +231,7 @@
 			
 			// template with highest power
 			$this->data['emailtemplate'] = $templates[0];
-			$template_default = array();
+			$template_default = [];
 			foreach ($templates as $template) {
 				if ($template['emailtemplate_default']) {
 					$this->emailtemplate_default_id = $template['emailtemplate_id'];
@@ -244,7 +244,7 @@
 			}
 			
 			// many templates with same top power, select one at random
-			$template_ids = array();
+			$template_ids = [];
 			foreach ($templates as $i => $template) {
 				if ($template['power'] != 0 && $this->data['emailtemplate']['power'] == $template['power']) {
 					$template_ids[] = $i;
@@ -275,7 +275,7 @@
 				$this->emailtemplate_config_id = $this->data['emailtemplate']['emailtemplate_config_id'];
 			}
 			
-			$description_default = array();
+			$description_default = [];
 			if($this->emailtemplate_default_id != $this->emailtemplate_id){
 				$description_default = $this->model->getTemplateDescription(array(
 				'emailtemplate_id' => $this->emailtemplate_default_id,
@@ -574,7 +574,7 @@
 			}
 			
 			if($this->data['config']['showcase'] && $this->data['emailtemplate']['showcase']){
-				$filter_data = array();
+				$filter_data = [];
 				
 				if(isset($this->data['order_id'])){
 					$filter_data['order_id'] = $this->data['order_id'];
@@ -914,7 +914,7 @@
 			if(!isset($this->data['config']['tracking'])) return $url;
 			
 			if(!isset($this->data['tracking'])){
-				$tracking = array();
+				$tracking = [];
 				$tracking['utm_campaign'] = $this->data['config']['tracking_campaign_name'];
 				$tracking['utm_medium'] = 'email';
 				
@@ -1106,7 +1106,7 @@
 				$red=($until[0]-$from[0])/($length-1);
 				$green=($until[1]-$from[1])/($length-1);
 				$blue=($until[2]-$from[2])/($length-1);
-				$return = array();
+				$return = [];
 				
 				for($i=0;$i<$length;$i++){
 					$newred=dechex($from[0]+round($i*$red));
@@ -1189,9 +1189,9 @@
 			*  Get all empty shortcodes from database & merge with data
 		*/
 		private function _fetchShortCodes(){
-			$find = array();
-			$replace = array();
-			$data = array();
+			$find = [];
+			$replace = [];
+			$data = [];
 			
 			$shortcodes = $this->model->getTemplateShortcodes(array(
 			'emailtemplate_id' => $this->emailtemplate_id
@@ -1227,8 +1227,8 @@
 			* @param String address formatting e.g '{firstname}...'
 		*/
 		public static function formatAddress($address, $address_prefix = '', $format = null){
-			$find = array();
-			$replace = array();
+			$find = [];
+			$replace = [];
 			if($address_prefix != ""){
 				$address_prefix = trim($address_prefix, '_') . '_';
 			}

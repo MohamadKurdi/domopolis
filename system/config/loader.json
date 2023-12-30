@@ -37,7 +37,8 @@
 		"/hobotix/CheckBoxUA",
 		"/hobotix/Fiscalisation",
 		"/hobotix/SupplierAdaptor",
-		"/hobotix/QRCodeExtender"
+		"/hobotix/QRCodeExtender",
+		"/hobotix/OTP"
 	],
 	"startup_libraries":[
 		"engine/action",

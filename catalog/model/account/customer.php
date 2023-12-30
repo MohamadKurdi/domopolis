@@ -160,10 +160,16 @@
 		}
 
 		public function editPasswordByPhone($telephone, $password) {
-			$this->db->non_cached_query("UPDATE customer 
-				SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', 
-				password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "'
-				WHERE REGEXP_REPLACE(telephone, '[^0-9]', '') LIKE '" . $this->db->escape(preg_replace("([^0-9])", "", $telephone)) ."'");
+			$customer 	= $this->customer->getCustomerByTelephone($telephone);
+			$salt 		= substr(md5(uniqid(rand(), true)), 0, 9);
+			$password   = sha1($salt . sha1($salt . sha1($password)));
+
+			if ($customer && !empty($customer['customer_id'])){
+				$this->db->non_cached_query("UPDATE customer 
+				SET salt = '" . $this->db->escape($salt) . "', 
+				password = '" . $this->db->escape($password) . "'
+				WHERE customer_id = '" . (int)$customer['customer_id'] . "'");
+			}						
 		}
 		
 		public function editViberNews($viber_news) {
@@ -262,20 +268,9 @@
 		}
 		
 		public function getCustomerByPhone($telephone){
-			$telephone = preg_replace("([^0-9])", "", $telephone);
-			
-			if (!$telephone){
-				return false;
-			}
-			
-			$sql = "SELECT customer_id FROM `customer` WHERE ";
-			$sql .= "(REGEXP_REPLACE(telephone, '[^0-9]', '') LIKE '" . $this->db->escape($telephone) . "' )";
-			$sql .= " LIMIT 1";
-			
-			$query = $this->db->non_cached_query($sql);
-			
-			if ($query->num_rows){
-				return $query->row['customer_id'];			
+			$customer = $this->customer->getCustomerByTelephone($telephone);
+			if ($customer){
+				return (int)$customer['customer_id'];
 			}
 			
 			return false;			

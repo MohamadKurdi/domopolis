@@ -513,6 +513,7 @@
 			
 			$this->load->model('account/customer');
 			$this->data['action'] 		= $this->url->link('account/login');
+			$this->data['login_otp'] 	= $this->url->link('account/login_otp');
 			$this->data['register'] 	= $this->url->link('account/register');
 			$this->data['forgotten'] 	= $this->url->link('account/forgotten');
 

@@ -71,8 +71,16 @@ function days_diff($target){
 	return (int)date_diff(date_create(date('Y-m-d')), date_create($target))->format('%a');
 }
 
-function dateDifference($date_1, $date_2, $differenceFormat = '%a')
-{
+function seconds_diff($target){
+	$d1 = new DateTime(date('Y-m-d H:i:s'));
+	$d2 = new DateTime($target);
+
+	$diff = $d1->getTimestamp() - $d2->getTimestamp(); 
+
+	return (int)$diff;
+}
+
+function dateDifference($date_1, $date_2, $differenceFormat = '%a'){
 	$datetime1 = date_create($date_1);
 	$datetime2 = date_create($date_2);
 
@@ -81,8 +89,7 @@ function dateDifference($date_1, $date_2, $differenceFormat = '%a')
 	return $interval->format($differenceFormat);
 }
 
-function dateDiff($date1, $date2)
-{
+function dateDiff($date1, $date2){
 	$d = (strtotime($date2)-strtotime($date1))/(60*60*24);
 	if (!round($d)) {
 		$d = 1;
@@ -101,8 +108,8 @@ function secToHR($seconds) {
 }
 
 function secToHRCyr($seconds) {
-	$hours = floor($seconds / 3600);
-	$minutes = floor(($seconds / 60) % 60);
-	$seconds = $seconds % 60;
+	$hours 		= floor($seconds / 3600);
+	$minutes 	= floor(($seconds / 60) % 60);
+	$seconds 	= $seconds % 60;
 	return $hours > 0 ? "$hours ч., $minutes мин." : ($minutes > 0 ? "$minutes мин., $seconds сек. " : "$seconds сек.");
 }

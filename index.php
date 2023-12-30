@@ -391,9 +391,10 @@
 	$registry->set('document', 			new Document());	 					
 	$registry->set('affiliate', 		new Affiliate($registry));
 	$registry->set('currency', 			new Currency($registry));
-	$registry->set('smsQueue', 			new hobotix\SmsQueue($registry));
+	$registry->set('smsQueue', 			new hobotix\SmsQueue($registry));	
 	$registry->set('phoneValidator', 	new hobotix\phoneValidator($registry));
 	$registry->set('smsAdaptor', 		new hobotix\SmsAdaptor($registry));
+	$registry->set('otpLogin', 			new hobotix\OTP($registry));
 	$registry->set('customer', 			new hobotix\CustomerExtended($registry));
 	$registry->set('tax', 				new Tax($registry));
 	$registry->set('weight', 			new Weight($registry));

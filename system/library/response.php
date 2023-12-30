@@ -51,7 +51,7 @@ class Response {
   	if ($registry) {				
   		$this->cache  	= $registry->get('cache');
   		$this->config 	= $registry->get('config');
-  		$this->db 		= $registry->get('db');
+  		$this->db 		  = $registry->get('db');
   		$this->language = $registry->get('language');
 
   		if (defined('THIS_IS_CATALOG') && $this->db && $this->cache && $this->config && $this->config->get('config_language_id')){

@@ -37,15 +37,13 @@ class FPCTimer {
 	}
 }
 
-class Interval
-{
+class Interval {
 	private $data;
 	private $timezone;
 	private $start;
 	private $end;
 
-	public function __construct($serialized, $timezoneName = false)
-	{
+	public function __construct($serialized, $timezoneName = false){
 
 		if (!$timezoneName){
 			$timezoneName = date_default_timezone_get();
@@ -57,8 +55,7 @@ class Interval
 		$this->makeEnd();
 	}
 
-	public function contains(\DateTimeInterface $date)
-	{
+	public function contains(\DateTimeInterface $date){
 		return $date >= $this->start && $date <= $this->end;
 	}
 
@@ -68,8 +65,7 @@ class Interval
 		return $this->contains($now);
 	}
 
-	private function parse($serialized)
-	{
+	private function parse($serialized){
 		$parts = explode('-', $serialized);
 
 		$this->data = [
@@ -78,19 +74,16 @@ class Interval
 		];
 	}
 
-	private function makeStart()
-	{
+	private function makeStart(){
 		$this->start = $this->makeDate($this->data['start']['hour'], $this->data['start']['minute']);
 	}
 
-	private function makeEnd()
-	{
+	private function makeEnd(){
 		$this->end = $this->makeDate($this->data['end']['hour'], $this->data['end']['minute']);
 		$this->ensureEndIsAfterStart();
 	}
 
-	private function parsePart($part)
-	{
+	private function parsePart($part){
 		list($hour, $minute) = explode(':', $part);
 
 		return [
@@ -99,8 +92,7 @@ class Interval
 		];
 	}
 
-	private function makeDate($hour, $minute)
-	{
+	private function makeDate($hour, $minute){
 		list($day, $month, $year) = explode('.', date('d.m.Y'));
 
 		$date = new \DateTime('now', $this->timezone);
@@ -111,10 +103,8 @@ class Interval
 		return $date;
 	}
 
-	private function ensureEndIsAfterStart()
-	{
-		if ($this->start > $this->end)
-		{
+	private function ensureEndIsAfterStart(){
+		if ($this->start > $this->end) {
 			$this->end->add(new \DateInterval('P1D'));
 		}
 	}

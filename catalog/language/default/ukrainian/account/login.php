@@ -17,6 +17,8 @@ $_['error_approved'] = 'Увага: Ваш обліковий запис має 
 $_['placeholder_password'] = 'Пароль';
 $_['placeholder_email'] = 'Телефон чи e-mail'; 
 
+$_['entry_telephone']              = 'Номер телефону';
+
 $_['error_store']                  = 'Помилка входу, обліковий запис %s зареєстровано в магазині %s';
 
 $_['text_register']               = 'Якщо у Вас ще немає облікового запису, </ span> <a href="%s" style="text-decoration: underline;"> зареєструйтеся </a> ';

@@ -1,12 +1,8 @@
 <?php
-// Heading
-$_['heading_title'] = 'Вход'; // $_['heading_title']                = 'Логин';
+$_['heading_title'] = 'Вход';
+$_['text_account'] = 'Кабинет';
 
-
-// Text
-$_['text_account'] = 'Кабинет'; // $_['text_account']			= 'Личный Кабинет';
-
-$_['text_login'] = 'Вход'; // $_['text_login']                   = 'Логин';
+$_['text_login'] = 'Вход';
 
 $_['text_new_customer']            = 'Новый покупатель';
 $_['text_register']                = 'Регистрация';
@@ -21,27 +17,23 @@ $_['text_register_account']        = '
 
 ';
 $_['text_returning_customer']      = 'Зарегистрированный покупатель';
-$_['text_i_am_returning_customer'] = 'Войти Кабинет:'; // $_['text_i_am_returning_customer'] = 'Войти в Личный Кабинет:';
+$_['text_i_am_returning_customer'] = 'Войти Кабинет:';
 
 $_['text_forgotten']               = 'Забыли пароль?';
 $_['text_remember_me']             = 'Запомнить меня';
 
-// Entry
 $_['entry_email']                  = 'E-mail или номер телефона:';
 $_['entry_password']               = 'Пароль:';
 
-// Error
+$_['entry_telephone']              = 'Номер телефона';
+
 $_['error_login']                  = 'Ошибка входа, возможно неправильный пароль';
 $_['error_store']                  = 'Ошибка входа, учетная запись %s зарегистрирована в магазине %s';
 $_['error_approved']               = 'Вы сможете войти после проверки учётной записи администрацией магазина.'; 
-$_['save_me']               = 'Запомнить меня';
-
+$_['save_me']               	   = 'Запомнить меня';
 $_['placeholder_password']               = 'Пароль';
 $_['placeholder_email']               = 'E-mail или номер телефона';
-
 $_['text_register']               = 'Если у Вас еще нет аккаунта, </span><a href="%s" style="text-decoration: underline;">зарегистрируйтесь</a>';
-
-
 $_['login_b2b']               = 'Вход для клиентов b2b';
 $_['login_cabinet']               = 'Войти Кабинет';
 
