@@ -121,7 +121,15 @@ class ModelCatalogCategory extends Model {
 		$this->db->query("DELETE FROM category_overprice_rules WHERE category_id = '" . (int)$category_id . "'");
 		if (isset($data['category_overprice_rules'])) {
 			foreach ($data['category_overprice_rules'] as $category_overprice_rule) {
-				$this->db->query(("INSERT INTO category_overprice_rules SET category_id = '" . (int)$category_id . "', multiplier = '" . (float)$category_overprice_rule['multiplier'] . "', default_multiplier = '" . (float)$category_overprice_rule['default_multiplier'] . "', min = '" . (int)$category_overprice_rule['min'] . "', max = '" . (int)$category_overprice_rule['max'] . "'"));
+				$this->db->query(("INSERT INTO category_overprice_rules 
+					SET category_id 		= '" . (int)$category_id . "', 
+					multiplier 				= '" . (float)$category_overprice_rule['multiplier'] . "', 
+					default_multiplier 		= '" . (float)$category_overprice_rule['default_multiplier'] . "', 
+					multiplier_old 			= '" . (float)$category_overprice_rule['multiplier_old'] . "', 
+					default_multiplier_old 	= '" . (float)$category_overprice_rule['default_multiplier_old'] . "',
+					discount				= '" . (int)$category_overprice_rule['discount'] . "',
+					min 					= '" . (int)$category_overprice_rule['min'] . "', 
+					max 					= '" . (int)$category_overprice_rule['max'] . "'"));
 			}
 		}
 		
@@ -365,7 +373,15 @@ class ModelCatalogCategory extends Model {
 		$this->db->query("DELETE FROM category_overprice_rules WHERE category_id = '" . (int)$category_id . "'");
 		if (isset($data['category_overprice_rules'])) {
 			foreach ($data['category_overprice_rules'] as $category_overprice_rule) {
-				$this->db->query(("INSERT INTO category_overprice_rules SET category_id = '" . (int)$category_id . "', multiplier = '" . (float)$category_overprice_rule['multiplier'] . "', default_multiplier = '" . (float)$category_overprice_rule['default_multiplier'] . "', min = '" . (int)$category_overprice_rule['min'] . "', max = '" . (int)$category_overprice_rule['max'] . "'"));
+				$this->db->query(("INSERT INTO category_overprice_rules 
+					SET category_id 		= '" . (int)$category_id . "', 
+					multiplier 				= '" . (float)$category_overprice_rule['multiplier'] . "', 
+					default_multiplier 		= '" . (float)$category_overprice_rule['default_multiplier'] . "', 
+					multiplier_old 			= '" . (float)$category_overprice_rule['multiplier_old'] . "', 
+					default_multiplier_old 	= '" . (float)$category_overprice_rule['default_multiplier_old'] . "',
+					discount				= '" . (int)$category_overprice_rule['discount'] . "',
+					min 					= '" . (int)$category_overprice_rule['min'] . "', 
+					max 					= '" . (int)$category_overprice_rule['max'] . "'"));
 			}
 		}
 		

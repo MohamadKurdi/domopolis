@@ -984,20 +984,45 @@
 					<table class="form" id="category_overprice_rules" >
 						<thead>
 							<tr>
-								<td class="center">
+								<td colspan="2" class="center">
+									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Границы цен</span>
+								</td>
+								<td colspan="3" class="center">
+									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Множитель для формулы с весом</span>
+								</td>
+								<td colspan="3" class="center" >
+									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Множитель для формулы без веса</span>
+								</td>
+								<td class="right" colspan="2">
+									<a onclick="copyDefaultValues();" class="button">Скопировать из общих</a>
+								</td>
+							</tr>
+							<tr>
+								<td class="center" style="width:10%">
 									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Цена закупки от, <?php echo $this->config->get('config_currency'); ?></span>
 								</td>
-								<td class="center">
+								<td class="center" style="width:10%; border-right:1px dashed grey;">
 									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Цена закупки до, <?php echo $this->config->get('config_currency'); ?></span>
 								</td>
 								<td class="center">
-									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Множитель для формулы с весом</span>									
-								</td>	
-								<td class="center"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Множитель для формулы без веса</span>
+									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Текущий</span>									
 								</td>
-								<td>
-									<a onclick="copyDefaultValues();" class="button">Скопировать из общих</a>
+								<td class="center" style="width:1%">									
 								</td>
+								<td class="center" style="border-right:1px dashed grey;">
+									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Старый</span>									
+								</td>
+								<td class="center">
+									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Текущий</span>
+								</td>
+								<td class="center" style="width:1%">									
+								</td>
+								<td class="center" style="border-right:1px dashed grey;">
+									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Старый</span>
+								</td>
+								<td class="center" style="width:10%">
+									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Создавать скидку</span>
+								</td>								
 							</tr>
 						</thead>
 						<?php $category_overprice_rules_row = 0; ?>
@@ -1008,14 +1033,32 @@
 									<td class="center">
 										<input type="number" step="10" name="category_overprice_rules[<?php echo $category_overprice_rules_row; ?>][min]" value="<?php echo $category_overprice_rule['min']; ?>" size="10" />
 									</td>
-									<td class="center">
+									<td class="center" style="border-right:1px dashed grey;">
 										<input type="number" step="10" name="category_overprice_rules[<?php echo $category_overprice_rules_row; ?>][max]" value="<?php echo $category_overprice_rule['max']; ?>" size="10" />
 									</td>
 									<td class="center">
 										<input type="number" step="0.01" name="category_overprice_rules[<?php echo $category_overprice_rules_row; ?>][multiplier]" value="<?php echo $category_overprice_rule['multiplier']; ?>" size="10" />
 									</td>
 									<td class="center">
+										<i class="fa fa-arrow-circle-right" style="color:#00ad07; cursor:pointer;" onclick="$(this).parent().next('td').find('input').val($(this).parent('td').prev('td').find('input').val());"></i>
+									</td>
+									<td class="center" style="border-right:1px dashed grey;">
+										<input type="number" step="0.01" name="category_overprice_rules[<?php echo $category_overprice_rules_row; ?>][multiplier_old]" value="<?php echo $category_overprice_rule['multiplier_old']; ?>" size="10" />
+										<i class="fa fa-times-circle" style="cursor:pointer; color:#cf4a61" onclick="$(this).prev().val(0);"></i>
+									</td>
+									<td class="center">
 										<input type="number" step="0.01" name="category_overprice_rules[<?php echo $category_overprice_rules_row; ?>][default_multiplier]" value="<?php echo $category_overprice_rule['default_multiplier']; ?>" size="10" />
+									</td>
+									<td class="center">
+										<i class="fa fa-arrow-circle-right" style="color:#00ad07; cursor:pointer;" onclick="$(this).parent().next('td').find('input').val($(this).parent('td').prev('td').find('input').val());"></i>
+									</td>
+									<td class="center" style="border-right:1px dashed grey;">
+										<input type="number" step="0.01" name="category_overprice_rules[<?php echo $category_overprice_rules_row; ?>][default_multiplier_old]" value="<?php echo $category_overprice_rule['default_multiplier_old']; ?>" size="10" />
+										<i class="fa fa-times-circle" style="cursor:pointer; color:#cf4a61" onclick="$(this).prev().val(0);"></i>
+									</td>
+									<td class="center">
+										<input id="category_overprice_rules_row_<?php echo $category_overprice_rules_row; ?>_discount" type="checkbox" class="checkbox" name="category_overprice_rules[<?php echo $category_overprice_rules_row; ?>][discount]" <? if ($category_overprice_rule['discount']){ ?> checked="checked" <? } ?> value="1" />
+										<label for="category_overprice_rules_row_<?php echo $category_overprice_rules_row; ?>_discount"></label>
 									</td>
 									<td class="right">
 										<a onclick="$('#category_overprice_rules-row<?php echo $category_overprice_rules_row; ?>').remove();" class="button">Удалить</a>
@@ -1026,7 +1069,7 @@
 						<?php } ?>
 						<tfoot>
 							<tr>
-								<td colspan="4"></td>
+								<td colspan="9"></td>
 								<td class="right" colspan="1">
 									<a onclick="addCategoryOverpriceRule();" class="button">Добавить</a>									
 								</td>
@@ -1048,8 +1091,17 @@
 
 								html += '    <td class="center"><input type="number" step="10" name="category_overprice_rules[' + category_overprice_rules_row + '][min]" value="<?php echo ${'config_rainforest_main_formula_min_' . $crmfc}; ?>" size="10" /></td>';
 								html += '    <td class="center"><input type="number" step="10" name="category_overprice_rules[' + category_overprice_rules_row + '][max]" value="<?php echo ${'config_rainforest_main_formula_max_' . $crmfc}; ?>" size="10" /></td>';
+
 								html += '    <td class="center"><input type="number" step="0.01" name="category_overprice_rules[' + category_overprice_rules_row + '][multiplier]" value="<?php echo ${'config_rainforest_main_formula_multiplier_' . $crmfc}; ?>" size="10" /></td>';
+								html += '    <td class="center"><i class="fa fa-arrow-circle-right" style="color:#00ad07; cursor:pointer;" onclick="$(this).parent().next(\'td\').find(\'input\').val($(this).parent(\'td\').prev(\'td\').find(\'input\').val());"></i></td>';
+								html += '    <td class="center"><input type="number" step="0.01" name="category_overprice_rules[' + category_overprice_rules_row + '][multiplier_old]" value="0" size="10" /> <i class="fa fa-times-circle" style="cursor:pointer; color:#cf4a61" onclick="$(this).prev().val(0);"></i></td>';
+
+
 								html += '    <td class="center"><input type="number" step="0.01" name="category_overprice_rules[' + category_overprice_rules_row + '][default_multiplier]" value="<?php echo ${'config_rainforest_main_formula_default_' . $crmfc}; ?>" size="10" /></td>';
+								html += '    <td class="center"><i class="fa fa-arrow-circle-right" style="color:#00ad07; cursor:pointer;" onclick="$(this).parent().next(\'td\').find(\'input\').val($(this).parent(\'td\').prev(\'td\').find(\'input\').val());"></i></td>';
+								html += '    <td class="center"><input type="number" step="0.01" name="category_overprice_rules[' + category_overprice_rules_row + '][default_multiplier_old]" value="0" size="10" /> <i class="fa fa-times-circle" style="cursor:pointer; color:#cf4a61" onclick="$(this).prev().val(0);"></i></td>';
+
+								html += '    <td class="center"><input id="category_overprice_rules_row_' + category_overprice_rules_row + '_discount" type="checkbox" class="checkbox" name="category_overprice_rules[' + category_overprice_rules_row + '][discount]" value="1" /><label for="category_overprice_rules_row_' + category_overprice_rules_row + '_discount"></label></td>';
 
 								html += '    <td class="right"><a onclick="$(\'#category_overprice_rules-row' + category_overprice_rules_row + '\').remove();" class="button">Удалить</a></td>';
 
@@ -1067,9 +1119,17 @@
 							html += '  <tr>'; 
 
 							html += '    <td class="center"><input type="number" step="10" name="category_overprice_rules[' + category_overprice_rules_row + '][min]" value="" size="10" /></td>';
-							html += '    <td class="center"><input type="number" step="10" name="category_overprice_rules[' + category_overprice_rules_row + '][max]" value="" size="10" /></td>';
+							html += '    <td class="center" style="border-right:1px dashed grey;"><input type="number" step="10" name="category_overprice_rules[' + category_overprice_rules_row + '][max]" value="" size="10" /></td>';
+
 							html += '    <td class="center"><input type="number" step="0.01" name="category_overprice_rules[' + category_overprice_rules_row + '][multiplier]" value="" size="10" /></td>';
+							html += '    <td class="center"><i class="fa fa-arrow-circle-right" style="color:#00ad07; cursor:pointer;" onclick="$(this).parent().next(\'td\').find(\'input\').val($(this).parent(\'td\').prev(\'td\').find(\'input\').val());"></i></td>';
+							html += '    <td class="center" style="border-right:1px dashed grey;"><input type="number" step="0.01" name="category_overprice_rules[' + category_overprice_rules_row + '][multiplier_old]" value="" size="10" /> <i class="fa fa-times-circle" style="cursor:pointer; color:#cf4a61" onclick="$(this).prev().val(0);"></i></td>';
+
 							html += '    <td class="center"><input type="number" step="0.01" name="category_overprice_rules[' + category_overprice_rules_row + '][default_multiplier]" value="" size="10" /></td>';
+							html += '    <td class="center"><i class="fa fa-arrow-circle-right" style="color:#00ad07; cursor:pointer;" onclick="$(this).parent().next(\'td\').find(\'input\').val($(this).parent(\'td\').prev(\'td\').find(\'input\').val());"></i></td>';
+							html += '    <td class="center" style="border-right:1px dashed grey;"><input type="number" step="0.01" name="category_overprice_rules[' + category_overprice_rules_row + '][default_multiplier_old]" value="" size="10" /> <i class="fa fa-times-circle" style="cursor:pointer; color:#cf4a61" onclick="$(this).prev().val(0);"></i></td>';
+
+							html += '    <td class="center"><input id="category_overprice_rules_row_' + category_overprice_rules_row + '_discount" type="checkbox" class="checkbox" name="category_overprice_rules[' + category_overprice_rules_row + '][discount]" value="1" /><label for="category_overprice_rules_row_' + category_overprice_rules_row + '_discount"></label></td>';
 
 							html += '    <td class="right"><a onclick="$(\'#category_overprice_rules-row' + category_overprice_rules_row + '\').remove();" class="button">Удалить</a></td>';
 

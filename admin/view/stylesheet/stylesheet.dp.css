@@ -79,9 +79,9 @@ a.redbg:hover{opacity:1;background:#7a7878;border:2px solid #7a7878!important;}
 .list tbody td a{text-decoration:underline}
 .list tbody tr{background:#fff}
 .list tbody td{vertical-align:middle;padding:0 5px;border-bottom:1px solid #eee;border-left:1px solid #eee;border-right:1px solid #eee}
-.list .left{text-align:left;padding:4px}
-.list .right{text-align:right;padding:4px;min-width:40px}
-.list .center{text-align:center;padding:4px}
+.list .left, .form .left{text-align:left;padding:4px}
+.list .right, .form .right{text-align:right;padding:4px;min-width:40px}
+.list .center, .form .center{text-align:center;padding:4px}
 .list .asc{padding-right:15px;background:url(../image/asc.png) right center no-repeat}
 .list .desc{padding-right:15px;background:url(../image/desc.png) right center no-repeat}
 .list tr.filter td{padding:5px;border:1px solid #eee;color:#999}
