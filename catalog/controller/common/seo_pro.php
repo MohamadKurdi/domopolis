@@ -540,6 +540,7 @@
 				case 'account/simpleaddress/update':
 				case 'account/simpleaddress/insert':
 				case 'account/login':
+				case 'account/otp':
 				case 'account/order':
 				case 'account/order/info':
 				case 'account/order/completedorderslist':

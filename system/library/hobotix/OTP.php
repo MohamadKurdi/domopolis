@@ -11,7 +11,7 @@ final class OTP {
     private $phoneValidator = null; 
     private $customer       = null; 
 
-    private $lifetime       = 180; 
+    private $lifetime       = 600; 
 
     public function __construct($registry){        
         $this->config   = $registry->get('config');
@@ -24,18 +24,28 @@ final class OTP {
     }
 
     public function sendOTPCode($telephone){
-        $otpCode = $this->setOTPCode();
+        $telephone  = $this->phoneValidator->format($telephone);
+        $otpCode    = $this->setOTPCode($telephone);
 
-        $this->smsAdaptor->sendSMSOTP(['telephone' => $telephone], ['otp_code' => $otpCode]);
+        return $this->smsAdaptor->sendSMSOTP(['telephone' => $telephone], ['otp_code' => $otpCode]);
     }
 
-    public function setOTPCode(){
+    public function setOTPCode($telephone){
         $otpCode = generateRandomPin(6);
        
+        $this->session->data['otp_telephone']   = $telephone;
         $this->session->data['otp_code']        = $otpCode;
         $this->session->data['otp_time']        = time();  
 
         return $otpCode;
+    }
+
+    public function getCurrentOTPTelephone(){
+        if (!empty($this->session->data['otp_telephone'])){
+            return $this->session->data['otp_telephone'];
+        }
+
+        return false;        
     }
 
     public function cleanOTPCode(){

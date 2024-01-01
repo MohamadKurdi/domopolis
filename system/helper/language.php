@@ -192,7 +192,6 @@ function getFreeDeliveryInfo($shippingSettings){
 				return (int)str_replace(':0', '', $info);
 			}
 		}
-
 	}
 
 	return PHP_INT_MAX;

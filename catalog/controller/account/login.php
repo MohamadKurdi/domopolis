@@ -30,7 +30,7 @@ class ControllerAccountLogin extends Controller {
 
 			$customer_info = $this->model_account_customer->getCustomerByToken($this->request->get['token']);					
 
-			if ($customer_info && $this->customer->login($customer_info['email'], '', true)) {
+			if ($customer_info && $this->customer->login(['field' => 'customer_id', 'value' => $customer_info['customer_id']], false, true)) {
 				$this->load->model('account/address');
 
 				$address_info = $this->model_account_address->getAddress($this->customer->getAddressId());
@@ -191,16 +191,6 @@ class ControllerAccountLogin extends Controller {
 		$autologin = (isset($this->request->post['autologin'])) ? true : false;
 		if (!$this->customer->login($this->request->post['email'], $this->request->post['password'], false, $autologin)) {
 			$this->error['warning'] = $this->language->get('error_login');
-		}
-
-		$customer_store = $this->customer->validateStore($this->request->post['email']);
-		if ($customer_store !== false){			
-			if ($customer_store !== $this->config->get('config_store_id')){
-				$this->load->model('setting/setting');
-				$this->load->language('account/login');
-
-				$this->error['warning'] = sprintf($this->language->get('error_store'), $this->request->post['email'], $this->model_setting_setting->getKeyValue('config_name', $customer_store));
-			}
 		}
 
 		$customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
