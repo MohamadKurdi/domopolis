@@ -38,11 +38,7 @@ class ControllerAPIGoogle extends Controller {
         $customer_info 	= $customer_query->row;
 
         if ($customer_info) {
-        	if (!trim($customer_info['email'])){
-        		$customer_info['email'] = $customer_info['customer_id'];
-        	}
-
-        	if ($this->customer->login($customer_info['email'], '', true)) {
+        	if ($this->customer->login(['field' => 'customer_id', 'value' => $customer_info['customer_id']], false, true)) {
         		unset($this->session->data['guest']);
         		$result = ['status' => true, 'message' => 'Logged you by google_id as ' . $customer_info['email']];
         	} else {
@@ -50,9 +46,9 @@ class ControllerAPIGoogle extends Controller {
         	}
         } else {
         	if($customer['email']){ 
-        		if ($this->customer->login($customer['email'], '', true)) {                            
+        		if ($this->customer->login(['field' => 'email', 'value' => $customer['email']], false, true)) {                            
         			unset($this->session->data['guest']);                        
-        			$result = ['status' => true, 'message' => 'Logged you by email as ' . $customer_info['email']];                            
+        			$result = ['status' => true, 'message' => 'Logged you by email as ' . $customer['email']];                            
         		} else {
         			$customer_id = $this->model_account_customer->addCustomer($customer);
         			$this->db->ncquery("UPDATE customer SET social_id = '" . (string)$this->db->escape($customer['social_id']) . "' WHERE customer_id = '" . (int)$customer_id . "'");

@@ -38,7 +38,7 @@
 				if($customer_id){
 					$customer_info = $this->model_account_customer->getCustomer($customer_id);
 					
-					if ($this->customer->login($customer_info['email'], "", true)) {
+					if ($this->customer->login(['field' => 'customer_id', 'value' => $customer_info['customer_id']], false, true)) {
 						$this->login($customer_info);
 						$this->response->redirect($this->url->link('account/account', '', 'SSL'));
 					}
@@ -162,7 +162,6 @@
 			$this->response->setOutput($this->load->view('module/social_auth_register', $data));
 		}
 		
-		// validate fiels register function
 		protected function register_validate() {
 			if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
 				$this->error['firstname'] = $this->language->get('error_firstname');
@@ -180,9 +179,8 @@
 				//$this->error['telephone'] = $this->language->get('error_telephone');
 			}
 			return !$this->error;
-		}
-		
-		// method login to Google with  oauth2
+		}		
+
 		public function iframeGoogleLogin(){
 			
 			$redirect_href = $this->url->link('module/social_auth/iframeGoogleLogin');
@@ -207,7 +205,7 @@
 				'redirect_uri' 	=> $redirect_href,
 				'grant_type' 	=> 'authorization_code',
                 ));
-				// get token
+
 				$token = $data->access_token;
 				
 				$url = 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' . $token;
@@ -251,7 +249,6 @@
 			}
 		}
 		
-		// method login to Facebook with  oauth2
 		public function iframeFacebookLogin(){
 			
 			$redirect_href = $this->url->link('module/social_auth/iframeFacebookLogin');
@@ -328,7 +325,7 @@
 			
 			$link = 'https://api.instagram.com/oauth/authorize/?client_id=' . $insatagram_client_id . '&redirect_uri=' . urlencode($redirect_href) . '&response_type=code';
 			
-			if (!isset($this->request->get['code'])) {
+			if (!isset($this->request->get['code'])) {				
 				
 				$this->response->redirect($link);
 				
@@ -340,7 +337,7 @@
 				'code' => $code,
 				'client_id' => $insatagram_client_id,
 				'client_secret' => $insatagram_secret_key,
-				'redirect_uri' => $redirect_href, //это на случай если на сайте, к которому обращаемся проверяется была ли нажата кнопка submit, а не была ли оправлена форма
+				'redirect_uri' => $redirect_href,
 				'grant_type' => 'authorization_code',
                 ));
 				
@@ -387,7 +384,6 @@
 			}
 		}
 		
-		// login or redister user
 		private function toLoginRegister($customer){
 			
 			if ($this->cart->hasProducts()){
@@ -397,25 +393,21 @@
 			}
 						
 			$redirect_after_register = $this->url->link('account/simpleedit', '');
-			//$redirect_after_register = $this->url->link('module/social_auth/register', '');
 			
-			if($customer['social_id']){
+			if ($customer['social_id']){
                 $this->load->model('account/customer');
                 
                 $customer_query = $this->db->query("SELECT * FROM customer WHERE social_id = '" . (string)$this->db->escape($customer['social_id']) . "'");                
-                $customer_info = $customer_query->row;
+                $customer_info 	= $customer_query->row;
                 
                 if ($customer_info) {
                     if(!$customer_info['approved']){
+                        
                         return ['status' => false, 'text' => 'not approved'];
+
                         } else {
-                        // login customer
-						
-						if (!trim($customer_info['email'])){
-							$customer_info['email'] = $customer_info['customer_id'];
-						}
-						
-                        if ($this->customer->login($customer_info['email'], "", true)) {
+																		
+                        if ($this->customer->login(['field' => 'customer_id', 'value' => $customer_info['customer_id']], false, true)) {
                             $this->login($customer_info);
                             
                             return ['status' => true, 'text' => 'login','redirect' => $redirect_after];
@@ -425,10 +417,9 @@
 						}
 					}
                     } else {
-                    // add customer
                     
-                    if($customer['email']){                        
-                        if ($this->customer->login($customer['email'], "", true)) {                            
+                    if ($customer['email']){                        
+                        if ($this->customer->login(['field' => 'email', 'value' => $customer['email']], false, true)) {                            
                             $this->login($customer);                            
                             return ['status' => true, 'text' => 'login','redirect' => $redirect_after];                            
 						}
@@ -440,15 +431,16 @@
                         if($customer_id){                            
                             $customer_info = $this->model_account_customer->getCustomer($customer_id);
                             
-                            if ($this->customer->login($customer_info['email'], "", true)) {
+                            if ($this->customer->login(['field' => 'customer_id', 'value' => $customer_info['customer_id']], false, true)) {
                                 
-                                $this->login($customer_info);
-                                
+                                $this->login($customer_info);                                
                                 return ['status' => true, 'text' => 'login','redirect' => $redirect_after];
                                 
                                 } else {
+
                                 return ['status' => false, 'text' => 'not login'];
                                 $this->model_account_customer->deleteLoginAttempts($customer_info['email']);
+
 							}
                             } else {
                             return ['status' => false, 'text' => 'not register customer'];
@@ -462,26 +454,22 @@
 				}
 			}
 		}
-		
-		// method unset guest data with login 
-		protected function login($customer_info){
-			
+	
+		protected function login($customer_info){			
 			$this->load->model('account/customer');
-			//	$this->model_account_customer->addLoginAttempt($customer_info['email']);
-			
-			// login OK
-			unset($this->session->data['guest']);
 			$this->load->model('account/address');
+
+			unset($this->session->data['guest']);
+			
 			if ($this->config->get('config_tax_customer') == 'payment') {
 				$this->session->data['payment_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
 			}
+
 			if ($this->config->get('config_tax_customer') == 'shipping') {
 				$this->session->data['shipping_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
 			}			
 		}
 		
-		
-		// get curl POST
 		private function getTokenWithCurl($url = '',$data = array()){
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $url);
@@ -502,7 +490,6 @@
 			return json_decode($data);
 		}
 		
-		// get curl GET
 		protected function getCurl($url){
 			
 			$ch = curl_init();

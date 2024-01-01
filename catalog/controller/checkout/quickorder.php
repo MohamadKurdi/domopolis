@@ -132,12 +132,12 @@ class ControllerCheckoutQuickorder extends Controller {
 
 					if ($product_info) {
 						if (!$this->customer->isLogged()) {
-							if (!$this->customer->login($phone, false, true)) {
+							if (!$this->customer->login(['field' => 'telephone', 'value' => $phone], false, false, true)) {
 								$this->load->model('account/customer');
 
 								$email = generateRandomEmail($this->config->get('config_ssl'));
 
-								$this->model_account_customer->addCustomer(array(
+								$customer_id = $this->model_account_customer->addCustomer(array(
 									'firstname' 		=> $this->language->get('text_client'),
 									'lastname' 			=> $phone,
 									'customer_group_id' => $this->config->get('config_customer_group_id'),
@@ -157,7 +157,7 @@ class ControllerCheckoutQuickorder extends Controller {
 									'company' 			=> '',
 								));
 
-								$this->customer->login($email, false, true);
+								$this->customer->login(['field' => 'customer_id', 'value' => $customer_id], false, true, true);
 							}
 						}
 
@@ -557,12 +557,12 @@ class ControllerCheckoutQuickorder extends Controller {
 
 		if (!$json) {				
 			if (!$this->customer->isLogged()) {
-				if (!$this->customer->login($phone, false, true)) {
+				if (!$this->customer->login(['field' => 'telephone', 'value' => $phone], false, false, true)) {
 					$this->load->model('account/customer');
 
 					$email = generateRandomEmail($this->config->get('config_ssl'));
 
-					$this->model_account_customer->addCustomer(array(
+					$customer_id = $this->model_account_customer->addCustomer(array(
 						'firstname' 	=> $this->language->get('text_client'),
 						'lastname' 		=> '',
 						'email' 		=> $email,
@@ -580,7 +580,8 @@ class ControllerCheckoutQuickorder extends Controller {
 						'zone_id' 		=> '',
 						'company' 		=> '',
 					));
-					$this->customer->login($email, false, true);
+
+					$this->customer->login(['field' => 'customer_id', 'value' => $customer_id], false, true, true);
 				}
 			}
 
@@ -945,12 +946,12 @@ class ControllerCheckoutQuickorder extends Controller {
 
 			if ($product_info) {
 				if (!$this->customer->isLogged()) {
-					if (!$this->customer->login($phone, false, true)) {
+					if (!$this->customer->login(['field' => 'telephone', 'value' => $phone], false, false, true)) {
 						$this->load->model('account/customer');
 
 						$email = generateRandomEmail($this->config->get('config_ssl'));
 
-						$this->model_account_customer->addCustomer(array(
+						$customer_id = $this->model_account_customer->addCustomer(array(
 							'firstname' 	=> $this->language->get('text_client'),
 							'lastname' 		=> $this->language->get('text_fastorder_default'),
 							'email' 		=> $email,
@@ -968,7 +969,8 @@ class ControllerCheckoutQuickorder extends Controller {
 							'zone_id' 		=> '',
 							'company' 		=> '',
 						));
-						$this->customer->login($email, false, true);
+
+						$this->customer->login(['field' => 'customer_id', 'value' => $customer_id], false, true, true);
 					}
 				}
 

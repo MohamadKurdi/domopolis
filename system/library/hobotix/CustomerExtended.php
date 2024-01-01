@@ -39,8 +39,7 @@
 		public const customerRelatedTablesForReplacement = ['order', 'order_sms_history', 'order_product', 'order_product_nogood', 'order_product_untaken', 'customer_ip', 'address', 'customer_segments', 'customer_calls', 'customer_reward', 'customer_reward_queue', 'customer_search_history', 'customer_segments', 'customer_simple_fields', 'customer_transaction', 'customer_viewed'];
 
 		public const customerRelatedTablesForDeletion = ['customer', 'customer_ip', 'address', 'customer_segments', 'customer_calls', 'customer_reward', 'customer_reward_queue', 'customer_search_history', 'customer_segments', 'customer_simple_fields', 'customer_transaction', 'customer_viewed'];
-		
-				
+						
 		public function __construct($registry) {
 			$this->registry = $registry;
 			$this->config 	= $registry->get('config');
@@ -106,59 +105,154 @@
 				$this->login($this->request->cookie['em'], $this->request->cookie['p']);
 			}			
 		}
+
+		private function getPasswordSQL($password){
+			return " (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '". $this->db->escape($password) ."' OR password = '" . $this->db->escape(md5($password)) . "') ";
+		}
+
+		private function loginByCustomerId($customer_id, $password){
+			if (empty(trim($customer_id))){
+				return false;
+			}
+
+			$sql = "SELECT * FROM customer WHERE customer_id = '" . (int)$customer_id . "' AND status = '1' AND store_id = '" . $this->config->get('config_store_id') . "'";
+
+			if ($password){
+				$sql .= (" AND " . $this->getPasswordSQL($password));
+			}
+
+			$query = $this->db->ncquery($sql);
+
+			if ($query->num_rows){
+				return $query->row['customer_id'];
+			}
+
+			return false;
+		}
+
+		private function loginByDiscountCard($discount_card, $password){
+			if (empty(trim($discount_card))){
+				return false;
+			}
+
+			$sql = "SELECT * FROM customer WHERE (REPLACE(discount_card, ' ', '')  LIKE '" . $this->db->escape(str_replace(' ', '' , $discount_card)) . "') AND status = '1' AND store_id = '" . $this->config->get('config_store_id') . "'";
+
+			if ($password){
+				$sql .= (" AND " . $this->getPasswordSQL($password));
+			}
+
+			$query = $this->db->ncquery($sql);
+
+			if ($query->num_rows){
+				return $query->row['customer_id'];
+			}
+
+			return false;
+		}
+
+		private function loginByTelephone($telephone, $password){
+			if (empty(trim($telephone))){
+				return false;
+			}
+
+			$sql = "SELECT * FROM customer WHERE (REGEXP_REPLACE(telephone, '[^0-9]', '') LIKE '" . $this->db->escape(preg_replace("([^0-9])", "", $telephone)) . "') AND status = '1' AND store_id = '" . $this->config->get('config_store_id') . "'";
+
+			if ($password){
+				$sql .= (" AND " . $this->getPasswordSQL($password));
+			}
+
+			$query = $this->db->ncquery($sql);
+
+			if ($query->num_rows){
+				return $query->row['customer_id'];
+			}
+
+			return false;
+		}
+
+		private function loginByEmail($email, $password){
+			if (empty(trim($email))){
+				return false;
+			}
+
+			$sql = "SELECT * FROM customer WHERE (LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "') AND status = '1' AND store_id = '" . $this->config->get('config_store_id') . "'";
+
+			if ($password){
+				$sql .= (" AND " . $this->getPasswordSQL($password));
+			}
+
+			$query = $this->db->ncquery($sql);
+
+			if ($query->num_rows){
+				return $query->row['customer_id'];
+			}
+
+			return false;
+		}		
+
 		
-		public function login($email, $password, $override = false, $autologin = false) {
-			if ($override) {
-				if (is_numeric($email)){					
-					$customer_query = $this->db->ncquery("SELECT * FROM customer WHERE customer_id = '" . (int)$email . "' AND status = '1' AND store_id = '" . $this->config->get('config_store_id') . "'");					
-				} else {
-					$customer_query = $this->db->ncquery("SELECT * FROM customer WHERE (LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "') AND status = '1' AND store_id = '" . $this->config->get('config_store_id') . "'");
+		public function login($auth, $password, $override = false, $autologin = false) {
+			$customer_id = false;
+
+			if (!trim($password)){
+				$password = generateRandomString(50);
+			}
+
+			if ($override){
+				$password = false;
+			}
+
+			$field = false;
+			if (is_array($auth)){
+				$field 		= $auth['field'];
+				$auth		= $auth['value'];
+			}
+
+			if ($field){
+				switch ($field) {
+					case 'email':
+						$customer_id = $this->loginByEmail($auth, $password);
+						break;
+					
+					case 'telephone':
+						$customer_id = $this->loginByTelephone($auth, $password);
+						break;
+
+					case 'customer_id':
+						$customer_id = $this->loginByCustomerId($auth, $password);
+						break;
+					
+					case 'discount_card':
+						$customer_id = $this->loginByDiscountCard($auth, $password);
+						break;
 				}
-				
 			} else {
-				$IS_EMAIL = $IS_PHONE_OR_DISCOUNT = false;
-				
-				if (filter_var($email, FILTER_VALIDATE_EMAIL)){
-					$IS_EMAIL = true;
-				} elseif (mb_strlen(preg_replace("([^0-9])", "", $email)) > 0) {
-					$IS_PHONE_OR_DISCOUNT = true;				
-				}
-				
-				if ($IS_EMAIL){
+				if (filter_var($auth, FILTER_VALIDATE_EMAIL)){
+					$customer_id = $this->loginByEmail($auth, $password);
+				} elseif (mb_strlen(preg_replace("([^0-9])", "", $auth))) {
+					$customer_id = $this->loginByTelephone($auth, $password);
 
-					$customer_query = $this->db->ncquery("SELECT * FROM customer WHERE 
-						(LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "')  		
-							AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '". $this->db->escape($password) ."' OR password = '" . $this->db->escape(md5($password)) . "')
-							AND status = '1'
-							AND approved = '1'");
-
-					} elseif ($IS_PHONE_OR_DISCOUNT) {
-
-						$customer_query = $this->db->ncquery("SELECT * FROM customer WHERE 
-							(REPLACE(discount_card, ' ', '')  LIKE '" . $this->db->escape(str_replace(' ', '' , $email)) . "'
-								OR (REGEXP_REPLACE(telephone, '[^0-9]', '') LIKE '". $this->db->escape(preg_replace("([^0-9])", "", $email)) ."' )
-								OR (REGEXP_REPLACE(fax, '[^0-9]', '') LIKE '". $this->db->escape(preg_replace("([^0-9])", "", $email)) ."' )	
-								)  		
-								AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '". $this->db->escape($password) ."' OR password = '" . $this->db->escape(md5($password)) . "')
-								AND status = '1'
-								AND approved = '1'
-								AND store_id = '" . $this->config->get('config_store_id') . "'");
-
-						} else {
-							$customer_query = $this->db->ncquery("SELECT * FROM customer WHERE customer_id = '-1'");				
-						}								
+					if (!$customer_id){
+						$customer_id = $this->loginByCustomerId($auth, $password);
 					}
-			
-			if ($customer_query->num_rows) {
+
+					if (!$customer_id){
+						$customer_id = $this->loginByDiscountCard($auth, $password);
+					}
+				}
+			}
+
+			if ($customer_id) {
+				$customer_query = $this->db->ncquery("SELECT * FROM customer WHERE customer_id = '" . (int)$customer_id . "'");
+
 				$this->session->data['customer_id'] = $customer_query->row['customer_id'];	
 				
-				if (!isset($this->session->data['cart']) || empty($this->session->data['cart'])){
-					
+				if (!isset($this->session->data['cart']) || empty($this->session->data['cart'])){					
 					if ($customer_query->row['cart'] && is_string($customer_query->row['cart'])) {
 						$cart = unserialize($customer_query->row['cart']);
 						
 						if (!isset($this->session->data['cart'])){
-							$this->session->data['cart'] = array();
+							$this->session->data['cart'] = [];
 						}
 						
 						foreach ($cart as $key => $value) {
@@ -173,11 +267,10 @@
 				
 				if ($customer_query->row['wishlist'] && is_string($customer_query->row['wishlist'])) {
 					if (!isset($this->session->data['wishlist'])) {
-						$this->session->data['wishlist'] = array();
+						$this->session->data['wishlist'] = [];
 					}
 					
-					$wishlist = unserialize($customer_query->row['wishlist']);
-					
+					$wishlist = unserialize($customer_query->row['wishlist']);					
 					foreach ($wishlist as $product_id) {
 						if (!in_array($product_id, $this->session->data['wishlist'])) {
 							$this->session->data['wishlist'][] = $product_id;
@@ -218,14 +311,14 @@
 				$this->db->ncquery("UPDATE customer SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
 				
 				if ($autologin) {
-					$salt 		= $this->db->ncquery("SELECT salt FROM customer WHERE customer_id = '".$customer_query->row['customer_id']."'")->row['salt'];
+					$salt 		= $this->db->ncquery("SELECT salt FROM customer WHERE customer_id = '" . (int)$this->customer_id . "'")->row['salt'];
 					$password_c = sha1($salt . sha1($salt . sha1($password)));
 
 					setcookie('em', $email, time()+60 * 60 * 24 * 30, '/');
 					setcookie('p', $password_c, time()+60 * 60 * 24 * 30, '/');
 				}
 												
-				if($this->config->get('config_affiliate_login') && isset($this->affiliateNZ) && is_object($this->affiliateNZ) && !$this->affiliateNZ->isLogged()) {
+				if ($this->config->get('config_affiliate_login') && isset($this->affiliateNZ) && is_object($this->affiliateNZ) && !$this->affiliateNZ->isLogged()) {
 					$query = $this->db->ncquery("SELECT * FROM `affiliate` WHERE affiliate_id = '" . (int)$this->affiliate_paid . "'");
 					$affiliate_info = $query->row;
 					if($affiliate_info) {
@@ -248,7 +341,7 @@
 		private function checkIfHasBirthday($month, $day){
 			$today = date('Y-m-d');
 			
-			$dates = array();
+			$dates = [];
 			for ($i=-6; $i<=3; $i++){				
 				$dates[] = date('m-d', strtotime("$i day"));
 			}			
@@ -304,49 +397,7 @@
 			setcookie('p', '');
 			unset($this->request->cookie['em']);
 			unset($this->request->cookie['p']);
-		}
-		
-		public function validateStore($email){
-			if (is_numeric($email)){				
-				$store_query = $this->db->ncquery("SELECT store_id FROM customer WHERE	customer_id = '" . (int)$email . "' AND status = '1'");				
-				} else {
-				$store_query = $this->db->ncquery("SELECT store_id FROM customer WHERE (LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "') AND status = '1'");
-			}
-			
-			$IS_EMAIL = $IS_PHONE_OR_DISCOUNT = false;
-
-			if (filter_var($email, FILTER_VALIDATE_EMAIL)){
-				$IS_EMAIL = true;
-				} elseif (mb_strlen(trim(preg_replace("([^0-9])", "", $email))) > 0) {
-				$IS_PHONE_OR_DISCOUNT = true;				
-			}
-			
-			if ($IS_EMAIL){
-				$store_query = $this->db->ncquery("SELECT store_id FROM customer WHERE 
-					(LOWER(email) 		= '" . $this->db->escape(utf8_strtolower($email)) . "')  							
-						AND status 		= '1'
-						AND approved 	= '1'");
-
-			} elseif ($IS_PHONE_OR_DISCOUNT) {
-
-				$store_query = $this->db->ncquery("SELECT store_id FROM customer WHERE 
-					(REPLACE(discount_card,' ','')  LIKE '" . $this->db->escape(str_replace(' ','', $email)) . "'
-						OR (REGEXP_REPLACE(telephone, '[^0-9]', '') LIKE '". $this->db->escape(preg_replace("([^0-9])", "", $email)) ."' )
-						OR (REGEXP_REPLACE(fax, '[^0-9]', '') LIKE '". $this->db->escape(preg_replace("([^0-9])", "", $email)) ."' )	
-						)  							
-						AND status 		= '1'
-						AND approved 	= '1'");
-
-			} else {
-				$store_query = $this->db->ncquery("SELECT store_id FROM customer WHERE customer_id = '-1'");				
-			}
-			
-			if ($store_query->num_rows){
-				return $store_query->row['store_id'];
-			}
-			
-			return false;
-		}
+		}		
 		
 		public function isLogged() {
 			return $this->customer_id;
