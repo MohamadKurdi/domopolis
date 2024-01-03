@@ -47,8 +47,7 @@ class ControllerFeedReFeedMaker extends Controller
         }
     }
 
-    private function setLanguageID($language_id)
-    {
+    private function setLanguageID($language_id){
         $this->language_id = $language_id;
         $this->load->model('localisation/language');
         $this->urlcode = $this->model_localisation_language->getLanguage($language_id)['urlcode'];
@@ -56,20 +55,17 @@ class ControllerFeedReFeedMaker extends Controller
         return $this;
     }
 
-    private function setEanLog()
-    {
+    private function setEanLog(){
         $this->eanLog = new Log('invalid_ean.txt');
         $this->eanLog->clear();
         return $this;
     }
 
-    private function setURLCode($urlcode)
-    {
+    private function setURLCode($urlcode) {
         $this->urlcode = $urlcode;
     }
 
-    private function setSteps()
-    {
+    private function setSteps(){
         $steps = array();
         if ($this->config->get('config_store_id') == 1) {
             $steps = $this->steps;
@@ -100,8 +96,7 @@ class ControllerFeedReFeedMaker extends Controller
         $this->steps = $steps;
     }
 
-    protected function printItemFast($product, $changeID = true)
-    {
+    protected function printItemFast($product, $changeID = true){
         $output = '';
 
         $output .= '<item>' . PHP_EOL;
@@ -154,8 +149,7 @@ class ControllerFeedReFeedMaker extends Controller
         return $output;
     }
 
-    public function supplemental()
-    {
+    public function supplemental(){
         $this->load->model('catalog/product');
 
         $this->db->query("UPDATE product SET quantity = 0 WHERE quantity < 0 ");
@@ -235,13 +229,11 @@ class ControllerFeedReFeedMaker extends Controller
         }
     }
 
-    public function makeStockFeedsCron()
-    {
+    public function makeStockFeedsCron(){
         $this->makeFeedsCron(true);
     }
 
-    public function makeAllExceptExcludedLanguageCron()
-    {
+    public function makeAllExceptExcludedLanguageCron(){
         $query = $this->db->non_cached_query("SELECT * FROM store ORDER BY store_id ASC");
 
         $stores = [0];
@@ -261,29 +253,17 @@ class ControllerFeedReFeedMaker extends Controller
         }
     }
 
-    public function makeFeedsCron($stock = false)
-    {
+    public function makeFeedsCron($stock = false){
         $this->load->model('catalog/category');
         $this->load->model('catalog/product');
         $this->load->model('localisation/currency');
         $this->load->model('tool/image');
         $this->load->model('catalog/manufacturer');
 
-        $query = $this->db->non_cached_query("SELECT * FROM language");
-        foreach ($query->rows as $result) {
-            $languages[$result['code']] = array(
-                'language_id' => $result['language_id'],
-                'name'        => $result['name'],
-                'code'        => $result['code'],
-                'locale'      => $result['locale'],
-                'directory'   => $result['directory'],
-                'filename'    => $result['filename']
-            );
-        }
 
         $language_id = $this->config->get('config_language_id');
         $store_id = $this->config->get('config_store_id');
-            
+
         foreach (array(0,1) as $changeID) {
             if ($language_id != $this->registry->get('excluded_language_id') && $changeID) {
                 continue;
@@ -392,8 +372,7 @@ class ControllerFeedReFeedMaker extends Controller
         $this->cleanUp();
     }
 
-    protected function printItem($product, $google_base_category, $changeID = true)
-    {
+    protected function printItem($product, $google_base_category, $changeID = true){
         $output = '';
 
         $output .= '<item>' . PHP_EOL;
@@ -522,9 +501,6 @@ class ControllerFeedReFeedMaker extends Controller
                 $output .= '  <g:sale_price_effective_date>' . date('c', strtotime('-1 day')) .'/'. date('c', strtotime($product['special_date_end'])) . '</g:sale_price_effective_date>'. PHP_EOL;
                 $output .= '  <g:offer_price_effective_date>' . date('c', strtotime('-1 day')) .'/'. date('c', strtotime($product['special_date_end'])) . '</g:offer_price_effective_date>'. PHP_EOL;
             }
-
-                //      echo '[DEBUG] Опа, товар со скидкой, sale_price = ' . $this->currency->format($product['special'], '', '', false) . ' ' . $this->currency->getCode() . PHP_EOL;
-                //      echo '[DEBUG] Опа, товар со скидкой, sale_price_effective_date = ' . $product['special_date_end'] . ' = ' . date('c', strtotime('-1 day')) .'/'. date('c', strtotime($product['special_date_end'])) . PHP_EOL;
         }
 
 
