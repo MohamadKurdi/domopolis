@@ -1,6 +1,6 @@
 <?php
 $_['heading_title'] = 'Авторизация';
-$_['text_account'] = 'Учетная запись';
+$_['text_account'] = 'Кабинет';
 $_['text_login'] = 'Вход';
 $_['text_new_customer'] = 'Новый покупатель';
 $_['text_register'] = 'Создать учетную запись';

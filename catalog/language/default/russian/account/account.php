@@ -1,8 +1,6 @@
 <?php
 $_['heading_title'] = 'Кабинет'; 
-
 $_['text_account'] = 'Кабинет'; 
-
 $_['text_my_account'] = 'Кабинет'; 
 
 $_['text_my_orders']     = 'Мои заказы';
