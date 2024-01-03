@@ -44,14 +44,7 @@ class ControllerAccountOTP extends Controller {
 
 		$this->template = 'account/otp.tpl';
 
-		$this->children = [
-			'common/column_left',
-			'common/column_right',
-			'common/content_top',
-			'common/content_bottom',
-			'common/footer',
-			'common/header'	
-		];
+		$this->children = [];
 
 		$this->response->setOutput($this->render());
 	}
@@ -61,33 +54,23 @@ class ControllerAccountOTP extends Controller {
 		$this->language->load('account/login');
 
 		if (!$this->customer->isLogged()){
-			$telephone = $this->request->post['telephone'];
-
-			if ($this->config->get('config_google_recaptcha_contact_enable')){				
-				$result['error'] = $this->language->get('error_captcha');
-				if (!empty($this->request->post['g-recaptcha-response'])){
-					$reCaptcha 			= new \ReCaptcha\ReCaptcha($this->config->get('config_google_recaptcha_contact_secret'));
-					$reCaptchaResponse 	= $reCaptcha->setScoreThreshold(0.5)->verify($this->request->post['g-recaptcha-response']);
-
-					if ($reCaptchaResponse->isSuccess()){
-						unset($result['error']);
-					} else {
-						$result['error'] .= ' ' . json_encode($reCaptchaResponse->getErrorCodes());
-					}
-				}				
-			}
+			$telephone = $this->request->post['telephone'];			
 
 			if (empty($result['error']) && !$this->phoneValidator->validate($telephone)){
 				$result['error'] = $this->language->get('error_telephone');
 			} elseif (empty($result['error'])) {
-				if ($senderId = $this->otpLogin->sendOTPCode($telephone)){
-					$result['success'] = sprintf($this->language->get('entry_code_sent_to_number'), $this->phoneValidator->format($telephone));
-				} else {
+				$senderId = $this->otpLogin->sendOTPCode($telephone);
+
+				if ($senderId == \hobotix\OTP::MAX_TRIES_EXCEEDED){
+					$result['error'] = $this->language->get('error_tries_exceeded');
+				} elseif ($senderId == \hobotix\OTP::SMS_NOT_SENT || !$senderId){
 					$result['error'] =  $this->language->get('error_code');
+				} else {
+					$result['success'] = sprintf($this->language->get('entry_code_sent_to_number'), $this->phoneValidator->format($telephone));
 				}
-			}
+			}				
 		}
-	
+
 		$this->response->setJSON($result);
 	}
 
@@ -97,20 +80,6 @@ class ControllerAccountOTP extends Controller {
 
 		if (!$this->customer->isLogged()){
 			$code = trim($this->request->post['code']);		
-
-			// if ($this->config->get('config_google_recaptcha_contact_enable')){				
-			// 	$result['error'] = $this->language->get('error_captcha');
-			// 	if (!empty($this->request->post['g-recaptcha-response'])){
-			// 		$reCaptcha 			= new \ReCaptcha\ReCaptcha($this->config->get('config_google_recaptcha_contact_secret'));
-			// 		$reCaptchaResponse 	= $reCaptcha->setScoreThreshold(0.5)->verify($this->request->post['g-recaptcha-response']);
-
-			// 		if ($reCaptchaResponse->isSuccess()){
-			// 			unset($result['error']);
-			// 		} else {
-			// 			$result['error'] .= ' ' . json_encode($reCaptchaResponse->getErrorCodes());
-			// 		}
-			// 	}				
-			// }
 
 			if (empty($result['error'])) {
 				$result['error'] = $this->language->get('error_code_validation');				

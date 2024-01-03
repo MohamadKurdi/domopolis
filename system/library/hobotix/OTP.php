@@ -4,18 +4,26 @@ namespace hobotix;
 
 final class OTP {
 
-    private $db     = null;
-    private $config = null;
+    private $db         = null;
+    private $config     = null;
+    private $request    = null;
 
     private $smsAdaptor     = null;
     private $phoneValidator = null; 
     private $customer       = null; 
 
-    private $lifetime       = 600; 
+    private $lifetime           = 600; 
+    private $resend_lifetime    = 60;
+    private $max_tries          = 3;
+    private $lifetime_tries     = 600;
+
+    public const MAX_TRIES_EXCEEDED = -2;
+    public const SMS_NOT_SENT       = -3;
 
     public function __construct($registry){        
         $this->config   = $registry->get('config');
         $this->db       = $registry->get('db');
+        $this->request  = $registry->get('request');
 
         $this->smsAdaptor       = $registry->get('smsAdaptor');
         $this->phoneValidator   = $registry->get('phoneValidator');
@@ -24,20 +32,32 @@ final class OTP {
     }
 
     public function sendOTPCode($telephone){
-        $telephone  = $this->phoneValidator->format($telephone);
-        $otpCode    = $this->setOTPCode($telephone);
+        $telephone  = $this->phoneValidator->format($telephone);        
 
-        return $this->smsAdaptor->sendSMSOTP(['telephone' => $telephone], ['otp_code' => $otpCode]);
+        if ($this->validateTries() === false){
+            return self::MAX_TRIES_EXCEEDED;
+        }
+
+        $otpCode    = $this->setOTPCode($telephone);
+            
+        $senderID = $this->smsAdaptor->sendSMSOTP(['telephone' => $telephone], ['otp_code' => $otpCode]);            
+
+        if (!$senderID){
+            return self::SMS_NOT_SENT;
+        } 
+
+        return $senderID;     
     }
 
     public function setOTPCode($telephone){
-        $otpCode = generateRandomPin(6);
-       
+        $this->updateTries();
+        $otpCode = generateRandomPin(6);               
+
         $this->session->data['otp_telephone']   = $telephone;
         $this->session->data['otp_code']        = $otpCode;
         $this->session->data['otp_time']        = time();  
 
-        return $otpCode;
+        return $otpCode;        
     }
 
     public function getCurrentOTPTelephone(){
@@ -59,6 +79,7 @@ final class OTP {
             if ($this->session->data['otp_code'] == $code){
                 if ((time() - $this->session->data['otp_time']) <= $this->lifetime){
                     $this->cleanOTPCode();
+                    $this->unsetTries();
 
                     return true;                    
                 }
@@ -66,5 +87,38 @@ final class OTP {
         }
 
         return false;
+    }
+
+    public function validateTries(){
+         $query = $this->db->query("SELECT * FROM otp_tries WHERE ip_addr = '" . $this->request->server['REMOTE_ADDR'] . "'");
+
+         if ($query->num_rows){
+            if ((int)$query->row['tries'] < $this->max_tries){
+                return true;
+            } else {
+                if (((int)$query->row['timestamp'] + $this->lifetime_tries) < time()){
+                    $this->unsetTries();
+                    return true;
+                } else {
+                    return false;
+                }                
+            }
+         }
+
+        return 0;
+    }
+
+    private function unsetTries(){
+        $this->db->query("DELETE FROM otp_tries WHERE ip_addr = '" . $this->request->server['REMOTE_ADDR'] . "'");
+    }
+
+    private function updateTries(){
+        $this->db->query("INSERT INTO otp_tries SET
+            ip_addr = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "',
+            tries = 1,
+            timestamp = '" . (int)time() . "'
+            ON DUPLICATE KEY UPDATE
+            tries = tries + 1,
+            timestamp = '" . (int)time() . "'");
     }
 }
