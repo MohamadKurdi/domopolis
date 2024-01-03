@@ -10,8 +10,7 @@
 		private function validateIfIsCheckoutPage(){
 			$checkout_page = $this->url->link('checkout/simplecheckout');
 			
-			if (!empty($this->request->server['HTTP_REFERER']) && $parsedReferer = parse_url($this->request->server['HTTP_REFERER'])){
-				
+			if (!empty($this->request->server['HTTP_REFERER']) && $parsedReferer = parse_url($this->request->server['HTTP_REFERER'])){				
 				if (($parsedReferer['scheme'] . '://' . $parsedReferer['host'] . $parsedReferer['path']) == $checkout_page){
 					return true;
 				}
@@ -266,7 +265,6 @@
 					$this->template = 'common/popup_cart.tpl';
 				}
 				$this->response->setOutput($this->render());
-			}
-			
+			}			
 		}
 	}			
