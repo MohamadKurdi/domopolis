@@ -137,9 +137,7 @@ class ControllerModuleMegaFilter extends Controller {
 		if( ! $curr_ver || version_compare( $curr_ver, $this->_version, '<' ) || $this->_isOldMFilterPlus() ) {			
 			$this->load->model('setting/setting');
 			$this->load->model('setting/store');
-			
-			$stores = array(0);
-			
+
 			foreach( $this->model_setting_store->getStores() as $row ) {
 				$stores[] = $row['store_id'];
 			}
