@@ -90,13 +90,13 @@ final class OTP {
     }
 
     public function validateTries(){
-         $query = $this->db->query("SELECT * FROM otp_tries WHERE ip_addr = '" . $this->request->server['REMOTE_ADDR'] . "'");
+         $ncquery = $this->db->ncquery("SELECT * FROM otp_tries WHERE ip_addr = '" . $this->request->server['REMOTE_ADDR'] . "'");
 
-         if ($query->num_rows){
-            if ((int)$query->row['tries'] < $this->max_tries){
+         if ($ncquery->num_rows){
+            if ((int)$ncquery->row['tries'] < $this->max_tries){
                 return true;
             } else {
-                if (((int)$query->row['timestamp'] + $this->lifetime_tries) < time()){
+                if (((int)$ncquery->row['timestamp'] + $this->lifetime_tries) < time()){
                     $this->unsetTries();
                     return true;
                 } else {
@@ -109,11 +109,11 @@ final class OTP {
     }
 
     private function unsetTries(){
-        $this->db->query("DELETE FROM otp_tries WHERE ip_addr = '" . $this->request->server['REMOTE_ADDR'] . "'");
+        $this->db->ncquery("DELETE FROM otp_tries WHERE ip_addr = '" . $this->request->server['REMOTE_ADDR'] . "'");
     }
 
     private function updateTries(){
-        $this->db->query("INSERT INTO otp_tries SET
+        $this->db->ncquery("INSERT INTO otp_tries SET
             ip_addr = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "',
             tries = 1,
             timestamp = '" . (int)time() . "'

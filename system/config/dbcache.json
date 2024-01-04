@@ -4,7 +4,9 @@
 		"customer_simple_fields",
 		"order_simple_fields",
 		"customer_reward",
-		"customer_reward_queue"
+		"customer_reward_queue",
+		"otp_tries",
+		"order"
 	],
 	"explicitCacheableTables": [
 		"setting",

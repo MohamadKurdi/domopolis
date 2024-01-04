@@ -56,7 +56,7 @@
 								}).then(otp => {
 									console.log("[PWA] Success getting OTP: " + otp.code);
 									$('input[name=code]').val(otp.code);
-									$('#button-get-code').trigger('click');
+									$('#button-check-code').trigger('click');
 								}).catch(err => {   
 									console.error("[PWA] WebOTP error: ", err);
 								});
