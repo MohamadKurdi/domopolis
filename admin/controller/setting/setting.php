@@ -4295,6 +4295,13 @@ class ControllerSettingSetting extends Controller
             'social_auth_facebook_secret_key',
             'social_auth_google_app_id',
             'social_auth_google_secret_key',
+            'social_auth_google_enable_sso_widget',
+            'social_auth_yandex_client_id',
+            'social_auth_yandex_secret_key',
+            'social_auth_yandex_enable_sso_widget',
+            'social_auth_mailru_client_id',
+            'social_auth_mailru_secret_key',
+            'social_auth_mailru_enable_sso_widget',
             'social_auth_insatagram_client_id',
             'social_auth_insatagram_secret_key'
         ];

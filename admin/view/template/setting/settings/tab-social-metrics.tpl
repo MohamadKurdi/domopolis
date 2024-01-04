@@ -65,9 +65,13 @@
 		</table>
 
 
-		<h2 style="color:#57AC79">Авторизация Google + Facebook APP</h2>
+		<h2 style="color:#57AC79">Авторизация Google, Facebook<?php if ($this->config->get('config_country_id') == 176) { ?>, Yandex<?php } ?></h2>
 		<table class="form">
-			<tr>		
+			<tr>
+				<td width="25%">
+					Google
+				</td>
+
 				<td width="25%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Google APP ID</span></p>
 					<input type="text" name="social_auth_google_app_id" value="<?php echo $social_auth_google_app_id; ?>" size="30" style="width:150px;" />
@@ -76,8 +80,25 @@
 				<td width="25%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Google Secret Key</span></p>
 					<input type="text" name="social_auth_google_secret_key" value="<?php echo $social_auth_google_secret_key; ?>" size="30" style="width:150px;" />
-				</td>	
-				
+				</td>
+
+				<td width="25%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Google SSO Виджет</span></p>
+					<select name="social_auth_google_enable_sso_widget">
+						<?php if ($social_auth_google_enable_sso_widget) { ?>
+							<option value="1" selected="selected">Включить</option>
+							<option value="0">Отключить</option>
+						<?php } else { ?>													
+							<option value="1">Включить</option>
+							<option value="0"  selected="selected">Отключить</option>
+						<? } ?>
+					</select>
+				</td>		
+			</tr>
+			<tr>
+				<td width="25%">
+					Facebook
+				</td>				
 				<td width="25%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">FB APP ID</span></p>
 					<input type="text" name="social_auth_facebook_app_id" value="<?php echo $social_auth_facebook_app_id; ?>" size="30" style="width:150px;" />
@@ -86,9 +107,71 @@
 				<td width="25%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">FB APP Secret Key</span></p>
 					<input type="text" name="social_auth_facebook_secret_key" value="<?php echo $social_auth_facebook_secret_key; ?>" size="30" style="width:150px;" />
-				</td>	
+				</td>
+
+				<td width="25%">					
+				</td>		
 			</tr>
-		</table>
+			<?php if ($this->config->get('config_country_id') == 176) { ?>
+				<tr>		
+					<td width="25%">
+						Yandex
+					</td>
+					<td width="25%">
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Yandex ClientID</span></p>
+						<input type="text" name="social_auth_yandex_client_id" value="<?php echo $social_auth_yandex_client_id; ?>" size="30" style="width:150px;" />
+					</td>
+
+					<td width="25%">
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Yandex Secret Key</span></p>
+						<input type="text" name="social_auth_yandex_secret_key" value="<?php echo $social_auth_yandex_secret_key; ?>" size="30" style="width:150px;" />
+					</td>	
+
+					<td width="25%">
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Yandex ID SSO Виджет</span></p>
+						<select name="social_auth_yandex_enable_sso_widget">
+							<?php if ($social_auth_yandex_enable_sso_widget) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+					</td>	
+				</tr>
+				<tr>		
+					<td width="25%">
+						MailRu
+					</td>
+					<td width="25%">
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">MailRu ClientID</span></p>
+						<input type="text" name="social_auth_mailru_client_id" value="<?php echo $social_auth_mailru_client_id; ?>" size="30" style="width:150px;" />
+					</td>
+					
+					<td width="25%">
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Mailru Secret Key</span></p>
+						<input type="text" name="social_auth_mailru_secret_key" value="<?php echo $social_auth_mailru_secret_key; ?>" size="30" style="width:150px;" />
+					</td>	
+					
+					<td width="25%">
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Mailru SSO Виджет</span></p>
+						<select name="social_auth_mailru_enable_sso_widget">
+							<?php if ($social_auth_mailru_enable_sso_widget) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+					</td>	
+					
+					<td width="25%">
+					</td>
+				</tr>
+			<?php } ?>
+		</table>		
 
 
 		<h2 style="color:#57AC79">Google Tag Manager (GTM) + Custom JS code</h2>
