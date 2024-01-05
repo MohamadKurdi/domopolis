@@ -8,13 +8,11 @@
 <div class="dashboard-content" style="min-height: 360px;">
 	<div style="margin-bottom: 10px;">
 		<?php if ($success) { ?>
-			<span style="color:#00ad07; font-size:18px; font-weight: 700;"><i class="fa fa-check-circle"></i> судя по ответу от Rainforest, всё работает
+			<span style="color:#00ad07; font-size:18px; font-weight: 700;"><i class="fa fa-info-circle"></i> Rainforest API говорит что всё ок
 				<br />
-				<small><i class="fa fa-info-circle"></i> скрипты крутятся, лавеха мутится</small>
+				<i class="fa fa-check-circle"></i> скрипты крутятся, лавеха мутится
 			</span>
-		<?php } else { ?>
-
-			
+		<?php } else { ?>			
 			<?php if ($message == 'ZERO_CREDITS_AND_OVERAGE_IS_USED_NOW') { ?>
 
 				<span style="color:#FF9243; font-size:18px; font-weight: 700;"><i class="fa fa-exclamation-triangle"></i> есть ньюансы:

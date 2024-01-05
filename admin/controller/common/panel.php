@@ -350,7 +350,7 @@ class ControllerCommonPanel extends Controller {
 		$this->response->setOutput(json_encode($json));				
 	}
 
-	public function getDeeplTranslateInfo(){
+	public function getDeeplTranslatorInfo(){
 		$body = '';
 		$class= 'good';
 
@@ -385,7 +385,7 @@ class ControllerCommonPanel extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
-	public function getAzureTranslateInfo(){
+	public function getAzureTranslatorInfo(){
 		$body = '';
 		$class= 'good';
 
@@ -424,7 +424,7 @@ class ControllerCommonPanel extends Controller {
 	}
 
 
-	public function getYandexTranslateInfo(){
+	public function getYandexTranslatorInfo(){
 		$body = '';
 		$class= 'good';
 
