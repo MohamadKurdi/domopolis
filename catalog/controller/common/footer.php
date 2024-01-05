@@ -409,6 +409,12 @@ class ControllerCommonFooter extends Controller {
 								$this->data['qrcode']    = HTTP_ADMIN . 'index.php?route=kp/printer/createQRForPage&token='. $this->data['admin_token'] .'&uri=' . base64_encode($this->data['canonical']);
 								break;
 
+								case 'action':									
+								$this->data['admin_uri'] = HTTP_ADMIN . 'index.php?route=catalog/actions/update&token='. $this->data['admin_token'] .'&actions_id=' . $this->request->get['actions_id'];
+								$this->data['canonical'] = $this->url->link('information/actions', 'actions_id=' . $this->request->get['actions_id']);
+								$this->data['qrcode']    = HTTP_ADMIN . 'index.php?route=kp/printer/createQRForPage&token='. $this->data['admin_token'] .'&uri=' . base64_encode($this->data['canonical']);
+								break;
+
 								default:
 								break;
 							}

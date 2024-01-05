@@ -132,7 +132,11 @@ function tryToGuessPageType($request){
 		
 		if ($request['route'] == 'product/category' && !empty($request['path'])){
 			return 'category';
-		}		
+		}	
+
+		if ($request['route'] == 'information/actions' && !empty($request['actions_id'])){
+			return 'action';
+		}	
 	}
 
 	return false;
