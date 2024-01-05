@@ -39,8 +39,10 @@ class SmsAdaptor {
 
 	private function editOTPSetting($setting){
 		if ($this->config->get('config_otp_auto_enable')){
-			$this->db->query("UPDATE setting SET value = '" . (int)$setting . "' WHERE key = 'config_otp_enable'");
-			$this->db->query("UPDATE setting SET value = '" . (int)$setting . "' WHERE key = 'config_otp_enable_sms'");
+			echoLine('[SmsAdaptor::editOTPSetting] OTP auto enabled, setting it to: ' . (int)$setting, 'w');
+
+			$this->db->query("UPDATE setting SET `value` = '" . (int)$setting . "' WHERE `key` = 'config_otp_enable'");
+			$this->db->query("UPDATE setting SET `value` = '" . (int)$setting . "' WHERE `key` = 'config_otp_enable_sms'");
 		}
 	}
 
