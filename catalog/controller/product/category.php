@@ -1344,7 +1344,7 @@
 				require_once(DIR_SYSTEM . 'library/microdata/opengraph/category.php');
 				require_once(DIR_SYSTEM . 'library/microdata/twittercard/category.php');
 				
-				//REWARD TEXT
+				$this->data['href_credits'] 	= $this->url->link('information/information', 'information_id=' . $this->config->get('config_credits_article_id'));
 				if ($this->config->get('rewardpoints_appinstall')){
 					$this->data['text_retranslate_app_block'] = sprintf($this->data['text_retranslate_app_block_reward'], $this->currency->format($this->config->get('rewardpoints_appinstall'), $this->config->get('config_currency_national'), 1));
 				}
