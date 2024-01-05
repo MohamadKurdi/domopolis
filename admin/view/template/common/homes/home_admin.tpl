@@ -11,7 +11,7 @@
 		.tile-block{width:100%; float: left; margin-left:0px;}
 	}
 
-	.tile-body {overflow: hidden; line-height: 14px;}
+	.tile-body {overflow: hidden; line-height: 14px; min-height: 30px;}
 
 	.tile.good > .tile-heading, .tile.good > .tile-footer{background-color: #00ad07; }
 	.tile.good > .tile-body{background-color: #00ad07;opacity: 0.8;}
@@ -64,7 +64,7 @@
 							<span class="tile-result"></span>
 						</div>
 						<div class="tile-footer">
-							смс-шлюз <?php echo $this->config->get('config_smsgate_library');?>
+							<?php echo $this->config->get('config_smsgate_library');?>
 						</div>
 					</div>
 				</div>
@@ -76,11 +76,12 @@
 							<span class="tile-result"></span>
 						</div>
 						<div class="tile-footer">
-							сколько смсок в очереди
+							очередь sms
 						</div>
 					</div>
 				</div>
 
+				<?php if ($this->config->get('config_openai_enable')) { ?>
 				<div class="tile-block narrow">
 					<div class="tile info-loader unknown" data-path="common/panel/getOpenAIInfo" data-update-interval="300000">
 						<div class="tile-heading">🤖 OpenAI API</div>
@@ -92,6 +93,7 @@
 						</div>
 					</div>
 				</div>	
+				<?php } ?>
 
 				<?php if ($this->config->get('config_translation_library')) { ?>
 				<div class="tile-block">
