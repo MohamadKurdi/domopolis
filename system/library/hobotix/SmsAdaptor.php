@@ -37,6 +37,11 @@ class SmsAdaptor {
         return $results;
 	}
 
+	private function editOTPSetting($setting){
+		$this->db->query("UPDATE setting SET value = '" . (int)$setting . "' WHERE key = 'config_otp_enable'");
+		$this->db->query("UPDATE setting SET value = '" . (int)$setting . "' WHERE key = 'config_otp_enable_sms'");
+	}
+
 	public function getBalance(){
 		if (method_exists($this->smsObject, 'getBalance')){
 			try {
@@ -52,6 +57,12 @@ class SmsAdaptor {
 		}			
 
 		$result = number_format($result, 0, '', '');
+
+		if ((int)$result > 5){
+			$this->editOTPSetting(1);
+		} else {
+			$this->editOTPSetting(0);
+		}
 
 		echoLine('[SmsAdaptor::getBalance] Got balance: ' . $result);
 
