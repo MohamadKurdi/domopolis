@@ -356,7 +356,7 @@ class ControllerCommonPanel extends Controller {
 
 		if ($this->config->get('config_deepl_translate_api_enable')){
 			try {
-				$result = $this->translateAdaptor->use('DeeplTranslator')->translate('привет', 'ru', 'en');	
+				$result = $this->translateAdaptor->use('DeeplTranslator')->translate('привет', 'ru', 'en-GB');	
 
 				$json = json_decode($result, true);
 

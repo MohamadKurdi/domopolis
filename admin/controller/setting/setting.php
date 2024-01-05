@@ -2861,6 +2861,7 @@ class ControllerSettingSetting extends Controller
 
          $otp_auth_settings = [
             'config_otp_enable',
+            'config_otp_auto_enable',
             'config_otp_enable_sms',
             'config_otp_enable_viber',
             'config_otp_enable_email',

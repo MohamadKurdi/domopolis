@@ -38,8 +38,10 @@ class SmsAdaptor {
 	}
 
 	private function editOTPSetting($setting){
-		$this->db->query("UPDATE setting SET value = '" . (int)$setting . "' WHERE key = 'config_otp_enable'");
-		$this->db->query("UPDATE setting SET value = '" . (int)$setting . "' WHERE key = 'config_otp_enable_sms'");
+		if ($this->config->get('config_otp_auto_enable')){
+			$this->db->query("UPDATE setting SET value = '" . (int)$setting . "' WHERE key = 'config_otp_enable'");
+			$this->db->query("UPDATE setting SET value = '" . (int)$setting . "' WHERE key = 'config_otp_enable_sms'");
+		}
 	}
 
 	public function getBalance(){

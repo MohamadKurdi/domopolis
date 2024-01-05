@@ -139,7 +139,7 @@
 		<h2><i class="fa fa-mobile"></i> OTP авторизация</h2>
 		<table class="form">
 			<tr>
-				<td width="25%">
+				<td width="20%">
 					<div>
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff007f; color:#FFF">Включить OTP-авторизацию</span></p>
 						<select name="config_otp_enable">
@@ -154,7 +154,22 @@
 						<span class="help">One Time Password</span>
 					</div>				
 				</td>
-				<td width="25%">
+				<td width="20%">
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff007f; color:#FFF">Автоотключение</span></p>
+						<select name="config_otp_auto_enable">
+							<?php if ($config_otp_auto_enable) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+						<span class="help">в зависимости от баланса шлюза</span>
+					</div>				
+				</td>
+				<td width="20%">
 					<div>
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff007f; color:#FFF">EMAIL OTP</span></p>
 						<select name="config_otp_enable_email">
@@ -169,7 +184,7 @@
 						<span class="help">не используется, настройка нужна для совместимости методов OTP</span>
 					</div>
 				</td>
-				<td width="25%">
+				<td width="20%">
 					<div>
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff007f; color:#FFF">SMS OTP</span></p>
 						<select name="config_otp_enable_sms">
@@ -184,7 +199,7 @@
 						<span class="help">поддерживается автопрочтение кода OTP в современных браузерах</span>
 					</div>
 				</td>
-				<td width="25%">
+				<td width="20%">
 					<div>
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff007f; color:#FFF">VIBER OTP</span></p>
 						<select name="config_otp_enable_viber">
