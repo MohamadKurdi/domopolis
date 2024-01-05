@@ -40,7 +40,7 @@
 			$this->document->setTitle("Новинки");
 			
 			
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 			
 			$this->data['breadcrumbs'][] = array(
             'text'      => $this->language->get('text_home'),
@@ -96,7 +96,7 @@
 			
 			$this->load->model('catalog/category');
 			
-			$this->data['products'] = array();
+			$this->data['products'] = [];
 			
 			$data = array(
             'new'                 => 1,
@@ -123,7 +123,7 @@
 				$url .= '&limit=' . $this->request->get['limit'];
 			}
 			
-			$this->data['sorts'] = array();
+			$this->data['sorts'] = [];
 
 			foreach ($this->registry->get('sorts') as $sortConfig){
 				if ($sortConfig['visible']){
@@ -146,7 +146,7 @@
 				$url .= '&order=' . $this->request->get['order'];
 			}
 			
-			$this->data['limits'] = array();
+			$this->data['limits'] = [];
 			
 			$limits = array_unique(array($this->config->get('config_catalog_limit'), $this->config->get('config_catalog_limit') * 2, $this->config->get('config_catalog_limit') * 3));
 			
@@ -175,12 +175,12 @@
 				$url .= '&limit=' . $this->request->get['limit'];
 			}
 			
-			$pagination = new Pagination();
-			$pagination->total = $product_total;
-			$pagination->page = $page;
-			$pagination->limit = $limit;
-			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('product/product_new', $url . '&page={page}');
+			$pagination 		= new Pagination();
+			$pagination->total 	= $product_total;
+			$pagination->page 	= $page;
+			$pagination->limit 	= $limit;
+			$pagination->text 	= $this->language->get('text_pagination');
+			$pagination->url 	= $this->url->link('product/product_new', $url . '&page={page}');
 			
 			$this->data['text_show_more'] = $this->language->get('text_show_more');
 			$this->data['pagination'] = $pagination->render();
@@ -193,11 +193,12 @@
 				$this->document->addLink($this->url->link('product/product_new', '&page=' . $page), 'canonical');
 				$this->document->addRobotsMeta("noindex, follow");
 			}
+
 			if ($page < $num_pages) {
 				$this->document->addLink($this->url->link('product/product_new', '&page=' . ($page + 1)), 'next');
 			}
+
 			if ($page > 1) {
-				// Remove page duplicate
 				if ($page == 2) {
 					$this->document->addLink($this->url->link('product/product_new'), 'prev');
 					} else {
@@ -216,8 +217,7 @@
 					$this->data['current_sort'] = $_sort['text'];
 				}
 			}
-			
-			//REWARD TEXT
+
 			if ($this->config->get('rewardpoints_appinstall')){
 				$this->data['text_retranslate_app_block'] = sprintf($this->data['text_retranslate_app_block_reward'], $this->currency->format($this->config->get('rewardpoints_appinstall'), $this->config->get('config_currency_national'), 1));
 			}

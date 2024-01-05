@@ -80,16 +80,16 @@
 					
 					foreach ($modules as $module) {
 						
-						if( ! isset( $module['layout_id'] ) )
+						if( !isset( $module['layout_id'] ) )
 						$module['layout_id'] = 0;
 						
-						if( ! isset( $module['position'] ) )
+						if( !isset( $module['position'] ) )
 						$module['position'] = '';
 						
-						if( ! isset( $module['status'] ) )
+						if( !isset( $module['status'] ) )
 						$module['status'] = '0';
 						
-						if( ! isset( $module['sort_order'] ) )
+						if( !isset( $module['sort_order'] ) )
 						$module['sort_order'] = 0;
 						
 						if( ! is_array( $module['layout_id'] ) )
@@ -114,7 +114,7 @@
 					}
 				}
 			}
-			
+
 			
 			$sort_order = array();
 			
@@ -132,7 +132,6 @@
 			array_multisort($sort_order, SORT_ASC, $module_data);
 			
 			$this->data['modules'] = array();
-			
 			
 			foreach ($module_data as $module) {				
 				$module = $this->getChild('module/' . $module['code'], $module['setting']);										
