@@ -109,9 +109,10 @@
 						<ul class="right">
 							<li id="dashboard"><a href="<?php echo $home; ?>" class="top"><i class="fa fa-home icon_menu"></i><?php echo $text_dashboard; ?></a></li>							
 							<? if ($this->user->getIsAV()) { ?>
-								<li id="worktime"><a class="top"><i class="fa fa-eye icon_menu"></i>Работа</a>
+								<li id="worktime"><a class="top"><i class="fa fa-clock-o icon_menu"></i>Работа</a>
 									<ul>
 										<li id="user_content"><a class="home_icon_style" href="<?php echo $user_content; ?>"><i class="fa fa-clock-o"  aria-hidden="true"></i><span>Работа контентов</span></a></li>
+										<li id="addasin_report"><a class="home_icon_style" href="<?php echo $addasin_report; ?>"><i class="fa fa-amazon"  aria-hidden="true"></i><span>Отчет по добавлениям Amazon</span></a></li>
 										<li id="user_worktime"><a class="home_icon_style" href="<?php echo $user_worktime; ?>"><i class="fa fa-clock-o"  aria-hidden="true"></i><span>Работа менеджеров</span></a></li>
 										<li id="manager_quality"><a class="home_icon_style" href="<?php echo $manager_quality; ?>"><i class="fa fa-bar-chart"  aria-hidden="true"></i><span>KPI менеджеров</span></a></li>
 										<li id="salary_manager"><a class="home_icon_style" href="<?php echo $salary_manager; ?>"><i class="fa fa-handshake-o"  aria-hidden="true"></i><span>Отчет по закрытым заказам</span></a></li>

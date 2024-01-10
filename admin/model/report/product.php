@@ -184,19 +184,39 @@
 		}
 
 		public function getProductsInASINQueue($data = []) {
-			$sql = "SELECT adq.*, pd.name, 
+			$sql = "SELECT adq.*, pd.name, pd2.name as rnf_name,
 				p.image, 
 				p.status, 
 				p.amazon_product_link, 
-				p.amazon_best_price,				
+				p.amazon_best_price,
+				p.price,				
+				p.costprice,
+				p.profitability,
 				p.date_added as date_created 
-				FROM amzn_add_queue adq 
-				LEFT JOIN product p ON (p.product_id = adq.product_id) 
-				LEFT JOIN product_description pd ON (adq.product_id = pd.product_id AND language_id = '" . $this->config->get('config_language_id') . "') 
-					WHERE 1";
+				FROM amzn_add_queue adq ";
+
+			if (isset($data['filter_good'])){
+				$sql .= " 	JOIN product p ON (p.product_id = adq.product_id) 
+							JOIN product_description pd ON (adq.product_id = pd.product_id AND pd.language_id = '" . $this->config->get('config_language_id') . "') 
+							JOIN product_description pd2 ON (adq.product_id = pd2.product_id AND pd2.language_id = '" . $this->config->get('config_rainforest_source_language_id') . "') ";
+			} else {
+				$sql .= " 	LEFT JOIN product p ON (p.product_id = adq.product_id) 
+							LEFT JOIN product_description pd ON (adq.product_id = pd.product_id AND pd.language_id = '" . $this->config->get('config_language_id') . "') 
+							LEFT JOIN product_description pd2 ON (adq.product_id = pd2.product_id AND pd2.language_id = '" . $this->config->get('config_rainforest_source_language_id') . "') ";
+			}
+				
+			$sql .= " WHERE 1";
 			
 			if (isset($data['filter_asin'])){
 				$sql .= " AND asin LIKE ('%" . $this->db->escape($data['filter_asin']) . "%')";
+			}
+
+			if (!empty($data['filter_date_from'])){
+				$sql .= " AND DATE(p.date_added) >= '" . $this->db->escape(date('Y-m-d', strtotime($data['filter_date_from']))) . "'";
+			}
+
+			if (!empty($data['filter_date_to'])){
+				$sql .= " AND DATE(p.date_added) <= '" . $this->db->escape(date('Y-m-d', strtotime($data['filter_date_to']))) . "'";
 			}
 
 			if (isset($data['filter_user_id'])){
@@ -205,6 +225,10 @@
 			
 			if (isset($data['filter_name'])){
 				$sql .= " AND LOWER(name) LIKE ('%" . $this->db->escape(mb_strtolower($data['filter_name'])) . "%')";
+			}
+
+			if (isset($data['filter_good'])){
+				$sql .= " AND adq.product_id > 0";
 			}
 
 			if (isset($data['filter_problems'])){
@@ -248,11 +272,31 @@
 			return $query->row['total'];
 		}
 
-		public function getTotalProductsInASINQueue($data) {
-			$sql = "SELECT COUNT(*) AS total FROM amzn_add_queue adq LEFT JOIN product p ON (p.product_id = adq.product_id) LEFT JOIN product_description pd ON (adq.product_id = pd.product_id AND language_id = '" . $this->config->get('config_language_id') . "') WHERE 1 ";
+		public function getTotalProductsInASINQueue($data = []) {
+			$sql = "SELECT COUNT(*) AS total FROM amzn_add_queue adq ";
+
+			if (isset($data['filter_good'])){
+				$sql .= " JOIN product p ON (p.product_id = adq.product_id) ";
+			} else {
+				$sql .= " LEFT JOIN product p ON (p.product_id = adq.product_id) ";
+			}
+
+			if (isset($data['filter_name'])){
+				$sql .= " LEFT JOIN product_description pd ON (adq.product_id = pd.product_id AND language_id = '" . $this->config->get('config_language_id') . "')";
+			}
+
+			$sql .= " WHERE 1 ";
 			
 			if (isset($data['filter_asin'])){
 				$sql .= " AND adq.asin LIKE ('%" . $this->db->escape($data['filter_asin']) . "%')";
+			}
+
+			if (!empty($data['filter_date_from'])){
+				$sql .= " AND DATE(p.date_added) >= '" . $this->db->escape(date('Y-m-d', strtotime($data['filter_date_from']))) . "'";
+			}
+
+			if (!empty($data['filter_date_to'])){
+				$sql .= " AND DATE(p.date_added) <= '" . $this->db->escape(date('Y-m-d', strtotime($data['filter_date_to']))) . "'";
 			}
 			
 			if (isset($data['filter_name'])){
@@ -263,10 +307,14 @@
 				$sql .= " AND user_id = '". (int)$data['filter_user_id'] ."'";
 			}
 
+			if (isset($data['filter_good'])){
+				$sql .= " AND adq.product_id > 0";
+			}
+
 			if (isset($data['filter_problems'])){
 				$sql .= " AND (adq.category_id IN (" . (int)$this->config->get('config_rainforest_default_technical_category_id') . ", " . (int)$this->config->get('config_rainforest_default_unknown_category_id') . ") OR p.product_id = '-1' OR p.status = 0)";
 			}
-			
+
 			$query = $this->db->query($sql);
 			
 			return $query->row['total'];

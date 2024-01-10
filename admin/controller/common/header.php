@@ -259,7 +259,8 @@ class ControllerCommonHeader extends Controller
             $this->data['order_status'] = $this->url->link('localisation/order_status', 'token=' . $this->session->data['token']);
             $this->data['payment'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token']);
             
-            $this->data['addasin'] = $this->url->link('catalog/addasin', 'token=' . $this->session->data['token']);
+            $this->data['addasin']          = $this->url->link('catalog/addasin', 'token=' . $this->session->data['token']);
+            $this->data['addasin_report']   = $this->url->link('catalog/addasin/report', 'token=' . $this->session->data['token']);
             $this->data['total_product_in_asin_queue'] = $this->model_report_product->getCountWaitingInASINQueue();
 
             $this->data['product'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token']);
