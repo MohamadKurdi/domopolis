@@ -721,6 +721,25 @@ class InfoUpdater extends RainforestRetriever
 		}
 	}
 
+	public function parseAndReturnProductDimensions($product){	
+		if (!$product || (empty($product['dimensions']) && empty($product['attributes']) && empty($product['specifications']))){
+			return false;
+		}
+		
+		if (!empty($product['dimensions']) && $data = $this->parseDimesionsString(atrim($product['dimensions']))){	
+			return $data;	
+		} elseif (!empty($product['dimensions']) && $data = $this->tryToParseDimensionStringExtended(atrim($product['dimensions']), 'all')){	
+			return $data;			
+		} elseif (!empty($product['attributes']) && $data = $this->parseDimesionsAttributes(self::prepareAttributesForParsing($product['attributes']))) {
+			return $data;
+			return true;
+		} elseif (!empty($product['specifications']) && $data = $this->parseDimesionsAttributes(self::prepareAttributesForParsing($product['specifications']))){
+			return $data;
+		}
+
+		return false;
+	}
+
 	public function parseAndUpdateProductDimensions($product){					
 		if (!$product || (empty($product['dimensions']) && empty($product['attributes']) && empty($product['specifications']))){
 			return false;
@@ -748,9 +767,7 @@ class InfoUpdater extends RainforestRetriever
 			return true;
 
 		} else {
-
 			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Could not parse dimensions for ' . $product['asin'], 'e');
-
 		}
 
 		return false;

@@ -324,6 +324,12 @@ if ($registry->get('config')->get('config_order_default')) {
     $registry->get('config')->set('order_default', $sorts['order_default']);
 }
 
+if ($apiRoute && $apiRoute == 'api/rainforest/getProducts'){
+    foreach ($languages as $language){
+        $registry->get('config')->set('config_rainforest_enable_language_' . $language['code'],  $registry->get('config')->get('config_rainforest_external_enable_language_' . $language['code']));
+    }
+}
+
 $response = new Response($registry);
 $response->addHeader('Content-Type: text/html; charset=utf-8');
 $response->setCompression($registry->get('config')->get('config_compression'));

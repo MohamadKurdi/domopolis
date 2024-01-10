@@ -75,14 +75,14 @@
 			
 			if (!isset($response['request_info']['success'])){
 				var_dump($response);
-				echoLine('[SimpleProductParser::parseResponse] Could not parse response, no success marker in it!', 'e');
-				die();
-				
+				echoLine('[SimpleProductParser::parseResponse] Could not parse response, no success marker in it!', 'e');			
+				throw new \Exception('[SimpleProductParser::parseResponse] Could not parse response, no success marker in it!');				
 			}
 			
 			if ($response['request_info']['success'] == false){				
 				echoLine('[SimpleProductParser::parseResponse] Success marker is false in response, returning false!', 'e');
 				echoLine('[SimpleProductParser::parseResponse] Success marker is false in response, message is:' . $response['request_info']['message'], 'e');
+				throw new \Exception('[SimpleProductParser::parseResponse] Success marker is false in response, returning false!');
 
 				return false;
 			}

@@ -162,7 +162,7 @@ class ProductsRetriever extends RainforestRetriever
 		}				
 	}
 
-	public function parseProductDescriptions($product_id, $product){			
+	public function parseProductDescriptions($product_id, $product, $return = false){			
 		if (!empty($product['description'])){
 			$product_description = [];			
 
@@ -185,9 +185,53 @@ class ProductsRetriever extends RainforestRetriever
 					'translated'  => (int)(mb_strlen($description)>0)					
 				];
 			}
+
+			if ($return){
+				return $product_description;
+			}
 			
 			$this->model_product_edit->editProductDescriptions($product_id, $product_description);
 		}
+	}
+
+	public function parseProductNames($product_id, $product, $return = false){
+		if ($this->config->get('config_openai_enable') && $this->config->get('config_openai_enable_shorten_names') && $this->config->get('config_rainforest_short_names_with_openai') && $this->config->get('config_openai_enable_shorten_names_before_translation')){
+			$data['name'] = $this->registry->get('openaiAdaptor')->shortenName($product['name'], $this->config->get('config_rainforest_source_language'));
+		}
+
+		$product_name_data = [];		
+		foreach ($this->registry->get('languages') as $language_code => $language) {
+			$name = $this->translateWithCheck($product['name'], $language['code']);
+
+			$translated = false;
+			if ($name && $name != atrim($product['name'])){
+				$translated = true;
+			}
+
+			$product_name_data[$language['language_id']] = [
+				'name' 			=> $name,
+				'short_name_d'  => '',
+				'translated' 	=> $translated
+			];
+
+			if ($language['code'] != $this->config->get('config_rainforest_source_language') && $name){
+				$product_name_data[$language['language_id']]['name'] = $this->registry->get('rainforestAmazon')->infoUpdater->normalizeProductName($name);
+			}
+
+			if ($this->config->get('config_openai_enable') && $this->config->get('config_openai_enable_shorten_names') && $this->config->get('config_rainforest_short_names_with_openai') && $this->config->get('config_openai_enable_shorten_names_after_translation')){
+				$product_name_data[$language['language_id']]['name'] = $this->registry->get('openaiAdaptor')->shortenName($product_name_data[$language['language_id']]['name'], $language['code']);
+			}
+
+			if ($this->config->get('config_openai_enable') && $this->config->get('config_openai_enable_export_names') && $this->config->get('config_rainforest_export_names_with_openai')){
+				$product_name_data[$language['language_id']]['short_name_d'] = $this->registry->get('openaiAdaptor')->exportName($product_name_data[$language['language_id']]['name'], $language['code']);
+			}
+		}
+
+		if ($return){
+			return $product_name_data;
+		}
+
+		$this->model_product_edit->addProductNames($product_id, $product_name_data);
 	}
 	
 	public function parseProductVideos($product_id, $product){
@@ -249,7 +293,7 @@ class ProductsRetriever extends RainforestRetriever
 		}	
 	}
 
-	public function parseProductColor($product_id, $product){
+	public function parseProductColor($product_id, $product, $return = false){
 
 		if (!empty($product['color'])){
 			$product_color = [];			
@@ -258,12 +302,16 @@ class ProductsRetriever extends RainforestRetriever
 					'color' => $this->translateWithCheck($product['color'], $language_code)
 				];
 			}
+
+			if ($return){
+				return $product_color;
+			}
 			
 			$this->model_product_edit->editProductColor($product_id, $product_color);
 		}
 	}
 
-	public function parseProductMaterial($product_id, $product){
+	public function parseProductMaterial($product_id, $product, $return = false){
 		if (!empty($product['material'])){
 			$product_material = [];			
 			foreach ($this->registry->get('languages') as $language_code => $language) {
@@ -271,8 +319,104 @@ class ProductsRetriever extends RainforestRetriever
 					'material' => $this->translateWithCheck($product['material'], $language_code)
 				];
 			}
+
+			if ($return){
+				return $product_material;
+			}
 			
 			$this->model_product_edit->editProductMaterial($product_id, $product_material);
+		}
+	}
+
+	public function passProductFeatureBullets($product_id, $product, $return = false){
+		$product_feature_bullets = [];
+
+		if (!empty($product['feature_bullets'])){
+			foreach ($product['feature_bullets'] as $feature_bullet){
+				$product_feature_bullet_description = [];
+				foreach ($this->registry->get('languages') as $language_code => $language) {
+					$text = $this->translateWithCheck($feature_bullet, $language_code);
+					$text = $this->registry->get('rainforestAmazon')->infoUpdater->normalizeProductAttributeText($text);
+
+					$product_feature_bullet_description[$language['language_id']] = [
+						'text' => $text
+					];
+				}
+
+				$product_feature_bullets[] = $product_feature_bullet_description;
+			}
+
+			if ($return){
+				return $product_feature_bullets;
+			}
+		}
+	}
+
+	public function passProductAttributes($product_id, $product, $return = false){
+		$product_attributes = [];
+
+		if (!empty($product['attributes']) || !empty($product['specifications'])){
+			$mergedProductAttributes = [];
+
+			if (!empty($product['attributes'])){
+				foreach ($product['attributes'] as $temp){
+					$temp['name'] = atrim($temp['name']);
+					$temp['value'] = atrim($temp['value']);
+
+					$mergedProductAttributes[clean_string($temp['name'])] = [
+						'name' 	=> $temp['name'],
+						'value' => $temp['value']
+					];
+				}
+			}
+
+			unset($temp);
+			if (!empty($product['specifications'])){
+				foreach ($product['specifications'] as $temp){
+					$temp['name'] = atrim($temp['name']);
+					$temp['value'] = atrim($temp['value']);
+
+					$mergedProductAttributes[clean_string($temp['name'])] = [
+						'name' 	=> $temp['name'],
+						'value' => $temp['value']
+					];
+				}
+			}
+
+			foreach ($this->passAttributesAndSpecifications as $pass){
+				if (!empty($mergedProductAttributes[clean_string($pass)])){
+					unset($mergedProductAttributes[clean_string($pass)]);
+				}
+			}
+
+			foreach ($mergedProductAttributes as $attribute){
+				echoLine('[ProductsRetriever::parseProductAttributes] Attributes: ' . $attribute['name'], 'i');
+				$attribute['name'] = atrim($attribute['name']);
+				$attribute['value'] = atrim($attribute['value']);	
+
+				$names = [];
+				foreach ($this->registry->get('languages') as $language_code => $language) {						
+					$names[$language['language_id']] = $this->translateWithCheck($attribute['name'], $language_code);					
+				}
+
+				$values = [];
+
+				foreach ($this->registry->get('languages') as $language_code => $language) {	
+					$text = $this->translateWithCheck($attribute['value'], $language_code);
+					$text = $this->registry->get('rainforestAmazon')->infoUpdater->normalizeProductAttributeText($text);
+
+					$values[$language['language_id']] = $text;					
+				}
+
+				$product_attributes[] = [
+					'names' 	=> $names,
+					'values' 	=> $values
+				];
+			}
+
+			if ($return){
+				return $product_attributes;
+			}
 		}
 	}
 
@@ -323,8 +467,6 @@ class ProductsRetriever extends RainforestRetriever
 
 
 		if (!empty($product['attributes']) || !empty($product['specifications'])){
-
-				//Репарсим массивы атрибутов и спецификаций
 			$mergedProductAttributes = [];
 
 			if (!empty($product['attributes'])){
@@ -352,7 +494,6 @@ class ProductsRetriever extends RainforestRetriever
 				}
 			}
 
-				//И удаляем те, которые нам вообще не вперлись
 			foreach ($this->passAttributesAndSpecifications as $pass){
 				if (!empty($mergedProductAttributes[clean_string($pass)])){
 					unset($mergedProductAttributes[clean_string($pass)]);
@@ -1087,6 +1228,57 @@ class ProductsRetriever extends RainforestRetriever
 	public function editFullProductVariants($product_id, $product){
 		$this->parseProductVariants($product_id, $product, true, true);
 	}
+
+	public function passFullProduct($asin, $rfProduct){
+		$result = [];
+
+		$rfProduct['name'] 	= $rfProduct['title'];
+
+		if ($this->config->get('config_rainforest_external_enable_names')){
+			$result['names']		= $this->parseProductNames(false, $rfProduct, true);
+		} else {
+			$result['names']		= ['config_rainforest_external_enable_names' => false];
+		}
+
+		if ($this->config->get('config_rainforest_external_enable_dimensions')){
+			$result['dimensions']  	= $this->registry->get('rainforestAmazon')->infoUpdater->parseAndReturnProductDimensions($rfProduct);
+		} else {
+			$result['dimensions'] 	= ['config_rainforest_external_enable_dimensions' => false];
+		}
+
+		if ($this->config->get('config_rainforest_external_enable_color')){
+			$result['color'] 		= $this->parseProductColor(false, $rfProduct, true);
+		} else {
+			$result['color'] 		= ['config_rainforest_external_enable_color' => false];
+		}
+
+		if ($this->config->get('config_rainforest_external_enable_material')){
+			$result['material'] 	= $this->parseProductMaterial(false, $rfProduct, true);
+		} else {
+			$result['material'] 	= ['config_rainforest_external_enable_material' => false];
+		}
+
+		if ($this->config->get('config_rainforest_external_enable_descriptions')){
+			$result['descriptions']	= $this->parseProductDescriptions(false, $rfProduct, true);
+		} else {
+			$result['descriptions'] 	= ['config_rainforest_external_enable_descriptions' => false];
+		}
+
+		if ($this->config->get('config_rainforest_external_enable_features')){
+			$result['feature_bullets'] 	= $this->passProductFeatureBullets(false, $rfProduct, true);
+		} else {
+			$result['feature_bullets'] 	= ['config_rainforest_external_enable_features' => false];
+		}
+		
+		if ($this->config->get('config_rainforest_external_enable_attributes')){						
+			$result['attributes'] 	= $this->passProductAttributes(false, $rfProduct, true);
+		} else {
+			$result['attributes'] 	= ['config_rainforest_external_enable_attributes' => false];
+		}
+	
+		
+		return $result;
+	}
 	
 	public function editFullProduct($product_id, $product, $do_adding_new_variants = true){	
 		$this->translateAdaptor->setDebug(false);
@@ -1225,7 +1417,7 @@ class ProductsRetriever extends RainforestRetriever
 				}
 			}
 		}
-	}
+	}	
 	
 	public function addSimpleProductWithOnlyAsin($data) {			
 
@@ -1300,39 +1492,7 @@ class ProductsRetriever extends RainforestRetriever
 		echoLine('[RainforestRetriever::addSimpleProductWithOnlyAsin] Adding product to category ' . $data['category_id'], 'i');
 
 		$this->db->query("DELETE FROM product_description WHERE product_id 	= '" . (int)$product_id . "'");
-		if ($this->config->get('config_openai_enable') && $this->config->get('config_openai_enable_shorten_names') && $this->config->get('config_rainforest_short_names_with_openai') && $this->config->get('config_openai_enable_shorten_names_before_translation')){
-			$data['name'] = $this->registry->get('openaiAdaptor')->shortenName($data['name'], $this->config->get('config_rainforest_source_language'));
-		}
-
-		$product_name_data = [];		
-		foreach ($this->registry->get('languages') as $language_code => $language) {
-			$name = $this->translateWithCheck($data['name'], $language['code']);
-
-			$translated = false;
-			if ($name && $name != atrim($data['name'])){
-				$translated = true;
-			}
-
-			$product_name_data[$language['language_id']] = [
-				'name' 			=> $name,
-				'short_name_d'  => '',
-				'translated' 	=> $translated
-			];
-
-			if ($language['code'] != $this->config->get('config_rainforest_source_language') && $name){
-				$product_name_data[$language['language_id']]['name'] = $this->registry->get('rainforestAmazon')->infoUpdater->normalizeProductName($name);
-			}
-
-			if ($this->config->get('config_openai_enable') && $this->config->get('config_openai_enable_shorten_names') && $this->config->get('config_rainforest_short_names_with_openai') && $this->config->get('config_openai_enable_shorten_names_after_translation')){
-				$product_name_data[$language['language_id']]['name'] = $this->registry->get('openaiAdaptor')->shortenName($product_name_data[$language['language_id']]['name'], $language['code']);
-			}
-
-			if ($this->config->get('config_openai_enable') && $this->config->get('config_openai_enable_export_names') && $this->config->get('config_rainforest_export_names_with_openai')){
-				$product_name_data[$language['language_id']]['short_name_d'] = $this->registry->get('openaiAdaptor')->exportName($product_name_data[$language['language_id']]['name'], $language['code']);
-			}
-			
-			$this->model_product_edit->addProductNames($product_id, $product_name_data);
-		}
+		$this->parseProductNames($product_id, $data);
 
 		if ($this->config->get('config_seo_url_from_id') && $this->registry->get('url')->checkIfGenerate('product_id')){
 			$this->db->query("DELETE FROM url_alias WHERE query = '" . $this->db->escape('product_id=' . $product_id) . "'");

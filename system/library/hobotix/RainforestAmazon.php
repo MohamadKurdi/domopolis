@@ -52,8 +52,9 @@ class RainforestAmazon
 		fullProductParserLimit = Сколько отбирать товаров для получения полной информации за один запуск
 		productRequestLimits   = Сколько запросов в параллели
 	*/
-	public const fullProductParserLimit = 200;
-	public const productRequestLimits 	= 20;
+	public const fullProductParserLimit 	= 200;
+	public const productRequestLimits 		= 20;
+	public const externalAPIRequestLimits 	= 5;
 
 	/*
 		Лимит для отбора из очереди обработки вариантов
