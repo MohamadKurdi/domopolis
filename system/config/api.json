@@ -8,6 +8,7 @@
 		"api/bitrixbot",
 		"api/bitrixbot/sendMessageToUser",	
 		"api/describe",
+		"api/rainforest/getProducts",
 		"api/info1c/getProductPrice",
 		"api/info1c/getProductPrices",
 		"api/info1c/setProductPrices",
@@ -52,6 +53,7 @@
 			"api/binotel":								"config.api.php",
 			"api/bitrixbot":							"/admin/config.php",
 			"api/bitrixbot/sendMessageToUser":			"/admin/config.php",
+			"api/rainforest/getProducts":				"/admin/config.php",
 			"api/info1c/getProductPrice": 				"config.slave.php",
 			"api/info1c/getProductPrices":				"/admin/config.slave.php",
 			"api/info1c/setProductPrices":				"/admin/config.php",
@@ -91,6 +93,7 @@
 	"params":[
 		{	
 			"api/ping":											["ping:int"],
+			"api/rainforest/getProducts":						["asin_list:json"],
 			"api/info1c/getProductPrice":						["product_id:int"],
 			"api/info1c/getProductPrices":						["product_id:int"],
 			"api/info1c/setProductPrices":						["product_id:int", "prices:json"],
@@ -151,6 +154,7 @@
 			"api/bitrixbot":						"Webhook для бота Битрикс24 (Хоботун)",			
 			"api/bitrixbot/sendMessageToUser":		"Расширение Webhook для бота Битрикс24, позволяющее отправить пользователю сообщение через API",
 			"api/describe":							"Описание методов API (текущий метод)",
+			"api/rainforest/getProducts":			"Получение данных о товаре с Amazon с переводом и обработкой",
 			"api/info1c/getProductPrice":			"Получение цены товара фронта в валюте текущего магазина, к которому производится запрос",
 			"api/info1c/getProductPrices":			"Получение всех цен товара в JSON",
 			"api/info1c/setProductPrices":			"Установка цен товара",
