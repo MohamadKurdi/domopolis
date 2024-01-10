@@ -27,8 +27,9 @@
 			</style>
 
 			<div id="tabs" class="htabs">
-				<a href="#tab-cron"><span style="color:#7F00FF;"><i class="fa fa-refresh"></i> Cron-задачи</span></a>
-				<a href="#tab-cron-results"><span style="color:#0054b3;"><i class="fa fa-refresh"></i> Статистика работы фреймворка</span></a>
+				<a href="#tab-cron"><span style="color:#7F00FF;"><i class="fa fa-refresh"></i> Cron</span></a>
+				<a href="#tab-cron-results"><span style="color:#0054b3;"><i class="fa fa-refresh"></i> Статистика фреймворка</span></a>
+				<a href="#tab-external-api"><span style="color:#cf4a61;"><i class="fa fa-cogs"></i> External API</span></a>
 				<a href="#tab-products"><span style="color:#00ad07;"><i class="fa fa-cogs"></i> Настройки добавления товаров</span></a>
 				<a href="#tab-pricelogic"><span style="color:#D69241;"><i class="fa fa-cogs"></i> Настройки ценообразования</span></a>
 				<a href="#tab-priceformula"><span style="color:#ff7815;"><i class="fa fa-calculator"></i> Ценовая модель</span></a>
@@ -490,6 +491,145 @@
 				</div>
 
 				<div id="tab-cron-results" class="delayed-load" data-route='common/home/loadProductStats&tpl=rnf&long=true' data-reload="30000">
+				</div>
+
+				<div id="tab-external-api">
+					<table class="list">
+						<tr>
+							<td colspan="3" class="left" style="color:#00ad07;">
+								<i class="fa fa-cogs"></i> <b>🤖 Настройки переводчика</b>
+							</td>
+						</tr>
+
+						<?php foreach ($languages as $language) { ?>
+							<?php if ($language['code'] != $config_rainforest_source_language) { ?>
+								<tr>
+									<td  class="right">
+										Включить перевод <?php echo mb_strtoupper($language['code']); ?>
+									</td>
+									<td  class="center">
+										<input id="config_rainforest_external_enable_language_<?php echo $language['code']; ?>" type="checkbox" class="checkbox" name="config_rainforest_external_enable_language_<?php echo $language['code']; ?>" <? if (${'config_rainforest_external_enable_language_' . $language['code']}){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_external_enable_language_<?php echo $language['code']; ?>"></label>
+									</td>
+									<td>
+										<span class="help">
+											<i class="fa fa-info-circle"></i> Включить ли автоматический перевод при добавлении на этот язык при использовании External API
+										</span>
+									</td>
+								</tr>
+							<?php } ?>
+						<?php } ?>				
+
+						<tr>
+							<td colspan="3" class="left" style="color:#00ad07;">
+								<i class="fa fa-cogs"></i> <b>Обработчик данных</b>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								Тестовый ASIN
+							</td>
+							<td style="width:50px;" class="center">
+								<input type="text" name="config_rainforest_external_test_asin" value="<?php echo $config_rainforest_external_test_asin; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Нужно для отладки, чтоб не расходовать запросы. Асин можно взять любой успешно добавленный из очереди.
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td  class="right">
+								Обрабатывать атрибуты
+							</td>
+							<td  class="center">
+								<input id="config_rainforest_external_enable_attributes" type="checkbox" class="checkbox" name="config_rainforest_external_enable_attributes" <? if ($config_rainforest_external_enable_attributes){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_external_enable_attributes"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Блок attributes
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td  class="right">
+								Обрабатывать особенности
+							</td>
+							<td  class="center">
+								<input id="config_rainforest_external_enable_features" type="checkbox" class="checkbox" name="config_rainforest_external_enable_features" <? if ($config_rainforest_external_enable_features){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_external_enable_features"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Блок feature_bullets
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td  class="right">
+								Обрабатывать описания
+							</td>
+							<td  class="center">
+								<input id="config_rainforest_external_enable_descriptions" type="checkbox" class="checkbox" name="config_rainforest_external_enable_descriptions" <? if ($config_rainforest_external_enable_descriptions){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_external_enable_descriptions"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Блок description
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td  class="right">
+								Обрабатывать описания
+							</td>
+							<td  class="center">
+								<input id="config_rainforest_external_enable_names" type="checkbox" class="checkbox" name="config_rainforest_external_enable_names" <? if ($config_rainforest_external_enable_names){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_external_enable_names"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Блок title
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td  class="right">
+								Обрабатывать цвет
+							</td>
+							<td  class="center">
+								<input id="config_rainforest_external_enable_color" type="checkbox" class="checkbox" name="config_rainforest_external_enable_color" <? if ($config_rainforest_external_enable_color){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_external_enable_color"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Попытка определить цвет товара из всех возможных полей
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td  class="right">
+								Обрабатывать материал
+							</td>
+							<td  class="center">
+								<input id="config_rainforest_external_enable_material" type="checkbox" class="checkbox" name="config_rainforest_external_enable_material" <? if ($config_rainforest_external_enable_material){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_external_enable_material"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Попытка определить материал товара из всех возможных полей
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td  class="right">
+								Обрабатывать габариты
+							</td>
+							<td  class="center">
+								<input id="config_rainforest_external_enable_dimensions" type="checkbox" class="checkbox" name="config_rainforest_external_enable_dimensions" <? if ($config_rainforest_external_enable_dimensions){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_external_enable_dimensions"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Попытка определить и структурировать габариты товара из всех возможных полей
+								</span>
+							</td>
+						</tr>
+					</table>
 				</div>
 
 				<div id="tab-products">

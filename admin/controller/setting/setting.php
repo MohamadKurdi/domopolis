@@ -4054,6 +4054,16 @@ class ControllerSettingSetting extends Controller
             }
         }
 
+        foreach ($this->data['languages'] as $rnf_language) {
+            if ($rnf_language['code'] != $this->data['config_rainforest_source_language']) {
+                if (isset($this->request->post['config_rainforest_external_enable_language_' . $rnf_language['code']])) {
+                    $this->data['config_rainforest_external_enable_language_' . $rnf_language['code']] = $this->request->post['config_rainforest_external_enable_language_' . $rnf_language['code']];
+                } else {
+                    $this->data['config_rainforest_external_enable_language_' . $rnf_language['code']] = $this->config->get('config_rainforest_external_enable_language_' . $rnf_language['code']);
+                }
+            }
+        }
+
         if (isset($this->request->post['config_rainforest_max_variants'])) {
             $this->data['config_rainforest_max_variants'] = $this->request->post['config_rainforest_max_variants'];
         } else {

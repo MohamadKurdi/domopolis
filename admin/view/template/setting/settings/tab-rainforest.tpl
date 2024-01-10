@@ -983,9 +983,28 @@
 				<?php foreach ($languages as $language) { ?>
 					<?php if ($language['code'] != $config_rainforest_source_language) { ?>
 						<div>
-							<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Переводить на <?php echo $language['code']; ?></span></p>
+							<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Переводить каталог на <?php echo $language['code']; ?></span></p>
 							<select name="config_rainforest_enable_language_<?php echo $language['code']; ?>">
 								<?php if (${'config_rainforest_enable_language_' . $language['code']}) { ?>
+									<option value="1" selected="selected">Включить</option>
+									<option value="0">Отключить</option>
+								<?php } else { ?>													
+									<option value="1">Включить</option>
+									<option value="0"  selected="selected">Отключить</option>
+								<? } ?>
+							</select>											
+						</div>
+					<?php } ?>
+				<?php } ?>
+			</td>
+
+			<td style="width:20%">
+				<?php foreach ($languages as $language) { ?>
+					<?php if ($language['code'] != $config_rainforest_source_language) { ?>
+						<div>
+							<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Переводить External API на <?php echo $language['code']; ?></span></p>
+							<select name="config_rainforest_external_enable_language_<?php echo $language['code']; ?>">
+								<?php if (${'config_rainforest_external_enable_language_' . $language['code']}) { ?>
 									<option value="1" selected="selected">Включить</option>
 									<option value="0">Отключить</option>
 								<?php } else { ?>													
@@ -1011,21 +1030,22 @@
 			</td>
 
 			<td style="width:20%">
-				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">TG группа уведомлений</span></p>
-				<input type="text" name="config_rainforest_tg_alert_group_id" value="<?php echo $config_rainforest_tg_alert_group_id; ?>" size="50" style="width:250px;" />
-			</td>
-
-			<td style="width:20%">
-				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Автоматическое дерево</span></p>
-				<select name="config_rainforest_enable_auto_tree">
-					<?php if ($config_rainforest_enable_auto_tree) { ?>
-						<option value="1" selected="selected">Включить</option>
-						<option value="0">Отключить</option>
-					<?php } else { ?>													
-						<option value="1">Включить</option>
-						<option value="0"  selected="selected">Отключить</option>
-					<? } ?>
-				</select>
+				<div>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">TG группа уведомлений</span></p>
+					<input type="text" name="config_rainforest_tg_alert_group_id" value="<?php echo $config_rainforest_tg_alert_group_id; ?>" size="50" style="width:250px;" />
+				</div>
+				<div>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Автоматическое дерево</span></p>
+					<select name="config_rainforest_enable_auto_tree">
+						<?php if ($config_rainforest_enable_auto_tree) { ?>
+							<option value="1" selected="selected">Включить</option>
+							<option value="0">Отключить</option>
+						<?php } else { ?>													
+							<option value="1">Включить</option>
+							<option value="0"  selected="selected">Отключить</option>
+						<? } ?>
+					</select>
+				</div>
 			</td>
 
 			<td style="width:20%">

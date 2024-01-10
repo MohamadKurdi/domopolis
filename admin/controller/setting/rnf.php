@@ -123,7 +123,16 @@ class ControllerSettingRnf extends Controller {
 		'config_openai_enable_shorten_names_before_translation',
 		'config_openai_enable_shorten_names_after_translation',
 		'config_openai_shortennames_length',
-		'config_openai_exportnames_length'
+		'config_openai_exportnames_length',
+
+		'config_rainforest_external_test_asin',
+		'config_rainforest_external_enable_attributes',
+		'config_rainforest_external_enable_features',
+		'config_rainforest_external_enable_descriptions',
+		'config_rainforest_external_enable_names',
+		'config_rainforest_external_enable_color',
+		'config_rainforest_external_enable_material',
+		'config_rainforest_external_enable_dimensions',
 	];
 
 	private $pricing_settings = [
@@ -200,6 +209,12 @@ class ControllerSettingRnf extends Controller {
 		foreach ($this->data['languages'] as $rnf_language){
 			if ($rnf_language['code'] != $this->data['config_rainforest_source_language']){
 				$this->data['config_rainforest_enable_language_' . $rnf_language['code']] = $this->config->get('config_rainforest_enable_language_' . $rnf_language['code']);
+			}
+		}
+
+		foreach ($this->data['languages'] as $rnf_language){
+			if ($rnf_language['code'] != $this->data['config_rainforest_source_language']){
+				$this->data['config_rainforest_external_enable_language_' . $rnf_language['code']] = $this->config->get('config_rainforest_external_enable_language_' . $rnf_language['code']);
 			}
 		}
 
