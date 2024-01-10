@@ -217,10 +217,11 @@ class ProductsRetriever extends RainforestRetriever
 					];						
 				}
 
-				$this->model_product_edit->editProductVideos($product_id, $videos);
-
 				$sort_order++;
+			}
 
+			if ($videos){
+				$this->model_product_edit->editProductVideos($product_id, $videos);
 			}
 		}
 	}
@@ -241,6 +242,7 @@ class ProductsRetriever extends RainforestRetriever
 					$sort_order++;
 				}
 			}
+			
 			if ($images){
 				$this->model_product_edit->editProductImages($product_id, $images);
 			}

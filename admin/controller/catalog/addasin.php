@@ -91,6 +91,14 @@
 			];
 
 			$this->data['periods'][] 	= [
+				'period' 			=> 'С начала месяца',
+				'filter_date_from' 	=> date('Y-m-d', strtotime('first day of this month')),
+				'filter_date_to' 	=> date('Y-m-d'),
+				'href' 				=> $this->url->link('catalog/addasin/report',  'token=' . $this->session->data['token'] . '&filter_date_from=' . date('Y-m-d', strtotime('first day of this month')) . '&filter_date_to=' . date('Y-m-d')),
+				'total' 			=> 'catalog/addasin/report_total&filter_date_from=' . date('Y-m-d', strtotime('first day of this month')) . '&filter_date_to=' . date('Y-m-d'),
+			];
+
+			$this->data['periods'][] 	= [
 				'period' 			=> 'За последний месяц',
 				'filter_date_from' 	=> date('Y-m-d', strtotime('-1 Month')),
 				'filter_date_to' 	=> date('Y-m-d'),
