@@ -118,10 +118,14 @@
                             <td class="center">Название <img src="<?php echo DIR_FLAGS_NAME; ?>/<?php echo $this->config->get('config_rainforest_source_language'); ?>.png" /></td>
                             <td class="center">Название <img src="<?php echo DIR_FLAGS_NAME; ?>/<?php echo $this->config->get('config_language'); ?>.png" />"</td>
                             <td class="center" style="width:60px;">Закупка</td>
-                            <td class="center" style="width:60px;">Себестоимость</td>
-                            <td class="center" style="width:100px;">Продажа</td>
-                            <td class="center" style="width:100px;">Чистыми</td>
-                            <td class="center" style="width:60px;">Рентабельность</td>
+
+                            <?php if ($this->config->get('config_amazon_profitability_in_stocks')) { ?>
+                                <td class="center" style="width:60px;">Себестоимость</td>
+                                <td class="center" style="width:100px;">Продажа</td>
+                                <td class="center" style="width:100px;">Чистыми</td>
+                                <td class="center" style="width:60px;">Рентабельность</td>
+                            <?php } ?>
+
                             <td class="center" style="width:200px">Категория</td>
                             <td class="center" style="width:100px;">ASIN</td>                                                        
                             <td class="center" style="width:70px;">Код товара</td>                          
@@ -176,6 +180,7 @@
                                        <? } ?>
                                     </td>  
 
+                                <?php if ($this->config->get('config_amazon_profitability_in_stocks')) { ?> 
                                     <td class="center">
                                        <?php if ($product['costprice']) { ?>
                                             <span style="color:#FF7815; font-weight: 700;"><? echo $product['costprice_eur']; ?></span>  
@@ -212,7 +217,8 @@
                                        <?php } else { ?>
                                             <span style="color:#FF9243; font-size:18px; font-weight: 700;"><i class="fa fa-question-circle"></i></span>
                                        <? } ?>
-                                    </td>                                                             
+                                    </td>                  
+                                 <?php } ?>                                           
 
                                     <td class="center">
                                         <?php if ($product['category']) { ?>
