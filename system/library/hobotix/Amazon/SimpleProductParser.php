@@ -73,16 +73,16 @@
 		private function parseResponse($response){
 			$response = json_decode($response, true);	
 			
-			if (!isset($response['request_info']['success'])){
-				var_dump($response);
+			if (!isset($response['request_info']) || !isset($response['request_info']['success'])){
+				echoLine('[SimpleProductParser::parseResponse] --------------------- DUMPING RESPONSE ---------------------', 'w');
+				print_r($response);
+				echoLine('[SimpleProductParser::parseResponse] --------------------- END DUMPING RESPONSE ---------------------', 'w');
 				echoLine('[SimpleProductParser::parseResponse] Could not parse response, no success marker in it!', 'e');			
 				throw new \Exception('[SimpleProductParser::parseResponse] Could not parse response, no success marker in it!');				
-			}
-			
-			if ($response['request_info']['success'] == false){				
+			} elseif (isset($response['request_info']['success']) && $response['request_info']['success'] == false){				
 				echoLine('[SimpleProductParser::parseResponse] Success marker is false in response, returning false!', 'e');
 				echoLine('[SimpleProductParser::parseResponse] Success marker is false in response, message is:' . $response['request_info']['message'], 'e');
-				throw new \Exception('[SimpleProductParser::parseResponse] Success marker is false in response, returning false!');
+				//throw new \Exception('[SimpleProductParser::parseResponse] Success marker is false in response, returning false!');
 
 				return false;
 			}

@@ -411,7 +411,7 @@
         }           
     }
 
-    $('input[name=page], select[name=sort]').bind('change', function() {
+    $('input[name=page], select[name=sort]').on('change', function() {
        reload();
     });
 

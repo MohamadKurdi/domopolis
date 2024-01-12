@@ -53,7 +53,7 @@ class RainforestAmazon
 		productRequestLimits   = Сколько запросов в параллели
 	*/
 	public const fullProductParserLimit 	= 200;
-	public const productRequestLimits 		= 20;
+	public const productRequestLimits 		= 10;
 	public const externalAPIRequestLimits 	= 5;
 
 	/*
