@@ -548,7 +548,7 @@ class ControllerCheckoutQuickorder extends Controller {
 		if (isset($this->request->post['quickfastorder-phone']) && mb_strlen($this->request->post['quickfastorder-phone'],'UTF-8')>=7 && $this->registry->get('phoneValidator')->validate($this->request->post['quickfastorder-phone'])) {
 			$phone = $this->request->post['quickfastorder-phone'];
 		} else {
-			$json['error']['phone'] = sprintf($this->language->get('error_required'), 'Телефон');
+			$json['error']['phone'] = $this->language->get('error_telephone');
 		}
 
 		if (!$this->cart->getProducts()){
