@@ -2,6 +2,18 @@
 
 <?php echo $column_left; ?><?php echo $column_right; ?>
 <?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
+
+<?php if ($this->config->get('config_google_recaptcha_contact_enable')) { ?>
+	<script src="https://www.google.com/recaptcha/api.js?render=<?php echo $this->config->get('config_google_recaptcha_contact_key'); ?>"></script>
+    <script>
+        grecaptcha.ready(function() {
+            grecaptcha.execute('<?php echo $this->config->get('config_google_recaptcha_contact_key'); ?>', {action: 'homepage'}).then(function(token) {
+                document.getElementById('g-recaptcha-response').value=token;
+			});
+		});
+	</script>
+<?php } ?>
+
 <div id="content-shop-rating">
 	<?php echo $content_top; ?>
 	<div class="wrap">
@@ -40,7 +52,7 @@
 			
 			
             <div class="shop_summary_rating">
-                <?php if(isset($shop_rating_summary)){ ?>
+                <?php if(!empty($shop_rating_summary) && !empty($general['count'])){ ?>
 					<div class="shop_summary_general">
 						<div class="shop_summary_general_title"><?php echo $text_summary; ?></div>
 						<div class="shop_summary_general_rating"><?php echo $general['summ']?></div>
@@ -52,22 +64,22 @@
 					<div class="shop_summary_detail">
 						<div class="shop_summary_detail_line">
 							<span class="star">5</span>
-							<span class="percent_line" style=" <?php echo 'width:'.round($general['5']*100/$general['count']).'px';?>"></span>
+							<span class="percent_line" style=" <?php echo 'width:'. round($general['5']*100/$general['count']) . 'px';?>"></span>
 							<span><?php echo $general['5'];?>x</span>
 						</div>
 						<div class="shop_summary_detail_line">
 							<span class="star">4</span>
-							<span class="percent_line" style="<?php echo 'width:'.round($general['4']*100/$general['count']).'px';?>"></span>
+							<span class="percent_line" style="<?php echo 'width:' . round($general['4']*100/$general['count']) . 'px';?>"></span>
 							<span><?php echo $general['4'];?>x</span>
 						</div>
 						<div class="shop_summary_detail_line">
 							<span class="star">3</span>
-							<span class="percent_line" style="<?php echo 'width:'.round($general['3']*100/$general['count']).'px';?>"></span>
+							<span class="percent_line" style="<?php echo 'width:' . round($general['3']*100/$general['count']) . 'px';?>"></span>
 							<span><?php echo $general['3'];?>x</span>
 						</div>
 						<div class="shop_summary_detail_line">
 							<span class="star">2</span>
-							<span class="percent_line" style="<?php echo 'width:'.round($general['2']*100/$general['count']).'px';?>"></span>
+							<span class="percent_line" style="<?php echo 'width:' . round($general['2']*100/$general['count']) . 'px';?>"></span>
 							<span><?php echo $general['2'];?>x</span>
 						</div>
 						<div class="shop_summary_detail_line">
@@ -77,26 +89,14 @@
 						</div>
 					</div>
 					<div class="shop_summary_add_rating price__btn-group">
-						
-						<!-- <?php if($show_form){ ?>
-							<?php if(!$rating_send){ ?>
-
-								<a class="btn do-popup-element" data-target="formRev"><?php echo $send_rating;?></a>
-								
-								<?php } else { ?>
-								<?php echo $text_will_send; ?>
-							<?php } ?>
-							<?php } else { ?>
-							<?php echo $text_login; ?>
-						<?php } ?> -->
 					</div>
 					<div style="clear: both"></div>
 					<?php }else{ ?>
+
 					<?php if($show_form){ ?>
 						<button class="rating_btn add_rating-button" data-remodal-target="ratingModal"><?php echo $send_rating;?></button>
 						<?php } else { ?>
-						<?php echo $text_login; ?>
-						
+						<?php echo $text_login; ?>						
 					<?php } ?>
 				<?php } ?>
 			</div>

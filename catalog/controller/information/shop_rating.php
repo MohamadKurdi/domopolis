@@ -22,14 +22,14 @@
 				if($rating_id > 0){
 					if($this->config->get('shop_rating_moderate')){
 						$this->session->data['shop_rating_success_text'] = $this->language->get('shop_rating_success_text_moderate');
+
 						}else{
+
 						$this->session->data['shop_rating_success_text'] = $this->language->get('shop_rating_success_text');
 					}
 					$this->session->data['rating_send'] = true;
 				}
-				$this->response->redirect($this->url->link('information/shop_rating'));
-				
-				
+				$this->response->redirect($this->url->link('information/shop_rating'));								
 			}
 			
 			
@@ -39,13 +39,14 @@
 				}else{
 				$this->data['success'] = '';
 			}
+
 			if(isset($this->session->data['rating_send'])){
 				$this->data['rating_send'] = $this->session->data['rating_send'];
 				}else{
 				$this->data['rating_send'] = false;
 			}
-			$this->data['rating_send'] = false;
-			
+
+			$this->data['rating_send'] = false;			
 			$this->data['heading_title'] = sprintf($this->language->get('heading_title'), str_replace('|', '', $this->config->get('config_name')));
 			$this->data['module_description'] = $this->language->get('module_description');
 			$this->data['send_rating'] = $this->language->get('send_rating');
@@ -111,8 +112,8 @@
 			$this->data['general']['3'] = 0;
 			$this->data['general']['4'] = 0;
 			$this->data['general']['5'] = 0;
-			$x = 0;
-			$summ = 0;
+			$x 		= 0;
+			$summ 	= 0;
 			foreach($this->model_catalog_shop_rating->getStoreRatingsAll() as $rate){
 				if(isset($rate['shop_rate']) && $rate['shop_rate'] > 0){
 					$this->data['general'][$rate['shop_rate']]++;
@@ -208,12 +209,10 @@
 				$this->data['email'] = $this->customer->getEmail();
 			}
 			
-			if ($this->config->get($this->config->get('config_captcha') . '_status') && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-				
+			if ($this->config->get($this->config->get('config_captcha') . '_status') && in_array('contact', (array)$this->config->get('config_captcha_page'))) {				
 				$this->data['captcha'] = $this->load->controller('captcha/' . $this->config->get('config_captcha'), $this->error);
 				
 				} elseif (true || $this->config->get('config_google_captcha_status')) {
-				//   $this->data['site_key'] = $this->config->get('config_google_captcha_public');
                 $this->data['captcha'] = '<div class="form-group">
 				<div class="">
 				<div class="g-recaptcha" data-sitekey="6Le3-SYTAAAAAOthvC5udRjh2D9lgT04wuf-8Zwi"></div>';
@@ -223,9 +222,7 @@
                 $this->data['captcha'] .='</div></div>';
 				} else {
                 $this->data['captcha'] = '';
-			}
-			
-			
+			}						
 			
 			if (isset($this->request->get['page'])) {
 				$url .= '&page=' . $this->request->get['page'];
@@ -269,21 +266,18 @@
 				$this->error['email'] = $this->language->get('error_email');
 			}
 			
-			// Captcha
-			if ($this->config->get($this->config->get('config_captcha') . '_status') && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
-				$captcha = $this->load->controller('captcha/' . $this->config->get('config_captcha') . '/validate');
-				
-				if ($captcha) {
-					$this->error['captcha'] = $captcha;
-				}
-				} elseif (true || $this->config->get('config_google_captcha_status')) {
-				$recaptcha = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode('6Le3-SYTAAAAAMCtwiLAMZVLdemFMBg73DRC5Sy_') . '&response=' . $this->request->post['g-recaptcha-response'] . '&remoteip=' . $this->request->server['REMOTE_ADDR']);
-				
-				$recaptcha = json_decode($recaptcha, true);
-				
-				if (!$recaptcha['success']) {
-					$this->error['captcha'] = $this->language->get('error_captcha');
-				}
+			if ($this->config->get('config_google_recaptcha_contact_enable')){				
+				$this->error['captcha'] = $this->language->get('error_captcha');
+				if (!empty($this->request->post['g-recaptcha-response'])){
+					$reCaptcha 			= new \ReCaptcha\ReCaptcha($this->config->get('config_google_recaptcha_contact_secret'));
+					$reCaptchaResponse 	= $reCaptcha->setScoreThreshold(0.5)->verify($this->request->post['g-recaptcha-response']);
+
+					if ($reCaptchaResponse->isSuccess()){
+						unset($this->error['captcha']);
+					} else {
+						$this->error['captcha'] .= ' ' . json_encode($reCaptchaResponse->getErrorCodes());
+					}
+				}				
 			}
 			
 			
@@ -353,8 +347,6 @@
 					}
 				}
 				
-			}
-			
-		}
-		
+			}			
+		}		
 	}
