@@ -1074,6 +1074,7 @@ class ControllerSaleReceipt extends Controller {
         }
 
         $processingReceipts = $this->model_sale_receipt->getProcessingReceipts();
+
     	if ($processingReceipts){
     		echoLine('[ControllerSaleReceipt::cron] Have processing receipts, ' . count($processingReceipts), 'i');
 

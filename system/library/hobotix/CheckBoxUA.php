@@ -21,6 +21,7 @@ class CheckBoxUA {
     private $config     = null;
     private $currency   = null;
     private $registry   = null;
+    private $log        = null;
 
     private $model_payment_mono = null;
 
@@ -33,6 +34,7 @@ class CheckBoxUA {
         $this->config   = $registry->get('config');
         $this->db       = $registry->get('db');
         $this->currency = $registry->get('currency');
+        $this->log      = $registry->get('log');
         $this->registry = $registry;
     }
 
@@ -840,14 +842,13 @@ class CheckBoxUA {
     }
 
     public function nLog($message = "Empty message"){
-        $log = fopen(DIR_LOGS . 'checkbox.log', 'a+');
+        $log = new \Log('checkbox.log');
 
         if (!empty($_SERVER['REMOTE_ADDR'])){
-            fwrite($log, date('Y-m-d G:i:s') . " [".$_SERVER['REMOTE_ADDR']."] : ");
+            $log->write("Request From IP: [" . $_SERVER['REMOTE_ADDR'] . "]");
         }    
 
-        fwrite($log, print_r($message, true) ."\n");
-        fclose($log); 
+        $log->write(print_r($message, true));        
     }
 
 
