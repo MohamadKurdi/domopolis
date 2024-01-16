@@ -130,6 +130,7 @@
                             <td class="center" style="width:100px;">ASIN</td>                                                        
                             <td class="center" style="width:70px;">Код товара</td>                          
                             <td class="center" style="width:100px">Добавлен</td>     
+                            <td class="center" style="width:100px">Создан</td>     
                             <td class="center" style="width:100px">Кем добавлен</td>   
                             <td class="center" style="width:100px">Действие</td>                 
                         </tr>
@@ -248,6 +249,15 @@
                                         <small><?php echo $product['date_added']; ?></small><br />
                                         <small><?php echo $product['time_added']; ?></small>
                                     </td>  
+
+                                    <td class="center">
+                                        <?php if ($product['product_id'] > 0) { ?>
+                                            <small><?php echo $product['date_created']; ?></small><br />
+                                            <small><?php echo $product['time_created']; ?></small>
+                                         <?php } else { ?>
+                                            <span style="color:#FF9243; font-size:18px; font-weight: 700;"><i class="fa fa-refresh"></i></span>
+                                       <? } ?>
+                                    </td>
 
                                     <td class="center">
                                         <small><?php echo $product['user']; ?></small>

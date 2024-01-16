@@ -153,6 +153,8 @@
 				'rnf_name'	 			=> !empty($result['rnf_name'])?$result['rnf_name']:false,
 				'date_added'			=> date('Y-m-d', strtotime($result['date_added'])),
 				'time_added'			=> date('H:i:s', strtotime($result['date_added'])),
+				'date_created'			=> ($result['product_id'] > 0)?date('Y-m-d', strtotime($result['date_created'])):false,	
+				'time_created'			=> ($result['product_id'] > 0)?date('H:i:s', strtotime($result['date_created'])):false,
 				'product_id'			=> $result['product_id'],	
 
 				'price'					=> $result['price'],
@@ -176,7 +178,7 @@
 
 				'status'		=> ($result['product_id'] > 0)?$result['status']:false,
 				'view'			=> ($result['product_id'] > 0)?(HTTP_CATALOG . 'index.php?route=product/product&product_id=' . $result['product_id']):false,
-				'date_created'	=> ($result['product_id'] > 0)?date('Y-m-d', strtotime($result['date_created'])):false,		
+				
 				'image'			=> $result['image']?$this->model_tool_image->resize($result['image'], 50, 50):false,
 				'category_id'	=> $result['category_id'],
 				'category'		=> $result['category_id']?$this->model_catalog_category->getCategory($result['category_id']):false,

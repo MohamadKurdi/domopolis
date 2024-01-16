@@ -192,7 +192,8 @@
 				p.price,				
 				p.costprice,
 				p.profitability,
-				p.date_added as date_created 
+				p.date_added as date_created,
+				adq.date_added as date_added
 				FROM amzn_add_queue adq ";
 
 			if (isset($data['filter_good'])){
