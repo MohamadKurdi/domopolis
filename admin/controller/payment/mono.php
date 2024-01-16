@@ -48,6 +48,11 @@ class ControllerPaymentMono extends Controller
             "mono_status_fake",
             'mono_ismethod',
             "mono_merchant",
+            "mono_monocheckout_merchant",
+
+            "mono_person",
+            "mono_monocheckout_person",
+
             'mono_geo_zone_id',
             "mono_sort_order",
             "mono_order_success_status_id",

@@ -269,7 +269,7 @@ class ModelPaymentMonoCheckout extends Model
                 CURLOPT_POSTFIELDS      => json_encode($data),
                 CURLOPT_HTTPHEADER      => [
                     'Content-Type: application/json',
-                    'X-Token: '.    $this->config->get('mono_merchant') .''
+                    'X-Token: '.    $this->config->get('mono_monocheckout_merchant') .''
                 ],
             ));
 

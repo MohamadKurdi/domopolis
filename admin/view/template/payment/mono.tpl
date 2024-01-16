@@ -18,15 +18,59 @@
             <div class="content">            
                 <table class="form">
                     <tr>
-                        <td><span class="required">*</span> <?php echo $entry_merchant; ?></td>
+                        <td><span class="required">*</span> Токен мерчанта в стандартном чекауте</td>
                         <td>
-                         <input style="margin-bottom:0%;" type="text" name="mono_merchant" value="<?php echo $mono_merchant ;?>" id="input-merchant" class="mono-select" required />
+                         <input style="width:300px;" style="margin-bottom:0%;" type="text" name="mono_merchant" value="<?php echo $mono_merchant ;?>" id="input-merchant" class="mono-select" required />
                          <?php if ($error_merchant) { ?>
                             <span class="error"><?php echo $error_merchant ;?></span>
                         <?php } ?>
                         <p class="mono-text"><?php echo $mono_text ;?> <a href="https://web.monobank.ua/" style="color:#EA5357;" target="_blank">web.monobank.ua</a></p>
                     </td>
                 </tr>
+
+                <tr style="border-bottom:1px dashed grey; padding-bottom: 10px margin-bottom:10px;">
+                        <td><span class="required">*</span> Название мерчанта в стандартном чекауте</td>
+                        <td>
+                         <input style="width:300px;" style="margin-bottom:0%;" type="text" name="mono_person" value="<?php echo $mono_person ;?>" id="input-mono_person" class="mono-select" />
+                        <p class="mono-text">не используется в логике, нужно просто для визуализации</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Моно Чекаут включить (экспериментальная фишка)                
+                    </td>
+                    <td>
+                        <select name="mono_monocheckout_enable" class="form-control">
+                         <?php if ( $mono_monocheckout_enable == 1 ) { ?>
+                            <option class="mono-option" value="1"  selected="selected" ><?php echo $text_enabled; ?></option>
+                            <option class="mono-option" value="0"><?php echo $text_disabled; ?></option>
+                        <?php } else { ?>
+                            <option class="mono-option" value="1"><?php echo $text_enabled; ?></option>
+                            <option class="mono-option" value="0"  selected="selected"><?php echo $text_disabled; ?></option>
+                        <?php } ?>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td><span class="required">*</span> Токен мерчанта в моно чекауте</td>
+                <td>
+                   <input style="width:300px;" style="margin-bottom:0%;" type="text" name="mono_monocheckout_merchant" value="<?php echo $mono_monocheckout_merchant ;?>" id="input-mono_monocheckout_merchant" class="mono-select"  />
+                   <p class="mono-text"><?php echo $mono_text ;?> <a href="https://web.monobank.ua/" style="color:#EA5357;" target="_blank">web.monobank.ua</a></p>
+               </td>
+           </tr>
+
+            <tr style="border-bottom:1px dashed grey; padding-bottom: 10px margin-bottom:10px;">
+                        <td><span class="required">*</span> Название мерчанта в моно чекауте</td>
+                        <td>
+                         <input style="width:300px;" style="margin-bottom:0%;" type="text" name="mono_monocheckout_person" value="<?php echo $mono_monocheckout_person ;?>" id="input-mono_monocheckout_person" class="mono-select" />
+                        <p class="mono-text">не используется в логике, нужно просто для визуализации</p>
+                    </td>
+                </tr>
+
+
+
                 <tr>
                     <td><span class="required">*</span> <?php echo $entry_redirect; ?></td>
                     <td>
@@ -92,25 +136,7 @@
                     </select>
                 </td>
             </tr>
-
-             <tr>
-                <td>
-                    Моно Чекаут включить (экспериментальная фишка)                
-                </td>
-                <td>
-                    <select name="mono_monocheckout_enable" class="form-control">
-                       <?php if ( $mono_monocheckout_enable == 1 ) { ?>
-                            <option class="mono-option" value="1"  selected="selected" ><?php echo $text_enabled; ?></option>
-                            <option class="mono-option" value="0"><?php echo $text_disabled; ?></option>
-                        <?php } else { ?>
-                            <option class="mono-option" value="1"><?php echo $text_enabled; ?></option>
-                            <option class="mono-option" value="0"  selected="selected"><?php echo $text_disabled; ?></option>
-                    <?php } ?>
-                    </select>
-                </td>
-            </tr>
-
-
+        
             <tr>
                 <td>
                     Чекбокс ПРРО включить                              
