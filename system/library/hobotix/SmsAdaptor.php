@@ -260,8 +260,8 @@ class SmsAdaptor {
 			$viber = [
 				'viber' 		=> true,
 				'to' 			=> $info['telephone'],
-				'message' 		=> reTemplate($template, $this->config->get('config_sms_restore_password_text')),
-				'messageSms' 	=> reTemplate($template, $this->config->get('config_viber_restore_password_text')),				
+				'message' 		=> reTemplate($template, $this->config->get('config_viber_restore_password_text')),
+				'messageSms' 	=> reTemplate($template, $this->config->get('config_sms_restore_password_text')),				
 			];
 
 			$viberID = $this->sendViber($viber);
@@ -291,8 +291,8 @@ class SmsAdaptor {
 			$viber = [
 				'viber' 		=> true,
 				'to' 			=> $info['telephone'],
-				'message' 		=> reTemplate($template, $this->config->get('config_sms_otp_text')),
-				'messageSms' 	=> reTemplate($template, $this->config->get('config_viber_otp_text')),				
+				'message' 		=> reTemplate($template, $this->config->get('config_viber_otp_text')),
+				'messageSms' 	=> reTemplate($template, $this->config->get('config_sms_otp_text')),				
 			];
 
 			$viberID = $this->sendViber($viber);
