@@ -7,7 +7,6 @@
 			$products = [];
 
 			foreach ($results as $result){
-
 				if ($result['image']) {
 					$image = $this->model_tool_image->resize($result['image'], 185, 185);						
 				} else {
@@ -25,6 +24,18 @@
 			}
 
 			return $products;
+		}
+
+		public function getProductsFromOrderOrSimpleCart($data){
+
+
+
+
+
+
+
+
+			
 		}
 
 		public function getNewProductsForCustomerAddedFromLastOrder($data){

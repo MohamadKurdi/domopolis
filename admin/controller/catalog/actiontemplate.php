@@ -659,8 +659,7 @@
 					'date_sent'       => date('d.m.Y')
 				];
 				$this->response->setOutput(json_encode($responce));				
-			}
-											
+			}											
 		}
 						
 		protected function validateForm() {

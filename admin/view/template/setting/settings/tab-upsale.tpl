@@ -116,13 +116,16 @@
 					<span class="help">отбирать корзины до</span>
 				</td>
 			</tr>
+		</table>
+
+		<table class="form">
 			<tr>
-				<td colspan="2">
+				<td style="width:20%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Шаблон почты (модуль Emailtemplate)</span></p>
 					<input type="text" name="config_forgottencart_email_template_1" value="<?php echo $config_forgottencart_email_template_1; ?>" size="50" />
 					<span class="help">скопировать из списка шаблонов почты</span>
 				</td>
-				<td colspan="2">
+				<td style="width:20%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Шаблон почты (регулярные рассылки)</span></p>
 					<select name="config_forgottencart_email_actiontemplate_1">
 						<option value="0" <?php if (empty($config_forgottencart_email_actiontemplate_1)) { ?>selected="selected"<? } ?>>Не использовать</option>
@@ -132,7 +135,12 @@
 					</select>
 					<span class="help">выбрать из списка</span>
 				</td>
-				<td colspan="4">
+				<td style="width:20%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Трек-код</span></p>
+					<input type="text" name="config_forgottencart_email_actiontemplate_tracking_code_1" value="<?php echo $config_forgottencart_email_actiontemplate_tracking_code_1; ?>" size="15" />
+					<span class="help">найти в SEO/Трекинг</span>
+				</td>
+				<td style="width:40%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Текст SMS</span></p>
 					<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_forgottencart_sms_text_1" value="<?php echo $config_forgottencart_sms_text_1; ?>" />
 					<span class="help"><b>{FIRSTNAME}, {PRODUCT}, {PROMOCODE}</b></span>
@@ -232,13 +240,16 @@
 					<span class="help">отбирать корзины до</span>
 				</td>
 			</tr>
+		</table>
+
+		<table class="form">
 			<tr>
-				<td colspan="2">
+				<td style="width:20%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Шаблон почты (модуль Emailtemplate)</span></p>
 					<input type="text" name="config_forgottencart_email_template_2" value="<?php echo $config_forgottencart_email_template_2; ?>" size="50" />
 					<span class="help">скопировать из списка шаблонов почты</span>
 				</td>
-				<td colspan="2">
+				<td style="width:20%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Шаблон почты (регулярные рассылки)</span></p>
 					<select name="config_forgottencart_email_actiontemplate_2">
 						<option value="0" <?php if (empty($config_forgottencart_email_actiontemplate_2)) { ?>selected="selected"<? } ?>>Не использовать</option>
@@ -248,7 +259,12 @@
 					</select>
 					<span class="help">выбрать из списка</span>
 				</td>
-				<td colspan="4">
+				<td style="width:20%">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Трек-код</span></p>
+					<input type="text" name="config_forgottencart_email_actiontemplate_tracking_code_2" value="<?php echo $config_forgottencart_email_actiontemplate_tracking_code_2; ?>" size="15" />
+					<span class="help">найти в SEO/Трекинг</span>
+				</td>
+				<td style="width:40%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Текст SMS</span></p>
 					<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_forgottencart_sms_text_2" value="<?php echo $config_forgottencart_sms_text_2; ?>" />
 					<span class="help"><b>{FIRSTNAME}, {PRODUCT}, {PROMOCODE}</b></span>
