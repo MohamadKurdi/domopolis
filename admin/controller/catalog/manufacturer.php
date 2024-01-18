@@ -1,6 +1,6 @@
 <?php    
 class ControllerCatalogManufacturer extends Controller { 
-	private $error = array();
+	private $error = [];
 	
 	public function index() {
 		$this->language->load('catalog/manufacturer');
@@ -146,7 +146,7 @@ class ControllerCatalogManufacturer extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 		
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 		
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -163,7 +163,7 @@ class ControllerCatalogManufacturer extends Controller {
 		$this->data['insert'] = $this->url->link('catalog/manufacturer/insert', 'token=' . $this->session->data['token'] . $url);
 		$this->data['delete'] = $this->url->link('catalog/manufacturer/delete', 'token=' . $this->session->data['token'] . $url);	
 		
-		$this->data['manufacturers'] = array();
+		$this->data['manufacturers'] = [];
 		
 		$data = array(
 			'sort'  => $sort,
@@ -184,7 +184,7 @@ class ControllerCatalogManufacturer extends Controller {
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
 		
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 			
 			$action[] = array(
 				'text' => $this->language->get('text_edit'),
@@ -342,7 +342,7 @@ class ControllerCatalogManufacturer extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 		
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 		
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -379,7 +379,7 @@ class ControllerCatalogManufacturer extends Controller {
 		} elseif (isset($this->request->get['manufacturer_id'])) {
 			$this->data['manufacturer_description'] = $this->model_catalog_manufacturer->getManufacturerDescriptions($this->request->get['manufacturer_id']);
 		} else {
-			$this->data['manufacturer_description'] = array();
+			$this->data['manufacturer_description'] = [];
 		}
 		
 		$this->load->model('kp/reward');
@@ -388,7 +388,7 @@ class ControllerCatalogManufacturer extends Controller {
 		} elseif (isset($this->request->get['manufacturer_id'])) {
 			$this->data['rewards'] = $this->model_kp_reward->getEntityRewards($this->request->get['manufacturer_id'], 'm');
 		} else {
-			$this->data['rewards'] = array();
+			$this->data['rewards'] = [];
 		}
 		
 		if (isset($this->request->post['name'])) {
@@ -404,7 +404,7 @@ class ControllerCatalogManufacturer extends Controller {
 		} elseif (isset($this->request->get['manufacturer_id'])) {
 			$this->data['manufacturer_page_content'] = $this->model_catalog_manufacturer->getManufacturerPageContent($this->request->get['manufacturer_id']);
 		} else {
-			$this->data['manufacturer_page_content'] = array();
+			$this->data['manufacturer_page_content'] = [];
 		}
 		
 		if (isset($this->request->post['priceva_enable'])) {
@@ -445,44 +445,36 @@ class ControllerCatalogManufacturer extends Controller {
 		
 		foreach ($this->data['languages'] as $language){
 			if (isset($this->data['manufacturer_page_content'][$language['language_id']])){
-				foreach ($this->data['manufacturer_page_content'][$language['language_id']] as &$content){						
-					
-					if ($content['products']){
-						
-						$content['real_products'] = array();						
-						$p_array = explode(',', $content['products']);						
-						foreach ($p_array as $product_id){
+				foreach ($this->data['manufacturer_page_content'][$language['language_id']] as &$content){											
+					if ($content['products']){						
+						$content['real_products'] = [];						
+						$exploded = explode(',', $content['products']);						
+						foreach ($exploded as $product_id){
 							$content['real_products'][] = $this->model_catalog_product->getProduct($product_id);
-						}
-						
+						}						
 					} else {
-						$content['real_products'] = array();
+						$content['real_products'] = [];
 					}
 					
-					if ($content['collections']) {
-						
-						$content['real_collections'] = array();						
-						$p_array = explode(',', $content['collections']);						
+					if ($content['collections']) {						
+						$content['real_collections'] = [];						
+						$exploded = explode(',', $content['collections']);						
 						foreach ($p_array as $product_id){
 							$content['real_collections'][] = $this->model_catalog_collection->getCollectionById($product_id);
-						}
-						
+						}						
 					} else {
-						$content['real_collections'] = array();	
+						$content['real_collections'] = [];	
 					}
 					
-					if ($content['categories']) {
-						
-						$content['real_categories'] = array();						
-						$p_array = explode(',', $content['categories']);						
-						foreach ($p_array as $product_id){
+					if ($content['categories']) {						
+						$content['real_categories'] = [];						
+						$exploded = explode(',', $content['categories']);						
+						foreach ($exploded as $product_id){
 							$content['real_categories'][] = $this->model_catalog_category->getCategory($product_id);
-						}
-						
+						}						
 					} else {
-						$content['real_categories'] = array();	
-					}
-					
+						$content['real_categories'] = [];	
+					}					
 				}									
 			}
 		}		
@@ -528,7 +520,7 @@ class ControllerCatalogManufacturer extends Controller {
 		} elseif (!empty($manufacturer_info)) {
 			$this->data['keyword'] = $this->model_catalog_manufacturer->getKeyWords($this->request->get['manufacturer_id']);
 		} else {
-			$this->data['keyword']= array();
+			$this->data['keyword']= [];
 		}
 		
 		if (isset($this->request->post['image'])) {
@@ -576,7 +568,7 @@ class ControllerCatalogManufacturer extends Controller {
 		} elseif (isset($this->request->get['manufacturer_id'])) {
 			$this->data['manufacturer_layout'] = $this->model_catalog_manufacturer->getManufacturerLayouts($this->request->get['manufacturer_id']);
 		} else {
-			$this->data['manufacturer_layout'] = array();
+			$this->data['manufacturer_layout'] = [];
 		}
 		$this->load->model('design/layout');
 		
@@ -666,7 +658,7 @@ class ControllerCatalogManufacturer extends Controller {
 	}
 	
 	public function autocomplete() {
-		$json = array();
+		$json = [];
 		
 		if (isset($this->request->get['filter_name'])) {
 			$this->load->model('catalog/manufacturer');
@@ -687,7 +679,7 @@ class ControllerCatalogManufacturer extends Controller {
 			}		
 		}
 		
-		$sort_order = array();
+		$sort_order = [];
 		
 		foreach ($json as $key => $value) {
 			$sort_order[$key] = $value['name'];

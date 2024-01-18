@@ -160,83 +160,40 @@
 				}
 			}
 			
-			
-			$this->db->query("DELETE FROM manufacturer_page_content WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
-			
-			if (isset($data['copyrussian']) && $data['copyrussian'] == 1){
-				
-				$rucontent = $data['manufacturer_page_content'][2];
-				$lquery = $this->db->query("SELECT DISTINCT language_id FROM language WHERE language_id <> 26");
-				
-				$lcodes = array();
-				foreach ($lquery->rows as $lrow){
-					$lcodes[] = $lrow['language_id'];
-				} 
-				
-				foreach ($lcodes as $language_id) {
-					
-					foreach ($rucontent as $value){
-						
-						if (!isset($value['products']) or !is_array($value['products'])){
-							$value['products'] = array();
-						}
-						
-						if (!isset($value['collections']) or !is_array($value['collections'])){
-							$value['collections'] = array();
-						}
-						
-						if (!isset($value['categories']) or !is_array($value['categories'])){
-							$value['categories'] = array();
-						}
-						
-						$this->db->query("INSERT INTO manufacturer_page_content SET 
-						manufacturer_id = '" . (int)$manufacturer_id . "', 
-						language_id = '" . (int)$language_id . "', 
-						title = '" . $this->db->escape($value['title']) . "',
-						products = '" . $this->db->escape(implode(',', $value['products'])) . "', 
-						collections = '" . $this->db->escape(implode(',', $value['collections'])) . "',
-						categories = '" . $this->db->escape(implode(',', $value['categories'])) . "',
-						type = '" . $this->db->escape($value['type']) . "', 
-						sort_order = '" . (int)$value['sort_order'] . "'");
-						
+			$this->db->query("DELETE FROM manufacturer_page_content WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");	
+			if (!empty($data['copymain'])){	
+				foreach ($this->registry->get('languages') as $language){
+					if ($language['language_id'] != $this->config->get('config_de_language_id')){
+						$data['manufacturer_page_content'][(int)$language['language_id']] = $data['manufacturer_page_content'][(int)$this->config->get('config_language_id')];
 					}
-					
 				}
-				
-				
-				} else {
-				
-				foreach ($data['manufacturer_page_content'] as $language_id => $contents) {
-					
-					foreach ($contents as $value){
-						
-						if (!isset($value['products']) or !is_array($value['products'])){
-							$value['products'] = array();
-						}
-						
-						if (!isset($value['collections']) or !is_array($value['collections'])){
-							$value['collections'] = array();
-						}
-						
-						if (!isset($value['categories']) or !is_array($value['categories'])){
-							$value['categories'] = array();
-						}
-						
-						$this->db->query("INSERT INTO manufacturer_page_content SET 
-						manufacturer_id = '" . (int)$manufacturer_id . "', 
-						language_id = '" . (int)$language_id . "', 
-						title = '" . $this->db->escape($value['title']) . "',
-						products = '" . $this->db->escape(implode(',', $value['products'])) . "', 
-						collections = '" . $this->db->escape(implode(',', $value['collections'])) . "',
-						categories = '" . $this->db->escape(implode(',', $value['categories'])) . "',
-						type = '" . $this->db->escape($value['type']) . "', 
-						sort_order = '" . (int)$value['sort_order'] . "'");	
-						
-					}
-					
-				}
-				
 			}
+
+			foreach ($data['manufacturer_page_content'] as $language_id => $contents) {					
+				foreach ($contents as $value){						
+					if (!isset($value['products']) or !is_array($value['products'])){
+						$value['products'] = [];
+					}
+
+					if (!isset($value['collections']) or !is_array($value['collections'])){
+						$value['collections'] = [];
+					}
+
+					if (!isset($value['categories']) or !is_array($value['categories'])){
+						$value['categories'] = [];
+					}
+
+					$this->db->query("INSERT INTO manufacturer_page_content SET 
+						manufacturer_id = '" . (int)$manufacturer_id . "', 
+						language_id 	= '" . (int)$language_id . "', 
+						title 			= '" . $this->db->escape($value['title']) . "',
+						products 		= '" . $this->db->escape(implode(',', $value['products'])) . "', 
+						collections 	= '" . $this->db->escape(implode(',', $value['collections'])) . "',
+						categories 		= '" . $this->db->escape(implode(',', $value['categories'])) . "',
+						type 			= '" . $this->db->escape($value['type']) . "', 
+						sort_order 		= '" . (int)$value['sort_order'] . "'");							
+				}				
+			}			
 			
 			if ($this->url->checkIfGenerate('manufacturer_id')){
 				$this->db->query("DELETE FROM url_alias WHERE query = 'manufacturer_id=" . (int)$manufacturer_id. "'");
@@ -274,7 +231,7 @@
 		}
 		
 		public function getKeyWords($manufacturer_id) {
-			$keywords = array();
+			$keywords = [];
 
 			if ($keywords = $this->url->linkfromid('manufacturer_id', $manufacturer_id)){
 				return $keywords;
@@ -291,7 +248,7 @@
 		}
 		
 		public function getManufacturerLayouts($manufacturer_id) {
-			$manufacturer_layout_data = array();
+			$manufacturer_layout_data = [];
 			
 			$query = $this->db->query("SELECT * FROM manufacturer_to_layout WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			
@@ -303,7 +260,7 @@
 		}
 		
 		public function getManufacturerDescriptions($manufacturer_id) {
-			$manufacturer_description_data = array();
+			$manufacturer_description_data = [];
 			
 			$query = $this->db->query("SELECT * FROM manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			
@@ -395,7 +352,7 @@
 		}
 		
 		public function getManufacturerStores($manufacturer_id) {
-			$manufacturer_store_data = array();
+			$manufacturer_store_data = [];
 			
 			$query = $this->db->query("SELECT * FROM manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			
@@ -425,7 +382,7 @@
 		}
 		
 		public function getManufacturerPageContent($manufacturer_id) {
-			$manufacturer_page_content_data = array();
+			$manufacturer_page_content_data = [];
 			
 			$query = $this->db->query("SELECT * FROM manufacturer_page_content WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			

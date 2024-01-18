@@ -237,45 +237,27 @@ class ModelCatalogCategory extends Model {
 		$this->db->query("DELETE FROM category_menu_content WHERE category_id = '" . (int)$category_id . "'");
 		
 		if (!empty($data['category_menu_content'])){
-			if (isset($data['copyrussian']) && $data['copyrussian'] == 1){
-				$rucontent = $data['category_menu_content'][2];
-				$lquery = $this->db->query("SELECT DISTINCT language_id FROM language WHERE language_id <> 26");
-
-				$lcodes = array();
-				foreach ($lquery->rows as $lrow){
-					$lcodes[] = $lrow['language_id'];
-				} 
-
-				foreach ($lcodes as $language_id) {				
-					foreach ($rucontent as $value){
-						$this->db->query("INSERT INTO category_menu_content SET 
-							category_id = '" . (int)$category_id . "', 
-							language_id = '" . (int)$language_id . "', 
-							title = '" . $this->db->escape($value['title']) . "', 
-							content = '" . $this->db->escape($value['content']) . "',
-							href = '" . $this->db->escape($value['href']) . "', 
-							image = '" . $this->db->escape($value['image']) . "', 
-							width = '" . (int)$value['width'] . "', 
-							height = '" . (int)$value['height'] . "', 
-							standalone = '" . (int)$value['standalone'] . "', 
-							sort_order = '" . (int)$value['sort_order'] . "'");					
-					}				
-				}
-			} else {
-				foreach ($data['category_menu_content'] as $language_id => $contents) {
-					foreach ($contents as $value){
-						$this->db->query("INSERT INTO category_menu_content SET 
-							category_id = '" . (int)$category_id . "', 
-							language_id = '" . (int)$language_id . "', 
-							title = '" . $this->db->escape($value['title']) . "', 
-							content = '" . $this->db->escape($value['content']) . "',
-							href = '" . $this->db->escape($value['href']) . "', 
-							image = '" . $this->db->escape($value['image']) . "', 
-							width = '" . (int)$value['width'] . "', 
-							height = '" . (int)$value['height'] . "', 
-							standalone = '" . (int)$value['standalone'] . "', 
-							sort_order = '" . (int)$value['sort_order'] . "'");
+			if (!empty($data['copymain'])){	
+				foreach ($this->registry->get('languages') as $language){
+					if ($language['language_id'] != $this->config->get('config_de_language_id')){
+						$data['category_menu_content'][(int)$language['language_id']] = $data['category_menu_content'][(int)$this->config->get('config_language_id')];
 					}
+				}
+			}
+			
+			foreach ($data['category_menu_content'] as $language_id => $contents) {
+				foreach ($contents as $value){
+					$this->db->query("INSERT INTO category_menu_content SET 
+						category_id = '" . (int)$category_id . "', 
+						language_id = '" . (int)$language_id . "', 
+						title = '" . $this->db->escape($value['title']) . "', 
+						content = '" . $this->db->escape($value['content']) . "',
+						href = '" . $this->db->escape($value['href']) . "', 
+						image = '" . $this->db->escape($value['image']) . "', 
+						width = '" . (int)$value['width'] . "', 
+						height = '" . (int)$value['height'] . "', 
+						standalone = '" . (int)$value['standalone'] . "', 
+						sort_order = '" . (int)$value['sort_order'] . "'");
 				}
 			}
 		}
