@@ -29,6 +29,10 @@ class Url {
         $this->rewrite[] = $rewrite;
     }
 
+    public function frontlink($route, $args = '', $connection = 'SSL', $language_id = false) {
+        return str_replace('/admin', '', $this->linkCached($route, $args, $language_id));
+    }
+
     public function link($route, $args = '', $connection = 'SSL', $language_id = false) {
         return $this->linkCached($route, $args, $language_id);
     }

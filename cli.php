@@ -362,6 +362,12 @@ $controller = new Front($registry);
 
 if ($application != 'admin'){
 	$controller->addPreAction(new Action('common/seo_pro'));
+} else {
+	$admin_seo_routes = loadJsonConfig('admin_seo_routes');
+
+	if (in_array($route, $admin_seo_routes)){
+		$controller->addPreAction(new Action('common/seo_pro'));
+	}
 }
 
 $registry->get('simpleProcess')->startProcess();
