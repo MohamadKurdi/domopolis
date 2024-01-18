@@ -14,15 +14,15 @@
 	$_['text_affiliate']             = 'Партнеры';
 	$_['text_return']                = 'Возвраты';
 	$_['text_image_manager']         = 'Управление изображениями';
-	$_['text_browse']                = 'Просмотр файлов';
-	$_['text_clear']                 = 'Очистить изображение';
+	$_['text_browse']                = 'Просмотр';
+	$_['text_clear']                 = 'Очистить';
 	$_['text_shipping']              = 'Адрес доставки';
 	$_['text_payment']               = 'Платёжный адрес';
 	$_['text_mail']                  = 'Mail';
 	$_['text_smtp']                  = 'SMTP';
 	
-	$_['text_seo_url']					= 'Логика v1 (seo_url)';
-	$_['text_seo_pro']					= 'Логика v2 (seo_pro)';
+	$_['text_seo_url']					= 'Логика v1';
+	$_['text_seo_pro']					= 'Логика v2';
 	$_['entry_seo_url_type']			= 'Тип ЧПУ:';
 	$_['entry_seo_url_include_path']	= 'ЧПУ товаров с категориями:<span class="help">/category/subcategory/product<br />(только для v2)</span>';
 	$_['entry_seo_url_postfix']			= 'Окончание ЧПУ:<span class="help">Например .html<br />(только для v2)</span>';

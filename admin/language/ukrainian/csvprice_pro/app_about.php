@@ -1,24 +1,24 @@
 <?php
 // Heading
-$_['heading_title'] = 'Про модуль';
+$_['heading_title'] = 'О модуле';
 $_['heading_title_normal'] = 'CSV Price Pro import/export 3';
 
 // Text
-$_['text_module'] = 'Модулі';
-$_['text_license_key'] = 'Ліцензія:';
+$_['text_module'] = 'Модули';
+$_['text_license_key'] = 'Лицензия:';
 $_['text_app_name'] = 'Модуль:';
-$_['text_app_version'] = 'Версія:';
-$_['text_home_page'] = 'Офіційний сайт модуля:';
-$_['text_empty_license'] = '<mark>Ліцензійний ключ відсутній</mark>';
-$_['text_support_email'] = 'Технічна підтримка:';
-$_['text_success_license_key'] = 'Ліцензійний ключ успішно встановлений!';
-$_['text_show'] = 'показати';
+$_['text_app_version'] = 'Версия:';
+$_['text_home_page'] = 'Официальный сайт модуля:';
+$_['text_empty_license'] = '<mark>Лицензионный ключ отсутствует</mark>';
+$_['text_support_email'] = 'Техническая поддержка:';
+$_['text_success_license_key'] = 'Лицензионный ключ успешно установлен!';
+$_['text_show'] = 'показать';
 
 $_['home_page'] = 'www.opencartlabs.ru';
 $_['support_email'] = 'info@opencartlabs.ru';
 
 // Butons
-$_['button_save'] = 'Зберегти';
+$_['button_save'] = 'Сохранить';
 
 // Entry
-$_['entry_license_key'] = 'Ліцензія:';
+$_['entry_license_key'] = 'Лицензия:';

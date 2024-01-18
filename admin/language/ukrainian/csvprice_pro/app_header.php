@@ -4,13 +4,13 @@ $_['heading_title'] = '<span class="f-heading-title">CSV Price Pro import/export
 $_['heading_title_normal'] = 'CSV Price Pro import/export 3';
 
  // Text
-$_['text_menu_product'] = 'Товари';
-$_['text_menu_category'] = 'Категорії';
-$_['text_menu_manufacturer'] = 'Виробники';
-$_['text_menu_crontab'] = 'Планувальник';
-$_['text_menu_customer'] = 'Клієнти';
-$_['text_menu_order'] = 'Замовлення';
-$_['text_menu_about'] = 'Про модуль';
+$_['text_menu_product'] = 'Товары';
+$_['text_menu_category'] = 'Категории';
+$_['text_menu_manufacturer'] = 'Производители';
+$_['text_menu_crontab'] = 'Планировщик';
+$_['text_menu_customer'] = 'Клиенты';
+$_['text_menu_order'] = 'Заказы';
+$_['text_menu_about'] = 'О модуле';
 
 $_['mod_demo'] = '0';
 $_['mdemo_title'] = '

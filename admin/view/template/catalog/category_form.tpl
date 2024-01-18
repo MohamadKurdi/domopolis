@@ -1478,17 +1478,19 @@
 				</div>
 
 				<div id="tab-menucontent">
-					<div id="languages2" class="htabs">
+					<div id="languages-menucontent" class="htabs">
 						<?php foreach ($languages as $language) { ?>
-							<a href="#language2<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br /><?php echo $language['name']; ?></a>
+							<a href="#language-menucontent<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br /><?php echo $language['name']; ?></a>
 						<?php } ?>
-						<span style="vertical-align: -15px;"><input class="checkbox" type="checkbox" name="copyrussian" value="1" id="copyrussian" />
-						<label for="copyrussian">Копировать ru на все.</label></span>
-						<div class="clr"></div>
+						<div style="float:right; vertical-align: -15px;">
+								<input class="checkbox" type="checkbox" name="copymain" value="1" id="copymain" />
+								<label for="copymain"><b>Копировать контент <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $this->config->get('config_admin_language'); ?>.png" title="<?php echo $this->config->get('config_admin_language'); ?>" /> (<?php echo $this->config->get('config_admin_language'); ?>) на все языки</b></label>
+								<span class="help"><i class="fa fa-exclamation-circle"></i> весь контент, кроме <?php echo $this->config->get('config_de_language');?> будет перезаписан</span>
+							</div>
 					</div>
 					<? $max_row = 0; ?>
 					<?php foreach ($languages as $language) { ?>
-						<div id="language2<?php echo $language['language_id']; ?>">
+						<div id="language-menucontent<?php echo $language['language_id']; ?>">
 							<table id="table_content_<?php echo $language['language_id']; ?>" style="width:100%">
 								<? if (isset($category_menu_content[$language['language_id']])) { ?>			
 									<? $row=0; foreach ($category_menu_content[$language['language_id']] as $menu_content) { ?>
@@ -1977,6 +1979,6 @@
 		$('.date').datepicker({dateFormat: 'yy-mm-dd'});
 		$('#tabs a').tabs(); 
 		$('#languages a').tabs();
-		$('#languages2 a').tabs();
+		$('#languages-menucontent a').tabs();
 	//--></script> 
 <?php echo $footer; ?>																																												

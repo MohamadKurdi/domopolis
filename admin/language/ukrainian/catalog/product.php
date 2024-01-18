@@ -25,6 +25,10 @@ $_['text_related'] = 'Сопутствующие товары';
 $_['text_specials'] = 'Специальные предложения';
 $_['text_descriptions'] = 'Описания';
 
+$_['entry_values']          		= 'Добавьте значения для этой опции.';
+$_['tab_ocfilter']          		= 'Опции фильтра';
+$_['ocfilter_select_category'] 	= 'Для начала, выберите категории для этого товара.';
+
 $_['txt_attr']               = 'A';
 $_['txt_dscnt']              = 'D';
 $_['txt_img']                = 'I';
@@ -83,9 +87,6 @@ $_['column_amzn_offers_count']	= 'Офферов<i class="fa fa-amazon"></i>';
 $_['column_fill_from_amazon'] 	= 'Загружать<i class="fa fa-amazon"></i>';
 $_['column_product_offers_count'] 	= 'Заказов';
 $_['column_product_warehouse_count'] 	= 'Склад';
-$_['column_amazon_offers_type'] 	= 'OFRS<i class="fa fa-amazon"></i>';
-$_['column_amazon_seller_quality'] 	= 'SLR<i class="fa fa-amazon"></i>';
-
 $_['column_tag']                = 'Product Tags';
 $_['column_sku']                = 'SKU';
 $_['column_asin']               = 'ASIN';
@@ -104,7 +105,20 @@ $_['column_store']              = 'Stores';
 $_['column_view_in_store']      = 'View in Store';
 $_['column_download']           = 'Downloads';
 $_['column_filter']             = 'Filters';
+$_['column_cost']             = 'Закупка';
 
+$_['column_product_is_in_offers']  = 'Заказы';
+$_['column_product_is_in_warehouse']      = 'Склады';
+
+$_['tab_ukrcredits']			= 'Кредиты';
+$_['credit_type']				= 'Вид кредитования:';
+$_['partsCount']				= 'Максимум месяцев:';
+$_['markup']					= 'Коэффициент наценки:';
+$_['help_partsCount']			= 'Введите максимальное количество месяцев кредитования';
+$_['help_markup']				= 'Если необходимо, установите наценку на стоимость товара, например 1.027, что составляет 2.7%';
+$_['credit_type_ii']			= 'Мгновенная рассрочка (Приватбанк)';
+$_['credit_type_pp']			= 'Оплата частями (Приватбанк)';
+$_['credit_type_mb']			= 'Покупка частями (Монобанк)';
 
 $_['entry_values']          		= 'Добавьте значения для этой опции.';
 $_['tab_ocfilter']          		= 'Тэги/Фильтр';

@@ -32,10 +32,7 @@
 			<div class="th_style"></div>
 			<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
 				<div id="tab-general">
-					
-					
-					<table class="form">						
-						
+					<table class="form">												
 						<tr>
 							<td style="width:20%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Название</span>
@@ -102,12 +99,10 @@
 							<td>
 								<input type="text" name="sort_order" value="<?php echo $sort_order; ?>" size="1" />
 							</td>
-						</tr>
-						
+						</tr>						
 					</table>
 					
-					<table class="form">						
-						
+					<table class="form">											
 						<tr>
 							<td style="width:20%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Выгрузка на Hotline</span>
@@ -155,12 +150,10 @@
 								<?php } ?>
 							</td>
 							
-						</tr>
-						
+						</tr>						
 					</table>
 					
-					<table class="form">
-						
+					<table class="form">		
 						<tr>
 							<td><?php echo $entry_store; ?></td>
 							<td>
@@ -493,27 +486,25 @@
 				</div>
 				
 				<div id="tab-pagecontent">
-					<div id="languages2" class="htabs">
+					<div id="languages-menucontent" class="htabs">
 						<?php foreach ($languages as $language) { ?>
-							<a href="#language2<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br /><?php echo $language['name']; ?></a>
+							<a href="#language-menucontent<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br /><?php echo $language['name']; ?></a>
 						<?php } ?>
-						<span style="vertical-align: -15px;"><input class="checkbox" type="checkbox" name="copyrussian" value="1" id="copyrussian" />
-						<label for="copyrussian">Копировать ru на все.</label></span>
-					</div>
-					
-					<? $max_row = 0; ?>
-					<?php foreach ($languages as $language) { ?>
-						<div id="language2<?php echo $language['language_id']; ?>">
-							<table id="table_content_<?php echo $language['language_id']; ?>" style="width:100%">
-								<? if (isset($manufacturer_page_content[$language['language_id']])) { ?>			
-									<? $row=0; foreach ($manufacturer_page_content[$language['language_id']] as $page_content) { ?>
-										
-										<tr id="tr_content_<?php echo $page_content['manufacturer_page_content_id'] ; ?>">				
-											<? if ($row%2==0) { ?>
-												<td style="border-left:2px solid green; padding:10px;">
-													<? } else { ?>
-													<td style="border-left:2px solid orange; padding:10px;">
-													<? } ?>
+							<div style="float:right; vertical-align: -15px;">
+								<input class="checkbox" type="checkbox" name="copymain" value="1" id="copymain" />
+								<label for="copymain"><b>Копировать контент <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $this->config->get('config_admin_language'); ?>.png" title="<?php echo $this->config->get('config_admin_language'); ?>" /> (<?php echo $this->config->get('config_admin_language'); ?>) на все языки</b></label>
+								<span class="help"><i class="fa fa-exclamation-circle"></i> весь контент, кроме <?php echo $this->config->get('config_de_language');?> будет перезаписан</span>
+							</div>
+						</div>
+
+						<? $max_row = 0; ?>
+						<?php foreach ($languages as $language) { ?>
+							<div id="language-menucontent<?php echo $language['language_id']; ?>">
+								<table id="table_content_<?php echo $language['language_id']; ?>" style="width:100%">
+									<? if (isset($manufacturer_page_content[$language['language_id']])) { ?>			
+										<? $row=0; foreach ($manufacturer_page_content[$language['language_id']] as $page_content) { ?>										
+											<tr id="tr_content_<?php echo $page_content['manufacturer_page_content_id'] ; ?>">															
+												<td style="border-left:2px solid <? if ($row%2==0) { ?>green<? } else { ?>orange<?php } ?>; padding:10px;">
 													<table style="width:100%">
 														<tr>
 															<td colspan="2">
@@ -547,11 +538,11 @@
 																		<option value="products" >Товары</option>
 																		<option value="collections" selected="selected">Коллекции</option>
 																		<option value="categories">Категории</option>
-																		<? } elseif ($page_content['type'] == 'categories') { ?>
+																	<? } elseif ($page_content['type'] == 'categories') { ?>
 																		<option value="products" >Товары</option>
 																		<option value="collections">Коллекции</option>
 																		<option value="categories"  selected="selected">Категории</option>	
-																		<? } else { ?>
+																	<? } else { ?>
 																		<option value="products" selected="selected">Товары</option>
 																		<option value="collections">Коллекции</option>
 																		<option value="categories">Категории</option>						
@@ -586,45 +577,44 @@
 																				<?php foreach ($page_content['real_collections'] as $real_collection) { ?>
 																					<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
 																					<div id="collection-<? echo $row; ?>-<?php echo $real_collection['collection_id']; ?>" class="<?php echo $class; ?>"> <?php echo $real_collection['name']; ?>
-																						<img src="view/image/delete.png" class='delete-collection-row' data-row-id="<? echo $row; ?>"  alt="" />
-																						<input type="hidden" name="manufacturer_page_content[<?php echo $language['language_id']; ?>][<?php echo $page_content['manufacturer_page_content_id'] ; ?>][collections][]" value="<?php echo $real_collection['collection_id']; ?>" />
-																					</div>
-																				<?php } ?>
+																					<img src="view/image/delete.png" class='delete-collection-row' data-row-id="<? echo $row; ?>"  alt="" />
+																					<input type="hidden" name="manufacturer_page_content[<?php echo $language['language_id']; ?>][<?php echo $page_content['manufacturer_page_content_id'] ; ?>][collections][]" value="<?php echo $real_collection['collection_id']; ?>" />
+																				</div>
+																			<?php } ?>
+																		</div>
+
+																	</td>
+																	<td style="width:33%">
+																		Категории<br />
+																		<input type="text" class="category-a" data-row='<? echo $row; ?>' data-language-id='<?php echo $language['language_id']; ?>' data-content-id='<?php echo $page_content['manufacturer_page_content_id'] ; ?>' style="width:400px;" value="" /><br /><br />
+
+																		<div id="categories-<? echo $row; ?>" class="scrollbox" style="width:400px; min-height: 200px;">
+																			<?php $class = 'odd'; ?>
+																			<?php foreach ($page_content['real_categories'] as $real_category) { ?>
+																				<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+																				<div id="category-<? echo $row; ?>-<?php echo $real_category['category_id']; ?>" class="<?php echo $class; ?>"> <?php echo $real_category['name']; ?>
+																				<img src="view/image/delete.png" class='delete-category-row' data-row-id="<? echo $row; ?>"  alt="" />
+																				<input type="hidden" name="manufacturer_page_content[<?php echo $language['language_id']; ?>][<?php echo $page_content['manufacturer_page_content_id'] ; ?>][categories][]" value="<?php echo $real_category['category_id']; ?>" />
 																			</div>
-																			
-																		</td>
-																		<td style="width:33%">
-																			Категории<br />
-																			<input type="text" class="category-a" data-row='<? echo $row; ?>' data-language-id='<?php echo $language['language_id']; ?>' data-content-id='<?php echo $page_content['manufacturer_page_content_id'] ; ?>' style="width:400px;" value="" /><br /><br />
-																			
-																			<div id="categories-<? echo $row; ?>" class="scrollbox" style="width:400px; min-height: 200px;">
-																				<?php $class = 'odd'; ?>
-																				<?php foreach ($page_content['real_categories'] as $real_category) { ?>
-																					<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-																					<div id="category-<? echo $row; ?>-<?php echo $real_category['category_id']; ?>" class="<?php echo $class; ?>"> <?php echo $real_category['name']; ?>
-																						<img src="view/image/delete.png" class='delete-category-row' data-row-id="<? echo $row; ?>"  alt="" />
-																						<input type="hidden" name="manufacturer_page_content[<?php echo $language['language_id']; ?>][<?php echo $page_content['manufacturer_page_content_id'] ; ?>][categories][]" value="<?php echo $real_category['category_id']; ?>" />
-																					</div>
-																				<?php } ?>
-																			</div>
-																			
-																		</td>
-																	</tr>
-																</table>
-															</td>
-														</tr>					
-													</table>
-												</td>
-											</tr>
-											<? if ($page_content['manufacturer_page_content_id'] > $max_row) $max_row = $page_content['manufacturer_page_content_id']; ?>  			
-										<? $row++; } ?>
-									<? } ?>
-								</table>
-								<a style="margin-top:20px; float:right;" class="button add-menu-content" data-language-id="<?php echo $language['language_id']; ?>">Добавить</a>
-							</div>
-						<? } ?>	
-						
-					</div>
+																		<?php } ?>
+																	</div>																			
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>					
+											</table>
+										</td>
+									</tr>
+									<? if ($page_content['manufacturer_page_content_id'] > $max_row) $max_row = $page_content['manufacturer_page_content_id']; ?>  			
+									<? $row++; } ?>
+								<? } ?>
+							</table>
+							<a style="margin-top:20px; float:right;" class="button add-menu-content" data-language-id="<?php echo $language['language_id']; ?>">Добавить</a>
+						</div>
+					<? } ?>							
+				</div>
+			</div>
 					
 				</form>
 			</div>
@@ -724,8 +714,7 @@
 		});
 	</script> 
 	
-	<script type="text/javascript" >
-		
+	<script type="text/javascript" >		
 		$('.collection-a').autocomplete({
 			delay: 500,
 			source: function(request, response) {
@@ -772,8 +761,6 @@
 	</script> 
 	<script type="text/javascript" >
 		$('a.add-menu-content').click(function(){
-			
-			
 			var module_row = <?php echo ($max_row + 200); ?>;
 			var language_id = $(this).attr('data-language-id');
 			
@@ -845,7 +832,7 @@
 	<script type="text/javascript"><!--
 		$('#tabs a').tabs();
 		$('#languages a').tabs();
-		$('#languages2 a').tabs();  
+		$('#languages-menucontent a').tabs();  
 		$('#languages-tags a').tabs();  
 	//--></script> 
 	<script type="text/javascript" src="view/javascript/ckeditor/ckeditor.js"></script> 
