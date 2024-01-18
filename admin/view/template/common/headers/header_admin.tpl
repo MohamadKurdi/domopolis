@@ -271,9 +271,7 @@
 								<?php } ?>		
 
 								<li><a class="home_icon_style" href="<?php echo $total; ?>"><i class="fa fa-plus"></i><span><?php echo $text_total; ?></span></a></li>								
-								<li><a class="home_icon_style" href="<?php echo $invite_after_order; ?>"><i class="fa fa-bar-chart"></i><span>Отзыв после покупки</span></a></li>						
-								<li><a class="home_icon_style" href="<?php echo $affiliate; ?>"><i class="fa fa-handshake-o"></i><span>Партнеры / партн. программа</span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $affiliate_mod_link; ?>"><i class="fa fa-cog"></i><span>Настройки партн. программы</span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $invite_after_order; ?>"><i class="fa fa-bar-chart"></i><span>Отзыв после покупки</span></a></li>														
 								<li><a class="home_icon_style" href="<?php echo $subscribe; ?>"><i class="fa fa-check-square-o"></i><span><?php echo $text_subscribe; ?></span></a></li>
 								
 								<?php if ($pp_express_status) { ?>
@@ -296,6 +294,8 @@
 								<li><a class="home_icon_style" href="<?php echo $keyworder_link; ?>"><i class="fa fa-retweet"></i><span>Связка произв./кат.</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $microdata_link; ?>"><i class="fa fa-sitemap"></i><span>Microdata v1</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $seo_snippet_link; ?>"><i class="fa fa-sitemap"></i><span>Microdata v2</span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $affiliate; ?>"><i class="fa fa-handshake-o"></i><span>Трекинг</span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $affiliate_mod_link; ?>"><i class="fa fa-cog"></i><span>Настройки трекинга</span></a></li>
 							</ul>
 						</li>
 						

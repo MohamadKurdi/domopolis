@@ -86,7 +86,8 @@
 								<?php } else { ?>
 								<a href="<?php echo $sort_email; ?>"><?php echo $column_email; ?></a>
 							<?php } ?></td>
-							<td class="left">Код отслеживания</td>							
+							<td class="left">Код отслеживания</td>
+							<td class="left">Линк</td>								
 							<td class="left"><?php if ($sort == 'c.status') { ?>
 								<a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
 								<?php } else { ?>
@@ -110,27 +111,51 @@
 						<?php if ($affiliates) { ?>
 							<?php foreach ($affiliates as $affiliate) { ?>
 								<tr>
-									<td style="text-align: center;"><?php if ($affiliate['selected']) { ?>
-										<input type="checkbox" name="selected[]" value="<?php echo $affiliate['affiliate_id']; ?>" checked="checked" />
+									<td style="text-align: center;">
+										<?php if ($affiliate['selected']) { ?>
+											<input type="checkbox" name="selected[]" value="<?php echo $affiliate['affiliate_id']; ?>" checked="checked" />
 										<?php } else { ?>
-										<input type="checkbox" name="selected[]" value="<?php echo $affiliate['affiliate_id']; ?>" />
-									<?php } ?></td>
-									<td class="left"><?php echo $affiliate['name']; ?></td>
-									<td class="left"><?php echo $affiliate['email']; ?></td>
-									
+											<input type="checkbox" name="selected[]" value="<?php echo $affiliate['affiliate_id']; ?>" />
+										<?php } ?>
+									</td>
 									<td class="left">
-										<kbd><?php echo $affiliate['code']; ?></kbd>
-										<span class="help">?tracking=<?php echo $affiliate['code']; ?></span>
-										
-										
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#000; color:#FFF;"><?php echo $affiliate['name']; ?></span>
+									</td>
+									<td class="center">
+										<?php echo $affiliate['email']; ?>											
 									</td>
 									
-									<td class="left"><?php echo $affiliate['status']; ?></td>
-									<td class="left"><?php echo $affiliate['approved']; ?></td>
-									<td class="left"><?php echo $affiliate['date_added']; ?></td>
-									<td class="right"><?php foreach ($affiliate['action'] as $action) { ?>
-										<a class="button" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
-									<?php } ?></td>
+									<td class="center">
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF;"><?php echo $affiliate['code']; ?></kbd>
+									</td>
+
+									<td class="center">
+										<kbd>?tracking=<?php echo $affiliate['code']; ?></kbd>																			
+									</td>
+									
+									<td class="center">
+										<? if ($affiliate['status']) { ?>
+											<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+										<? } else { ?>
+											<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+										<? } ?>											
+									</td>
+
+									<td class="center">
+										<? if ($affiliate['approved']) { ?>
+											<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+										<? } else { ?>
+											<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+										<? } ?>											
+									</td>
+
+									<td class="center"><small><?php echo $affiliate['date_added']; ?></small></td>
+									
+									<td class="right">
+										<?php foreach ($affiliate['action'] as $action) { ?>
+											<a class="button" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
+										<?php } ?>
+									</td>
 								</tr>
 							<?php } ?>
 							<?php } else { ?>

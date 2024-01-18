@@ -1,6 +1,6 @@
 <?php    
 	class ControllerSaleAffiliate extends Controller { 
-		private $error = array();
+		private $error = [];
 		
 		public function index() {
 			$this->language->load('sale/affiliate');
@@ -328,7 +328,7 @@
 					$url .= '&page=' . $this->request->get['page'];
 				}
 				
-				$this->data['breadcrumbs'] = array();
+				$this->data['breadcrumbs'] = [];
 				
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_home'),
@@ -346,7 +346,7 @@
 				$this->data['insert'] = $this->url->link('sale/affiliate/insert', 'token=' . $this->session->data['token'] . $url);
 				$this->data['delete'] = $this->url->link('sale/affiliate/delete', 'token=' . $this->session->data['token'] . $url);
 				
-				$this->data['affiliates'] = array();
+				$this->data['affiliates'] = [];
 				
 				$data = array(
 				'filter_name'       => $filter_name, 
@@ -366,7 +366,7 @@
 				$results = $this->model_sale_affiliate->getAffiliates($data);
 				
 				foreach ($results as $result) {
-					$action = array();
+					$action = [];
 					
 					$action[] = array(
 					'text' => $this->language->get('text_edit'),
@@ -374,15 +374,15 @@
 					);
 					
 					$this->data['affiliates'][] = array(
-					'affiliate_id' => $result['affiliate_id'],
-					'request_payment' => $this->currency->format($result['request_payment'], $this->config->get('config_currency')),
-					'request_payment_int' => $result['request_payment'],
+					'affiliate_id' 			=> $result['affiliate_id'],
+					'request_payment' 		=> $this->currency->format($result['request_payment'], $this->config->get('config_currency')),
+					'request_payment_int' 	=> $result['request_payment'],
 					'name'         => $result['name'],
 					'code'         => $result['code'],
 					'email'        => $result['email'],
 					'balance'      => $this->currency->format($result['balance'], $this->config->get('config_currency')),
-					'status'       => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
-					'approved'     => ($result['approved'] ? $this->language->get('text_yes') : $this->language->get('text_no')),
+					'status'       => $result['status'],
+					'approved'     => $result['approved'],
 					'date_added'   => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 					'selected'     => isset($this->request->post['selected']) && in_array($result['affiliate_id'], $this->request->post['selected']),
 					'action'       => $action
@@ -718,7 +718,7 @@
 					$url .= '&page=' . $this->request->get['page'];
 				}
 				
-				$this->data['breadcrumbs'] = array();
+				$this->data['breadcrumbs'] = [];
 				
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_home'),
@@ -1328,7 +1328,7 @@
 			}
 			
 			public function country() {
-				$json = array();
+				$json = [];
 				
 				$this->load->model('localisation/country');
 				
@@ -1385,7 +1385,7 @@
 					$page = 1;
 				}  
 				
-				$this->data['transactions'] = array();
+				$this->data['transactions'] = [];
 				
 				$results = $this->model_sale_affiliate->getTransactions($this->request->get['affiliate_id'], ($page - 1) * 10, 10);
 				
@@ -1416,7 +1416,7 @@
 			}
 			
 			public function autocomplete() {
-				$affiliate_data = array();
+				$affiliate_data = [];
 				
 				if (isset($this->request->get['filter_name'])) {
 					$this->load->model('sale/affiliate');
