@@ -27,15 +27,6 @@
 		}
 
 		public function getProductsFromOrderOrSimpleCart($data){
-
-
-
-
-
-
-
-
-			
 		}
 
 		public function getNewProductsForCustomerAddedFromLastOrder($data){

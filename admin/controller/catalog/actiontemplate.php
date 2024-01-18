@@ -500,8 +500,12 @@
 
 			$html = $this->render();
 
-			if ($this->config->get('config_customer_manual_tracking_code')){
+			if ($actionTemplate['use_for_manual'] && $this->config->get('config_customer_manual_tracking_code')){
 				$html = addTrackingToHTML($html, $this->config->get('config_customer_manual_tracking_code'));
+			}
+
+			if ($actionTemplate['use_for_forgotten'] && $this->config->get('config_forgottencart_email_actiontemplate_tracking_code_1')){
+				$html = addTrackingToHTML($html, $this->config->get('config_forgottencart_email_actiontemplate_tracking_code_1'));
 			}
 
 			if ($return_html){

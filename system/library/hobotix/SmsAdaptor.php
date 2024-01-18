@@ -313,7 +313,7 @@ class SmsAdaptor {
 	}
 
 	public function sendSMSForgottenCartPromo($forgotten_cart, $data){
-		$iteration = $data['iteration_id'];
+		$iteration = (int)$data['iteration'];
 
 		$template = [
 			'{ID}' 				=> $forgotten_cart['order_id'], 
@@ -323,8 +323,8 @@ class SmsAdaptor {
 			'{PHONE}'			=> $forgotten_cart['telephone'], 
 			'{FIRSTNAME}'		=> $forgotten_cart['firstname'], 
 			'{LASTNAME}' 		=> $forgotten_cart['lastname'],
-			'{PRODUCT_TEXT}' 	=> $forgotten_cart['product_text'],
-			'{PROMOCODE}'   	=> $this->config->get('config_firstorder_promocode')
+			'{PRODUCT}' 		=> $forgotten_cart['product'],
+			'{PROMOCODE}'   	=> $this->config->get('config_forgottencart_promocode_' . $iteration)
 		];
 
 		if ($this->config->get('config_viber_forgottencart_enabled_' . $iteration)){
@@ -332,21 +332,21 @@ class SmsAdaptor {
 				'viber' 		=> true,
 				'to' 			=> $forgotten_cart['telephone'],
 				'message' 		=> reTemplate($template, $this->config->get('config_viber_forgottencart_' . $iteration)),
-				'messageSms' 	=> reTemplate($template, $this->config->get('config_firstorder_sms_text')),
+				'messageSms' 	=> reTemplate($template, $this->config->get('config_forgottencart_sms_text_' . $iteration)),
 
 				'button_txt' 	=> $this->config->get('config_viber_forgottencart_button_text_' . $iteration),
-				'button_url' 	=> $this->config->get('config_viber_firstorder_button_' . $iteration), 				
+				'button_url' 	=> $this->config->get('config_viber_forgottencart_button_url_' . $iteration), 				
 			];
+
+			if (!empty($this->config->get('config_viber_forgottencart_' . $iteration . '_image')) && file_exists(DIR_IMAGE . $this->config->get('config_viber_forgottencart_' . $iteration . '_image'))){
+				$viber['picture_url'] = HTTPS_CATALOG . DIR_IMAGE_NAME . $this->config->get('config_viber_forgottencart_' . $iteration . '_image');
+			}
 
 			if (!empty($forgotten_cart['product_image'])){
 				$viber['picture_url'] = $forgotten_cart['product_image'];
 			}
 
-			if (!empty($this->config->get('config_viber_forgottencart_image_' . $iteration)) && file_exists(DIR_IMAGE . $this->config->get('config_viber_forgottencart_image_' . $iteration))){
-				$viber['picture_url'] = HTTPS_CATALOG . DIR_IMAGE_NAME . $this->config->get('config_viber_forgottencart_image_' . $iteration);
-			}
-
-			$viberID = $this->registry->get('smsQueue')->queue($viber);
+			$viberID = $this->sendViber($viber);
 			$this->addOrderSmsHistory(false, ['sms' => $viber['message']], 'Queued', $viberID, (int)$forgotten_cart['customer_id']);
 
 			return $viberID;
@@ -358,13 +358,12 @@ class SmsAdaptor {
 				'message' 	=> reTemplate($template, $this->config->get('config_forgottencart_sms_text_' . $iteration))
 			];
 
-			$smsID = $this->registry->get('smsQueue')->queue($sms);
+			$smsID = $this->sendSMS($sms);
 			$this->addOrderSmsHistory(false, ['sms' => $sms['message']], 'Queued', $smsID, (int)$forgotten_cart['customer_id']);
 
 			return $smsID;
 		}
 	}
-
 
 	public function sendSMSFirstOrderPromo($order_info, $data){
 		$template = [

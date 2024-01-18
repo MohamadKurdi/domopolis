@@ -696,10 +696,18 @@
                         </td>
                         <td style="width:250px;">
                             <div class="image">
-                                <img src="<?php echo $viber_forgottencart_image_1; ?>" alt="" id="thumb-viber_forgottencart_image_1" height="150px" />
-                                <input type="text" style="font-size:10px; width:150px;" class="image-ajax" name="config_viber_forgottencart_image_1" value="<?php echo $config_viber_forgottencart_image_1; ?>" id="thumb-viber_forgottencart_image_1" />
+                                <img src="<?php echo $viber_forgottencart_1_image; ?>" alt="" id="thumb-viber_forgottencart_1_image" height="150px" />
+                                <input type="text" style="font-size:10px; width:150px;" class="image-ajax" name="config_viber_forgottencart_1_image" value="<?php echo $config_viber_forgottencart_1_image; ?>" id="thumb-viber_forgottencart_1_image" />
                                 <br />
-                                <a onclick="image_upload('viber_forgottencart_image_1', 'thumb-viber_forgottencart_image_1');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb-viber_forgottencart_image_1').attr('src', '<?php echo $no_image; ?>'); $('#viber_forgottencart_image_1').attr('value', ''); $('#viber_forgottencart_image_1').trigger('change');"><?php echo $text_clear; ?></a>
+                                <a onclick="image_upload('viber_forgottencart_1_image', 'thumb-viber_forgottencart_1_image');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb-viber_forgottencart_1_image').attr('src', '<?php echo $no_image; ?>'); $('#viber_forgottencart_1_image').attr('value', ''); $('#viber_forgottencart_1_image').trigger('change');"><?php echo $text_clear; ?></a>
+                            </div>
+                            <div>
+                            	<input class="checkbox" type="checkbox" name="config_viber_forgottencart_1_image_product" id="config_viber_forgottencart_1_image_product" <?php if ($config_viber_forgottencart_1_image_product) { echo ' checked="checked"'; }?> />
+                            	<label for="config_viber_forgottencart_1_image_product">Картинка товара</label>
+                            </div>
+                            <div>
+                            	<input class="checkbox" type="checkbox" name="config_viber_forgottencart_1_image_product_if_single" id="config_viber_forgottencart_1_image_product_if_single" <?php if ($config_viber_forgottencart_1_image_product_if_single) { echo ' checked="checked"'; }?> />
+                            	<label for="config_viber_forgottencart_1_image_product_if_single">Только если 1 товар</label>
                             </div>
                         </td>
                         <td style="width:200px;">
@@ -742,10 +750,18 @@
                         </td>
                         <td style="width:250px;">
                             <div class="image">
-                                <img src="<?php echo $viber_forgottencart_image_2; ?>" alt="" id="thumb-viber_forgottencart_image_2" height="150px" />
-                                <input type="text" style="font-size:10px; width:150px;" class="image-ajax" name="config_viber_forgottencart_image_2" value="<?php echo $config_viber_forgottencart_image_2; ?>" id="thumb-viber_forgottencart_image_2" />
+                                <img src="<?php echo $viber_forgottencart_2_image; ?>" alt="" id="thumb-viber_forgottencart_2_image" height="150px" />
+                                <input type="text" style="font-size:10px; width:150px;" class="image-ajax" name="config_viber_forgottencart_2_image" value="<?php echo $config_viber_forgottencart_2_image; ?>" id="thumb-viber_forgottencart_2_image" />
                                 <br />
-                                <a onclick="image_upload('viber_forgottencart_image_2', 'thumb-viber_forgottencart_image_2');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb-viber_forgottencart_image_2').attr('src', '<?php echo $no_image; ?>'); $('#viber_forgottencart_image_2').attr('value', ''); $('#viber_forgottencart_image_2').trigger('change');"><?php echo $text_clear; ?></a>
+                                <a onclick="image_upload('viber_forgottencart_2_image', 'thumb-viber_forgottencart_2_image');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb-viber_forgottencart_2_image').attr('src', '<?php echo $no_image; ?>'); $('#viber_forgottencart_2_image').attr('value', ''); $('#viber_forgottencart_2_image').trigger('change');"><?php echo $text_clear; ?></a>
+                            </div>
+                            <div>
+                            	<input class="checkbox" type="checkbox" name="config_viber_forgottencart_2_image_product" id="config_viber_forgottencart_2_image_product" <?php if ($config_viber_forgottencart_2_image_product) { echo ' checked="checked"'; }?> />
+                            	<label for="config_viber_forgottencart_2_image_product">Картинка товара</label>
+                            </div>
+                            <div>
+                            	<input class="checkbox" type="checkbox" name="config_viber_forgottencart_2_image_product_if_single" id="config_viber_forgottencart_2_image_product_if_single" <?php if ($config_viber_forgottencart_1_image_product_if_single) { echo ' checked="checked"'; }?> />
+                            	<label for="config_viber_forgottencart_2_image_product_if_single">Только если 1 товар</label>
                             </div>
                         </td>
                         <td style="width:200px;">

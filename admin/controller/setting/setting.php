@@ -3026,13 +3026,17 @@ class ControllerSettingSetting extends Controller
 
             'config_viber_forgottencart_enabled_1',
             'config_viber_forgottencart_1',
-            'config_viber_forgottencart_image_1',
+            'config_viber_forgottencart_1_image',
+            'config_viber_forgottencart_1_image_product',
+            'config_viber_forgottencart_1_image_product_if_single',
             'config_viber_forgottencart_button_text_1',
             'config_viber_forgottencart_button_url_1',
 
             'config_viber_forgottencart_enabled_2',
             'config_viber_forgottencart_2',
-            'config_viber_forgottencart_image_2',
+            'config_viber_forgottencart_2_image',
+            'config_viber_forgottencart_2_image_product',
+            'config_viber_forgottencart_2_image_product_if_single',
             'config_viber_forgottencart_button_text_2',
             'config_viber_forgottencart_button_url_2'
         ];

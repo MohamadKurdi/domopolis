@@ -14,7 +14,11 @@
 			<div class="buttons"><a onclick="$('#form').submit();" class="button"><?php echo $button_save; ?></a><a href="<?php echo $cancel; ?>" class="button"><?php echo $button_cancel; ?></a></div>
 		</div>
 		<div class="content">
-			<div id="tabs" class="htabs"><a href="#tab-general"><?php echo $tab_general; ?></a><a href="#tab-data"><?php echo $tab_data; ?></a><a href="#tab-help">Помощь в шаблонизации</a><div class="clr"></div></div>
+			<div id="tabs" class="htabs">
+				<a href="#tab-general"><?php echo $tab_general; ?></a>
+				<a href="#tab-data"><?php echo $tab_data; ?></a>
+				<a href="#tab-preview">Превью</a>
+				<div class="clr"></div></div>
 			<div class="th_style"></div>
 			<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
 				<div id="tab-general">
@@ -169,16 +173,12 @@
 						</tr>
 					</table>
 				</div>
-				<div id="tab-help">
-					<h2>Доступные тэги</h2><br /><br />
-					<b>{customer_name}</b>- имя<br />
-					<b>{customer_lastname}</b> - фамилия<br />
-					<b>{customer_email}</b> - мейл<br />
-					<b>{customer_utoken}</b> - утокен<br />
-					<b>{store_url}</b> - ссылка на магазин покупателя<br />
-					<b>{date plus ХХ days}</b> - дата + ХХ суток. для админки - текущая дата, для каталога - дата последней отправки<br />
-					<b>{date minus ХХ days}</b> - дата - ХХ суток. для админки - текущая дата, для каталога - дата последней отправки<br />
-				</div>
+					<div id="tab-preview">
+						<div style="width:100%" id="actiontemplate_preview">
+
+
+						</div>
+					</div>
 					</form>
 				</div>
 			</div>
