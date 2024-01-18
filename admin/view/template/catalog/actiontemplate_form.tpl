@@ -119,6 +119,22 @@
 							</td>
 						</tr>  
 						<tr>
+							<td>
+								Использовать при отправке забытых корзин
+							</td>
+							<td>
+								<select name="use_for_forgotten">
+									<?php if ($use_for_forgotten) { ?>
+										<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+										<option value="0"><?php echo $text_disabled; ?></option>
+									<?php } else { ?>
+										<option value="1"><?php echo $text_enabled; ?></option>
+										<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+									<?php } ?>
+								</select>
+							</td>
+						</tr>
+						<tr>
 							<td>Отобразить обертку магазина
 							<span class="help">Хедер, футер</span></td>
 							<td>

@@ -190,6 +190,7 @@
 				'image'			 	=> $this->model_tool_image->resize($result['image'], 50, 50),
 				'sort_order'     	=> $result['sort_order'],
 				'use_for_manual' 	=> $result['use_for_manual'],
+				'use_for_forgotten' => $result['use_for_forgotten'],
 				'data_function' 	=> $result['data_function'],
 				'file_template' 	=> $result['file_template'],
 				'coupons'			=> $this->model_catalog_actiontemplate->getActionTemplateCoupons($result['actiontemplate_id']),
@@ -428,6 +429,14 @@
 				} else {
 				$this->data['use_for_manual'] = '';
 			}	
+
+			if (isset($this->request->post['use_for_forgotten'])) {
+				$this->data['use_for_forgotten'] = $this->request->post['use_for_forgotten'];
+				} elseif (!empty($actiontemplate_info)) {
+				$this->data['use_for_forgotten'] = $actiontemplate_info['use_for_forgotten'];
+				} else {
+				$this->data['use_for_forgotten'] = '';
+			}
 
 			$this->data['file_templates'] = [];
 			$file_templates = glob(DIR_APPLICATION . '/view/template/sale/actiontemplates/*.tpl');        

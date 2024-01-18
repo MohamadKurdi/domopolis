@@ -45,6 +45,9 @@
 								Текущий обзвон
 							</td>
 							<td class="left">
+								Забытая корзина
+							</td>
+							<td class="left">
 								Просмотров
 							</td>
 							<td class="right"><?php if ($sort == 'i.sort_order') { ?>
@@ -95,6 +98,13 @@
 									</td>
 									<td class="center">
 										<? if ($actiontemplate['use_for_manual']) { ?>
+											<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+										<? } else { ?>
+											<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+										<? } ?>											
+									</td>
+									<td class="center">
+										<? if ($actiontemplate['use_for_forgotten']) { ?>
 											<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 										<? } else { ?>
 											<i class="fa fa-times-circle" style="color:#cf4a61"></i>

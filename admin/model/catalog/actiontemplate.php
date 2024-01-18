@@ -10,7 +10,8 @@
 				sort_order 		= '" . (int)$data['sort_order'] . "', 
 				bottom 			= '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', 
 				status 			= '" . (int)$data['status'] . "', 
-				use_for_manual 	= '" . (int)$data['use_for_manual'] . "',
+				use_for_manual 		= '" . (int)$data['use_for_manual'] . "',
+				use_for_forgotten 	= '" . (int)$data['use_for_forgotten'] . "',
 				data_function	= '" . $this->db->escape($data['data_function']) . "',
 				image 			= '" . $this->db->escape($data['image']) . "'");
 			
@@ -43,12 +44,13 @@
 			}
 
 			$this->db->query("UPDATE actiontemplate SET 
-				sort_order 		= '" . (int)$data['sort_order'] . "', 
-				bottom 			= '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', 
-				status 			= '" . (int)$data['status'] . "', 
-				use_for_manual 	= '" . (int)$data['use_for_manual'] . "', 
-				data_function	= '" . $this->db->escape($data['data_function']) . "',
-				image 			= '" . $this->db->escape($data['image']) . "' 
+				sort_order 			= '" . (int)$data['sort_order'] . "', 
+				bottom 				= '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', 
+				status 				= '" . (int)$data['status'] . "', 
+				use_for_manual 		= '" . (int)$data['use_for_manual'] . "', 
+				use_for_forgotten 	= '" . (int)$data['use_for_forgotten'] . "',
+				data_function		= '" . $this->db->escape($data['data_function']) . "',
+				image 				= '" . $this->db->escape($data['image']) . "' 
 				WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");
 			
 			$this->db->query("DELETE FROM actiontemplate_description WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");
@@ -196,6 +198,10 @@
 
 			if (!empty($data['filter_use_for_manual'])){				
 				$sql .= " AND use_for_manual = 1";			
+			}
+
+			if (!empty($data['filter_use_for_forgotten'])){				
+				$sql .= " AND use_for_forgotten = 1";			
 			}
 			
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
