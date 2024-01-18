@@ -675,6 +675,98 @@
 							<textarea name="config_viber_birthday_greeting_button_url" cols="50" rows="7"><?php echo $config_viber_birthday_greeting_button_url; ?></textarea>
 						</td>
 					</tr>
+					<tr>
+                        <td style="width:200px;">
+                            <span class="status_color" style="text-align: left; background: #FF7815; color:#fff">
+                                Забытая корзина - 1 итерация
+                            </span>
+                        </td>
+                        <td style="width:50px" class="center">
+                            <input class="checkbox" type="checkbox" name="config_viber_forgottencart_enabled_1" id="config_viber_forgottencart_enabled_1" <?php if ($config_viber_forgottencart_enabled_1) { echo ' checked="checked"'; }?> />
+                            <label for="config_viber_forgottencart_enabled_1"></label>
+                        </td>
+                        <td style="width:300px;">
+                            <p>
+                                <span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+                                    Текст
+                                </span>
+                            </p>
+
+                            <textarea name="config_viber_forgottencart_1" cols="50" rows="7"><?php echo $config_viber_forgottencart_1; ?></textarea>
+                        </td>
+                        <td style="width:250px;">
+                            <div class="image">
+                                <img src="<?php echo $viber_forgottencart_image_1; ?>" alt="" id="thumb-viber_forgottencart_image_1" height="150px" />
+                                <input type="text" style="font-size:10px; width:150px;" class="image-ajax" name="config_viber_forgottencart_image_1" value="<?php echo $config_viber_forgottencart_image_1; ?>" id="thumb-viber_forgottencart_image_1" />
+                                <br />
+                                <a onclick="image_upload('viber_forgottencart_image_1', 'thumb-viber_forgottencart_image_1');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb-viber_forgottencart_image_1').attr('src', '<?php echo $no_image; ?>'); $('#viber_forgottencart_image_1').attr('value', ''); $('#viber_forgottencart_image_1').trigger('change');"><?php echo $text_clear; ?></a>
+                            </div>
+                        </td>
+                        <td style="width:200px;">
+                            <p>
+                                <span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+                                    Текст кнопки
+                                </span>
+                            </p>
+
+                            <textarea name="config_viber_forgottencart_button_text_1" cols="50" rows="7"><?php echo $config_viber_forgottencart_button_text_1; ?></textarea>
+                        </td>
+                        <td style="width:200px;">
+                            <p>
+                                <span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+                                    URL кнопки
+                                </span>
+                            </p>
+
+                            <textarea name="config_viber_forgottencart_button_url_1" cols="50" rows="7"><?php echo $config_viber_forgottencart_button_url_1; ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:200px;">
+                            <span class="status_color" style="text-align: left; background: #FF7815; color:#fff">
+                                Забытая корзина - 2 итерация
+                            </span>
+                        </td>
+                        <td style="width:50px" class="center">
+                            <input class="checkbox" type="checkbox" name="config_viber_forgottencart_enabled_2" id="config_viber_forgottencart_enabled_2" <?php if ($config_viber_forgottencart_enabled_2) { echo ' checked="checked"'; }?> />
+                            <label for="config_viber_forgottencart_enabled_2"></label>
+                        </td>
+                        <td style="width:300px;">
+                            <p>
+                                <span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+                                    Текст
+                                </span>
+                            </p>
+
+                            <textarea name="config_viber_forgottencart_2" cols="50" rows="7"><?php echo $config_viber_forgottencart_2; ?></textarea>
+                        </td>
+                        <td style="width:250px;">
+                            <div class="image">
+                                <img src="<?php echo $viber_forgottencart_image_2; ?>" alt="" id="thumb-viber_forgottencart_image_2" height="150px" />
+                                <input type="text" style="font-size:10px; width:150px;" class="image-ajax" name="config_viber_forgottencart_image_2" value="<?php echo $config_viber_forgottencart_image_2; ?>" id="thumb-viber_forgottencart_image_2" />
+                                <br />
+                                <a onclick="image_upload('viber_forgottencart_image_2', 'thumb-viber_forgottencart_image_2');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb-viber_forgottencart_image_2').attr('src', '<?php echo $no_image; ?>'); $('#viber_forgottencart_image_2').attr('value', ''); $('#viber_forgottencart_image_2').trigger('change');"><?php echo $text_clear; ?></a>
+                            </div>
+                        </td>
+                        <td style="width:200px;">
+                            <p>
+                                <span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+                                    Текст кнопки
+                                </span>
+                            </p>
+
+                            <textarea name="config_viber_forgottencart_button_text_2" cols="50" rows="7"><?php echo $config_viber_forgottencart_button_text_2; ?></textarea>
+                        </td>
+                        <td style="width:200px;">
+                            <p>
+                                <span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+                                    URL кнопки
+                                </span>
+                            </p>
+
+                            <textarea name="config_viber_forgottencart_button_url_2" cols="50" rows="7"><?php echo $config_viber_forgottencart_button_url_2; ?></textarea>
+                        </td>
+                    </tr>
 				</table>
 			<?php } ?>
 		</div>

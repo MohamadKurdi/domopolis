@@ -1278,42 +1278,6 @@ class ControllerSettingSetting extends Controller
                 $this->data['config_pickup_dayoff_' . $i] = $this->config->get('config_pickup_dayoff_' . $i);
             }
         }
-
-        if (isset($this->request->post['config_firstorder_send_promocode'])) {
-            $this->data['config_firstorder_send_promocode'] = $this->request->post['config_firstorder_send_promocode'];
-        } else {
-            $this->data['config_firstorder_send_promocode'] = $this->config->get('config_firstorder_send_promocode');
-        }
-
-        if (isset($this->request->post['config_firstorder_promocode'])) {
-            $this->data['config_firstorder_promocode'] = $this->request->post['config_firstorder_promocode'];
-        } else {
-            $this->data['config_firstorder_promocode'] = $this->config->get('config_firstorder_promocode');
-        }
-
-        if (isset($this->request->post['config_firstorder_sms_enable'])) {
-            $this->data['config_firstorder_sms_enable'] = $this->request->post['config_firstorder_sms_enable'];
-        } else {
-            $this->data['config_firstorder_sms_enable'] = $this->config->get('config_firstorder_sms_enable');
-        }  
-
-        if (isset($this->request->post['config_firstorder_sms_text'])) {
-            $this->data['config_firstorder_sms_text'] = $this->request->post['config_firstorder_sms_text'];
-        } else {
-            $this->data['config_firstorder_sms_text'] = $this->config->get('config_firstorder_sms_text');
-        }      
-
-        if (isset($this->request->post['config_firstorder_email_enable'])) {
-            $this->data['config_firstorder_email_enable'] = $this->request->post['config_firstorder_email_enable'];
-        } else {
-            $this->data['config_firstorder_email_enable'] = $this->config->get('config_firstorder_email_enable');
-        }  
-
-        if (isset($this->request->post['config_firstorder_email_template'])) {
-            $this->data['config_firstorder_email_template'] = $this->request->post['config_firstorder_email_template'];
-        } else {
-            $this->data['config_firstorder_email_template'] = $this->config->get('config_firstorder_email_template');
-        }
          
         if (isset($this->request->post['config_cdek_api_login'])) {
             $this->data['config_cdek_api_login'] = $this->request->post['config_cdek_api_login'];
@@ -2859,7 +2823,74 @@ class ControllerSettingSetting extends Controller
             }
         }
 
-         $otp_auth_settings = [
+        $this->load->model('catalog/actiontemplate');
+        $forgotten_actiontemplates = $this->model_catalog_actiontemplate->getActionTemplates(['filter_use_for_forgotten' => true]);
+
+        $this->data['forgotten_actiontemplates'] = [];
+        foreach ($forgotten_actiontemplates as $forgotten_actiontemplate){
+            $this->data['forgotten_actiontemplates'][] = [
+                'actiontemplate_id'     => $forgotten_actiontemplate['actiontemplate_id'],
+                'actiontemplate_title'  => $forgotten_actiontemplate['title'],
+            ];
+        }
+
+        $forgottencart_config_keys = [
+            'config_forgottencart_send_enable',
+            'config_forgottencart_send_time_start',
+            'config_forgottencart_send_time_end',
+
+            'config_forgottencart_send_something_1',
+            'config_forgottencart_promocode_1',
+            'config_forgottencart_sms_enable_1',
+            'config_forgottencart_sms_text_1',
+            'config_forgottencart_email_enable_1',
+            'config_forgottencart_email_template_1',
+            'config_forgottencart_email_actiontemplate_1',
+            'config_forgottencart_use_simplecheckout_carts_1',
+            'config_forgottencart_use_zerostatus_orders_1',          
+            'config_forgottencart_time_min_hours_1',
+            'config_forgottencart_time_max_hours_1',
+
+            'config_forgottencart_send_something_2',
+            'config_forgottencart_promocode_2',
+            'config_forgottencart_sms_enable_2',
+            'config_forgottencart_sms_text_2',
+            'config_forgottencart_email_enable_2',
+            'config_forgottencart_email_template_2',
+            'config_forgottencart_email_actiontemplate_2',
+            'config_forgottencart_use_simplecheckout_carts_2',
+            'config_forgottencart_use_zerostatus_orders_2',          
+            'config_forgottencart_time_min_hours_2',
+            'config_forgottencart_time_max_hours_2',
+        ];
+
+        foreach ($forgottencart_config_keys as $forgottencart_config_key) {
+            if (isset($this->request->post[$forgottencart_config_key])) {
+                $this->data[$forgottencart_config_key] = $this->request->post[$forgottencart_config_keys];
+            } else {
+                $this->data[$forgottencart_config_key] = $this->config->get($forgottencart_config_key);
+            }
+        }
+
+
+        $firstorder_config_keys = [
+          'config_firstorder_send_promocode',
+          'config_firstorder_promocode',
+          'config_firstorder_sms_enable',
+          'config_firstorder_sms_text',
+          'config_firstorder_email_enable',
+          'config_firstorder_email_template'
+        ];
+
+        foreach ($firstorder_config_keys as $firstorder_config_key) {
+            if (isset($this->request->post[$firstorder_config_key])) {
+                $this->data[$firstorder_config_key] = $this->request->post[$firstorder_config_key];
+            } else {
+                $this->data[$firstorder_config_key] = $this->config->get($firstorder_config_key);
+            }
+        }
+
+        $otp_auth_settings = [
             'config_otp_enable',
             'config_otp_auto_enable',
             'config_otp_enable_sms',
@@ -2875,117 +2906,45 @@ class ControllerSettingSetting extends Controller
             'config_viber_restore_password_text'
         ];
 
-         foreach ($otp_auth_settings as $otp_auth_setting) {
+        foreach ($otp_auth_settings as $otp_auth_setting) {
             if (isset($this->request->post[$otp_auth_setting])) {
                 $this->data[$otp_auth_setting] = $this->request->post[$otp_auth_setting];
             } else {
                 $this->data[$otp_auth_setting] = $this->config->get($otp_auth_setting);
             }
         }
-                
-        if (isset($this->request->post['config_sms_tracker_leave_main_warehouse_enabled'])) {
-            $this->data['config_sms_tracker_leave_main_warehouse_enabled'] = $this->request->post['config_sms_tracker_leave_main_warehouse_enabled'];
-        } else {
-            $this->data['config_sms_tracker_leave_main_warehouse_enabled'] = $this->config->get('config_sms_tracker_leave_main_warehouse_enabled');
-        }
-        
-        if (isset($this->request->post['config_sms_tracker_leave_main_warehouse'])) {
-            $this->data['config_sms_tracker_leave_main_warehouse'] = $this->request->post['config_sms_tracker_leave_main_warehouse'];
-        } else {
-            $this->data['config_sms_tracker_leave_main_warehouse'] = $this->config->get('config_sms_tracker_leave_main_warehouse');
-        }
-        
-        if (isset($this->request->post['config_sms_payment_recieved_enabled'])) {
-            $this->data['config_sms_payment_recieved_enabled'] = $this->request->post['config_sms_payment_recieved_enabled'];
-        } else {
-            $this->data['config_sms_payment_recieved_enabled'] = $this->config->get('config_sms_payment_recieved_enabled');
-        }
-        
-        if (isset($this->request->post['config_sms_payment_recieved'])) {
-            $this->data['config_sms_payment_recieved'] = $this->request->post['config_sms_payment_recieved'];
-        } else {
-            $this->data['config_sms_payment_recieved'] = $this->config->get('config_sms_payment_recieved');
-        }
+  
+        $config_sms_keys = [
+          'config_sms_tracker_leave_main_warehouse_enabled',
+          'config_sms_tracker_leave_main_warehouse',
+          'config_sms_payment_recieved_enabled',
+          'config_sms_payment_recieved',
+          'config_sms_ttn_sent_enabled',
+          'config_sms_ttn_sent',
+          'config_sms_ttn_ready_enabled',
+          'config_sms_ttn_ready',
+          'config_sms_payment_link_enabled',
+          'config_sms_payment_link',
+          'config_sms_birthday_greeting_enabled',
+          'config_sms_birthday_greeting',
+          'config_sms_send_new_order_status',
+          'config_sms_new_order_status_message',
+          'config_sms_transaction_text_type_1',
+          'config_sms_transaction_text_type_2',
+          'config_sms_transaction_text_type_3',
+          'config_sms_send_new_order',
+          'config_sms_new_order_message',
+          'config_sms_alert',
+          'config_sms_copy'
+        ];
 
-        if (isset($this->request->post['config_sms_ttn_sent_enabled'])) {
-            $this->data['config_sms_ttn_sent_enabled'] = $this->request->post['config_sms_ttn_sent_enabled'];
-        } else {
-            $this->data['config_sms_ttn_sent_enabled'] = $this->config->get('config_sms_ttn_sent_enabled');
+        foreach ($config_sms_keys as $sms_key) {
+            if (isset($this->request->post[$sms_key])) {
+                $this->data[$sms_key] = $this->request->post[$sms_key];
+            } else {
+                $this->data[$sms_key] = $this->config->get($sms_key); 
+            }
         }
-        
-        if (isset($this->request->post['config_sms_ttn_sent'])) {
-            $this->data['config_sms_ttn_sent'] = $this->request->post['config_sms_ttn_sent'];
-        } else {
-            $this->data['config_sms_ttn_sent'] = $this->config->get('config_sms_ttn_sent');
-        }
-
-        if (isset($this->request->post['config_sms_ttn_ready_enabled'])) {
-            $this->data['config_sms_ttn_ready_enabled'] = $this->request->post['config_sms_ttn_ready_enabled'];
-        } else {
-            $this->data['config_sms_ttn_ready_enabled'] = $this->config->get('config_sms_ttn_ready_enabled');
-        }
-        
-        if (isset($this->request->post['config_sms_ttn_ready'])) {
-            $this->data['config_sms_ttn_ready'] = $this->request->post['config_sms_ttn_ready'];
-        } else {
-            $this->data['config_sms_ttn_ready'] = $this->config->get('config_sms_ttn_ready');
-        }
-
-        if (isset($this->request->post['config_sms_payment_link_enabled'])) {
-            $this->data['config_sms_payment_link_enabled'] = $this->request->post['config_sms_payment_link_enabled'];
-        } else {
-            $this->data['config_sms_payment_link_enabled'] = $this->config->get('config_sms_payment_link_enabled');
-        }
-        
-        if (isset($this->request->post['config_sms_payment_link'])) {
-            $this->data['config_sms_payment_link'] = $this->request->post['config_sms_payment_link'];
-        } else {
-            $this->data['config_sms_payment_link'] = $this->config->get('config_sms_payment_link');
-        }
-
-        if (isset($this->request->post['config_sms_birthday_greeting_enabled'])) {
-            $this->data['config_sms_birthday_greeting_enabled'] = $this->request->post['config_sms_birthday_greeting_enabled'];
-        } else {
-            $this->data['config_sms_birthday_greeting_enabled'] = $this->config->get('config_sms_birthday_greeting_enabled');
-        }
-        
-        if (isset($this->request->post['config_sms_birthday_greeting'])) {
-            $this->data['config_sms_birthday_greeting'] = $this->request->post['config_sms_birthday_greeting'];
-        } else {
-            $this->data['config_sms_birthday_greeting'] = $this->config->get('config_sms_birthday_greeting');
-        }
-        
-        if (isset($this->request->post['config_sms_send_new_order_status'])) {
-            $this->data['config_sms_send_new_order_status'] = $this->request->post['config_sms_send_new_order_status'];
-        } else {
-            $this->data['config_sms_send_new_order_status'] = $this->config->get('config_sms_send_new_order_status');
-        }
-        
-        if (isset($this->request->post['config_sms_new_order_status_message'])) {
-            $this->data['config_sms_new_order_status_message'] = $this->request->post['config_sms_new_order_status_message'];
-        } else {
-            $this->data['config_sms_new_order_status_message'] = (array)$this->config->get('config_sms_new_order_status_message');
-        }
-        
-        if (isset($this->request->post['config_sms_transaction_text_type_1'])) {
-            $this->data['config_sms_transaction_text_type_1'] = $this->request->post['config_sms_transaction_text_type_1'];
-        } else {
-            $this->data['config_sms_transaction_text_type_1'] = $this->config->get('config_sms_transaction_text_type_1');
-        }
-
-        if (isset($this->request->post['config_sms_transaction_text_type_2'])) {
-            $this->data['config_sms_transaction_text_type_2'] = $this->request->post['config_sms_transaction_text_type_2'];
-        } else {
-            $this->data['config_sms_transaction_text_type_2'] = $this->config->get('config_sms_transaction_text_type_2');
-        }
-
-        if (isset($this->request->post['config_sms_transaction_text_type_3'])) {
-            $this->data['config_sms_transaction_text_type_3'] = $this->request->post['config_sms_transaction_text_type_3'];
-        } else {
-            $this->data['config_sms_transaction_text_type_3'] = $this->config->get('config_sms_transaction_text_type_3');
-        }
-
-        //VIBER SETTINGS
 
         $viberkeys = [
             'config_viber_send_new_order',
@@ -3063,11 +3022,17 @@ class ControllerSettingSetting extends Controller
             'config_viber_birthday_greeting_button_text',
             'config_viber_birthday_greeting_button_url',
 
-            'config_viber_forgottencart_enabled',
-            'config_viber_forgottencart',
-            'config_viber_forgottencart_image',
-            'config_viber_forgottencart_button_text',
-            'config_viber_forgottencart_button_url'
+            'config_viber_forgottencart_enabled_1',
+            'config_viber_forgottencart_1',
+            'config_viber_forgottencart_image_1',
+            'config_viber_forgottencart_button_text_1',
+            'config_viber_forgottencart_button_url_1',
+
+            'config_viber_forgottencart_enabled_2',
+            'config_viber_forgottencart_2',
+            'config_viber_forgottencart_image_2',
+            'config_viber_forgottencart_button_text_2',
+            'config_viber_forgottencart_button_url_2'
         ];
         
         foreach ($viberkeys as $viberkey) {
@@ -3109,151 +3074,49 @@ class ControllerSettingSetting extends Controller
                 $this->data['viber_order_status_message_image'][$order_status['order_status_id']] = $this->model_tool_image->resize('no_image.jpg', 200, 200);
             }
         }
-
-        if (isset($this->request->post['config_sms_send_new_order'])) {
-            $this->data['config_sms_send_new_order'] = $this->request->post['config_sms_send_new_order'];
-        } else {
-            $this->data['config_sms_send_new_order'] = $this->config->get('config_sms_send_new_order');
-        }
         
-        if (isset($this->request->post['config_sms_new_order_message'])) {
-            $this->data['config_sms_new_order_message'] = $this->request->post['config_sms_new_order_message'];
-        } else {
-            $this->data['config_sms_new_order_message'] = $this->config->get('config_sms_new_order_message');
-        }
-        
-        if (isset($this->request->post['config_sms_alert'])) {
-            $this->data['config_sms_alert'] = $this->request->post['config_sms_alert'];
-        } else {
-            $this->data['config_sms_alert'] = $this->config->get('config_sms_alert');
-        }
-        
-        if (isset($this->request->post['config_sms_copy'])) {
-            $this->data['config_sms_copy'] = $this->request->post['config_sms_copy'];
-        } else {
-            $this->data['config_sms_copy'] = $this->config->get('config_sms_copy');
-        }
-        
-        if (isset($this->request->post['config_google_analytics'])) {
-            $this->data['config_google_analytics'] = $this->request->post['config_google_analytics'];
-        } else {
-            $this->data['config_google_analytics'] = $this->config->get('config_google_analytics');
-        }
-        
-        if (isset($this->request->post['config_google_analytics_header'])) {
-            $this->data['config_google_analytics_header'] = $this->request->post['config_google_analytics_header'];
-        } else {
-            $this->data['config_google_analytics_header'] = $this->config->get('config_google_analytics_header');
-        }
+        $config_pixels_keys = [
+          'config_google_analytics',
+          'config_google_analytics_header',
+          'config_fb_pixel_header',
+          'config_fb_pixel_body',
+          'config_vk_enable_pixel',
+          'config_vk_pixel_id',
+          'config_vk_pricelist_id',
+          'config_vk_feed_only_in_stock',
+          'config_vk_add_feed_for_category_id_0',
+          'config_vk_add_feed_for_category_id_1',
+          'config_vk_add_feed_for_category_id_2',
+          'config_vk_ignore_general_brand_exclusion_for_category_id_0',
+          'config_vk_ignore_general_brand_exclusion_for_category_id_1',
+          'config_vk_ignore_general_brand_exclusion_for_category_id_2',
+          'config_vk_pixel_header',
+          'config_vk_pixel_body',
+          'config_vk_feed_include_manufacturers',
+          'config_gtm_header',
+          'config_gtm_body',
+          'config_preload_links',
+          'config_sendpulse_script',
+          'config_sendpulse_id',
+          'config_onesignal_app_id',
+          'config_onesignal_api_key', 
+          'config_onesignal_safari_web_id',
+          'config_google_analitycs_id',
+          'config_google_conversion_id',
+          'config_google_merchant_id',
+          'config_google_merchant_feed_limit',
+          'config_google_merchant_one_iteration_limit',
+          'config_google_remarketing_type',
+          'config_google_ecommerce_enable',
+          'config_metrika_counter'
+      ];
 
-        if (isset($this->request->post['config_fb_pixel_header'])) {
-            $this->data['config_fb_pixel_header'] = $this->request->post['config_fb_pixel_header'];
-        } else {
-            $this->data['config_fb_pixel_header'] = $this->config->get('config_fb_pixel_header');
-        }
-
-        if (isset($this->request->post['config_fb_pixel_body'])) {
-            $this->data['config_fb_pixel_body'] = $this->request->post['config_fb_pixel_body'];
-        } else {
-            $this->data['config_fb_pixel_body'] = $this->config->get('config_fb_pixel_body');
-        }
-
-        if (isset($this->request->post['config_vk_enable_pixel'])) {
-            $this->data['config_vk_enable_pixel'] = $this->request->post['config_vk_enable_pixel'];
-        } else {
-            $this->data['config_vk_enable_pixel'] = $this->config->get('config_vk_enable_pixel');
-        }
-
-        if (isset($this->request->post['config_vk_pixel_id'])) {
-            $this->data['config_vk_pixel_id'] = $this->request->post['config_vk_pixel_id'];
-        } else {
-            $this->data['config_vk_pixel_id'] = $this->config->get('config_vk_pixel_id');
-        }
-
-        if (isset($this->request->post['config_vk_pricelist_id'])) {
-            $this->data['config_vk_pricelist_id'] = $this->request->post['config_vk_pricelist_id'];
-        } else {
-            $this->data['config_vk_pricelist_id'] = $this->config->get('config_vk_pricelist_id');
-        }
-
-        if (isset($this->request->post['config_vk_feed_only_in_stock'])) {
-            $this->data['config_vk_feed_only_in_stock'] = $this->request->post['config_vk_feed_only_in_stock'];
-        } else {
-            $this->data['config_vk_feed_only_in_stock'] = $this->config->get('config_vk_feed_only_in_stock');
-        }
-
-        if (isset($this->request->post['config_vk_add_feed_for_category_id_0'])) {
-            $this->data['config_vk_add_feed_for_category_id_0'] = $this->request->post['config_vk_add_feed_for_category_id_0'];
-        } else {
-            $this->data['config_vk_add_feed_for_category_id_0'] = $this->config->get('config_vk_add_feed_for_category_id_0');
-        }
-
-        if (isset($this->request->post['config_vk_add_feed_for_category_id_1'])) {
-            $this->data['config_vk_add_feed_for_category_id_1'] = $this->request->post['config_vk_add_feed_for_category_id_1'];
-        } else {
-            $this->data['config_vk_add_feed_for_category_id_1'] = $this->config->get('config_vk_add_feed_for_category_id_1');
-        }
-
-        if (isset($this->request->post['config_vk_add_feed_for_category_id_2'])) {
-            $this->data['config_vk_add_feed_for_category_id_2'] = $this->request->post['config_vk_add_feed_for_category_id_2'];
-        } else {
-            $this->data['config_vk_add_feed_for_category_id_2'] = $this->config->get('config_vk_add_feed_for_category_id_2');
-        }
-
-        if (isset($this->request->post['config_vk_ignore_general_brand_exclusion_for_category_id_0'])) {
-            $this->data['config_vk_ignore_general_brand_exclusion_for_category_id_0'] = $this->request->post['config_vk_ignore_general_brand_exclusion_for_category_id_0'];
-        } else {
-            $this->data['config_vk_ignore_general_brand_exclusion_for_category_id_0'] = $this->config->get('config_vk_ignore_general_brand_exclusion_for_category_id_0');
-        }
-
-        if (isset($this->request->post['config_vk_ignore_general_brand_exclusion_for_category_id_1'])) {
-            $this->data['config_vk_ignore_general_brand_exclusion_for_category_id_1'] = $this->request->post['config_vk_ignore_general_brand_exclusion_for_category_id_1'];
-        } else {
-            $this->data['config_vk_ignore_general_brand_exclusion_for_category_id_1'] = $this->config->get('config_vk_ignore_general_brand_exclusion_for_category_id_1');
-        }
-
-        if (isset($this->request->post['config_vk_ignore_general_brand_exclusion_for_category_id_2'])) {
-            $this->data['config_vk_ignore_general_brand_exclusion_for_category_id_2'] = $this->request->post['config_vk_ignore_general_brand_exclusion_for_category_id_2'];
-        } else {
-            $this->data['config_vk_ignore_general_brand_exclusion_for_category_id_2'] = $this->config->get('config_vk_ignore_general_brand_exclusion_for_category_id_2');
-        }
-
-        if (isset($this->request->post['config_vk_pixel_header'])) {
-            $this->data['config_vk_pixel_header'] = $this->request->post['config_vk_pixel_header'];
-        } else {
-            $this->data['config_vk_pixel_header'] = $this->config->get('config_vk_pixel_header');
-        }
-
-        if (isset($this->request->post['config_vk_pixel_body'])) {
-            $this->data['config_vk_pixel_body'] = $this->request->post['config_vk_pixel_body'];
-        } else {
-            $this->data['config_vk_pixel_body'] = $this->config->get('config_vk_pixel_body');
-        }
-
-        if (isset($this->request->post['config_vk_feed_include_manufacturers'])) {
-            $this->data['config_vk_feed_include_manufacturers'] = $this->request->post['config_vk_feed_include_manufacturers'];
-        } elseif ($this->config->get('config_vk_feed_include_manufacturers')) {
-            $this->data['config_vk_feed_include_manufacturers'] = $this->config->get('config_vk_feed_include_manufacturers');
-        } else {
-            $this->data['config_vk_feed_include_manufacturers'] = [];
-        }
-        
-        if (isset($this->request->post['config_gtm_header'])) {
-            $this->data['config_gtm_header'] = $this->request->post['config_gtm_header'];
-        } else {
-            $this->data['config_gtm_header'] = $this->config->get('config_gtm_header');
-        }
-        
-        if (isset($this->request->post['config_gtm_body'])) {
-            $this->data['config_gtm_body'] = $this->request->post['config_gtm_body'];
-        } else {
-            $this->data['config_gtm_body'] = $this->config->get('config_gtm_body');
-        }
-        
-        if (isset($this->request->post['config_preload_links'])) {
-            $this->data['config_preload_links'] = $this->request->post['config_preload_links'];
-        } else {
-            $this->data['config_preload_links'] = $this->config->get('config_preload_links');
+        foreach ($config_pixels_keys as $config_pixels_key) {
+            if (isset($this->request->post[$config_pixels_key])) {
+                $this->data[$config_pixels_key] = $this->request->post[$config_pixels_keys];
+            } else {
+                $this->data[$config_pixels_key] = $this->config->get($config_pixels_key);
+            }
         }
 
         $assets_config = [
@@ -3293,87 +3156,8 @@ class ControllerSettingSetting extends Controller
             } else {
                 $this->data[$assets_config_key_dev] = $this->config->get($assets_config_key_dev);
             }
-        }        
+        }                       
         
-        if (isset($this->request->post['config_sendpulse_script'])) {
-            $this->data['config_sendpulse_script'] = $this->request->post['config_sendpulse_script'];
-        } else {
-            $this->data['config_sendpulse_script'] = $this->config->get('config_sendpulse_script');
-        }        
-        
-        if (isset($this->request->post['config_sendpulse_id'])) {
-            $this->data['config_sendpulse_id'] = $this->request->post['config_sendpulse_id'];
-        } else {
-            $this->data['config_sendpulse_id'] = $this->config->get('config_sendpulse_id');
-        }
-        
-        if (isset($this->request->post['config_onesignal_app_id'])) {
-            $this->data['config_onesignal_app_id'] = $this->request->post['config_onesignal_app_id'];
-        } else {
-            $this->data['config_onesignal_app_id'] = $this->config->get('config_onesignal_app_id');
-        }
-        
-        if (isset($this->request->post['config_onesignal_api_key'])) {
-            $this->data['config_onesignal_api_key'] = $this->request->post['config_onesignal_api_key'];
-        } else {
-            $this->data['config_onesignal_api_key'] = $this->config->get('config_onesignal_api_key');
-        }
-        
-        if (isset($this->request->post['config_onesignal_safari_web_id'])) {
-            $this->data['config_onesignal_safari_web_id'] = $this->request->post['config_onesignal_safari_web_id'];
-        } else {
-            $this->data['config_onesignal_safari_web_id'] = $this->config->get('config_onesignal_safari_web_id');
-        }
-        
-        if (isset($this->request->post['config_google_analitycs_id'])) {
-            $this->data['config_google_analitycs_id'] = $this->request->post['config_google_analitycs_id'];
-        } else {
-            $this->data['config_google_analitycs_id'] = $this->config->get('config_google_analitycs_id');
-        }
-        
-        if (isset($this->request->post['config_google_conversion_id'])) {
-            $this->data['config_google_conversion_id'] = $this->request->post['config_google_conversion_id'];
-        } else {
-            $this->data['config_google_conversion_id'] = $this->config->get('config_google_conversion_id');
-        }
-        
-        if (isset($this->request->post['config_google_merchant_id'])) {
-            $this->data['config_google_merchant_id'] = $this->request->post['config_google_merchant_id'];
-        } else {
-            $this->data['config_google_merchant_id'] = $this->config->get('config_google_merchant_id');
-        }
-
-        if (isset($this->request->post['config_google_merchant_feed_limit'])) {
-            $this->data['config_google_merchant_feed_limit'] = $this->request->post['config_google_merchant_feed_limit'];
-        } else {
-            $this->data['config_google_merchant_feed_limit'] = $this->config->get('config_google_merchant_feed_limit');
-        }
-
-        if (isset($this->request->post['config_google_merchant_one_iteration_limit'])) {
-            $this->data['config_google_merchant_one_iteration_limit'] = $this->request->post['config_google_merchant_one_iteration_limit'];
-        } else {
-            $this->data['config_google_merchant_one_iteration_limit'] = $this->config->get('config_google_merchant_one_iteration_limit');
-        }
-        
-        if (isset($this->request->post['config_google_remarketing_type'])) {
-            $this->data['config_google_remarketing_type'] = $this->request->post['config_google_remarketing_type'];
-        } else {
-            $this->data['config_google_remarketing_type'] = $this->config->get('config_google_remarketing_type');
-        }
-        
-        if (isset($this->request->post['config_google_ecommerce_enable'])) {
-            $this->data['config_google_ecommerce_enable'] = $this->request->post['config_google_ecommerce_enable'];
-        } else {
-            $this->data['config_google_ecommerce_enable'] = $this->config->get('config_google_ecommerce_enable');
-        }
-        
-        if (isset($this->request->post['config_metrika_counter'])) {
-            $this->data['config_metrika_counter'] = $this->request->post['config_metrika_counter'];
-        } else {
-            $this->data['config_metrika_counter'] = $this->config->get('config_metrika_counter');
-        }
-
-            //SOAP
         if (isset($this->request->post['config_odinass_soap_uri'])) {
             $this->data['config_odinass_soap_uri'] = $this->request->post['config_odinass_soap_uri'];
         } else {
@@ -3404,7 +3188,6 @@ class ControllerSettingSetting extends Controller
             $this->data['config_odinass_update_stockwaits'] = $this->config->get('config_odinass_update_stockwaits');
         }
 
-            //Bitrix24 Bot
         if (isset($this->request->post['config_bitrix_bot_enable'])) {
             $this->data['config_bitrix_bot_enable'] = $this->request->post['config_bitrix_bot_enable'];
         } else {
@@ -3435,8 +3218,7 @@ class ControllerSettingSetting extends Controller
             $this->data['config_bitrix_bot_client_secret'] = $this->config->get('config_bitrix_bot_client_secret');
         }
 
-        //FIXERIO
-         if (isset($this->request->post['config_fixer_io_token'])) {
+        if (isset($this->request->post['config_fixer_io_token'])) {
             $this->data['config_fixer_io_token'] = $this->request->post['config_fixer_io_token'];
         } else {
             $this->data['config_fixer_io_token'] = $this->config->get('config_fixer_io_token');
@@ -3448,7 +3230,6 @@ class ControllerSettingSetting extends Controller
             $this->data['config_currency_auto_threshold'] = $this->config->get('config_currency_auto_threshold');
         }
 
-            //TELEGRAM
         if (isset($this->request->post['config_telegram_bot_enable_alerts'])) {
             $this->data['config_telegram_bot_enable_alerts'] = $this->request->post['config_telegram_bot_enable_alerts'];
         } else {
@@ -3467,253 +3248,56 @@ class ControllerSettingSetting extends Controller
             $this->data['config_telegram_bot_name'] = $this->config->get('config_telegram_bot_name');
         }
 
-        //OpenAI
-        if (isset($this->request->post['config_openai_enable'])) {
-            $this->data['config_openai_enable'] = $this->request->post['config_openai_enable'];
-        } else {
-            $this->data['config_openai_enable'] = $this->config->get('config_openai_enable');
-        }
+       
+        $openai_config_keys = [
+          'config_openai_enable',
+          'config_openai_api_key',
+          'config_openai_default_model',
+          'config_openai_enable_category_alternatenames',
+          'config_openai_category_alternatenames_model',
+          'config_openai_category_alternatenames_endpoint',
+          'config_openai_category_alternatenames_maxtokens',
+          'config_openai_category_alternatenames_temperature',
+          'config_openai_category_alternatenames_top_p',
+          'config_openai_category_alternatenames_freq_penalty',
+          'config_openai_category_alternatenames_presence_penalty',
+          'config_openai_enable_category_descriptions',
+          'config_openai_category_descriptions_endpoint',
+          'config_openai_category_descriptions_model',
+          'config_openai_category_descriptions_maxtokens',
+          'config_openai_category_descriptions_temperature',
+          'config_openai_category_descriptions_top_p',
+          'config_openai_category_descriptions_freq_penalty',
+          'config_openai_category_descriptions_presence_penalty',
+          'config_openai_enable_shorten_names',
+          'config_openai_enable_shorten_names_before_translation',
+          'config_openai_enable_shorten_names_after_translation',
+          'config_openai_shortennames_endpoint',
+          'config_openai_shortennames_model',
+          'config_openai_shortennames_length',
+          'config_openai_shortennames_maxtokens',
+          'config_openai_shortennames_temperature',
+          'config_openai_shortennames_top_p',
+          'config_openai_shortennames_freq_penalty',
+          'config_openai_shortennames_presence_penalty',
+          'config_openai_enable_export_names',
+          'config_openai_exportnames_model',
+          'config_openai_exportnames_endpoint',
+          'config_openai_exportnames_maxtokens',
+          'config_openai_exportnames_length',
+          'config_openai_exportnames_temperature',
+          'config_openai_exportnames_top_p',
+          'config_openai_exportnames_freq_penalty',
+          'config_openai_exportnames_presence_penalty'  
+        ];
 
-        if (isset($this->request->post['config_openai_api_key'])) {
-            $this->data['config_openai_api_key'] = $this->request->post['config_openai_api_key'];
-        } else {
-            $this->data['config_openai_api_key'] = $this->config->get('config_openai_api_key');
+        foreach ($openai_config_keys as $openai_config_key) {
+            if (isset($this->request->post[$key])) {
+             $this->data[$openai_config_key] = $this->request->post[$openai_config_key];
+            } else {
+                $this->data[$openai_config_key] = $this->config->get($openai_config_key);
+            }
         }
-
-        if (isset($this->request->post['config_openai_default_model'])) {
-            $this->data['config_openai_default_model'] = $this->request->post['config_openai_default_model'];
-        } else {
-            $this->data['config_openai_default_model'] = $this->config->get('config_openai_default_model');
-        }
-
-        if (isset($this->request->post['config_openai_enable_category_alternatenames'])) {
-            $this->data['config_openai_enable_category_alternatenames'] = $this->request->post['config_openai_enable_category_alternatenames'];
-        } else {
-            $this->data['config_openai_enable_category_alternatenames'] = $this->config->get('config_openai_enable_category_alternatenames');
-        }
-
-        if (isset($this->request->post['config_openai_category_alternatenames_model'])) {
-            $this->data['config_openai_category_alternatenames_model'] = $this->request->post['config_openai_category_alternatenames_model'];
-        } else {
-            $this->data['config_openai_category_alternatenames_model'] = $this->config->get('config_openai_category_alternatenames_model');
-        }
-
-        if (isset($this->request->post['config_openai_category_alternatenames_endpoint'])) {
-            $this->data['config_openai_category_alternatenames_endpoint'] = $this->request->post['config_openai_category_alternatenames_endpoint'];
-        } else {
-            $this->data['config_openai_category_alternatenames_endpoint'] = $this->config->get('config_openai_category_alternatenames_endpoint');
-        }
-
-        if (isset($this->request->post['config_openai_category_alternatenames_maxtokens'])) {
-            $this->data['config_openai_category_alternatenames_maxtokens'] = $this->request->post['config_openai_category_alternatenames_maxtokens'];
-        } else {
-            $this->data['config_openai_category_alternatenames_maxtokens'] = $this->config->get('config_openai_category_alternatenames_maxtokens');
-        }
-
-        if (isset($this->request->post['config_openai_category_alternatenames_temperature'])) {
-            $this->data['config_openai_category_alternatenames_temperature'] = $this->request->post['config_openai_category_alternatenames_temperature'];
-        } else {
-            $this->data['config_openai_category_alternatenames_temperature'] = $this->config->get('config_openai_category_alternatenames_temperature');
-        }
-
-        if (isset($this->request->post['config_openai_category_alternatenames_top_p'])) {
-            $this->data['config_openai_category_alternatenames_top_p'] = $this->request->post['config_openai_category_alternatenames_top_p'];
-        } else {
-            $this->data['config_openai_category_alternatenames_top_p'] = $this->config->get('config_openai_category_alternatenames_top_p');
-        }
-
-        if (isset($this->request->post['config_openai_category_alternatenames_freq_penalty'])) {
-            $this->data['config_openai_category_alternatenames_freq_penalty'] = $this->request->post['config_openai_category_alternatenames_freq_penalty'];
-        } else {
-            $this->data['config_openai_category_alternatenames_freq_penalty'] = $this->config->get('config_openai_category_alternatenames_freq_penalty');
-        }
-
-        if (isset($this->request->post['config_openai_category_alternatenames_presence_penalty'])) {
-            $this->data['config_openai_category_alternatenames_presence_penalty'] = $this->request->post['config_openai_category_alternatenames_presence_penalty'];
-        } else {
-            $this->data['config_openai_category_alternatenames_presence_penalty'] = $this->config->get('config_openai_category_alternatenames_presence_penalty');
-        }
-
-        if (isset($this->request->post['config_openai_enable_category_descriptions'])) {
-            $this->data['config_openai_enable_category_descriptions'] = $this->request->post['config_openai_enable_category_descriptions'];
-        } else {
-            $this->data['config_openai_enable_category_descriptions'] = $this->config->get('config_openai_enable_category_descriptions');
-        }
-
-        if (isset($this->request->post['config_openai_category_descriptions_endpoint'])) {
-            $this->data['config_openai_category_descriptions_endpoint'] = $this->request->post['config_openai_category_descriptions_endpoint'];
-        } else {
-            $this->data['config_openai_category_descriptions_endpoint'] = $this->config->get('config_openai_category_descriptions_endpoint');
-        }
-
-        if (isset($this->request->post['config_openai_category_descriptions_model'])) {
-            $this->data['config_openai_category_descriptions_model'] = $this->request->post['config_openai_category_descriptions_model'];
-        } else {
-            $this->data['config_openai_category_descriptions_model'] = $this->config->get('config_openai_category_descriptions_model');
-        }
-
-        if (isset($this->request->post['config_openai_category_descriptions_maxtokens'])) {
-            $this->data['config_openai_category_descriptions_maxtokens'] = $this->request->post['config_openai_category_descriptions_maxtokens'];
-        } else {
-            $this->data['config_openai_category_descriptions_maxtokens'] = $this->config->get('config_openai_category_descriptions_maxtokens');
-        }
-
-        if (isset($this->request->post['config_openai_category_descriptions_temperature'])) {
-            $this->data['config_openai_category_descriptions_temperature'] = $this->request->post['config_openai_category_descriptions_temperature'];
-        } else {
-            $this->data['config_openai_category_descriptions_temperature'] = $this->config->get('config_openai_category_descriptions_temperature');
-        }
-
-        if (isset($this->request->post['config_openai_category_descriptions_top_p'])) {
-            $this->data['config_openai_category_descriptions_top_p'] = $this->request->post['config_openai_category_descriptions_top_p'];
-        } else {
-            $this->data['config_openai_category_descriptions_top_p'] = $this->config->get('config_openai_category_descriptions_top_p');
-        }
-
-        if (isset($this->request->post['config_openai_category_descriptions_freq_penalty'])) {
-            $this->data['config_openai_category_descriptions_freq_penalty'] = $this->request->post['config_openai_category_descriptions_freq_penalty'];
-        } else {
-            $this->data['config_openai_category_descriptions_freq_penalty'] = $this->config->get('config_openai_category_descriptions_freq_penalty');
-        }
-
-        if (isset($this->request->post['config_openai_category_descriptions_presence_penalty'])) {
-            $this->data['config_openai_category_descriptions_presence_penalty'] = $this->request->post['config_openai_category_descriptions_presence_penalty'];
-        } else {
-            $this->data['config_openai_category_descriptions_presence_penalty'] = $this->config->get('config_openai_category_descriptions_presence_penalty');
-        }
-
-        if (isset($this->request->post['config_openai_enable_shorten_names'])) {
-            $this->data['config_openai_enable_shorten_names'] = $this->request->post['config_openai_enable_shorten_names'];
-        } else {
-            $this->data['config_openai_enable_shorten_names'] = $this->config->get('config_openai_enable_shorten_names');
-        }
-
-        if (isset($this->request->post['config_openai_enable_shorten_names_before_translation'])) {
-            $this->data['config_openai_enable_shorten_names_before_translation'] = $this->request->post['config_openai_enable_shorten_names_before_translation'];
-        } else {
-            $this->data['config_openai_enable_shorten_names_before_translation'] = $this->config->get('config_openai_enable_shorten_names_before_translation');
-        }
-
-        if (isset($this->request->post['config_openai_enable_shorten_names_after_translation'])) {
-            $this->data['config_openai_enable_shorten_names_after_translation'] = $this->request->post['config_openai_enable_shorten_names_after_translation'];
-        } else {
-            $this->data['config_openai_enable_shorten_names_after_translation'] = $this->config->get('config_openai_enable_shorten_names_after_translation');
-        }
-
-        if (isset($this->request->post['config_openai_shortennames_endpoint'])) {
-            $this->data['config_openai_shortennames_endpoint'] = $this->request->post['config_openai_shortennames_endpoint'];
-        } else {
-            $this->data['config_openai_shortennames_endpoint'] = $this->config->get('config_openai_shortennames_endpoint');
-        }
-
-        if (isset($this->request->post['config_openai_shortennames_model'])) {
-            $this->data['config_openai_shortennames_model'] = $this->request->post['config_openai_shortennames_model'];
-        } else {
-            $this->data['config_openai_shortennames_model'] = $this->config->get('config_openai_shortennames_model');
-        }
-
-        if (isset($this->request->post['config_openai_shortennames_maxtokens'])) {
-            $this->data['config_openai_shortennames_maxtokens'] = $this->request->post['config_openai_shortennames_maxtokens'];
-        } else {
-            $this->data['config_openai_shortennames_maxtokens'] = $this->config->get('config_openai_shortennames_maxtokens');
-        }
-
-        if (isset($this->request->post['config_openai_shortennames_length'])) {
-            $this->data['config_openai_shortennames_length'] = $this->request->post['config_openai_shortennames_length'];
-        } else {
-            $this->data['config_openai_shortennames_length'] = $this->config->get('config_openai_shortennames_length');
-        }
-
-        if (isset($this->request->post['config_openai_shortennames_maxtokens'])) {
-            $this->data['config_openai_shortennames_maxtokens'] = $this->request->post['config_openai_shortennames_maxtokens'];
-        } else {
-            $this->data['config_openai_shortennames_maxtokens'] = $this->config->get('config_openai_shortennames_maxtokens');
-        }
-
-        if (isset($this->request->post['config_openai_shortennames_temperature'])) {
-            $this->data['config_openai_shortennames_temperature'] = $this->request->post['config_openai_shortennames_temperature'];
-        } else {
-            $this->data['config_openai_shortennames_temperature'] = $this->config->get('config_openai_shortennames_temperature');
-        }
-
-        if (isset($this->request->post['config_openai_shortennames_top_p'])) {
-            $this->data['config_openai_shortennames_top_p'] = $this->request->post['config_openai_shortennames_top_p'];
-        } else {
-            $this->data['config_openai_shortennames_top_p'] = $this->config->get('config_openai_shortennames_top_p');
-        }
-
-        if (isset($this->request->post['config_openai_shortennames_freq_penalty'])) {
-            $this->data['config_openai_shortennames_freq_penalty'] = $this->request->post['config_openai_shortennames_freq_penalty'];
-        } else {
-            $this->data['config_openai_shortennames_freq_penalty'] = $this->config->get('config_openai_shortennames_freq_penalty');
-        }
-
-        if (isset($this->request->post['config_openai_shortennames_presence_penalty'])) {
-            $this->data['config_openai_shortennames_presence_penalty'] = $this->request->post['config_openai_shortennames_presence_penalty'];
-        } else {
-            $this->data['config_openai_shortennames_presence_penalty'] = $this->config->get('config_openai_shortennames_presence_penalty');
-        }
-
-        if (isset($this->request->post['config_openai_enable_export_names'])) {
-            $this->data['config_openai_enable_export_names'] = $this->request->post['config_openai_enable_export_names'];
-        } else {
-            $this->data['config_openai_enable_export_names'] = $this->config->get('config_openai_enable_export_names');
-        }
-
-        if (isset($this->request->post['config_openai_exportnames_model'])) {
-            $this->data['config_openai_exportnames_model'] = $this->request->post['config_openai_exportnames_model'];
-        } else {
-            $this->data['config_openai_exportnames_model'] = $this->config->get('config_openai_exportnames_model');
-        }
-
-        if (isset($this->request->post['config_openai_exportnames_endpoint'])) {
-            $this->data['config_openai_exportnames_endpoint'] = $this->request->post['config_openai_exportnames_endpoint'];
-        } else {
-            $this->data['config_openai_exportnames_endpoint'] = $this->config->get('config_openai_exportnames_endpoint');
-        }
-
-        if (isset($this->request->post['config_openai_exportnames_maxtokens'])) {
-            $this->data['config_openai_exportnames_maxtokens'] = $this->request->post['config_openai_exportnames_maxtokens'];
-        } else {
-            $this->data['config_openai_exportnames_maxtokens'] = $this->config->get('config_openai_exportnames_maxtokens');
-        }
-
-        if (isset($this->request->post['config_openai_exportnames_length'])) {
-            $this->data['config_openai_exportnames_length'] = $this->request->post['config_openai_exportnames_length'];
-        } else {
-            $this->data['config_openai_exportnames_length'] = $this->config->get('config_openai_exportnames_length');
-        }
-
-        if (isset($this->request->post['config_openai_exportnames_maxtokens'])) {
-            $this->data['config_openai_exportnames_maxtokens'] = $this->request->post['config_openai_exportnames_maxtokens'];
-        } else {
-            $this->data['config_openai_exportnames_maxtokens'] = $this->config->get('config_openai_exportnames_maxtokens');
-        }
-
-        if (isset($this->request->post['config_openai_exportnames_temperature'])) {
-            $this->data['config_openai_exportnames_temperature'] = $this->request->post['config_openai_exportnames_temperature'];
-        } else {
-            $this->data['config_openai_exportnames_temperature'] = $this->config->get('config_openai_exportnames_temperature');
-        }
-
-        if (isset($this->request->post['config_openai_exportnames_top_p'])) {
-            $this->data['config_openai_exportnames_top_p'] = $this->request->post['config_openai_exportnames_top_p'];
-        } else {
-            $this->data['config_openai_exportnames_top_p'] = $this->config->get('config_openai_exportnames_top_p');
-        }
-
-        if (isset($this->request->post['config_openai_exportnames_freq_penalty'])) {
-            $this->data['config_openai_exportnames_freq_penalty'] = $this->request->post['config_openai_exportnames_freq_penalty'];
-        } else {
-            $this->data['config_openai_exportnames_freq_penalty'] = $this->config->get('config_openai_exportnames_freq_penalty');
-        }
-
-        if (isset($this->request->post['config_openai_exportnames_presence_penalty'])) {
-            $this->data['config_openai_exportnames_presence_penalty'] = $this->request->post['config_openai_exportnames_presence_penalty'];
-        } else {
-            $this->data['config_openai_exportnames_presence_penalty'] = $this->config->get('config_openai_exportnames_presence_penalty');
-        }
-
 
          foreach ($this->data['languages'] as $openai_language) {
             if (isset($this->request->post['config_openai_category_alternatenames_query_' . $openai_language['code']])) {

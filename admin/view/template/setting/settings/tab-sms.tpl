@@ -223,7 +223,7 @@
 					<textarea name="config_sms_otp_text" rows="3" cols="100"><?php echo $config_sms_otp_text; ?></textarea>
 					<span class="help"><b>{OTP_CODE}</b></span>
 				</td>
-			
+
 				<td style="width:50%">
 					<p><span class="status_color" style="display:inline-block;padding:3px 5px; background: #ff007f; color: #FFF; ?>;">Текст VIBER с OTP-кодом</span></p>
 					<textarea name="config_viber_otp_text" rows="3" cols="100"><?php echo $config_viber_otp_text; ?></textarea>
@@ -289,7 +289,7 @@
 					<textarea name="config_sms_restore_password_text" rows="3" cols="100"><?php echo $config_sms_restore_password_text; ?></textarea>
 					<span class="help"><b>{NEW_PASSWORD}</b></span>
 				</td>
-			
+
 				<td style="width:50%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background: #ff7f00; color: #FFF; ?>;">Текст VIBER с новым паролем</span></p>
 					<textarea name="config_viber_restore_password_text" rows="3" cols="100"><?php echo $config_viber_restore_password_text; ?></textarea>
@@ -350,6 +350,7 @@
 			</tr>	
 		</table>
 		
+		<h2><span style="color:#FF7815;"><i class="fa fa-star"></i> Статусы заказов</span></h2>
 		<table class="list">
 			<tr>
 				<td style="width:200px;">
@@ -389,6 +390,10 @@
 					</td>
 				</tr>										
 			<?php } ?>
+		</table>
+
+		<h2><span style="color:#FF7815;"><i class="fa fa-truck"></i> Доставки</span></h2>
+		<table class="list">
 			<tr>
 				<td style="width:200px;">
 					<span class="status_color" style="text-align: left; background: #43B02A; color: #FFF; ?>;">
@@ -444,7 +449,10 @@
 					<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_ttn_ready" value="<?php echo $config_sms_ttn_ready; ?>" />
 				</td>
 			</tr>
+		</table>
 
+		<h2><span style="color:#FF7815;"><i class="fa fa-star"></i> Бонусная система</span></h2>
+		<table class="list">
 			<tr>
 				<td style="width:200px;">
 					<span class="status_color" style="text-align: left; background: #ef5e67; color: #FFF; ?>;">
@@ -472,7 +480,10 @@
 					<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="rewardpoints_added_sms_text" value="<?php echo $rewardpoints_added_sms_text; ?>" />
 				</td>
 			</tr>
+		</table>
 
+		<h2><span style="color:#FF7815;"><i class="fa fa-eur"></i> Оплаты</span></h2>
+		<table class="list">
 			<tr>
 				<td style="width:200px;">
 					<span class="status_color" style="text-align: left; background: #ff7f00; color: #FFF; ?>;">
@@ -525,7 +536,10 @@
 					<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_payment_link" value="<?php echo $config_sms_payment_link; ?>" />
 				</td>
 			</tr>
+		</table>
 
+		<h2><span style="color:#FF7815;"><i class="fa fa-star"></i> Апсейл</span></h2>
+		<table class="list">
 			<tr>
 				<td style="width:200px;">
 					<span class="status_color" style="text-align: left; background: #43B02A; color: #FFF; ?>;">
