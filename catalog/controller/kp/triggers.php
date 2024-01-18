@@ -1,22 +1,20 @@
 <?
 	
  	class ControllerKPTriggers extends Controller {
-		private $error = array();
-		private $products = array();
+		private $error 		= [];
+		private $products 	= [];
 		
-		//MAIN
-		private $tracking = '5f6de726297fc';
-		private $html = '';
-		private $title = '';
-		private $to = '';
-		
-		//CURRENT
-		private $triggerType = '';
-		private $store_id = 0;
-		private $order = array();
-		private $order_id = 0;
-		private $customer_id = 0;
-		private $language_id = 0;
+		private $tracking 	= '5f6de726297fc';
+		private $html 		= '';
+		private $title 		= '';
+		private $to 		= '';
+
+		private $triggerType 	= '';
+		private $store_id 		= 0;
+		private $order 			= [];
+		private $order_id 		= 0;
+		private $customer_id 	= 0;
+		private $language_id 	= 0;
 		
 		
 		public function index() {
@@ -25,7 +23,6 @@
 			$this->load->model('setting/setting');
 		}
 		
-		//MAIL SETTING FUNCTIONS
 		private function setHTML($html){
 			$this->html = $html;
 		}
@@ -42,7 +39,6 @@
 			$this->triggerType = $triggerType;
 		}
 		
-		//DATA SETTING FUNCTIONS
 		private function setOrderID($order_id){
 			$this->order_id = $order_id;
 		}
@@ -61,15 +57,7 @@
 		
 		private function setLanguageID($language_id){
 			$this->language_id = $language_id;
-		}
-		
-		
-		//SERVICE FUNCTIONS	
-		private function echoLine($line){
-			if(php_sapi_name()==="cli"){
-				echo $line . PHP_EOL;
-			}
-		}
+		}			
 		
 		private function prepareProduct($result){
 			
@@ -136,11 +124,8 @@
 			'location'      		=> $result['location'],
 			'reviews'     			=> sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
 			'href'        			=> $href
-			);
-			
+			);			
 		}
-		
-		
 		
 		private function addHistory($data){	
 			$this->db->non_cached_query("INSERT INTO trigger_history SET
@@ -226,8 +211,7 @@
 				$this->response->setOutput($this->completed($input['order_id'], true));
 				} else {
 				$this->response->redirect($this->url->link('common/home'));
-			}
-			
+			}			
 		}
 		
 		private function validateEmail($email){
@@ -238,8 +222,7 @@
 			return true;
 		}
 		
-		private function getStoreURL(){
-			
+		private function getStoreURL(){			
 			$this->load->model('setting/setting');
 			$store_url = ($this->store_id==0)?HTTPS_SERVER:$this->model_setting_setting->getKeySettingValue('config', 'config_url' , $this->store_id);
 			
@@ -264,8 +247,7 @@
 			
 			$url = $this->getStoreURL($this->store_id) . ltrim($path, '/') . $query; 
 			
-			return $this->shortAlias->shortenURL($url);
-			
+			return $this->shortAlias->shortenURL($url);			
 		}
 		
 		private function selectEmail($data){
@@ -285,8 +267,7 @@
 			$query = $this->db->non_cached_query("SELECT o.order_id FROM `order` o LEFT JOIN customer c ON (o.customer_id = c.customer_id)			
 			WHERE order_status_id > 0 AND order_id = '" . (int)$order_id . "' AND o.store_id = '" . (int)$this->config->get('config_store_id'). "'");												
 			
-			return $query->num_rows;
-			
+			return $query->num_rows;		
 		}
 		
 		public function cancelledOrders($order_id = false, $return = false){
@@ -321,13 +302,8 @@
 				AND order_id = '" . (int)$order_id . "'");
 			}					
 			
-			foreach ($query->rows as $row){
-				
-				
-				$this->setOrderID($row['order_id']);
-				
-				
-				//Подбор товаров
+			foreach ($query->rows as $row){								
+				$this->setOrderID($row['order_id']);				
 				$order = $this->model_account_order->getOrder($this->order_id, true);
 				
 				$this->setOrder($order);
@@ -337,20 +313,20 @@
 				
 				$this->data['store_id'] = $this->store_id;
 				
-				$this->echoLine('[TRGR] Заказ ' . $this->order_id . ', покупатель ' . $row['email']);
+				echoLine('[TRGR] Заказ ' . $this->order_id . ', покупатель ' . $row['email']);
 				
 				if (!$to = $this->selectEmail($row)){
-					$this->echoLine('[TRGR] Мейла нет, пропускаем');
+					echoLine('[TRGR] Мейла нет, пропускаем');
 					continue;
 				}
 				
 				if (!$customer = $this->model_account_customer->getCustomer($this->customer_id)){
-					$this->echoLine('[TRGR] Покупателя нет, пропускаем');
+					echoLine('[TRGR] Покупателя нет, пропускаем');
 					continue;
 				}
 				
 				if (!$customer['newsletter']){
-					$this->echoLine('[TRGR] Покупатель отписан, пропускаем');
+					echoLine('[TRGR] Покупатель отписан, пропускаем');
 					continue;
 				}
 				
@@ -360,12 +336,12 @@
 					$products = $this->model_account_order->getOrderProducts($this->order_id);
 				}
 				
-				$exclude = array();
-				$this->data['products'] = array();
+				$exclude = [];
+				$this->data['products'] = [];
 				foreach ($products as $product) {
-					$this->echoLine('	[TRGR] Подбираем товары');
+					echoLine('	[TRGR] Подбираем товары');
 					
-					$this->echoLine('		[TRGR] Товар ' . $product['name']);
+					echoLine('		[TRGR] Товар ' . $product['name']);
 					
 					$this->data['products'][$product['product_id']] = array(
 					'info' 		=> $this->prepareProduct($this->model_catalog_product->getProduct($product['product_id'])), 
@@ -377,7 +353,7 @@
 					$similar_products = $this->model_kp_product->getReplaceProducts($product['product_id'], $this->order_id, $exclude);
 					foreach ($similar_products as $key => $result){
 						$exclude[] = $result['product_id'];
-						$this->echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);		
+						echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);		
 						$this->data['products'][$product['product_id']]['products'][] = $this->prepareProduct($result);
 					}
 				}
@@ -415,7 +391,7 @@
 				$this->document->setTitle($this->title);
 				$this->response->setOutput($html);
 				
-				$this->echoLine('');
+				echoLine('');
 				
 			}	
 		}
@@ -470,24 +446,24 @@
 				
 				$this->data['store_id'] = $this->store_id;
 				
-				$this->echoLine('[TRGR] Заказ ' . $this->order_id . ', покупатель ' . $row['email']);
+				echoLine('[TRGR] Заказ ' . $this->order_id . ', покупатель ' . $row['email']);
 				
 				
 				if (!$to = $this->selectEmail($row)){
 					//echo 'Мейла нет, пропускаем';
-					$this->echoLine('[TRGR] Мейла нет, пропускаем');
+					echoLine('[TRGR] Мейла нет, пропускаем');
 					continue;
 				}
 				
 				if (!$customer = $this->model_account_customer->getCustomer($this->customer_id)){
 					//echo 'Покупателя нет, пропускаем';
-					$this->echoLine('[TRGR] Покупателя нет, пропускаем');
+					echoLine('[TRGR] Покупателя нет, пропускаем');
 					continue;
 				}
 				
 				if (!$customer['newsletter']){
 					//echo 'Покупатель отписан, пропускаем';
-					$this->echoLine('[TRGR] Покупатель отписан, пропускаем');
+					echoLine('[TRGR] Покупатель отписан, пропускаем');
 					continue;
 				}
 				
@@ -497,15 +473,15 @@
 					$products = $this->model_account_order->getOrderProducts($this->order_id);
 				}
 				
-				$exclude = array();
-				$this->data['products'] = array();
+				$exclude = [];
+				$this->data['products'] = [];
 				foreach ($products as $product) {
 					// Нужно проверить, если основной товар есть на складе в текущей стране, то исключить его из выдачи
 					$is_stock = $this->model_kp_product->checkIfProductIsInWarehouseInCurrentCountry($product['product_id'], $this->store_id);
 					
 					if (!$is_stock) {
-						$this->echoLine('	[TRGR] Подбираем товары');
-						$this->echoLine('		[TRGR] Товар ' . $product['name']);
+						echoLine('	[TRGR] Подбираем товары');
+						echoLine('		[TRGR] Товар ' . $product['name']);
 						$this->data['products'][$product['product_id']] = array(
 						'info' 		=> $this->prepareProduct($this->model_catalog_product->getProduct($product['product_id'])), 
 						'products' 	=> array()
@@ -516,7 +492,7 @@
 						if ($similar_products) {
 							foreach ($similar_products as $key => $result){
 								$exclude[] = $result['product_id'];
-								$this->echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);		
+								echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);		
 								$this->data['products'][$product['product_id']]['products'][] = $this->prepareProduct($result);
 							}
 							} else {
@@ -543,7 +519,7 @@
 				
 				// Если нет товаров то нет что отправлять
 				if (empty($this->data['products'])) {				
-					$this->echoLine('[TRGR] Не нашли товары, пропускаем');
+					echoLine('[TRGR] Не нашли товары, пропускаем');
 					continue;
 				}
 				
@@ -567,7 +543,7 @@
 				$this->document->setTitle($this->title);
 				$this->response->setOutput($html);
 				
-				$this->echoLine('');
+				echoLine('');
 				
 			}	
 		}
@@ -614,7 +590,7 @@
 				$order = $this->model_account_order->getOrder($this->order_id, true);
 
 				// id товаров в заказе, добавлено ниже
-				$order_products = array();
+				$order_products = [];
 
 				$this->setOrder($order);
 				$this->setStoreID($order['store_id']);
@@ -623,24 +599,24 @@
 				
 				$this->data['store_id'] = $this->store_id;
 				
-				$this->echoLine('[TRGR] Заказ ' . $this->order_id . ', покупатель ' . $row['email']);
+				echoLine('[TRGR] Заказ ' . $this->order_id . ', покупатель ' . $row['email']);
 				
 				
 				if (!$to = $this->selectEmail($row)) {
 					//echo 'Мейла нет, пропускаем';
-					$this->echoLine('[TRGR] Мейла нет, пропускаем');
+					echoLine('[TRGR] Мейла нет, пропускаем');
 					continue;
 				}
 				
 				if (!$customer = $this->model_account_customer->getCustomer($this->customer_id)) {
 					//echo 'Покупателя нет, пропускаем';
-					$this->echoLine('[TRGR] Покупателя нет, пропускаем');
+					echoLine('[TRGR] Покупателя нет, пропускаем');
 					continue;
 				}
 				
 				if (!$customer['newsletter']) {
 					//echo 'Покупатель отписан, пропускаем';
-					$this->echoLine('[TRGR] Покупатель отписан, пропускаем');
+					echoLine('[TRGR] Покупатель отписан, пропускаем');
 					continue;
 				}
 				
@@ -650,8 +626,8 @@
 					$products = $this->model_account_order->getOrderProducts($this->order_id);
 				}
 				
-				$order_products = array();
-				$categories = array();
+				$order_products = [];
+				$categories = [];
 				
 				if ($products) {
 					foreach ($products as $product) {
@@ -672,9 +648,9 @@
 					}
 				}
 				
-				$this->data['products'] = array();
-				$this->data['products']['similar'] = array();
-				$results = array();
+				$this->data['products'] = [];
+				$this->data['products']['similar'] = [];
+				$results = [];
 
 				// Исключенные товары
 				$exclude = $order_products;
@@ -682,7 +658,7 @@
 				$this->model_kp_product->setOrderID($order_id);
 
 				$limit = 9;
-				$this->echoLine('	[TRGR] Подбираем товары по рекомендуемых');
+				echoLine('	[TRGR] Подбираем товары по рекомендуемых');
 
 				// Подбор рекомендуемых товаров по всех товарах в заказе
 				$results = $this->model_kp_product->getProductRelated($order_products, $limit, $categories, $this->store_id, false, $order_id);
@@ -690,7 +666,7 @@
 				if ($results) {
 					foreach ($results as $key => $result) {
 						$exclude[] = $result['product_id'];
-						$this->echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
+						echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
 						$this->data['products']['similar'][] = $this->prepareProduct($result);
 					}
 				}
@@ -698,14 +674,14 @@
 				if (count($this->data['products']['similar']) <= 9) {
 					$limit = 9 - count($this->data['products']['similar']);
 
-					$this->echoLine('	[TRGR] Подбираем товары по связанным категориям с учетом бренда производителя');
+					echoLine('	[TRGR] Подбираем товары по связанным категориям с учетом бренда производителя');
 					// Подбираем товары по связанным категориям с учетом бренда производителя
 					$results = $this->model_kp_product->getProductRelatedByCategory($order_products, $limit, $exclude, $this->store_id, true);
 
 					if ($results) {
 						foreach ($results as $key => $result) {
 							$exclude[] = $result['product_id'];
-							$this->echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
+							echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
 							$this->data['products']['similar'][] = $this->prepareProduct($result);
 						}
 					}
@@ -714,14 +690,14 @@
 				if (count($this->data['products']['similar']) <= 9) {
 					$limit = 9 - count($this->data['products']['similar']);
 
-					$this->echoLine('	[TRGR] Подбираем товары по связанным категориям с учетом бренда производителя');
+					echoLine('	[TRGR] Подбираем товары по связанным категориям с учетом бренда производителя');
 					// Подбираем товары по связанным категориям без учета бренда производителя
 					$results = $this->model_kp_product->getProductRelatedByCategory($order_products, $limit, $exclude, $this->store_id);
 
 					if ($results) {
 						foreach ($results as $key => $result) {
 							$exclude[] = $result['product_id'];
-							$this->echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
+							echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
 							$this->data['products']['similar'][] = $this->prepareProduct($result);
 						}
 					}
@@ -731,14 +707,14 @@
 					$limit = 9 - count($this->data['products']['similar']);
 
 
-					$this->echoLine('	[TRGR] Подбираем товары по связанным категориям с учетом бренда производителя');
+					echoLine('	[TRGR] Подбираем товары по связанным категориям с учетом бренда производителя');
 					// Подбираем товары по связанным категориям без учета бренда производителя
 					$results = $this->model_kp_product->getProductRelatedByCollection($order_products, $limit, $exclude, $this->store_id, true);
 
 					if ($results) {
 						foreach ($results as $key => $result) {
 							$exclude[] = $result['product_id'];
-							$this->echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
+							echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
 							$this->data['products']['similar'][] = $this->prepareProduct($result);
 						}
 					}
@@ -748,14 +724,14 @@
 					$limit = 9 - count($this->data['products']['similar']);
 
 
-					$this->echoLine('	[TRGR] Подбираем товары по связанным категориям с учетом бренда производителя');
+					echoLine('	[TRGR] Подбираем товары по связанным категориям с учетом бренда производителя');
 					// Подбираем товары по связанным категориям без учета бренда производителя
 					$results = $this->model_kp_product->getProductRelatedByCollection($order_products, $limit, $exclude, $this->store_id);
 
 					if ($results) {
 						foreach ($results as $key => $result) {
 							$exclude[] = $result['product_id'];
-							$this->echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
+							echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
 							$this->data['products']['similar'][] = $this->prepareProduct($result);
 						}
 					}
@@ -768,7 +744,7 @@
 				if ($results) {
 					foreach ($results as $key => $result) {
 						$exclude[] = $result['product_id'];
-						$this->echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
+						echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
 						$this->data['products']['similar'][] = $this->prepareProduct($result);
 					}
 				}
@@ -776,14 +752,14 @@
 				if (count($this->data['products']['similar']) <= 9) {
 					$limit = 9 - count($this->data['products']['similar']);
 
-					$this->echoLine('	[TRGR] Подбираем товары по связанным категориям с учетом бренда производителя');
+					echoLine('	[TRGR] Подбираем товары по связанным категориям с учетом бренда производителя');
 					// Подбираем товары по связанным категориям с учетом бренда производителя
 					$results = $this->model_kp_product->getProductRelatedByCategory($order_products, $limit, $exclude, $this->store_id, true, true);
 
 					if ($results) {
 						foreach ($results as $key => $result) {
 							$exclude[] = $result['product_id'];
-							$this->echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
+							echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
 							$this->data['products']['similar'][] = $this->prepareProduct($result);
 						}
 					}
@@ -792,14 +768,14 @@
 				if (count($this->data['products']['similar']) <= 9) {
 					$limit = 9 - count($this->data['products']['similar']);
 
-					$this->echoLine('	[TRGR] Подбираем товары по связанным категориям с учетом бренда производителя');
+					echoLine('	[TRGR] Подбираем товары по связанным категориям с учетом бренда производителя');
 					// Подбираем товары по связанным категориям без учета бренда производителя
 					$results = $this->model_kp_product->getProductRelatedByCategory($order_products, $limit, $exclude, $this->store_id, false, true);
 
 					if ($results) {
 						foreach ($results as $key => $result) {
 							$exclude[] = $result['product_id'];
-							$this->echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
+							echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
 							$this->data['products']['similar'][] = $this->prepareProduct($result);
 						}
 					}
@@ -809,14 +785,14 @@
 					$limit = 9 - count($this->data['products']['similar']);
 
 
-					$this->echoLine('	[TRGR] Подбираем товары по связанным категориям с учетом бренда производителя');
+					echoLine('	[TRGR] Подбираем товары по связанным категориям с учетом бренда производителя');
 					// Подбираем товары по связанным категориям без учета бренда производителя
 					$results = $this->model_kp_product->getProductRelatedByCollection($order_products, $limit, $exclude, $this->store_id, true, true);
 
 					if ($results) {
 						foreach ($results as $key => $result) {
 							$exclude[] = $result['product_id'];
-							$this->echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
+							echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
 							$this->data['products']['similar'][] = $this->prepareProduct($result);
 						}
 					}
@@ -826,14 +802,14 @@
 					$limit = 9 - count($this->data['products']['similar']);
 
 
-					$this->echoLine('	[TRGR] Подбираем товары по связанным категориям с учетом бренда производителя');
+					echoLine('	[TRGR] Подбираем товары по связанным категориям с учетом бренда производителя');
 					// Подбираем товары по связанным категориям без учета бренда производителя
 					$results = $this->model_kp_product->getProductRelatedByCollection($order_products, $limit, $exclude, $this->store_id, false, true);
 
 					if ($results) {
 						foreach ($results as $key => $result) {
 							$exclude[] = $result['product_id'];
-							$this->echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
+							echoLine('		[SIMILAR] Товар ' . $key  . '  '. $result['name']);
 							$this->data['products']['similar'][] = $this->prepareProduct($result);
 						}
 					}
@@ -857,7 +833,7 @@
 
 				// Если нет товаров то нет что отправлять
 				if (empty($this->data['products']['similar'])) {				
-					$this->echoLine('[TRGR] Не нашли товары, пропускаем');
+					echoLine('[TRGR] Не нашли товары, пропускаем');
 					continue;
 				}
 				
@@ -881,7 +857,7 @@
 				$this->document->setTitle($this->title);
 				$this->response->setOutput($html);
 				
-				$this->echoLine('');
+				echoLine('');
 				
 			}	
 		}
