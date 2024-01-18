@@ -31,6 +31,10 @@ function normalizeSKU($sku){
 	return preg_replace("([^0-9])", "", $sku);
 }
 
+function extractNumeric($string){
+	return preg_replace('/[^0-9.,]/', '', $string);
+}
+
 function removeSpaces($st){
 	$st = str_replace(' ','',$st);
 

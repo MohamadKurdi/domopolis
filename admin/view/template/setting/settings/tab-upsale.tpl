@@ -4,7 +4,7 @@
 		<h2><span style="color:#cf4a61;"><i class="fa fa-shopping-cart"></i> Настройки забытой корзины - воркер и таймлимит</span></h2>
 		<table class="form">														
 			<tr>
-				<td style="width:50%">
+				<td style="width:33%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включить логику</span></p>
 					<select name="config_forgottencart_send_enable">
 						<?php if ($config_forgottencart_send_enable) { ?>
@@ -16,11 +16,14 @@
 						<? } ?>
 					</select>
 				</td>
-				<td style="width:50%">
+				<td style="width:33%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><i class="fa fa-clock-o"></i> Время работы</span></p>
 
 					<input type="time" name="config_forgottencart_send_time_start" value="<?php echo $config_forgottencart_send_time_start; ?>" size="50" style="width:70px;" /> - 
 					<input type="time" name="config_forgottencart_send_time_end" value="<?php echo $config_forgottencart_send_time_end; ?>" size="50" style="width:70px;" />
+				</td>
+				<td style="width:33%">
+					<span class="help"><i class="fa fa-info-circle"></i> воркер запускается каждый час в рамках разрешенного времени и отбирает корзины, добавленные от "минимально часов" до "максимально часов" для первой итерации. для второй итерации - часы "от и до считаются от момента отправки уведомления в первой итерации". время в запросе считается от текущего времени запуска скрипта</span>
 				</td>
 			</tr>
 		</table>
