@@ -66,6 +66,7 @@
 				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Текст SMS</span></p>
 				<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_firstorder_sms_text" value="<?php echo $config_firstorder_sms_text; ?>" />
 				<span class="help"><b>{FIRSTNAME}, {PROMOCODE}</b></span>
+				<span class="help"><i class="fa fa-info-circle"></i> Если включена возможность отправки сообщений через Viber, настройки находятся в соответствующей вкладке</span>
 			</td>
 		</tr>	
 	</table>

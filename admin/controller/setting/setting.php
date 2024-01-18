@@ -3061,7 +3061,13 @@ class ControllerSettingSetting extends Controller
             'config_viber_birthday_greeting',
             'config_viber_birthday_greeting_image',
             'config_viber_birthday_greeting_button_text',
-            'config_viber_birthday_greeting_button_url'
+            'config_viber_birthday_greeting_button_url',
+
+            'config_viber_forgottencart_enabled',
+            'config_viber_forgottencart',
+            'config_viber_forgottencart_image',
+            'config_viber_forgottencart_button_text',
+            'config_viber_forgottencart_button_url'
         ];
         
         foreach ($viberkeys as $viberkey) {
