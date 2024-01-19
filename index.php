@@ -409,7 +409,7 @@
 	$registry->set('courierServices', 	new hobotix\CourierServices($registry));
 	$registry->set('openaiAdaptor', 	new hobotix\OpenAIAdaptor($registry));
 	$registry->set('Fiscalisation',		new hobotix\Fiscalisation($registry));
-	
+	$registry->set('couponRandom',		new hobotix\CouponRandom($registry));
 	$registry->set('bypass_rainforest_caches_and_settings', true);
 	$registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
 	

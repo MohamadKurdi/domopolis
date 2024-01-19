@@ -336,6 +336,7 @@ $registry->set('courierServices', 	new hobotix\CourierServices($registry));
 $registry->set('checkBoxUA', 		new hobotix\CheckBoxUA($registry));
 $registry->set('Fiscalisation',		new hobotix\Fiscalisation($registry));
 $registry->set('supplierAdaptor',	new hobotix\SupplierAdaptor($registry));
+$registry->set('couponRandom',		new hobotix\CouponRandom($registry));
 $registry->set('simpleProcess', 	new hobotix\simpleProcess(['route' => $route, 'config' => $configFile, 'args' => $allArguments], $configFilesPrefix));
 
 $registry->set('customer_group_id', (int)$registry->get('config')->get('config_customer_group_id'));
@@ -362,9 +363,8 @@ $controller = new Front($registry);
 
 if ($application != 'admin'){
 	$controller->addPreAction(new Action('common/seo_pro'));
-} else {
+} else {	
 	$admin_seo_routes = loadJsonConfig('admin_seo_routes');
-
 	if (in_array($route, $admin_seo_routes)){
 		$controller->addPreAction(new Action('common/seo_pro'));
 	}

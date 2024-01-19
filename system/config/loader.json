@@ -38,7 +38,8 @@
 		"/hobotix/Fiscalisation",
 		"/hobotix/SupplierAdaptor",
 		"/hobotix/QRCodeExtender",
-		"/hobotix/OTP"
+		"/hobotix/OTP",
+		"/hobotix/CouponRandom"
 	],
 	"startup_libraries":[
 		"engine/action",
