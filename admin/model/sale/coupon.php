@@ -28,7 +28,7 @@
 				action_id 			= '" . (int)$data['action_id'] . "', 
 				only_in_stock 		= '" . (int)$data['only_in_stock'] . "',
 				random 				= '" . (int)$data['random'] . "',
-				random_string 		= '" . $this->db->escape($data['random_string']) . "' 
+				random_string 		= '" . $this->db->escape($data['random_string']) . "',
 				date_added 			= NOW()");
 			
 			$coupon_id = $this->db->getLastId();
