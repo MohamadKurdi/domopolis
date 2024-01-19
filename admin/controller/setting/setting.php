@@ -3298,7 +3298,7 @@ class ControllerSettingSetting extends Controller
         ];
 
         foreach ($openai_config_keys as $openai_config_key) {
-            if (isset($this->request->post[$key])) {
+            if (isset($this->request->post[$openai_config_key])) {
              $this->data[$openai_config_key] = $this->request->post[$openai_config_key];
             } else {
                 $this->data[$openai_config_key] = $this->config->get($openai_config_key);
