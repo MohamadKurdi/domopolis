@@ -1,7 +1,35 @@
 <?php
 	class ModelSaleCoupon extends Model {
 		public function addCoupon($data) {
-			$this->db->query("INSERT INTO coupon SET name = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', promo_type = '" . $this->db->escape($data['promo_type']) . "', discount = '" . (float)$data['discount'] . "', discount_sum = '" . $this->db->escape($data['discount_sum']) . "', currency = '" . $this->db->escape($data['currency']) . "', min_currency = '" . $this->db->escape($data['min_currency']) . "', type = '" . $this->db->escape($data['type']) . "', total = '" . (float)$data['total'] . "', logged = '" . (int)$data['logged'] . "', shipping = '" . (int)$data['shipping'] . "', date_start = '" . $this->db->escape($data['date_start']) . "', date_end = '" . $this->db->escape($data['date_end']) . "', uses_total = '" . (int)$data['uses_total'] . "', uses_customer = '" . (int)$data['uses_customer'] . "', status = '" . (int)$data['status'] . "', show_in_segments = '" . (int)$data['show_in_segments'] . "', manager_id = '" . (int)$data['manager_id'] . "', birthday = '" . (int)$data['birthday'] . "', display_list = '" . (int)$data['display_list'] . "', display_in_account = '" . (int)$data['display_in_account'] . "', days_from_send = '" . (int)$data['days_from_send'] . "', actiontemplate_id = '" . (int)$data['actiontemplate_id'] . "', action_id = '" . (int)$data['action_id'] . "', only_in_stock = '" . (int)$data['only_in_stock'] . "',  date_added = NOW()");
+			$this->db->query("INSERT INTO coupon SET 
+				name 			= '" . $this->db->escape($data['name']) . "', 
+				code 			= '" . $this->db->escape($data['code']) . "', 
+				promo_type 		= '" . $this->db->escape($data['promo_type']) . "', 
+				discount 		= '" . (float)$data['discount'] . "', 
+				discount_sum 	= '" . $this->db->escape($data['discount_sum']) . "', 
+				currency 		= '" . $this->db->escape($data['currency']) . "', 
+				min_currency 	= '" . $this->db->escape($data['min_currency']) . "', 
+				type 			= '" . $this->db->escape($data['type']) . "', 
+				total 			= '" . (float)$data['total'] . "', 
+				logged 			= '" . (int)$data['logged'] . "', 
+				shipping 		= '" . (int)$data['shipping'] . "', 
+				date_start 		= '" . $this->db->escape($data['date_start']) . "', 
+				date_end 		= '" . $this->db->escape($data['date_end']) . "', 
+				uses_total 		= '" . (int)$data['uses_total'] . "', 
+				uses_customer 	= '" . (int)$data['uses_customer'] . "', 
+				status 			= '" . (int)$data['status'] . "', 
+				show_in_segments 	= '" . (int)$data['show_in_segments'] . "', 
+				manager_id 			= '" . (int)$data['manager_id'] . "', 
+				birthday 			= '" . (int)$data['birthday'] . "', 
+				display_list 		= '" . (int)$data['display_list'] . "', 
+				display_in_account 	= '" . (int)$data['display_in_account'] . "', 
+				days_from_send 		= '" . (int)$data['days_from_send'] . "', 
+				actiontemplate_id 	= '" . (int)$data['actiontemplate_id'] . "', 
+				action_id 			= '" . (int)$data['action_id'] . "', 
+				only_in_stock 		= '" . (int)$data['only_in_stock'] . "',
+				random 				= '" . (int)$data['random'] . "',
+				random_string 		= '" . $this->db->escape($data['random_string']) . "' 
+				date_added 			= NOW()");
 			
 			$coupon_id = $this->db->getLastId();
 			
@@ -37,7 +65,35 @@
 		}
 		
 		public function editCoupon($coupon_id, $data) {
-			$this->db->query("UPDATE coupon SET name = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', promo_type = '" . $this->db->escape($data['promo_type']) . "', discount = '" . (float)$data['discount'] . "', discount_sum = '" . $this->db->escape($data['discount_sum']) . "', currency = '" . $this->db->escape($data['currency']) . "', min_currency = '" . $this->db->escape($data['min_currency']) . "', type = '" . $this->db->escape($data['type']) . "', total = '" . (float)$data['total'] . "', logged = '" . (int)$data['logged'] . "', shipping = '" . (int)$data['shipping'] . "', date_start = '" . $this->db->escape($data['date_start']) . "', date_end = '" . $this->db->escape($data['date_end']) . "', uses_total = '" . (int)$data['uses_total'] . "', uses_customer = '" . (int)$data['uses_customer'] . "', status = '" . (int)$data['status'] . "', birthday = '" . (int)$data['birthday'] . "', days_from_send = '" . (int)$data['days_from_send'] . "', actiontemplate_id = '" . (int)$data['actiontemplate_id'] . "', action_id = '" . (int)$data['action_id'] . "', display_list = '" . (int)$data['display_list'] . "', display_in_account = '" . (int)$data['display_in_account'] . "', manager_id = '" . (int)$data['manager_id'] . "', only_in_stock = '" . (int)$data['only_in_stock'] . "', show_in_segments = '" . (int)$data['show_in_segments'] . "' WHERE coupon_id = '" . (int)$coupon_id . "'");
+			$this->db->query("UPDATE coupon SET 
+				name 			= '" . $this->db->escape($data['name']) . "', 
+				code 			= '" . $this->db->escape($data['code']) . "', 
+				promo_type 		= '" . $this->db->escape($data['promo_type']) . "', 
+				discount 		= '" . (float)$data['discount'] . "', 
+				discount_sum 	= '" . $this->db->escape($data['discount_sum']) . "', 
+				currency 		= '" . $this->db->escape($data['currency']) . "', 
+				min_currency 	= '" . $this->db->escape($data['min_currency']) . "', 
+				type 			= '" . $this->db->escape($data['type']) . "', 
+				total 			= '" . (float)$data['total'] . "', 
+				logged 			= '" . (int)$data['logged'] . "', 
+				shipping 		= '" . (int)$data['shipping'] . "', 
+				date_start 		= '" . $this->db->escape($data['date_start']) . "', 
+				date_end 		= '" . $this->db->escape($data['date_end']) . "', 
+				uses_total 		= '" . (int)$data['uses_total'] . "', 
+				uses_customer 	= '" . (int)$data['uses_customer'] . "', 
+				status 			= '" . (int)$data['status'] . "', 
+				birthday 		= '" . (int)$data['birthday'] . "', 
+				days_from_send 	= '" . (int)$data['days_from_send'] . "', 
+				actiontemplate_id 	= '" . (int)$data['actiontemplate_id'] . "', 
+				action_id 			= '" . (int)$data['action_id'] . "', 
+				display_list 		= '" . (int)$data['display_list'] . "', 
+				display_in_account 	= '" . (int)$data['display_in_account'] . "', 
+				manager_id 			= '" . (int)$data['manager_id'] . "', 
+				only_in_stock 		= '" . (int)$data['only_in_stock'] . "', 
+				show_in_segments 	= '" . (int)$data['show_in_segments'] . "',
+				random 				= '" . (int)$data['random'] . "',
+				random_string 		= '" . $this->db->escape($data['random_string']) . "'
+				WHERE coupon_id = '" . (int)$coupon_id . "'");
 			
 			$this->db->query("DELETE FROM coupon_product WHERE coupon_id = '" . (int)$coupon_id . "'");
 			
@@ -106,10 +162,28 @@
 			
 			return $query->row;
 		}
+
+		public function getRandomCouponCount($code){
+			
+		}
 		
 		public function getGoodCouponUsage($code){
-			$query = $this->db->query("SELECT count(ot.order_id) as total FROM `order_total` ot LEFT JOIN `order` o ON (o.order_id = ot.order_id) WHERE code = 'coupon' AND
-			TRIM(ot.title) LIKE ('%" . $this->db->escape(trim($code)) . "%') AND order_status_id = '" . (int)$this->config->get('config_complete_status_id') . "'");
+			$sql = "SELECT count(ot.order_id) as total FROM `order_total` ot 
+				LEFT JOIN `order` o ON (o.order_id = ot.order_id) 
+				WHERE code = 'coupon'";
+
+			if ($coupon_random_struct = $this->couponRandom->getCouponRandomStruct($code)){
+				$sql .= " AND ( ";
+				$sql .= " TRIM(ot.title) LIKE ('%" . $this->db->escape(trim($coupon_random_struct[0])) . "%') ";
+				$sql .= " AND TRIM(ot.title) LIKE ('%" . $this->db->escape(trim($coupon_random_struct[1])) . "%') ";
+				$sql .= " ) ";
+			} else {
+				$sql .= " AND TRIM(ot.title) LIKE ('%" . $this->db->escape(trim($code)) . "%') ";
+			}
+
+			$sql .= " AND order_status_id = '" . (int)$this->config->get('config_complete_status_id') . "'";
+
+			$query = $this->db->query($sql);
 			
 			if ($query->num_rows && isset($query->row['total'])){
 				return $query->row['total'];
@@ -119,8 +193,22 @@
 		}
 		
 		public function getBadCouponUsage($code){
-			$query = $this->db->query("SELECT count(ot.order_id) as total FROM `order_total` ot LEFT JOIN `order` o ON (o.order_id = ot.order_id) WHERE 
-			code = 'coupon' AND TRIM(ot.title) LIKE ('%" . $this->db->escape(trim($code)) . "%') AND order_status_id > 0");
+			$sql = "SELECT count(ot.order_id) as total FROM `order_total` ot 
+				LEFT JOIN `order` o ON (o.order_id = ot.order_id) 
+				WHERE code = 'coupon'";
+
+			if ($coupon_random_struct = $this->couponRandom->getCouponRandomStruct($code)){
+				$sql .= " AND ( ";
+				$sql .= " TRIM(ot.title) LIKE ('%" . $this->db->escape(trim($coupon_random_struct[0])) . "%') ";
+				$sql .= " AND TRIM(ot.title) LIKE ('%" . $this->db->escape(trim($coupon_random_struct[1])) . "%') ";
+				$sql .= " ) ";
+			} else {
+				$sql .= " AND TRIM(ot.title) LIKE ('%" . $this->db->escape(trim($code)) . "%') ";
+			}
+
+			$sql .= " AND order_status_id > 0 ";
+
+			$query = $this->db->query($sql);
 			
 			if ($query->num_rows && isset($query->row['total'])){
 				return $query->row['total'];

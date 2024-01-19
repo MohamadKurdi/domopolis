@@ -169,6 +169,14 @@
 										<td style="width:15%">
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Валюта минимального чека</span>
 										</td>
+
+										<td style="width:15%">
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Случайный</span>
+										</td>
+
+										<td style="width:15%">
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Случайная подстрока</span>
+										</td>
 									</tr>
 									<tr>
 										<td>
@@ -203,6 +211,21 @@
 											<? foreach ($currencies as $c) { ?>
 												<? echo $c['code']; ?>&nbsp;							
 											<? } ?>
+										</td>
+
+										<td>
+											<select name="random">
+												<?php if ($random) { ?>
+													<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+													<option value="0"><?php echo $text_disabled; ?></option>
+													<?php } else { ?>
+													<option value="1"><?php echo $text_enabled; ?></option>
+													<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+												<?php } ?>
+											</select>
+										</td>
+										<td>
+											<input type="text" name="random_string" value="<?php echo $random_string; ?>" />
 										</td>
 											
 									</tr>

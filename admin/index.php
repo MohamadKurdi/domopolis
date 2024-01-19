@@ -1,11 +1,8 @@
 <?php
+define('VERSION', '1.5.6.4');
+header('X-ENGINE-ENTRANCE: INDEX-ADMIN');
 
 ini_set('session.name', ini_get('session.name') . 'A');
-
-define('VERSION', '1.5.6.4');
-define('IS_HTTPS', true);
-define('IS_ADMIN', true);
-header('X-ENGINE-ENTRANCE: INDEX-ADMIN');
 
 require_once(dirname(__FILE__) . '/../system/jsonconfig.php');
 
@@ -74,6 +71,7 @@ require_once(DIR_SYSTEM . 'library/hobotix/CheckBoxUA.php');
 require_once(DIR_SYSTEM . 'library/hobotix/Fiscalisation.php');
 require_once(DIR_SYSTEM . 'library/hobotix/SupplierAdaptor.php');
 require_once(DIR_SYSTEM . 'library/hobotix/QRCodeExtender.php');
+require_once(DIR_SYSTEM . 'library/hobotix/CouponRandom.php');
 
 $registry 	= new Registry();
 $loader 	= new Loader($registry);
@@ -219,6 +217,7 @@ $registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
 $registry->set('checkBoxUA', 		new hobotix\CheckBoxUA($registry));
 $registry->set('Fiscalisation',		new hobotix\Fiscalisation($registry));
 $registry->set('supplierAdaptor',	new hobotix\SupplierAdaptor($registry));
+$registry->set('couponRandom',		new hobotix\CouponRandom($registry));
 
 if (!$registry->get('config')->get('config_enable_amazon_specific_modes')){
 	$registry->set('bypass_rainforest_caches_and_settings', true);

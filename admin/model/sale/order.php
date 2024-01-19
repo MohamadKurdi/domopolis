@@ -4389,12 +4389,16 @@
 			
 		}
 		
-		public function getCouponName($title){
-			
+		public function getCouponName($title){			
 			$coupon_name = explode('(', $title);
 			$coupon_name = $coupon_name[1];
-			return trim(str_replace(')', '', $coupon_name));				
-			
+			$coupon_name = trim(str_replace(')', '', $coupon_name));
+
+			if ($codeRandom = $this->couponRandom->getCouponRandomParent($coupon_name)){
+				$coupon_name = $codeRandom;
+			}				
+
+			return $coupon_name;							
 		}
 		
 		public function getCouponProducts($coupon, $product_ids = array(), $order_id = false, $has_birthday_discount_explicit = false){

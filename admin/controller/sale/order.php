@@ -4383,21 +4383,23 @@
 					$coupon_name = explode('(', $o_total['title']);
 					$coupon_name = isset($coupon_name[1])?$coupon_name[1]:'';
 					$coupon_name = trim(str_replace(')', '', $coupon_name));
-					$order_has_coupon = $coupon_name;
-					
+					$order_has_coupon = $coupon_name;					
 					
 					break;
 				}
 			}
+
+			if ($codeRandom = $this->couponRandom->getCouponRandomParent($order_has_coupon)){
+				$order_has_coupon = $codeRandom;
+			}
+				
 			
 			if ($order_has_coupon){									
-				$coupon_active_products = $this->model_sale_order->getCouponProducts($order_has_coupon, $just_product_ids, $this->request->get['order_id']);	
-				
+				$coupon_active_products = $this->model_sale_order->getCouponProducts($order_has_coupon, $just_product_ids, $this->request->get['order_id']);					
 				$coupon_query = $this->db->query("SELECT * FROM `coupon` WHERE code = '" . $this->db->escape($order_has_coupon) . "'");
 				
 				$this->data['order_has_coupon'] = $coupon_query->row;
-				
-				
+
 				$coupon_active_query = $this->db->query("SELECT * FROM `coupon` WHERE code = '" . $this->db->escape($order_has_coupon) . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) AND status = '1'");			
 				$this->data['order_has_coupon_is_active'] = ($coupon_active_query->num_rows);
 				

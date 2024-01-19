@@ -199,6 +199,8 @@
 				'type'       				=> $result['type'],
 				'currency'       			=> $result['currency'],
 				'code'       				=> $result['code'],
+				'random'       				=> $result['random'],
+				'random_count' 				=> $result['random']?$this->couponRandom->getCouponRandomCount($result['code']):0,
 				'birthday'       			=> $result['birthday'],
 				'only_in_stock'       		=> $result['only_in_stock'],
 				'days_from_send'       		=> $result['days_from_send'],
@@ -434,6 +436,22 @@
 				$this->data['code'] = $coupon_info['code'];
 				} else {
 				$this->data['code'] = '';
+			}
+
+			if (isset($this->request->post['random'])) {
+				$this->data['random'] = $this->request->post['random'];
+				} elseif (!empty($coupon_info)) {
+				$this->data['random'] = $coupon_info['random'];
+				} else {
+				$this->data['random'] = '';
+			}
+
+			if (isset($this->request->post['random_string'])) {
+				$this->data['random_string'] = $this->request->post['random_string'];
+				} elseif (!empty($coupon_info)) {
+				$this->data['random_string'] = $coupon_info['random_string'];
+				} else {
+				$this->data['random_string'] = '';
 			}
 			
 			if (isset($this->request->post['promo_type'])) {
