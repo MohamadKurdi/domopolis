@@ -163,10 +163,6 @@
 			return $query->row;
 		}
 
-		public function getRandomCouponCount($code){
-			
-		}
-		
 		public function getGoodCouponUsage($code){
 			$sql = "SELECT count(ot.order_id) as total FROM `order_total` ot 
 				LEFT JOIN `order` o ON (o.order_id = ot.order_id) 
