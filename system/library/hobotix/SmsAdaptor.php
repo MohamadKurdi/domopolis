@@ -324,7 +324,7 @@ class SmsAdaptor {
 			'{FIRSTNAME}'		=> $forgotten_cart['firstname'], 
 			'{LASTNAME}' 		=> $forgotten_cart['lastname'],
 			'{PRODUCT}' 		=> $forgotten_cart['product'],
-			'{PROMOCODE}'   	=> $this->config->get('config_forgottencart_promocode_' . $iteration)
+			'{PROMOCODE}'   	=> $forgotten_cart['promocode']
 		];
 
 		if ($this->config->get('config_viber_forgottencart_enabled_' . $iteration)){

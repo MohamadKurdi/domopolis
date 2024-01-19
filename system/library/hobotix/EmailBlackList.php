@@ -208,8 +208,6 @@
 				}
 			}
 
-
-
 			return true;
 		}
 		
@@ -233,6 +231,20 @@
 			}
 			
 			
+			return true;
+		}
+
+
+		public function checkSubscription($email, $field){
+			if (!$this->check($email)){
+				return false;
+			}
+
+			$query = $this->db->query("SELECT `" . $this->db->escape($field) . "` FROM customer WHERE email LIKE '" . $this->db->escape($email) . "'");
+			if ($query->num_rows && $query->row[$field] == 0){
+				return false;
+			}
+
 			return true;
 		}
 		
