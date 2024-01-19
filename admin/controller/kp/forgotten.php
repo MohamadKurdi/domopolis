@@ -1,63 +1,7 @@
 <?
 
 class ControllerKPForgotten extends Controller {
-	private $error = [];
-	private $json = '{
-  "simple70314": {
-    "cart_id": "70314",
-    "date_added": "2024-01-18 13:10:57",
-    "customer_id": "1555032",
-    "telephone": "+38(063)270-88-81",
-    "email": "v.zaichikov@gmail.com",
-    "firstname": "Віктор",
-    "lastname": "Зайчиков",
-    "type": "simple",
-    "products": [
-      {
-        "product_id": "2429912",
-        "name": "Маслянка для вершкового масла, набір 2 предмета Royal Villeroy &amp; Boch",
-        "model": "1044121860",
-        "quantity": 1,
-        "price": "2745"
-      },
-      {
-        "product_id": "2509992",
-        "name": "Піала 14,5 см Toys Delight Royal Classic Villeroy &amp; Boch",
-        "model": "1486581900",
-        "quantity": 6,
-        "price": "1445"
-      }
-    ],
-    "total": 0
-  },
-  "simple70312": {
-    "cart_id": "70312",
-    "date_added": "2024-01-18 12:55:10",
-    "customer_id": "0",
-    "telephone": "+380 93 997 00 68",
-    "email": "",
-    "firstname": "Наталья Лысенко",
-    "lastname": "",
-    "type": "simple",
-    "products": [
-      {
-        "product_id": "2429912",
-        "name": "Маслянка для вершкового масла, набір 2 предмета Royal Villeroy &amp; Boch",
-        "model": "1044121860",
-        "quantity": 1,
-        "price": "2745"
-      },
-      {
-        "product_id": "2509992",
-        "name": "Піала 14,5 см Toys Delight Royal Classic Villeroy &amp; Boch",
-        "model": "1486581900",
-        "quantity": 6,
-        "price": "1445"
-      }
-    ],
-    "total": 0
-  }
-}';
+	private $log = null;	
 
 	public function __construct($registry){
 		parent::__construct($registry);
@@ -67,6 +11,8 @@ class ControllerKPForgotten extends Controller {
 		$this->load->model('tool/image');
 		$this->load->model('catalog/actiontemplate');
 		$this->load->model('catalog/actiontemplate_functions');
+
+		$this->log = new \Log('forgotten-cart-reminders.log');
 	}
 
 	private function updateReminder($cart){
@@ -147,6 +93,7 @@ class ControllerKPForgotten extends Controller {
 			'date_added'	=> $cart['date_added'],
 			'customer_id'	=> $cart['customer_id'],
 			'telephone'		=> $cart['telephone'],
+			'store_id'		=> $cart['store_id'],
 			'email'			=> null,
 			'firstname'		=> $cart['firstname'],
 			'lastname'		=> $cart['lastname'],
@@ -155,7 +102,7 @@ class ControllerKPForgotten extends Controller {
 			'total' 		=> 0,			
 		];
 
-		if (!$this->emailBlackList->native($cart['email'])){
+		if ($cart['email'] && !$this->emailBlackList->native($cart['email']) && $this->emailBlackList->checkSubscription($cart['email'], 'newsletter_personal')){
 			$result['email'] = $cart['email'];
 		}
 
@@ -169,22 +116,31 @@ class ControllerKPForgotten extends Controller {
 		}
 
 		foreach ($products as $product){
+			$product_info = $this->model_catalog_product->getProduct($product['product_id']);
+
+			$price = (!empty($product['price_national'])?$product['price_national']:extractNumeric($product['price']));
+			$price = $this->currency->format($price, $this->config->get('config_regional_currency'), 1);
+
 			$result['products'][] = [
 				'product_id' 	=> $product['product_id'],
-				'name' 			=> $product['name'],
+				'name' 			=> normalizeForGoogleV2($product['name']),
 				'model'			=> $product['model'],
 				'quantity'		=> $product['quantity'],
+				'image'			=> $this->model_tool_image->resize($product_info['image'], 250, 250),
 				'href' 			=> $this->url->frontlink('product/product', 'product_id=' . $product['product_id']),
-				'price'			=> (!empty($product['price_national'])?$product['price_national']:extractNumeric($product['price']))
+				'price'			=> $price
 			];
 		}
-		
+
 		$result['products'] = array_slice($result['products'], 0, 3);
 
 		return $result;
 	}
 
 	private function sendCart($cart, $iteration){
+		if (($cart['telephone'] && $this->config->get('config_forgottencart_sms_enable_' . $iteration)) || ($cart['email'] && $this->config->get('config_forgottencart_email_enable_' . $iteration))){	
+				$cart['coupon'] = $this->couponRandom->getCouponRandom($this->config->get('config_forgottencart_promocode_' . $iteration));
+		}
 
 		if ($cart['telephone'] && $this->config->get('config_forgottencart_sms_enable_' . $iteration)){			
 			$data['iteration'] = $iteration;
@@ -195,43 +151,82 @@ class ControllerKPForgotten extends Controller {
 			$forgotten_cart['telephone'] 	= $cart['telephone'];
 			$forgotten_cart['firstname'] 	= $cart['firstname'];
 			$forgotten_cart['lastname'] 	= $cart['lastname'];
+			$forgotten_cart['promocode']  = $cart['coupon'];
 
 			$forgotten_cart['product'] 		= '';
 
 			foreach ($cart['products'] as $product){
-				$forgotten_cart['product'] .= normalizeForGoogleV2($product['name']);
-				$forgotten_cart['product'] .= '( ' . $this->currency->format($product['price'], $this->config->get('config_regional_currency'), 1) . ')';
+				$forgotten_cart['product'] .= $product['name'];
+				$forgotten_cart['product'] .= '( ' . $product['price'] . ')';
 				$forgotten_cart['product'] .= PHP_EOL;
 			}
 
 			if ($this->config->get('config_viber_forgottencart_' . $iteration . '_image_product')){
 				if ($this->config->get('config_viber_forgottencart_' . $iteration . '_image_product_if_single')){
 					if (count($cart['products']) == 1){
-						$product = $this->model_catalog_product->getProduct($cart['products'][0]['product_id']);
-						if ($product && $product['image']){
-							$forgotten_cart['product_image'] = $this->model_tool_image->resize($product['image'], 250, 250);
-						}
+						$forgotten_cart['product_image'] = $cart['products'][0]['image'];						
 					}
 				} else {
 					$product = $this->model_catalog_product->getProduct($cart['products'][0]['product_id']);
 					if ($product && $product['image']){
-						$forgotten_cart['product_image'] = $this->model_tool_image->resize($product['image'], 250, 250);
+						$forgotten_cart['product_image'] = $cart['products'][0]['image'];	
 					}
 				}
 			}
 
-			echoLine('[ControllerKPForgotten::cron] Sending SMS/Viber reminder to ' . $cart['telephone'], 'i');
+			echoLine('[ControllerKPForgotten::sendCart] Sending SMS/Viber reminder to ' . $cart['telephone'], 'i');
+			$this->log->write('[ControllerKPForgotten::sendCart] Sent to phone: ' . json_encode($forgotten_cart));
 
 			$this->smsAdaptor->sendSMSForgottenCartPromo($forgotten_cart, $data);
-			//$this->updateReminder($cart);
+			$this->updateReminder($cart);
 		}
 
 		if ($cart['email'] && $this->config->get('config_forgottencart_email_enable_' . $iteration)){	
+			$this->load->model('catalog/actiontemplate');
+			$actionTemplate = $this->model_catalog_actiontemplate->getActionTemplate($this->config->get('config_forgottencart_email_actiontemplate_' . $iteration));
+
+			if (!empty($actionTemplate['file_template'])){
+				$this->template = 'sale/actiontemplates/' . $actionTemplate['file_template'] . '.tpl';
+			} else {
+				$this->template = $actionTemplate['description'];
+			}
+
+			$this->log->write('[ControllerKPForgotten::sendCart] Sent to mail: ' . json_encode($cart));
+
+			$this->data = $cart;			
+			$cart['html'] = $this->render();
+
+			if ($this->config->get('config_forgottencart_email_actiontemplate_tracking_code_' .  $iteration)){
+				$cart['html'] = addTrackingToHTML($cart['html'], $this->config->get('config_forgottencart_email_actiontemplate_tracking_code_' .  $iteration));
+			}
+
+			$mail_info = [
+				'mail_from' 		=> $this->config->get('config_mail_trigger_name_from'),
+				'mail_from_email' 	=> $this->config->get('config_mail_trigger_mail_from'),
+				'mail_to' 			=> trim($cart['firstname'] . ' ' . $cart['lastname']),
+				'mail_to_email' 	=> $cart['email'],
+				'store_id'    		=> $cart['store_id'],
+				'customer_id'    	=> $cart['customer_id'],
+				'template_id'    	=> (int)$this->config->get('config_forgottencart_email_actiontemplate_' . $iteration)
+			];
+
+			$data = array_merge($cart, $actionTemplate, $mail_info);	
+
+			echoLine('[ControllerKPForgotten::sendCart] Sending Email reminder to ' . $cart['email'], 'i');
+
+			$mail = new Mail($this->registry); 
+			$mail->setProtocol($this->config->get('config_mail_protocol'));
+			$mail->setEmailTemplate(new EmailTemplate($this->request, $this->registry));
+			$mail->setFrom($this->config->get('config_mail_trigger_mail_from'));
+			$mail->setSender($this->config->get('config_mail_trigger_name_from'));
+			$mail->setIsMarketing(true);
+			$mail->setSubject($actionTemplate['seo_title']);
+			$mail->setTo($cart['email']);
+			$mail->setHTML($cart['html']);
+			$transmission_id = $mail->send(true, $data, true);
 
 
-
-
-			//$this->updateReminder($cart);
+			$this->updateReminder($cart);
 		}
 	}
 
@@ -312,13 +307,10 @@ class ControllerKPForgotten extends Controller {
 				$carts = $this->uniqueCarts($carts);
 
 				echoLine('[ControllerKPForgotten::cron] After checking for uniqueness we have ' . count($carts) . ' carts', 'i');
-
-				$carts = json_decode($this->json, true);
+				
 				foreach ($carts as $cart){
-				//	$this->sendCart($cart, $iteration);
+					$this->sendCart($cart, $iteration);
 				}
-
-				die();
 
 			} else {
 				echoLine('[ControllerKPForgotten::cron] iteration ' . $iteration . ' is disabled!', 'e');
