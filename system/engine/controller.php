@@ -179,7 +179,7 @@
 				print "<br />";
 			}
 			
-			if (!defined('IS_ADMIN')){		
+			if (!defined('IS_ADMIN')){				
 				if (stripos($this->template, $this->config->get('config_template')) === 0){
 					$this->template = substr($this->template, mb_strlen($this->config->get('config_template')));
 				}
@@ -221,8 +221,7 @@
 				if (IS_HTTPS && defined('THIS_IS_CATALOG')){
 					$this->output = str_ireplace('http://', 'https://', $this->output);
 				}
-				
-				
+								
 				return $this->output;
 				} else {
 				return '[' . $this->template . '] DOESNT EXIST';

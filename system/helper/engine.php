@@ -62,12 +62,28 @@ function reparseCartProductsByStock($products){
 	return $results;
 }
 
+function checkUniqueCoupon($coupon){
+	return mb_stripos($coupon, '-%UNIQUE%-');
+}
+
+function formatUniqueCoupon($coupon, $string){
+	$unique = mb_substr(md5($string), 0, 4);
+
+	return str_replace('-%UNIQUE%-', ('-' . $unique . '-'), $coupon);
+}
+
+function recoverUniqueCoupon($coupon, $string){
+	$unique = mb_substr(md5($string), 0, 4);
+
+	return str_replace(('-' . $unique . '-'), '-%UNIQUE%-', $coupon);
+}
+
 function addTrackingToHTML($html, $tracking){
 	libxml_use_internal_errors(true);
 
 	$doc = new DOMDocument();
 	$doc->encoding = 'UTF-8';
-	$doc->loadHTML($html);
+	$doc->loadHTML('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">' . $html);
 
 	$anchors = $doc->getElementsByTagName('a');
 	foreach ($anchors as $anchor) {
@@ -263,6 +279,15 @@ function generateRandomEmail($host, $user = 'guest'){
 	$host = parse_url($host, PHP_URL_HOST);
 
 	return $user . microtime(true) . '@' . $host;
+}
+
+function generateRandomUppercaseString($length = 4) {
+	$characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	$randomString = '';
+	for ($i = 0; $i < $length; $i++) {
+		$randomString .= $characters[rand(0, strlen($characters) - 1)];
+	}
+	return $randomString;
 }
 
 function generateRandomString($length = 50) {
