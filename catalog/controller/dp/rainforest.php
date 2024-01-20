@@ -1319,7 +1319,7 @@ class ControllerDPRainForest extends Controller {
 		$categories = $this->rainforestAmazon->productsRetriever->model_product_get->getCategoriesToReprice();
 		echoLine('[ControllerDPRainForest::reprice] Have ' . count($categories) . ' to reprice', 'i');
 
-		foreach ($categories as $category_id){
+		foreach ($categories as $category_id => $reprice_logic){
 			echoLine('[ControllerDPRainForest::reprice] Working with ' . $category_id . ', repricing', 'i');
 
 			$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFastPriceFullForCategory($category_id);		
