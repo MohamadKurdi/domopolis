@@ -13,17 +13,31 @@
 					</tr>
 					<tr>
 						<td>
-							<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Следующая цена</span>																								
+							<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Следующая цена</span>																							
 						</td>
 						<td>
 							<input type="text" name="price_delayed" value="<?php echo $price_delayed; ?>" />&nbsp;<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><? echo $this->config->get('config_currency'); ?></span>	
-
 							<span class="help">Будет назначена при переформировании гугл-фидов</span>			
 						</td>									
-					</tr>																						
+					</tr>	
+					<tr <?php if (!$this->config->get('config_single_special_price')) { ?>style="display:none;"<? } ?>>
+						<td><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Общая скидочная цена</span></td>
+						<td>
+							<input type="text" name="price_special" value="<?php echo $price_special; ?>" />&nbsp;<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><? echo $this->config->get('config_currency'); ?></span>				
+						</td>									
+					</tr>
+					<tr <?php if (!$this->config->get('config_single_special_price')) { ?>style="display:none;"<? } ?>>
+						<td>
+							<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Следующая скидочна цена</span>																							
+						</td>
+						<td>
+							<input type="text" name="price_special_delayed" value="<?php echo $price_special_delayed; ?>" />&nbsp;<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><? echo $this->config->get('config_currency'); ?></span>	
+							<span class="help">Будет назначена при переформировании гугл-фидов</span>			
+						</td>									
+					</tr>
 					<tr>
 						<td>
-							<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Себестоимость</span>																								
+							<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Себестоимость</span>																							
 						</td>
 						<td>
 							<input type="text" name="costprice" value="<?php echo $costprice; ?>" />&nbsp;<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><? echo $this->config->get('config_currency'); ?></span>	

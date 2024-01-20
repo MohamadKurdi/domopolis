@@ -1008,7 +1008,19 @@
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">ID категории товаров со скидками</span></p>
 						<input type="number" name="config_special_category_id" value="<?php echo $config_special_category_id; ?>" size="50" style="width:90px;" />
 					</div>
-
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Единая логика скидок</span></p>
+						<select name="config_single_special_price">
+						<?php if ($config_single_special_price) { ?>
+							<option value="1" selected="selected">Включить</option>
+							<option value="0">Отключить</option>
+						<?php } else { ?>													
+							<option value="1">Включить</option>
+							<option value="0"  selected="selected">Отключить</option>
+						<? } ?>
+						<br />
+						<span class="help">если включено, то используются поля price_special из таблички товаров</span>
+					</div>
 				</td>
 			</tr>						
 		</table>

@@ -45,6 +45,9 @@ class ModelCatalogCategory extends Model {
 			overload_max_multiplier 			= '" . (float)$data['overload_max_multiplier'] . "', 
 			overload_ignore_volumetric_weight 	= '" . (float)$data['overload_ignore_volumetric_weight'] . "',
 			need_reprice 						= '" . (int)$data['need_reprice'] . "',
+			need_special_reprice 				= '" . (int)$data['need_special_reprice'] . "',
+			special_reprice_plus 				= '" . (int)$data['special_reprice_plus'] . "',
+			special_reprice_minus 				= '" . (int)$data['special_reprice_minus'] . "',
 			last_reprice 						= '" . $this->db->escape($data['last_reprice']) . "',
 			date_modified 			= NOW(), 
 			date_added 				= NOW()");
@@ -205,6 +208,9 @@ class ModelCatalogCategory extends Model {
 			overload_max_multiplier 			= '" . (float)$data['overload_max_multiplier'] . "',
 			overload_ignore_volumetric_weight 	= '" . (float)$data['overload_ignore_volumetric_weight'] . "',
 			need_reprice 						= '" . (int)$data['need_reprice'] . "',
+			need_special_reprice 				= '" . (int)$data['need_special_reprice'] . "',
+			special_reprice_plus 				= '" . (int)$data['special_reprice_plus'] . "',
+			special_reprice_minus 				= '" . (int)$data['special_reprice_minus'] . "',
 			last_reprice 						= '" . $this->db->escape($data['last_reprice']) . "',
 			date_modified = NOW() 
 			WHERE

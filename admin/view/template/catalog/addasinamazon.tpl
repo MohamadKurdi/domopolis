@@ -93,7 +93,7 @@
                                 <option value="average_review">По рейтингу</option>
                                 <option value="most_recent">Новинки  сначала</option>
                             </select>
-                            <span class="help">только для category_id</span>
+                            <span class="help">работает не со всеми типами</span>
                         </div>
                     </td>
                     <td style="width:10%">
