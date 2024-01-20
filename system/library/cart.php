@@ -353,8 +353,18 @@
 
 								if ($product_special_query->row['currency_scode'] && $product_special_query->row['currency_scode'] != $this->config->get('config_currency')){
 									$special = $this->currency->convert($special, $product_special_query->row['currency_scode'], $this->config->get('config_currency'), false, false);
-								}
+								}								
 
+								$points = ($product_special_query->row['points_special'] > 0) ? $product_special_query->row['points_special'] : $points;
+							}
+
+							if ($this->config->get('config_single_special_price')){
+								if (!$special && (float)$product_query->row['price_special'] > 0){
+									$special = $product_query->row['price_special'];
+								}
+							}
+
+							if ($special){
 								$special_tmp = false;
 								if ($this->currency->percent){						
 									if ($this->currency->plus){
@@ -380,8 +390,6 @@
 										$price = $special;							
 									}	
 								}
-
-								$points = ($product_special_query->row['points_special'] > 0) ? $product_special_query->row['points_special'] : $points;
 							}
 						}
 						
