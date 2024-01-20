@@ -85,6 +85,8 @@ $_['column_amazon_best_price']	= 'Цена<i class="fa fa-amazon"></i>';
 $_['column_costprice']	= 'Себестоимость';
 $_['column_amzn_offers_count']	= 'Офферов<i class="fa fa-amazon"></i>';
 $_['column_fill_from_amazon'] 	= 'Загружать<i class="fa fa-amazon"></i>';
+$_['column_amazon_offers_type'] 	= 'Офферы';
+$_['column_amazon_seller_quality'] 	= 'Качество';
 $_['column_product_offers_count'] 	= 'Заказов';
 $_['column_product_warehouse_count'] 	= 'Склад';
 $_['column_tag']                = 'Product Tags';
