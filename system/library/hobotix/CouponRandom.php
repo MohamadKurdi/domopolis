@@ -57,7 +57,7 @@
 		}
 
 		public function getCouponRandomUsage($coupon){
-			$query = $this->db->query("SELECT COUNT(order_id) as total FROM order_total WHERE code = 'coupon' AND title LIKE ('%" . $this->db->escape($coupon) . "%')");
+			$query = $this->db->query("SELECT COUNT(DISTINCT ot.order_id) as total FROM order_total ot LEFT JOIN `order` o ON (o.order_id = ot.order_id) WHERE o.order_status_id > 0 AND ot.code = 'coupon' AND ot.title LIKE ('%" . $this->db->escape($coupon) . "%')");
 
 			return $query->row['total'];
 		}
