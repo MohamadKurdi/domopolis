@@ -55,11 +55,11 @@ class ControllerKPAmazon extends Controller {
 				'type' 			=> $type, 		
 				'search_term' 	=> $search_term,
 				'page' 			=> $page,
-				'sort' 			=> $sort
+				'sort_by' 		=> $sort
 			];
 
 			if ($sort != 'amazon'){
-				$options['sort'] = $sort;
+				$options['sort_by'] = $sort;
 			}
 
 		} elseif (!empty($url)){
@@ -76,7 +76,7 @@ class ControllerKPAmazon extends Controller {
 			];
 
 			if ($sort != 'amazon'){
-				$options['sort'] = $sort;
+				$options['sort_by'] = $sort;
 			}
 		}
 
