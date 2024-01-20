@@ -1697,6 +1697,22 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['price_delayed'] = '';
 		}
 
+		if (isset($this->request->post['price_special'])) {
+			$this->data['price_special'] = $this->request->post['price_special'];
+		} elseif (!empty($product_info)) {
+			$this->data['price_special'] = $product_info['price_special'];
+		} else {
+			$this->data['price_special'] = '';
+		}
+
+		if (isset($this->request->post['price_special_delayed'])) {
+			$this->data['price_special_delayed'] = $this->request->post['price_special_delayed'];
+		} elseif (!empty($product_info)) {
+			$this->data['price_special_delayed'] = $product_info['price_special_delayed'];
+		} else {
+			$this->data['price_special_delayed'] = '';
+		}
+
 		if (isset($this->request->post['mpp_price'])) {
 			$this->data['mpp_price'] = $this->request->post['mpp_price'];
 		} elseif (!empty($product_info)) {

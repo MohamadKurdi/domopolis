@@ -411,13 +411,18 @@ class ControllerCatalogProductExt extends Controller {
             $image = $this->model_tool_image->resize($result['image'], 40, 40);
 
             $special = false;
-
             $product_specials = $this->model_catalog_product->getProductSpecials($result['product_id']);
             foreach ($product_specials  as $product_special) {
                 if (($product_special['date_start'] == '0000-00-00' || $product_special['date_start'] < date('Y-m-d')) && ($product_special['date_end'] == '0000-00-00' || $product_special['date_end'] > date('Y-m-d'))) {
                     $special = round($product_special['price'], 2);
 
                     break;
+                }
+            }
+
+            if ($this->config->get('config_single_special_price')){
+                if (!$special && (float)$result['price_special']){
+                    $special = $result['price_special'];
                 }
             }
 

@@ -767,6 +767,38 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['need_reprice'] = '';
 		}
 
+		if (isset($this->request->post['need_reprice'])) {
+			$this->data['need_reprice'] = $this->request->post['need_reprice'];
+		} elseif (!empty($category_info)) {
+			$this->data['need_reprice'] = $category_info['need_reprice'];
+		} else {
+			$this->data['need_reprice'] = '';
+		}
+
+		if (isset($this->request->post['need_special_reprice'])) {
+			$this->data['need_special_reprice'] = $this->request->post['need_special_reprice'];
+		} elseif (!empty($category_info)) {
+			$this->data['need_special_reprice'] = $category_info['need_special_reprice'];
+		} else {
+			$this->data['need_special_reprice'] = '';
+		}
+
+		if (isset($this->request->post['special_reprice_plus'])) {
+			$this->data['special_reprice_plus'] = $this->request->post['special_reprice_plus'];
+		} elseif (!empty($category_info)) {
+			$this->data['special_reprice_plus'] = $category_info['special_reprice_plus'];
+		} else {
+			$this->data['special_reprice_plus'] = '';
+		}
+
+		if (isset($this->request->post['special_reprice_minus'])) {
+			$this->data['special_reprice_minus'] = $this->request->post['special_reprice_minus'];
+		} elseif (!empty($category_info)) {
+			$this->data['special_reprice_minus'] = $category_info['special_reprice_minus'];
+		} else {
+			$this->data['special_reprice_minus'] = '';
+		}
+
 		if (isset($this->request->post['last_reprice'])) {
 			$this->data['last_reprice'] = $this->request->post['last_reprice'];
 		} elseif (!empty($category_info)) {
