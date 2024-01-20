@@ -83,8 +83,7 @@
 			return $result;
 		}
 		
-		public function recalculateCouponPrice($product_info, $coupon_info){
-			
+		public function recalculateCouponPrice($product_info, $coupon_info){			
 			if (!$this->config->get('coupon_status')){
 				return false;
 			}
@@ -512,8 +511,7 @@
 					$has_rrp = false;
 					if (!empty($query->row['store_overload_price_national'])) {
 						$query->row['price'] = $this->currency->convert($query->row['store_overload_price_national'],
-						$this->config->get('config_regional_currency'), $this->config->get('config_currency'),
-						false, false);
+						$this->config->get('config_regional_currency'), $this->config->get('config_currency'), false, false);
 						$overload_price_national = $query->row['price'];
 						$do_percent = false;
 						$has_rrp = true;
@@ -534,15 +532,19 @@
 						$display_price_national = false;
 						$price_national = false;
 					}
-					
-					if ($query->row['special'] && isset($query->row['special_currency']) && $query->row['special_currency']){
-						if ($query->row['special_currency'] != $this->config->get('config_currency')){
-							$query->row['special'] = $this->currency->convert($query->row['special'],
-							$query->row['special_currency'], $this->config->get('config_currency'),
-							false, false);						
+
+					if ($this->config->get('config_single_special_price')){
+						if (!$query->row['special'] && (float)$query->row['price_special']){
+							$query->row['special'] = $query->row['price_special'];
 						}
 					}
 					
+					if ($query->row['special'] && isset($query->row['special_currency']) && $query->row['special_currency']){
+						if ($query->row['special_currency'] != $this->config->get('config_currency')){
+							$query->row['special'] = $this->currency->convert($query->row['special'], $query->row['special_currency'], $this->config->get('config_currency'), false, false);						
+						}
+					}
+
 					$special = $this->model_catalog_group_price->updatePrice($product_id, $query->row['special']);					
 					if ($this->currency->percent) {
 						if ($this->currency->plus) {
@@ -556,7 +558,6 @@
 								$price_opt = $price_opt - ($price_opt / 100 * (int)$this->currency->percent);
 								$special = $special - ($special / 100 * (int)$this->currency->percent);
 							}
-							
 						}
 					}
 
@@ -1136,6 +1137,10 @@
 					}
 				}
 			}
+
+			if (!empty($data['filter_has_special']) && $this->config->get('config_single_special_price')){
+				$sql .= " AND (p.product_id IN (SELECT product_id FROM product_special ps WHERE ps.price < p.price AND ps.price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (store_id = '" . (int)$this->config->get('config_store_id') . "' OR store_id = -1)) AND p.stock_status_id <> '" . (int)$this->config->get('config_not_in_stock_status_id') . "' AND p.quantity > 0) OR p.price_special > 0";
+			}
 			
 			if (!empty($data['filter_category_id']) && $this->config->get('config_special_category_id') && (int)$data['filter_category_id'] == (int)$this->config->get('config_special_category_id')) {
 				$sql .= " AND p.product_id IN (SELECT product_id FROM product_special ps WHERE ps.price < p.price AND ps.price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (store_id = '" . (int)$this->config->get('config_store_id') . "' OR store_id = -1)) AND p.stock_status_id <> '" . (int)$this->config->get('config_not_in_stock_status_id') . "' AND p.quantity > 0";
@@ -1533,6 +1538,11 @@
 			if (!isset($data['no_child'])) {
 				$data['no_child'] = false;
 			}
+
+			if ($this->config->get('config_single_special_price')){
+				$data['filter_has_special'] = true;
+				return $this->getProducts($data);
+			}
 			
 			$sql = "SELECT DISTINCT ps.product_id, p.points_only_purchase, ps.price,
 			(IF((p.quantity_stock + p.quantity_stockK + p.quantity_stockM + p.quantity_stockMN + p.quantity_stockAS) > 0, 
@@ -1547,8 +1557,8 @@
 			LEFT JOIN product_to_category p2c ON (p2c.product_id = ps.product_id) 
 			LEFT JOIN category_path cp ON (cp.category_id = p2c.category_id) 
 			WHERE p.status = '1' 
-			AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) 
-			AND (p2s.store_id = '" . (int)$this->config->get('config_store_id') . "')
+			AND (ps.store_id 	= '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) 
+			AND (p2s.store_id 	= '" . (int)$this->config->get('config_store_id') . "')
 			AND (pd.language_id = '" . (int)$this->config->get('config_language_id') . "')";
 
 			if ($this->config->get('config_no_zeroprice')){
@@ -2698,6 +2708,10 @@
 					$sql .= " AND pf.filter_id IN (" . implode(',', $implode) . ")";
 				}
 			}
+
+			if (!empty($data['filter_has_special']) && $this->config->get('config_single_special_price')){
+				$sql .= " AND (p.product_id IN (SELECT product_id FROM product_special ps WHERE ps.price < p.price AND ps.price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (store_id = '" . (int)$this->config->get('config_store_id') . "' OR store_id = -1)) AND p.stock_status_id <> '" . (int)$this->config->get('config_not_in_stock_status_id') . "' AND p.quantity > 0) OR p.price_special > 0";
+			}
 			
 			if (!empty($data['filter_category_id']) && $this->config->get('config_special_category_id') && (int)$data['filter_category_id'] == (int)$this->config->get('config_special_category_id')) {
 				$sql .= " AND p.product_id IN (SELECT product_id FROM product_special ps WHERE ps.price < p.price AND ps.price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (store_id = '" . (int)$this->config->get('config_store_id') . "' OR store_id = -1)) AND p.stock_status_id <> '" . (int)$this->config->get('config_not_in_stock_status_id') . "' AND p.quantity > 0";
@@ -2779,8 +2793,7 @@
 			if (!empty($data['filter_category_id_intersect'])) {				
 				if (is_array($filter_category_id_intersect = explode(':', $data['filter_category_id_intersect']))){
 					$filter_category_id_intersect = array_map('intval', $filter_category_id_intersect);
-				}
-				
+				}				
 				
 				if (!empty($filter_category_id_intersect)){
 					if (!empty($data['filter_sub_category_intersect'])) {
@@ -3240,6 +3253,11 @@
 			
 			if (!isset($data['no_child'])) {
 				$data['no_child'] = false;
+			}
+
+			if ($this->config->get('config_single_special_price')){
+				$data['filter_has_special'] = true;
+				return $this->getTotalProducts($data);
 			}
 			
 			$sql = "SELECT COUNT(DISTINCT ps.product_id) AS total FROM product_special ps 
