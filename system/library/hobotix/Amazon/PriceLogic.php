@@ -24,6 +24,7 @@ class PriceLogic
 	private $formulaOverloadData 			= [];
 	private $categoriesOverPriceRules		= [];
 	private $categoriesOverloadRules		= [];
+	private $currentCategoryRepiceLogic 	= [];	
 
 	private $costDividerSymbol 				= ':COSTDVDR:';
 
@@ -146,8 +147,20 @@ class PriceLogic
 		return $this;
 	}
 
-	private function setStoreSettings(){		
+	private function setCurrentCategoryRepiceLogic($reprice_logic){
+		$this->currentCategoryRepiceLogic = [
+			'need_reprice' 				=> $reprice_logic['need_reprice'],
+			'need_special_reprice' 		=> $reprice_logic['need_special_reprice'],
+			'special_reprice_plus' 		=> $reprice_logic['special_reprice_plus'],
+			'special_reprice_minus' 	=> $reprice_logic['special_reprice_minus']
+		];
+	}
 
+	private function getCurrentCategoryRepiceLogic($key){
+		return $this->currentCategoryRepiceLogic[$key];
+	}
+
+	private function setStoreSettings(){		
 		$implode = [];
 		foreach ($this->storesSettingsFields as $field){
 			$implode[] = "`key` = '" . $field . "'";
@@ -635,6 +648,9 @@ class PriceLogic
 			$this->db->query("UPDATE product SET price = price_delayed WHERE price_delayed > 0");			
 			$this->db->query("UPDATE product SET price_delayed = 0 WHERE price_delayed > 0");		
 
+			$this->db->query("UPDATE product SET price_special = price_special_delayed WHERE price_special_delayed > 0");			
+			$this->db->query("UPDATE product SET price_special_delayed = 0 WHERE price_special_delayed > 0");	
+
 			$this->updateProfitability();	
 
 			$this->db->query("UPDATE product_price_to_store SET price = price_delayed WHERE price_delayed > 0");	
@@ -662,6 +678,28 @@ class PriceLogic
 			price 				= '" . (float)$price . "' 
 			WHERE product_id 	= '" . (int)$product_id . "' 
 			AND price = 0
+			AND is_markdown 	= 0");
+
+		$this->updateProfitability($product_id);
+
+		$this->priceUpdaterQueue->addToQueue($product_id);
+	}	
+
+	public function updateProductSpecialInDatabase($product_id, $special){
+		$field = 'price_special';
+		if ($this->config->get('config_rainforest_delay_price_setting')){
+			$field = 'price_special_delayed';
+		}
+
+		$this->db->query("UPDATE product SET 
+			" . $field . " 		= '" . (float)$special . "' 
+			WHERE product_id 	= '" . (int)$product_id . "' 
+			AND is_markdown 	= 0");
+
+		$this->db->query("UPDATE product SET 
+			price_special 		= '" . (float)$special . "' 
+			WHERE product_id 	= '" . (int)$product_id . "' 
+			AND price_special 	= 0
 			AND is_markdown 	= 0");
 
 		$this->updateProfitability($product_id);
@@ -920,7 +958,6 @@ class PriceLogic
 		];
 
 		if ($this->config->get('config_rainforest_enable_pricing')){
-
 			if ($explicit){
 				$products = $this->getProductsByAsinExplicit($asin);
 			} else {
@@ -1140,7 +1177,6 @@ class PriceLogic
 		1. Наличие уточняйте, если для товара нет предложений на амазон и включена настройка "менять статус"
 		2. Есть в наличии, если для товара есть предложения на амазон, либо выключена настройка "менять статус"
 	*/
-
 	public function setProductStockStatusesGlobal(){			
 		foreach ($this->storesWarehouses as $store_id => $storesWarehouse) {
 			$warehouse_identifier = $storesWarehouse['config_warehouse_identifier_local'];

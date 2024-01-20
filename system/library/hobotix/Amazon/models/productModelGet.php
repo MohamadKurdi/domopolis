@@ -414,18 +414,24 @@ class productModelGet extends hoboModel{
 	public function getCategoriesToReprice(){
 		$results = [];
 
-		$sql 	= "SELECT category_id FROM category WHERE need_reprice = 1";
+		$sql 	= "SELECT * FROM category WHERE need_reprice = 1";
 		$query 	= $this->db->ncquery($sql);
 
 		foreach ($query->rows as $row){
-			$results[] = $row['category_id'];
+			$results[$row['category_id']] = $row;
 		}
 
 		return $results;
 	}
 
 	public function setCategoryWasRepriced($category_id){
-		$this->db->ncquery("UPDATE category SET need_reprice = 0, last_reprice = NOW() WHERE category_id = '" . (int)$category_id . "'");
+		$this->db->ncquery("UPDATE category SET 
+			need_reprice 			= 0, 
+			need_special_reprice 	= 0,
+			special_reprice_plus 	= 0,
+			special_reprice_minus 	= 0,
+			last_reprice = NOW() 
+			WHERE category_id = '" . (int)$category_id . "'");
 	}
 
 
