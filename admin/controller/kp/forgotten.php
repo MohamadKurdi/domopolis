@@ -308,9 +308,11 @@ class ControllerKPForgotten extends Controller {
 
 				echoLine('[ControllerKPForgotten::cron] After checking for uniqueness we have ' . count($carts) . ' carts', 'i');
 				
+		//		$carts = json_decode($this->json, true);
 				foreach ($carts as $cart){
 					$this->sendCart($cart, $iteration);
 				}
+				die();
 
 			} else {
 				echoLine('[ControllerKPForgotten::cron] iteration ' . $iteration . ' is disabled!', 'e');
