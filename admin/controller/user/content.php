@@ -112,6 +112,7 @@
 					'user_id' 		=> $user['user_id'],
 					'name' 			=> $this->model_user_user->getRealUserNameById($user['user_id']),
 					'product'  		=> $this->model_kp_content->getUserStats($user['user_id'], array_merge($filter_data, ['entity_type' => 'product'])),
+					'asin'  		=> $this->model_kp_content->getUserStats($user['user_id'], array_merge($filter_data, ['entity_type' => 'asin'])),
 					'category'  	=> $this->model_kp_content->getUserStats($user['user_id'], array_merge($filter_data, ['entity_type' => 'category'])),
 					'manufacturer'  => $this->model_kp_content->getUserStats($user['user_id'], array_merge($filter_data, ['entity_type' => 'manufacturer'])),
 					'collection'  	=> $this->model_kp_content->getUserStats($user['user_id'], array_merge($filter_data, ['entity_type' => 'collection'])),

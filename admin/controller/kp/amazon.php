@@ -11,9 +11,6 @@ class ControllerKPAmazon extends Controller {
 
 		if ($asin){
 			$this->model_report_product->insertAsinToQueue(['asin' => $asin, 'category_id' => $category_id, 'brand_logic' => $brand_logic]);	
-
-			$this->load->model('kp/content');
-			$this->model_kp_content->addContent(['action' => 'add', 'entity_type' => 'product', 'entity_id' => 0]);		
 		}
 
 		$this->response->setOutput(json_encode(['result' => 'success']));
@@ -26,10 +23,7 @@ class ControllerKPAmazon extends Controller {
 		$category_id 	= (int)($this->request->post['category_id']);
 
 		if ($asin){
-			$this->db->query("INSERT IGNORE INTO deleted_asins SET asin = '" . $this->db->escape($asin) . "', name = 'FROM_AMAZON_LOOKUP', date_added = NOW(), user_id = '" . $this->user->getID() . "'");	
-
-			$this->load->model('kp/content');
-			$this->model_kp_content->addContent(['action' => 'delete', 'entity_type' => 'product', 'entity_id' => 0]);		
+			$this->model_report_product->insertDeletedASIN(['asin' => $asin, 'name' => 'FROM_AMAZON_LOOKUP']);			
 		}
 
 		$this->response->setOutput(json_encode(['result' => 'success']));

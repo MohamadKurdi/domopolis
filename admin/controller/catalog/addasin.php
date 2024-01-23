@@ -238,7 +238,6 @@
 			);
 			
 			$this->response->setOutput($this->render());
-
 		}
 
 		public function amazon(){

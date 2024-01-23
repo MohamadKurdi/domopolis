@@ -168,6 +168,12 @@
 						brand_logic = '" . (int)$data['brand_logic'] . "', 
 						user_id = '" . (int)$this->user->getID() . "', 
 						date_added = NOW()");
+
+					$this->load->model('kp/content');
+					$this->model_kp_content->addContent(['action' => 'add', 'entity_type' => 'asin', 'entity_id' => $asin]);
+
+					$this->load->model('kp/content');
+					$this->model_kp_content->addContent(['action' => 'add', 'entity_type' => 'product', 'entity_id' => 0]);		
 				}
 			}		
 		}
@@ -392,7 +398,15 @@
 		
 		public function insertDeletedASIN($data) {			
 			if (trim($data['asin'])){
-				$this->db->query("INSERT IGNORE INTO deleted_asins SET asin = '" . $this->db->escape($data['asin']) . "', `name` = '" . $this->db->escape($data['name']) . "'");
+				$this->db->query("INSERT IGNORE INTO deleted_asins SET 
+					asin = '" . $this->db->escape($data['asin']) . "', 
+					name = '" . $this->db->escape($data['name']) . "',
+					date_added = NOW(), 
+					user_id = '" . $this->user->getID() . "'");
+
+
+				$this->load->model('kp/content');
+				$this->model_kp_content->addContent(['action' => 'delete', 'entity_type' => 'asin', 'entity_id' => $data['asin']]);	
 			}			
 		}
 

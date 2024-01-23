@@ -43,6 +43,7 @@
 							<td class="center green"><i class="fa fa-edit"></i> Товары</td>
 							<td class="center orange"><i class="fa fa-plus"></i> Товары</td>
 							<td class="center red"><i class="fa fa-minus"></i> Товары</td>
+							<td class="center orange"><i class="fa fa-plus"></i> ASIN</td>
 							<td class="center">Категории</td>
 							<td class="center">Бренды</td>
 							<td class="center">Коллекции</td>
@@ -71,6 +72,11 @@
 							<td class="right red">
 								<?php if (!empty($user['product']['delete'])) { ?>
 									<?php echo $user['product']['delete']; ?>
+								<?php } ?>
+							</td>
+							<td class="right orange">
+								<?php if (!empty($user['asin']['add'])) { ?>
+									<?php echo $user['asin']['add']; ?>
 								<?php } ?>
 							</td>
 
