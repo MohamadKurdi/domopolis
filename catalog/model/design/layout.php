@@ -20,20 +20,7 @@
 			}
 		}
 		
-		public function getLayoutForAllPages()
-		{
+		public function getLayoutForAllPages(){
 			return 18;
-			/*
-				$query = $this->db->query("SELECT * FROM oc_layout
-				WHERE name like '%all pages%'
-				LIMIT 1");
-				
-				if ($query->num_rows) {
-				return $query->row['layout_id'];
-				} else {
-				return 0;
-				}
-			*/
 		}
 	}
-?>
