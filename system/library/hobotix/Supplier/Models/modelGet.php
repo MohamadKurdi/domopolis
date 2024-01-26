@@ -65,7 +65,7 @@ class modelGet extends hoboModel{
 		}
 			
 		return $product_description_data;
-	}
+	}	
 
 	public function getProductPriceStatus($product_id){
 		$query = $this->db->query("SELECT price, status FROM product WHERE product_id = '" . (int)$product_id . "'");

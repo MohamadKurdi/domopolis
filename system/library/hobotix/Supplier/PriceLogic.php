@@ -48,19 +48,45 @@ class PriceLogic extends SupplierFrameworkClass {
 			AND price = '0'");
 	}
 
+	public function getIfProductIsInWarehouse($product_id){
+		if ($this->config->get('config_warehouse_identifier')){
+			$query = $this->db->query("SELECT (`" . $this->db->escape($this->config->get('config_warehouse_identifier')) . "` + `" . $this->db->escape($this->config->get('config_warehouse_identifier')) . "_onway`) as sum_stock FROM product WHERE product_id = '" . (int)$product_id . "'");
+
+			if ($query->num_rows){
+				return $query->row['sum_stock'];
+			}
+		}
+
+		return false;
+	}
+
+	public function disableProduct($product_id){
+		if ($is_on_stock = $this->getIfProductIsInWarehouse($product_id)){
+			echoLine('[PriceLogic::disableProduct] Product is in warehouse, ' . $is_on_stock . ' pieces, enabling!', 's');
+			$this->enableProduct($product_id);
+		} else {
+			echoLine('[PriceLogic::disableProduct] Product is not in warehouse, disabling', 'e');
+			$this->db->query("UPDATE product SET `status` = 0 WHERE product_id = '" . (int)$product_id . "'");
+		}
+	}
+
+	public function enableProduct($product_id){
+		echoLine('[PriceLogic::enableProduct] Enabling product ' . $product_id, 's');
+		$this->db->query("UPDATE product SET `status` = 1 WHERE product_id = '" . (int)$product_id . "'");
+	}	
 
 	public function setProductIsOnStock($product_id, $product){
 		$query = $this->db->query("SELECT `" . $this->config->get('config_warehouse_identifier') . "` FROM product WHERE product_id = '" . (int)$product_id . "'");
 		
 		if ((int)$query->row[$this->config->get('config_warehouse_identifier')] > 0){
 			echoLine('[PriceLogic::setProductIsOnStock] Product is in warehouse, setting status config_in_stock_status_id', 's');
-			$stock_status_id = (int)$this->config->get('config_in_stock_status_id');						
+			$stock_status_id = (int)$this->config->get('config_in_stock_status_id');
+			$this->enableProduct($product_id);					
 		} else {
 			echoLine('[PriceLogic::setProductIsOnStock] Product is in warehouse, setting status config_stock_status_id', 's');
 			$this->db->query("UPDATE product SET quantity = '" . (int)$product['quantity'] . "' WHERE product_id = '" . (int)$product_id . "'");
 
 			$stock_status_id = (int)$this->config->get('config_stock_status_id');
-
 		}
 
 		$sql = "INSERT INTO product_stock_status SET ";

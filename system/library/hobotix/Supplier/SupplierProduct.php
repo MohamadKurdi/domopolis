@@ -66,12 +66,10 @@ class SupplierProduct extends SupplierFrameworkClass {
 
 		if (isset($product['status'])){
 			if ($this->getSupplierSetting('auto_enable')){
-				if ($product['status']){
-					echoLine('[SupplierProduct::parseProductStatus] Status is ON, enabling product!', 's');
-					$this->model_edit->enableProduct($product_id);
+				if ($product['status']){					
+					$this->registry->get('supplierAdaptor')->PriceLogic->enableProduct($product_id);
 				} else {
-					echoLine('[SupplierProduct::parseProductStatus] Status is OFF, disabling product!', 'e');
-					$this->model_edit->disableProduct($product_id);
+					$this->registry->get('supplierAdaptor')->PriceLogic->disableProduct($product_id);
 				}
 			}
 		}
@@ -127,13 +125,13 @@ class SupplierProduct extends SupplierFrameworkClass {
 				if (!(float)$product['price']){
 					if (!(float)$product_current_info['price']){
 						echoLine('[SupplierProduct::parseProductPrice] Price is zero, prev is zero too, disabling product!', 'e');
-						$this->model_edit->disableProduct($product_id);
+						$this->registry->get('supplierAdaptor')->PriceLogic->disableProduct($product_id);
 						return false;
 					}
 				} else {
 					if (!(float)$product_current_info['price']){
 						echoLine('[SupplierProduct::parseProductPrice] Price is non zero, prev is zero, enabling product!', 'e');
-						$this->model_edit->enableProduct($product_id);
+						$this->registry->get('supplierAdaptor')->PriceLogic->enableProduct($product_id);
 					}
 				}							
 

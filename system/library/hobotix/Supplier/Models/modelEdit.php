@@ -50,19 +50,7 @@ class modelEdit extends hoboModel{
 		$sql .= " WHERE product_id = '" . (int)$product_id . "'";
 
 		$this->db->query($sql);
-	}		
-
-	public function disableProduct($product_id){
-		$this->db->query("UPDATE product SET `status` = 0 WHERE product_id = '" . (int)$product_id . "'");
-
-		return $this;
-	}
-
-	public function enableProduct($product_id){
-		$this->db->query("UPDATE product SET `status` = 1 WHERE product_id = '" . (int)$product_id . "'");
-
-		return $this;
-	}	
+	}			
 
 	public function changeProductAttributes($attribute_id_from, $attribute_id_to) {
 		$sql = "UPDATE product_attribute SET attribute_id = '" . (int)$attribute_id_to . "' WHERE attribute_id = '" . (int)$attribute_id_from . "'";
