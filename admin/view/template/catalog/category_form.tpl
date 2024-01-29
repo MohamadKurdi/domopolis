@@ -30,9 +30,10 @@
 				<a href="#tab-reward">Бонусная программа</a>	
 				<a href="#tab-taxonomies" style="color:#7F00FF;font-weight:700;"><i class="fa fa-link"></i> Таксономия, связи</a>			
 				<a href="#tab-amazon-sync" style="color:#FF9900;font-weight:700;">
-					<i class="fa fa-amazon"></i> Синхронизация Amazon (RNF API)
+					<i class="fa fa-amazon"></i> Синхронизация Amazon
 					<?php if ($this->config->get('config_country_id') == 176) { ?>,<span style="color:#cf4a61"><i class="fa fa-yahoo"></i> Yandex Market</span><?php } ?>
-				</a>				
+				</a>
+				<a href="#tab-amazon-auto" style="color:#00AD07;font-weight:700;"><i class="fa fa-star"></i> Автонаполнение Amazon</a>		
 				<a href="#tab-related-data">Умные подборы</a>
 				<a href="#tab-design"><?php echo $tab_design; ?></a>
 				<a href="#tab-menucontent">Контент в меню</a><div class="clr"></div>
