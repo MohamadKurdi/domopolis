@@ -10,7 +10,9 @@
 			<? if ($has_rights) { ?>	  
 				<td class="left" width="1px"></td>
 			<? } ?>
-			<td class="left">SMS</td>	  	
+			<?php if ($this->config->get('config_sms_status_use_only_settings')) { ?>
+				<td class="left">SMS</td>	  	
+			<?php } ?>
 		</tr>
 	</thead>
 	<tbody>
@@ -41,7 +43,9 @@
 						<span class="get_ttn_info" data-ttn="<?php echo $ttn['ttn']; ?>" data-delivery-code="<?php echo $ttn['delivery_code']; ?>"><?php echo $ttn['ttn']; ?></span>&nbsp;&nbsp;<span style="display:none;"></span></td>
 					</td>
 				<? } ?>
-				<td class="left"><?php echo $ttn['sms_sent']; ?></td>
+				<?php if ($this->config->get('config_sms_status_use_only_settings')) { ?>
+					<td class="left"><?php echo $ttn['sms_sent']; ?></td>
+				<?php } ?>
 			</tr>
 		<?php } ?>   
 		<?php } else { ?>

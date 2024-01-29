@@ -23,17 +23,19 @@ class ControllerApiInfo1C extends Controller
 
     public function addTTNHistory($order_id, $ttn, $shipping_code = '')
     {
+        $json = [];
+
         $this->load->model('sale/order');
         $this->load->model('setting/setting');
         $ttn = trim($ttn);
 
 
         if (!$order_info = $this->model_sale_order->getOrder($order_id)) {
-            die("order $order_id doesn't exist");
+            $json['error'] = "Order $order_id doesn't exist";            
         }
 
         if ($this->model_sale_order->getIfOrderClosed($order_id)) {
-            die("order $order_id is closed ");
+             $json['error'] = "Order $order_id is closed";
         }
 
         if (!$shipping_code) {
@@ -43,16 +45,27 @@ class ControllerApiInfo1C extends Controller
         $existingTTNS = $this->model_sale_order->getOrderTtnHistory($order_id);
         foreach ($existingTTNS as $existingTTN) {
             if ($ttn == trim($existingTTN['ttn'])) {
-                die("ttn $ttn already added");
+                $json['error'] = "Ttn $ttn already added";
             }
         }
 
-        $this->db->query("UPDATE `order` SET `ttn` = '" . $this->db->escape($ttn) . "' WHERE order_id = " . (int)$order_id);
-        $adding_query = $this->db->query("INSERT IGNORE INTO `order_ttns` SET	order_id = '" . (int)$order_id . "', ttn = '" . $this->db->escape($ttn) . "', delivery_code = '" . $this->db->escape($shipping_code) . "', date_ttn = NOW(), sms_sent = NOW()");
-       
-        if ($adding_query->num_rows){
-            $this->smsAdaptor->sendDeliveryNote($order_info, ['ttn' => $ttn, 'order_status_id' => $order_info['order_status_id']]);
+        if (empty($json['error'])){
+            $this->db->query("UPDATE `order` SET `ttn` = '" . $this->db->escape($ttn) . "' WHERE order_id = " . (int)$order_id);
+            $query = $this->db->query("INSERT IGNORE INTO `order_ttns` SET 
+                order_id = '" . (int)$order_id . "', 
+                ttn = '" . $this->db->escape($ttn) . "', 
+                delivery_code = '" . $this->db->escape($shipping_code) . "', 
+                date_ttn = NOW(), 
+                sms_sent = NOW()");
+
+            if ($this->db->countAffected()){
+                $json['success'] = $this->smsAdaptor->sendDeliveryNote($order_info, ['ttn' => $ttn, 'order_status_id' => $order_info['order_status_id']]);
+            } else {
+                $json['success'] = false;
+            }
         }
+
+        $this->response->setOutput(json_encode($json));
     }
 
     public function addFiscalReceipt($order_id, $receipt_data = [])

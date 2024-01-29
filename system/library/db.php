@@ -54,9 +54,11 @@ if (!class_exists('DB')){
 		}
 
 		public function query($sql) {
+			$result = false;
+
 			if (defined('DEBUGSQL') && DEBUGSQL) {		
 				$queryTimer = new \hobotix\FPCTimer();
-				$result = $this->connection->query($sql);					
+				$result 	= $this->connection->query($sql);					
 
 				$GLOBALS['sql-debug'][] = [
 					'sql' 			=> $sql,
@@ -67,11 +69,7 @@ if (!class_exists('DB')){
 				];
 
 				$queryTimer = null;
-
-				return $result;
-
 			} else {
-
 				try	{
 					$result = $this->connection->query($sql);
 				} catch (Exception $e){	
@@ -87,9 +85,9 @@ if (!class_exists('DB')){
 						$result = $this->connection->query($sql);
 					}
 				}
-
-				return $result;
 			}
+
+			return $result;
 		}
 
 		public function ncquery($sql) {
