@@ -548,6 +548,14 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['heading_title'] = $this->data['category_description'][$this->config->get('config_language_id')]['name'];
 		}
 
+		if (isset($this->request->post['category_search_words'])) {
+			$this->data['category_search_words'] = $this->request->post['category_search_words'];
+		} elseif (isset($this->request->get['category_id'])) {
+			$this->data['category_search_words'] = $this->model_catalog_category->getCategorySearchWords($this->request->get['category_id']);
+		} else {
+			$this->data['category_search_words'] = [];
+		}
+
 		if (isset($this->request->post['category_menu_content'])) {
 			$this->data['category_menu_content'] = $this->request->post['category_menu_content'];
 		} elseif (isset($this->request->get['category_id'])) {

@@ -74,8 +74,23 @@ class ModelCatalogCategory extends Model {
 				description 		= '" . $this->db->escape($value['description']) . "', 
 				google_tree 		= '" . $this->db->escape($value['google_tree']) . "'");
 		}
-		
 
+		$this->db->query("DELETE FROM category_search_words WHERE category_id = '" . (int)$category_id . "'");
+		
+		foreach ($data['category_search_words'] as $category_search_word) {
+			$this->db->query("INSERT INTO category_search_words SET 
+				category_id 	= '" . (int)$category_id . "', 
+				category_word_type 				= '" . $this->db->escape($category_search_word['category_word_type']) . "', 
+				category_search_word 			= '" . $this->db->escape($category_search_word['category_search_word']) . "',
+				category_search_sort 			= '" . $this->db->escape($category_search_word['category_search_sort']) . "', 
+				category_search_min_price 		= '" . (float)$category_search_word['category_search_min_price'] . "', 
+				category_search_max_price 		= '" . (float)$category_search_word['category_search_max_price'] . "', 
+				category_search_min_offers 		= '" . (int)$category_search_word['category_search_min_offers'] . "',  
+				category_word_last_search 		= '" . $this->db->escape($category_search_word['category_word_last_search']) . "', 
+				category_word_total_products 	= '" . (int)$category_search_word['category_word_total_products'] . "', 
+				category_word_product_added 	= '" . (int)$category_search_word['category_word_product_added'] . "'");
+		}
+		
 		$level = 0;		
 		$query = $this->db->query("SELECT * FROM `category_path` WHERE category_id = '" . (int)$data['parent_id'] . "' ORDER BY `level` ASC");
 		
@@ -256,16 +271,32 @@ class ModelCatalogCategory extends Model {
 					$this->db->query("INSERT INTO category_menu_content SET 
 						category_id = '" . (int)$category_id . "', 
 						language_id = '" . (int)$language_id . "', 
-						title = '" . $this->db->escape($value['title']) . "', 
-						content = '" . $this->db->escape($value['content']) . "',
-						href = '" . $this->db->escape($value['href']) . "', 
-						image = '" . $this->db->escape($value['image']) . "', 
-						width = '" . (int)$value['width'] . "', 
-						height = '" . (int)$value['height'] . "', 
-						standalone = '" . (int)$value['standalone'] . "', 
-						sort_order = '" . (int)$value['sort_order'] . "'");
+						title 		= '" . $this->db->escape($value['title']) . "', 
+						content 	= '" . $this->db->escape($value['content']) . "',
+						href 		= '" . $this->db->escape($value['href']) . "', 
+						image 		= '" . $this->db->escape($value['image']) . "', 
+						width 		= '" . (int)$value['width'] . "', 
+						height 		= '" . (int)$value['height'] . "', 
+						standalone 	= '" . (int)$value['standalone'] . "', 
+						sort_order 	= '" . (int)$value['sort_order'] . "'");
 				}
 			}
+		}
+
+		$this->db->query("DELETE FROM category_search_words WHERE category_id = '" . (int)$category_id . "'");
+		
+		foreach ($data['category_search_words'] as $category_search_word) {
+			$this->db->query("INSERT INTO category_search_words SET 
+				category_id 	= '" . (int)$category_id . "', 
+				category_word_type 				= '" . $this->db->escape($category_search_word['category_word_type']) . "', 
+				category_search_word 			= '" . $this->db->escape($category_search_word['category_search_word']) . "',
+				category_search_sort 			= '" . $this->db->escape($category_search_word['category_search_sort']) . "', 
+				category_search_min_price 		= '" . (float)$category_search_word['category_search_min_price'] . "', 
+				category_search_max_price 		= '" . (float)$category_search_word['category_search_max_price'] . "', 
+				category_search_min_offers 		= '" . (int)$category_search_word['category_search_min_offers'] . "',  
+				category_word_last_search 		= '" . $this->db->escape($category_search_word['category_word_last_search']) . "', 
+				category_word_total_products 	= '" . (int)$category_search_word['category_word_total_products'] . "', 
+				category_word_product_added 	= '" . (int)$category_search_word['category_word_product_added'] . "'");
 		}
 
 		$query = $this->db->query("SELECT * FROM `category_path` WHERE path_id = '" . (int)$category_id . "' ORDER BY level ASC");		
@@ -491,6 +522,16 @@ class ModelCatalogCategory extends Model {
 		}
 		
 		return $related_categories;		
+	}
+
+	public function getCategorySearchWords($category_id){
+		$query = $this->db->query("SELECT * FROM category_search_words WHERE category_id = '" . (int)$category_id . "'");
+		
+		if ($query->num_rows){
+			return $query->rows;
+		} else {
+			return false;
+		}
 	}
 	
 	public function getFeeds($category_id){
