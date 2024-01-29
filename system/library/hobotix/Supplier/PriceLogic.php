@@ -4,8 +4,24 @@ namespace hobotix\Supplier;
 
 class PriceLogic extends SupplierFrameworkClass {
 
+	public function getIfProductIsInWarehouse($product_id){
+		if ($this->config->get('config_warehouse_identifier')){
+			$query = $this->db->query("SELECT (`" . $this->db->escape($this->config->get('config_warehouse_identifier')) . "` + `" . $this->db->escape($this->config->get('config_warehouse_identifier')) . "_onway`) as sum_stock FROM product WHERE product_id = '" . (int)$product_id . "'");
+
+				if ($query->num_rows){
+					return $query->row['sum_stock'];
+				}
+			}
+
+			return false;
+		}
 
 	public function updateProductPriceInDatabase($product_id, $price){
+		if ($is_on_stock = $this->getIfProductIsInWarehouse($product_id)){
+			echoLine('[PriceLogic::disableProduct] Product is in warehouse, ' . $is_on_stock . ' pieces, skipping setting price!', 'e');
+			return;
+		}
+
 		$field = 'price';
 		if ($this->config->get('config_rainforest_delay_price_setting')){
 			$field = 'price_delayed';
@@ -24,6 +40,11 @@ class PriceLogic extends SupplierFrameworkClass {
 	}
 
 	public function updateProductPriceNationalToStoreInDatabase($product_id, $price, $store_id){
+		if ($is_on_stock = $this->getIfProductIsInWarehouse($product_id)){
+			echoLine('[PriceLogic::disableProduct] Product is in warehouse, ' . $is_on_stock . ' pieces, skipping setting price!', 'e');
+			return;
+		}
+
 		$field = 'price';
 		if ($this->config->get('config_rainforest_delay_price_setting')){
 			$field = 'price_delayed';
@@ -46,18 +67,6 @@ class PriceLogic extends SupplierFrameworkClass {
 			WHERE store_id = '" . (int)$store_id . "'
 			AND product_id = '" . (int)$product_id . "'
 			AND price = '0'");
-	}
-
-	public function getIfProductIsInWarehouse($product_id){
-		if ($this->config->get('config_warehouse_identifier')){
-			$query = $this->db->query("SELECT (`" . $this->db->escape($this->config->get('config_warehouse_identifier')) . "` + `" . $this->db->escape($this->config->get('config_warehouse_identifier')) . "_onway`) as sum_stock FROM product WHERE product_id = '" . (int)$product_id . "'");
-
-			if ($query->num_rows){
-				return $query->row['sum_stock'];
-			}
-		}
-
-		return false;
 	}
 
 	public function disableProduct($product_id){
