@@ -2,7 +2,7 @@
 
 namespace hobotix\Mail;
 
-class mailMailGun {
+class MailGun {
 
 	
 

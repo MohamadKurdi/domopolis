@@ -47,6 +47,7 @@ class Mail {
 
 	public function setIsMarketing($is_marketing){
 		$this->is_marketing = trim($is_marketing);
+		$this->setFrom($this->config->get('config_mail_trigger_mail_from'));
 		return $this;
 	}
 
@@ -148,6 +149,10 @@ class Mail {
 
 		if ($this->protocol == 'smtp') {
 			$this->preparemail()->send_smtp();
+		}
+
+		if ($this->protocol == 'sendsay') {
+			$this->preparemail()->send_sendsay();
 		}
 
 		return 0;
@@ -526,6 +531,75 @@ class Mail {
 		}
 	}
 
+	private function send_sendsay(){
+		$attachments = [];
+		foreach ($this->attachments as $attachment) {
+			if (file_exists($attachment)) {
+				$handle = fopen($attachment, 'r');				
+				$content = fread($handle, filesize($attachment));				
+				fclose($handle);
+
+				$finfo = new finfo(FILEINFO_MIME);
+				$type  = $finfo->file($attachment);
+
+				$attachments[] = [
+					'name' 		=> basename($attachment),
+					'mime-type' => $type,
+					'content' 	=> chunk_split(base64_encode($content)),
+					'encoding' 	=> 'base64',
+				];			
+			}
+		}
+
+		$json = [
+			'action' => 'issue.send',
+			'letter' => [
+				'message' => [
+					'html' 		=> $this->html,
+					'text' 		=> $this->text					
+				],
+				'attaches' 		=> $attachments,
+				'subject' 		=> (string)$this->subject,
+				'from.email' 	=> (string)$this->from,
+				'from.name' 	=> (string)$this->sender
+			],
+			'group' 		=> 'personal',			
+			'email' 		=> $this->to,
+			'sendwhen' 		=> 'now',
+			'apikey' 		=> (string)$this->config->get('config_sendsay_api_key')
+		];
+
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $this->config->get('config_sendsay_api_uri') . $this->config->get('config_sendsay_fid'));
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+
+		$headers = [];
+		$headers[] = 'Accept:application/json';
+		$headers[] = 'Accept-Encoding: gzip, deflate';
+		$headers[] = 'Accept-Language: en-US,en;q=0.5';
+		$headers[] = 'Content-Type: application/json; charset=utf-8';
+
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($json));
+		$result = json_decode(curl_exec($ch), true);
+
+		if (is_array($result)){
+			if (isset($result['track.id']) && isset($result['track.id'])){
+				$transmission_id = $result['track.id'];
+			} else {
+				$transmission_id = 0;
+			}
+		} else {
+			$transmission_id = 0;
+		}
+
+		return $transmission_id;
+	}
+
 	private function send_mailgun($domain = false){
 		$mgClient = \Mailgun\Mailgun::create($this->config->get('config_mailgun_api_private_key'), $this->config->get('config_mailgun_api_url'));
 
@@ -644,11 +718,11 @@ class Mail {
 		]);
 
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-		$server_output = json_decode(curl_exec($ch), true);
+		$result = json_decode(curl_exec($ch), true);
 
-		if (is_array($server_output)){
-			if (isset($server_output['results']) && isset($server_output['results']['id'])){
-				$transmission_id = $server_output['results']['id'];
+		if (is_array($result)){
+			if (isset($result['results']) && isset($result['results']['id'])){
+				$transmission_id = $result['results']['id'];
 			} else {
 				$transmission_id = 0;
 			}

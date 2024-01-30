@@ -2,7 +2,7 @@
 
 namespace hobotix\Mail;
 
-class SendSay {
+class SMTP {
 
 	
 

@@ -22,18 +22,18 @@ class MailAdaptor {
 
 		if (file_exists(DIR_SYSTEM . '/library/hobotix/Mail/' . $mailClass_Transaction . '.php')){
 			require_once (DIR_SYSTEM . '/library/hobotix/Mail/' . $mailClass_Transaction . '.php');
-			$mailClass_Transaction = "hobotix" . "\\" . "mail" . "\\" . $smsClass;
+			$mailClass_Transaction = "hobotix" . "\\" . "Mail" . "\\" . $mailClass_Transaction;
 			$this->mailClass_TransactionObject = new $mailClass_Transaction($this->registry);			
 		} else {
-			throw new \Exception('[MailAdaptor::__construct] Can not load mailClass_Transaction library!');
+			//throw new \Exception('[MailAdaptor::__construct] Can not load mailClass_Transaction library!');
 		}
 
 		if (file_exists(DIR_SYSTEM . '/library/hobotix/Mail/' . $mailClass_Marketing . '.php')){
 			require_once (DIR_SYSTEM . '/library/hobotix/Mail/' . $mailClass_Marketing . '.php');
-			$mailClass_Marketing = "hobotix" . "\\" . "mail" . "\\" . $smsClass;
+			$mailClass_Marketing = "hobotix" . "\\" . "Mail" . "\\" . $mailClass_Marketing;
 			$this->mailClass_MarketingObject = new $mailClass_Marketing($this->registry);			
 		} else {
-			throw new \Exception('[MailAdaptor::__construct] Can not load mailClass_Marketing library!');
+			//throw new \Exception('[MailAdaptor::__construct] Can not load mailClass_Marketing library!');
 		}
 	}
 

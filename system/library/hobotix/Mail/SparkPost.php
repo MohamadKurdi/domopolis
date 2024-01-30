@@ -2,7 +2,7 @@
 
 namespace hobotix\Mail;
 
-class mailSparkPost {
+class SparkPost {
 
 	
 
