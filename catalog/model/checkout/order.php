@@ -8,7 +8,7 @@ class ModelCheckoutOrder extends Model {
 			return $double_order_id;
 		}
 
-			//1. Доставка курьером по городам Киев, МСК, Минск, НурСултан
+		//1. Доставка курьером по городам Киев, МСК, Минск, НурСултан
 		if (!empty($data['shipping_code']) && ($data['shipping_code'] == 'dostavkaplus.sh1' || $data['shipping_code'] == 'dostavkaplus.sh2' || $data['shipping_code'] == 'dostavkaplus.sh7' || $data['shipping_code'] == 'dostavkaplus.sh8')){
 			if (!empty($data['courier_city_shipping_address'])){
 				$data['shipping_address_1'] = $data['courier_city_shipping_address'];
@@ -17,7 +17,7 @@ class ModelCheckoutOrder extends Model {
 		}
 
 
-			//2. Новая Почта отделение
+		//2. Новая Почта отделение
 		if (!empty($data['shipping_code']) && $data['shipping_code'] == 'dostavkaplus.sh3'){
 			if (!empty($data['novaposhta_warehouse'])){
 				$query = $this->db->ncquery("SELECT * FROM novaposhta_warehouses WHERE Ref = '" . $this->db->escape($data['novaposhta_warehouse']) . "' LIMIT 1");
@@ -34,7 +34,7 @@ class ModelCheckoutOrder extends Model {
 			}
 		}
 
-			//3. СДЭК отделение
+		//3. СДЭК отделение
 		if (!empty($data['shipping_code']) && $data['shipping_code'] == 'dostavkaplus.sh6'){
 			if (!empty($data['cdek_warehouse'])){
 				$query = $this->db->ncquery("SELECT * FROM cdek_deliverypoints WHERE code = '" . $this->db->escape($data['cdek_warehouse']) . "' LIMIT 1");
@@ -46,7 +46,7 @@ class ModelCheckoutOrder extends Model {
 			}
 		}
 
-			//3. JUSTIN отделение
+		//3. JUSTIN отделение
 		if (!empty($data['shipping_code']) && $data['shipping_code'] == 'dostavkaplus.sh15'){
 			if (!empty($data['justin_warehouse'])){
 				$query = $this->db->ncquery("SELECT * FROM justin_warehouses WHERE Uuid = '" . $this->db->escape($data['justin_warehouse']) . "' LIMIT 1");
@@ -58,7 +58,7 @@ class ModelCheckoutOrder extends Model {
 			}
 		}
 
-			//4. Новая Почта адреска
+		//4. Новая Почта адреска
 		if (!empty($data['shipping_code']) && $data['shipping_code'] == 'dostavkaplus.sh13'){
 			if (!empty($data['novaposhta_street'])){
 				$query = $this->db->ncquery("SELECT * FROM novaposhta_streets WHERE Ref = '" . $this->db->escape($data['novaposhta_street']) . "' LIMIT 1");
@@ -81,7 +81,7 @@ class ModelCheckoutOrder extends Model {
 			}
 		}
 
-			//5. СДЭК адреска или EMS
+		//5. СДЭК адреска или EMS
 		if (!empty($data['shipping_code']) && $data['shipping_code'] == 'dostavkaplus.sh17'){
 			if (!empty($data['cdek_street'])){
 
@@ -103,7 +103,7 @@ class ModelCheckoutOrder extends Model {
 			}
 		}
 
-			//5. EMS
+		//5. EMS
 		if (!empty($data['shipping_code']) && $data['shipping_code'] == 'dostavkaplus.sh5'){
 			if (!empty($data['cdek_street'])){
 
@@ -177,6 +177,15 @@ class ModelCheckoutOrder extends Model {
 			}
 		}
 
+		//Если надо заполнять паспортные данные для отправки
+		foreach (['passport_serie', 'passport_inn', 'passport_date', 'passport_given'] as $passport_data){
+			if (!empty($data[$passport_data])){
+				$data['shipping_' . $passport_data] = $data[$passport_data];
+			} else {
+				$data['shipping_' . $passport_data] = '';
+			}			
+		}
+
 		if (empty($data['shipping_country_id'])){
 			$this->load->model('localisation/country');				
 			$data['shipping_country_id'] 	= $this->config->get('config_country_id');
@@ -242,14 +251,18 @@ class ModelCheckoutOrder extends Model {
 			payment_zone_id 		= '" . (int)$data['payment_zone_id'] . "', 
 			payment_address_format 	= '" . $this->db->escape($data['payment_address_format']) . "', 
 			payment_method 			= '" . $this->db->escape($data['payment_method']) . "', 
-			payment_code 				= '" . $this->db->escape($data['payment_code']) . "', 
-			payment_secondary_method 	= '" . $this->db->escape($data['payment_secondary_method']) . "', 
-			payment_secondary_code 		= '" . $this->db->escape($data['payment_secondary_code']) . "', 
+			payment_code 			= '" . $this->db->escape($data['payment_code']) . "', 
+			payment_secondary_method= '" . $this->db->escape($data['payment_secondary_method']) . "', 
+			payment_secondary_code 	= '" . $this->db->escape($data['payment_secondary_code']) . "', 
 			shipping_firstname 		= '" . $this->db->escape($data['shipping_firstname']) . "', 
 			shipping_lastname 		= '" . $this->db->escape($data['shipping_lastname']) . "', 
 			shipping_company 		= '" . $this->db->escape($data['shipping_company']) . "', 
 			shipping_address_1 		= '" . $this->db->escape($data['shipping_address_1']) . "', 
 			shipping_address_2 		= '" . $this->db->escape($data['shipping_address_2']) . "', 
+			shipping_passport_serie =  '" . $this->db->escape($data['shipping_passport_serie']) . "',
+			shipping_passport_date  =  '" . $this->db->escape($data['shipping_passport_date']) . "',
+			shipping_passport_inn  	=  '" . $this->db->escape($data['shipping_passport_inn']) . "',
+			shipping_passport_given =  '" . $this->db->escape($data['shipping_passport_given']) . "',
 			shipping_city 			= '" . $this->db->escape($data['shipping_city']) . "', 
 			shipping_postcode 		= '" . $this->db->escape($data['shipping_postcode']) . "', 
 			shipping_country 		= '" . $this->db->escape($data['shipping_country']) . "', 
@@ -320,11 +333,13 @@ class ModelCheckoutOrder extends Model {
 		}
 
 
-		$customer = $this->model_account_customer->getCustomer($customer_id);		
-		if (empty($customer['telephone'])){
-			$this->db->query("UPDATE customer SET telephone = '" . $this->db->escape($data['telephone']) . "' WHERE customer_id = '" . (int)$customer_id . "'");
-		}
-
+		$customer = $this->model_account_customer->getCustomer($customer_id);	
+		foreach (['passport_serie', 'passport_inn', 'passport_date', 'passport_given', 'telephone'] as $field_update_data){
+			if (empty($customer[$field_update_data]) && !empty($data[$field_update_data])){
+				$this->db->query("UPDATE customer SET `" . $this->db->escape($field_update_data) . "` = '" . $this->db->escape($data[$field_update_data]) . "' WHERE customer_id = '" . (int)$customer_id . "'");
+			}
+		}	
+		
 		$data['order_id'] 		= $order_id;
 		$data['customer_id'] 	= $customer_id;
 
@@ -719,8 +734,10 @@ class ModelCheckoutOrder extends Model {
 			'newsletter_personal' 		=> 1,
 			'viber_news' 		=> 1,
 			'fax' 				=> $data['fax'],
-			'passport_serie' 	=> '', 
-			'passport_given' 	=> '',
+			'passport_serie' 	=> $data['passport_serie'],
+			'passport_date' 	=> $data['passport_date'],
+			'passport_inn' 		=> $data['passport_inn'],
+			'passport_given' 	=> $data['passport_given'], 
 			'birtday' 			=> '0000-00-00',
 			'password' 			=> rand(9999, 999999),
 			'company' 			=> '',

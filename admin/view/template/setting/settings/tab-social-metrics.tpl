@@ -442,7 +442,44 @@
 			</tr>       
 		</table>
 
+		<h2 style="color:#1F2937">SendSay ремаркетинг</h2>
+		<table class="form">
+			<td style="width:25%">
+				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#1F2937; color:#FFF">Включить маркетинг</span></p>
+				<select name="config_sendsay_enable_marketing">
+					<?php if ($config_sendsay_enable_marketing) { ?>
+						<option value="1" selected="selected">Включить</option>
+						<option value="0">Отключить</option>
+					<?php } else { ?>                                                   
+						<option value="1">Включить</option>
+						<option value="0"  selected="selected">Отключить</option>
+					<? } ?>
+				</select>
+			</td>
 
+			<td style="width:25%">
+				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#1F2937; color:#FFF">Включить вебпуш</span></p>
+				<select name="config_sendsay_enable_webpush">
+					<?php if ($config_sendsay_enable_webpush) { ?>
+						<option value="1" selected="selected">Включить</option>
+						<option value="0">Отключить</option>
+					<?php } else { ?>                                                   
+						<option value="1">Включить</option>
+						<option value="0"  selected="selected">Отключить</option>
+					<? } ?>
+				</select>
+			</td>
+
+			<td width="25%">
+				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#1F2937; color:#FFF">SendSay FiD</span></p>
+				<input type="text" name="config_sendsay_fid" value="<?php echo $config_sendsay_fid; ?>" size="50" />
+			</td>
+
+			<td width="25%">
+				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#1F2937; color:#FFF">SendSay Webpush iD</span></p>
+				<input type="text" name="config_sendsay_webpush_id" value="<?php echo $config_sendsay_webpush_id; ?>" size="50" />
+			</td>
+		</table>
 		
 		<h2 style="color:#cf4a61">Yandex Metrika</h2>
 		<table class="form">

@@ -2,13 +2,57 @@
 	class ModelSaleCustomer extends Model {
 		
 		public function addCustomer($data) {
-			$this->db->query("INSERT INTO customer SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', store_id = '" . $this->db->escape($data['store_id']) . "', customer_comment = '" . $this->db->escape($data['customer_comment']) . "', cashless_info = '" . $this->db->escape($data['cashless_info']) . "', discount_card = '" . $this->db->escape($data['discount_card']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', passport_serie = '" . $this->db->escape($data['passport_serie']) . "', passport_given = '" . $this->db->escape($data['passport_given']) . "', birthday = '" . $this->db->escape(date('Y-m-d',strtotime($data['birthday']))) . "',  newsletter = '" . (int)$data['newsletter'] . "',  viber_news = '" . (int)$data['viber_news'] . "',  newsletter_news = '" . (int)$data['newsletter_news'] . "',  newsletter_personal = '" . (int)$data['newsletter_personal'] . "', customer_group_id = '" . (int)$data['customer_group_id'] . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '" . (int)$data['status'] . "', mudak = '" . (int)$data['mudak'] . "', gender = '" . (int)$data['gender'] . "', cron_sent = '" . (int)$data['cron_sent'] . "', printed2912 = '" . (int)$data['printed2912'] . "'  date_added = NOW()");
+			$this->db->query("INSERT INTO customer SET 
+				firstname 			= '" . $this->db->escape($data['firstname']) . "', 
+				lastname 			= '" . $this->db->escape($data['lastname']) . "', 
+				store_id 			= '" . $this->db->escape($data['store_id']) . "', 
+				customer_comment 	= '" . $this->db->escape($data['customer_comment']) . "', 
+				cashless_info 		= '" . $this->db->escape($data['cashless_info']) . "', 
+				discount_card 		= '" . $this->db->escape($data['discount_card']) . "', 
+				email 				= '" . $this->db->escape($data['email']) . "', 
+				telephone 			= '" . $this->db->escape($data['telephone']) . "', 
+				fax 				= '" . $this->db->escape($data['fax']) . "', 
+				passport_serie 		= '" . $this->db->escape($data['passport_serie']) . "', 
+				passport_date 		= '" . $this->db->escape($data['passport_date']) . "',
+				passport_inn 		= '" . $this->db->escape($data['passport_inn']) . "',  
+				passport_given 		= '" . $this->db->escape($data['passport_given']) . "', 
+				birthday 			= '" . $this->db->escape(date('Y-m-d',strtotime($data['birthday']))) . "',  
+				newsletter 			= '" . (int)$data['newsletter'] . "',  
+				viber_news 			= '" . (int)$data['viber_news'] . "', 
+				newsletter_news 	= '" . (int)$data['newsletter_news'] . "',  
+				newsletter_personal = '" . (int)$data['newsletter_personal'] . "', 
+				customer_group_id 	= '" . (int)$data['customer_group_id'] . "', 
+				salt 				= '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', 
+				password 			= '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', 
+				status 				= '" . (int)$data['status'] . "', 
+				mudak 				= '" . (int)$data['mudak'] . "', 
+				gender 				= '" . (int)$data['gender'] . "', 
+				cron_sent 			= '" . (int)$data['cron_sent'] . "', 
+				printed2912 		= '" . (int)$data['printed2912'] . "'  
+				date_added 			= NOW()");
 			
 			$customer_id = $this->db->getLastId();
 			
 			if (isset($data['address'])) {
 				foreach ($data['address'] as $address) {
-					$this->db->query("INSERT INTO address SET customer_id = '" . (int)$customer_id . "', firstname = '" . $this->db->escape($address['firstname']) . "', lastname = '" . $this->db->escape($address['lastname']) . "', company = '" . $this->db->escape($address['company']) . "', company_id = '" . $this->db->escape($address['company_id']) . "', tax_id = '" . $this->db->escape($address['tax_id']) . "', address_1 = '" . $this->db->escape($address['address_1']) . "', address_2 = '" . $this->db->escape($address['address_2']) . "', city = '" . $this->db->escape($address['city']) . "', for_print = '" . (int)$address['for_print'] . "', postcode = '" . $this->db->escape($address['postcode']) . "', passport_serie = '" . $this->db->escape($address['passport_serie']) . "', passport_given = '" . $this->db->escape($address['passport_given']) . "', country_id = '" . (int)$address['country_id'] . "', zone_id = '" . (int)$address['zone_id'] . "'");
+					$this->db->query("INSERT INTO address SET 
+						customer_id 	= '" . (int)$customer_id . "', 
+						firstname 		= '" . $this->db->escape($address['firstname']) . "', 
+						lastname 		= '" . $this->db->escape($address['lastname']) . "', 
+						company 		= '" . $this->db->escape($address['company']) . "', 
+						company_id 		= '" . $this->db->escape($address['company_id']) . "', 
+						tax_id 			= '" . $this->db->escape($address['tax_id']) . "', 
+						address_1 		= '" . $this->db->escape($address['address_1']) . "', 
+						address_2 		= '" . $this->db->escape($address['address_2']) . "', 
+						city 			= '" . $this->db->escape($address['city']) . "', 
+						for_print 		= '" . (int)$address['for_print'] . "', 
+						postcode 		= '" . $this->db->escape($address['postcode']) . "', 
+						passport_serie 	= '" . $this->db->escape($address['passport_serie']) . "',
+						passport_date 	= '" . $this->db->escape($address['passport_date']) . "',
+						passport_inn 	= '" . $this->db->escape($address['passport_inn']) . "',  
+						passport_given 	= '" . $this->db->escape($address['passport_given']) . "', 
+						country_id 		= '" . (int)$address['country_id'] . "', 
+						zone_id 		= '" . (int)$address['zone_id'] . "'");
 					
 					if (isset($address['default'])) {
 						$address_id = $this->db->getLastId();
@@ -50,15 +94,14 @@
 		public function addCustomerCall($data){			
 			$this->db->query("INSERT INTO customer_calls
 				SET
-				customer_id = '" . (int)$data['customer_id'] . "',
-				customer_phone = '" . $this->db->escape($data['customer_phone']) . "',
-				date_start = '" . $this->db->escape($data['date_start']) . "',
-				date_end = '" . $this->db->escape($data['date_end']) . "',
-				comment = '" . $this->db->escape($data['comment']) . "',
-				manager_id = '" . (int)$data['manager_id'] . "',
-				filelink = '" . $this->db->escape($data['filelink']) . "',
-				order_id = '" . (int)$data['order_id'] . "'
-				");			
+				customer_id 		= '" . (int)$data['customer_id'] . "',
+				customer_phone 		= '" . $this->db->escape($data['customer_phone']) . "',
+				date_start 			= '" . $this->db->escape($data['date_start']) . "',
+				date_end 			= '" . $this->db->escape($data['date_end']) . "',
+				comment 			= '" . $this->db->escape($data['comment']) . "',
+				manager_id 			= '" . (int)$data['manager_id'] . "',
+				filelink 			= '" . $this->db->escape($data['filelink']) . "',
+				order_id 			= '" . (int)$data['order_id'] . "'");			
 		}
 
 		public function setSentManualLetter($customer_id, $sent_manual){
@@ -112,19 +155,44 @@
 			$this->load->model('kp/work');
 			$this->model_kp_work->updateFieldPlusOne('edit_customer_count');
 			
-			if ($data['birthday'] && mb_strlen($data['birthday']) > 2) {
-				
+			if ($data['birthday'] && mb_strlen($data['birthday']) > 2) {				
 				if ($birthday != date('Y-m-d', strtotime($data['birthday'])) && in_array($query->row['birthday'], array('', '0000-00-00', '1970-01-01', ))){				
 					$this->model_kp_work->updateFieldPlusOne('edit_birthday_count');
-				}
-				
+				}				
 			}
 			
-			$this->db->query("UPDATE customer SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "',  customer_comment = '" . $this->db->escape($data['customer_comment']) . "', cashless_info = '" . $this->db->escape($data['cashless_info']) . "', discount_card = '" . $this->db->escape($data['discount_card']) . "', email = '" . $this->db->escape(trim($data['email'])) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', passport_serie = '" . $this->db->escape($data['passport_serie']) . "', passport_given = '" . $this->db->escape($data['passport_given']) . "', birthday = '" . $this->db->escape(date('Y-m-d',strtotime($data['birthday']))) . "', newsletter = '" . (int)$data['newsletter'] . "',  viber_news = '" . (int)$data['viber_news'] . "',  newsletter_news = '" . (int)$data['newsletter_news'] . "',  newsletter_personal = '" . (int)$data['newsletter_personal'] . "', customer_group_id = '" . (int)$data['customer_group_id'] . "', status = '" . (int)$data['status'] . "', mudak = '" . (int)$data['mudak'] . "', gender = '" . (int)$data['gender'] . "', notify = '" . (int)$data['notify'] . "', cron_sent = '" . (int)$data['cron_sent'] . "', printed2912 = '" . (int)$data['printed2912'] . "'  WHERE customer_id = '" . (int)$customer_id . "'");
+			$this->db->query("UPDATE customer SET 
+				firstname 			= '" . $this->db->escape($data['firstname']) . "', 
+				lastname 			= '" . $this->db->escape($data['lastname']) . "',  
+				customer_comment 	= '" . $this->db->escape($data['customer_comment']) . "', 
+				cashless_info 		= '" . $this->db->escape($data['cashless_info']) . "', 
+				discount_card 		= '" . $this->db->escape($data['discount_card']) . "', 
+				email 				= '" . $this->db->escape(trim($data['email'])) . "', 
+				telephone 			= '" . $this->db->escape($data['telephone']) . "', 
+				fax 				= '" . $this->db->escape($data['fax']) . "', 
+				passport_serie 		= '" . $this->db->escape($data['passport_serie']) . "', 
+				passport_date 		= '" . $this->db->escape($data['passport_date']) . "',
+				passport_inn 		= '" . $this->db->escape($data['passport_inn']) . "', 
+				passport_given 		= '" . $this->db->escape($data['passport_given']) . "', 
+				birthday 			= '" . $this->db->escape(date('Y-m-d',strtotime($data['birthday']))) . "', 
+				newsletter 			= '" . (int)$data['newsletter'] . "',  
+				viber_news 			= '" . (int)$data['viber_news'] . "',  
+				newsletter_news 	= '" . (int)$data['newsletter_news'] . "',  
+				newsletter_personal = '" . (int)$data['newsletter_personal'] . "', 
+				customer_group_id 	= '" . (int)$data['customer_group_id'] . "', 
+				status 				= '" . (int)$data['status'] . "', 
+				mudak 				= '" . (int)$data['mudak'] . "', 
+				gender 				= '" . (int)$data['gender'] . "', 
+				notify 				= '" . (int)$data['notify'] . "', 
+				cron_sent 			= '" . (int)$data['cron_sent'] . "', 
+				printed2912 		= '" . (int)$data['printed2912'] . "'  
+				WHERE customer_id 	= '" . (int)$customer_id . "'");
 			
 			$simple_data = array(
 			'custom_birthday' => $this->db->escape(date('Y-m-d',strtotime($data['birthday']))),
 			'custom_passport_serie' => $this->db->escape($data['passport_serie']),
+			'custom_passport_date' 	=> $this->db->escape($data['passport_date']),
+			'custom_passport_inn' 	=> $this->db->escape($data['passport_inn']),
 			'custom_passport_given' => $this->db->escape($data['passport_given'])
 			);
 			
@@ -143,7 +211,26 @@
 			
 			if (isset($data['address'])) {
 				foreach ($data['address'] as $address) {
-					$this->db->query("INSERT INTO address SET address_id = '" . (int)$address['address_id'] . "', customer_id = '" . (int)$customer_id . "', firstname = '" . $this->db->escape($address['firstname']) . "', lastname = '" . $this->db->escape($address['lastname']) . "', company = '" . $this->db->escape($address['company']) . "', company_id = '" . $this->db->escape($address['company_id']) . "', tax_id = '" . $this->db->escape($address['tax_id']) . "', address_1 = '" . $this->db->escape($address['address_1']) . "', passport_serie = '" . $this->db->escape($address['passport_serie']) . "', passport_given = '" . $this->db->escape($address['passport_given']) . "', address_2 = '" . $this->db->escape($address['address_2']) . "', city = '" . $this->db->escape($address['city']) . "', verified = '" . (int)$address['verified'] . "', for_print = '" . (int)$address['for_print'] . "', postcode = '" . $this->db->escape($address['postcode']) . "', country_id = '" . (int)$address['country_id'] . "', zone_id = '" . (int)$address['zone_id'] . "'");
+					$this->db->query("INSERT INTO address SET 
+						address_id 			= '" . (int)$address['address_id'] . "', 
+						customer_id 		= '" . (int)$customer_id . "', 
+						firstname 			= '" . $this->db->escape($address['firstname']) . "', 
+						lastname 			= '" . $this->db->escape($address['lastname']) . "', 
+						company 			= '" . $this->db->escape($address['company']) . "', 
+						company_id			= '" . $this->db->escape($address['company_id']) . "', 
+						tax_id 				= '" . $this->db->escape($address['tax_id']) . "', 
+						address_1 			= '" . $this->db->escape($address['address_1']) . "', 
+						passport_serie 		= '" . $this->db->escape($address['passport_serie']) . "',
+						passport_date 		= '" . $this->db->escape($address['passport_date']) . "',
+						passport_inn 		= '" . $this->db->escape($address['passport_inn']) . "', 
+						passport_given 		= '" . $this->db->escape($address['passport_given']) . "', 
+						address_2 			= '" . $this->db->escape($address['address_2']) . "', 
+						city 				= '" . $this->db->escape($address['city']) . "', 
+						verified 			= '" . (int)$address['verified'] . "', 
+						for_print 			= '" . (int)$address['for_print'] . "', 
+						postcode 			= '" . $this->db->escape($address['postcode']) . "', 
+						country_id			= '" . (int)$address['country_id'] . "', 
+						zone_id 			= '" . (int)$address['zone_id'] . "'");
 					
 					if (isset($address['default'])) {
 						$address_id = $this->db->getLastId();

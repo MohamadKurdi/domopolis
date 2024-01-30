@@ -35,6 +35,49 @@
 				</tr>
 			</table>
 
+			<h2>Отправка почты v2, через библиотеку отправки</h2>
+			<table class="form">
+				<tr>		
+					<td width="25%">
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Библиотека для транзакций</span></p>
+						<select name="config_mailgate_library">
+							<?php foreach ($mailgates as $mailgate) { ?>
+								<?php if ($mailgate == $config_mailgate_library) { ?>
+									<option value="<?php echo $mailgate; ?>" selected="selected"><?php echo $mailgate; ?></option>
+								<?php } else { ?>
+									<option value="<?php echo $mailgate; ?>"><?php echo $mailgate; ?></option>
+								<?php } ?>
+							<?php } ?>				
+						</select>
+					</td>
+
+					<td width="25%">
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Библиотека для маркетинга</span></p>
+						<select name="config_mailgate_marketing_library">
+							<?php foreach ($mailgates as $mailgate) { ?>
+								<?php if ($mailgate == $config_mailgate_marketing_library) { ?>
+									<option value="<?php echo $mailgate; ?>" selected="selected"><?php echo $mailgate; ?></option>
+								<?php } else { ?>
+									<option value="<?php echo $mailgate; ?>"><?php echo $mailgate; ?></option>
+								<?php } ?>
+							<?php } ?>				
+						</select>
+					</td>
+
+						<td width="25%">
+							<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Маркетинг имя отправителя</span></p>
+							<input type="text" name="config_mail_trigger_name_from" value="<?php echo $config_mail_trigger_name_from; ?>" size="50" />								
+						</td>
+						
+						<td width="25%">
+							<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Маркетинг почта отправителя</span></p>
+							<input type="text" name="config_mail_trigger_mail_from" value="<?php echo $config_mail_trigger_mail_from; ?>" size="50" />								
+						</td>
+					</tr>
+				</table>
+
+
+
 			<h2>Отправка почты</h2><sup style="color:red">Устаревшие настройки, оставлены для обратной совместимости</sup>
 			<table class="form">
 				<tr>		
@@ -60,6 +103,11 @@
 								<option value="mailgun" selected="selected">MailGun веб апи</option>
 							<?php } else { ?>
 								<option value="mailgun">MailGun веб апи</option>
+							<?php } ?>
+							<?php if ($config_mail_trigger_protocol == 'sendsay') { ?>
+								<option value="sendsay" selected="selected">SendSay веб апи</option>
+							<?php } else { ?>
+								<option value="sendsay">SendSay веб апи</option>
 							<?php } ?>
 						</select>
 					</td>
@@ -87,23 +135,54 @@
 							<?php } else { ?>
 								<option value="mailgun">MailGun веб апи</option>
 							<?php } ?>
+							<?php if ($config_mail_trigger_protocol == 'sendsay') { ?>
+								<option value="sendsay" selected="selected">SendSay веб апи</option>
+							<?php } else { ?>
+								<option value="sendsay">SendSay веб апи</option>
+							<?php } ?>
 						</select></td>
 
-						<td width="25%">
-							<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Имя отправителя</span></p>
-							<input type="text" name="config_mail_trigger_name_from" value="<?php echo $config_mail_trigger_name_from; ?>" size="50" />								
+						<td width="25%">									
 						</td>
 						
-						<td width="25%">
-							<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Почта отправителя</span></p>
-							<input type="text" name="config_mail_trigger_mail_from" value="<?php echo $config_mail_trigger_mail_from; ?>" size="50" />								
+						<td width="25%">							
+						</td>
+					</tr>
+				</table>
+
+				<h2>Интерграция с SendSay</h2>	
+				<table class="form">
+					<tr>
+						<td>Включить SendSay</td>
+						<td>
+							<select name="config_sendsay_enable">
+								<?php if ($config_sendsay_enable) { ?>
+									<option value="1" selected="selected">Включить</option>
+									<option value="0">Отключить</option>
+								<?php } else { ?>													
+									<option value="1">Включить</option>
+									<option value="0"  selected="selected">Отключить</option>
+								<? } ?>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>API ключ SendSay</td>
+						<td>
+							<input type="text" name="config_sendsay_api_key" value="<?php echo $config_sendsay_api_key; ?>" size="50" />								
+						</td>
+					</tr>
+					<tr>
+						<td>API URI SendSay</td>
+						<td>
+							<input type="text" name="config_sendsay_api_uri" value="<?php echo $config_sendsay_api_uri; ?>" size="50" />								
 						</td>
 					</tr>
 				</table>
 
 
-				<h2>Интерграция с SparkPost</h2>
-				
+
+				<h2>Интерграция с SparkPost</h2>				
 				<table class="form">
 					<tr>
 						<td>Включить синхронизацию Suppression List из SparkPost</td>
@@ -206,9 +285,7 @@
 							</td>
 						</tr>
 					</tr>
-				</table>
-
-				
+				</table>				
 				
 				
 				<h2>Интерграция с MailWizz EMA</h2>

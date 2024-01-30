@@ -1,13 +1,14 @@
 <?php
 	class ModelAccountCustomer extends Model {
 		public function addCustomer($data) {
+			$this->language->load('mail/customer');
+			$this->load->model('account/customer_group');
+
 			if (isset($data['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($data['customer_group_id'], $this->config->get('config_customer_group_display'))) {
 				$customer_group_id = $data['customer_group_id'];
 				} else {
 				$customer_group_id = $this->config->get('config_customer_group_id');
-			}
-			
-			$this->load->model('account/customer_group');
+			}		
 			
 			$customer_group_info = $this->model_account_customer_group->getCustomerGroup($customer_group_id);
 			
@@ -20,7 +21,9 @@
 				birthday_date 	= '" . $this->db->escape(date('d',strtotime($data['birthday']))) . "',
 				birthday_month 	= '" . $this->db->escape(date('m',strtotime($data['birthday']))) . "',
 				email 			= '" . $this->db->escape($data['email']) . "', 
-				passport_serie 	= '" . $this->db->escape($data['passport_serie']) . "', 
+				passport_serie 	= '" . $this->db->escape($data['passport_serie']) . "',
+				passport_date 	= '" . $this->db->escape($data['passport_date']) . "',
+				passport_inn 	= '" . $this->db->escape($data['passport_inn']) . "', 
 				passport_given 	= '" . $this->db->escape($data['passport_given']) . "', 
 				telephone 		= '" . $this->db->escape($data['telephone']) . "', 
 				fax 			= '" . $this->db->escape($data['fax']) . "', 
@@ -40,16 +43,25 @@
 			
 			$this->db->non_cached_query("UPDATE customer SET utoken = md5(concat(email, '" . $this->config->get('config_encryption') . "')) WHERE customer_id = '" . (int)$customer_id . "'"); 
 			
-			$this->db->non_cached_query("INSERT INTO address SET customer_id = '" . (int)$customer_id . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company = '" . $this->db->escape($data['company']) . "', company_id = '" . $this->db->escape($data['company_id']) . "', tax_id = '" . $this->db->escape($data['tax_id']) . "', address_1 = '" . $this->db->escape($data['address_1']) . "', address_2 = '" . $this->db->escape($data['address_2']) . "', city = '" . $this->db->escape($data['city']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int)$data['country_id'] . "', zone_id = '" . (int)$data['zone_id'] . "'");
+			$this->db->non_cached_query("INSERT INTO address SET 
+				customer_id 	= '" . (int)$customer_id . "', 
+				firstname 		= '" . $this->db->escape($data['firstname']) . "', 
+				lastname 		= '" . $this->db->escape($data['lastname']) . "', 
+				company 		= '" . $this->db->escape($data['company']) . "', 
+				company_id 		= '" . $this->db->escape($data['company_id']) . "', 
+				tax_id 			= '" . $this->db->escape($data['tax_id']) . "', 
+				address_1 		= '" . $this->db->escape($data['address_1']) . "', 
+				address_2 		= '" . $this->db->escape($data['address_2']) . "', 
+				city 			= '" . $this->db->escape($data['city']) . "', 
+				postcode 		= '" . $this->db->escape($data['postcode']) . "', 
+				country_id 		= '" . (int)$data['country_id'] . "', 
+				zone_id 		= '" . (int)$data['zone_id'] . "'");
 			
 			$address_id = $this->db->getLastId();
 			
 			$this->db->non_cached_query("UPDATE customer SET address_id = '" . (int)$address_id . "' WHERE customer_id = '" . (int)$customer_id . "'");
 			
-			$this->language->load('mail/customer');
-			
-			$template = new EmailTemplate($this->request, $this->registry);
-			
+			$template = new EmailTemplate($this->request, $this->registry);			
 			$template->addData($data); 
 			
 			$template->data['newsletter'] 				= $this->language->get((isset($data['newsletter']) && $data['newsletter'] == 1) ? 'text_yes' : 'text_no');
@@ -121,7 +133,6 @@
 				$mail->send();
 				$template->sent();
 				
-				// Send to additional alert emails if new account email is enabled
 				$emails = explode(',', $this->config->get('config_alert_emails'));
 				
 				foreach ($emails as $email) {
@@ -146,11 +157,14 @@
 				birthday_date 	= '" . $this->db->escape(date('d',strtotime($data['birthday']))) . "',
 				birthday_month 	= '" . $this->db->escape(date('m',strtotime($data['birthday']))) . "',
 				email 			= '" . $this->db->escape($data['email']) . "', 
-				passport_serie 	= '" . $this->db->escape($data['passport_serie']) . "', 
+				passport_serie 	= '" . $this->db->escape($data['passport_serie']) . "',
+				passport_date 	= '" . $this->db->escape($data['passport_date']) . "',
+				passport_inn 	= '" . $this->db->escape($data['passport_inn']) . "',
 				passport_given 	= '" . $this->db->escape($data['passport_given']) . "', 
 				telephone 		= '" . $this->db->escape($data['telephone']) . "', 
 				fax 			= '" . $this->db->escape($data['fax']) . "' 
-				WHERE customer_id = '" . (int)$this->customer->getId() . "'");
+				WHERE 
+				customer_id 	= '" . (int)$this->customer->getId() . "'");
 			
 			$this->customer->addToEMAQueue();
 		}
@@ -166,10 +180,31 @@
 
 			if ($customer && !empty($customer['customer_id'])){
 				$this->db->non_cached_query("UPDATE customer 
-				SET salt = '" . $this->db->escape($salt) . "', 
-				password = '" . $this->db->escape($password) . "'
-				WHERE customer_id = '" . (int)$customer['customer_id'] . "'");
+				SET salt 	= '" . $this->db->escape($salt) . "', 
+				password 	= '" . $this->db->escape($password) . "'
+				WHERE 
+				customer_id = '" . (int)$customer['customer_id'] . "'");
 			}						
+		}
+
+		public function editTelephone($telephone) {
+			$this->db->non_cached_query("UPDATE customer SET telephone = '" . $this->db->escape($telephone) . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");			
+		}
+
+		public function editPassportSerie($passport_serie) {
+			$this->db->non_cached_query("UPDATE customer SET passport_serie = '" . $this->db->escape($passport_serie) . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");			
+		}
+
+		public function editPassportDate($passport_date) {
+			$this->db->non_cached_query("UPDATE customer SET passport_date = '" . $this->db->escape($passport_date) . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");			
+		}
+
+		public function editPassportInn($passport_inn) {
+			$this->db->non_cached_query("UPDATE customer SET passport_inn = '" . $this->db->escape($passport_inn) . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");			
+		}
+
+		public function editPassportGiven($passport_given) {
+			$this->db->non_cached_query("UPDATE customer SET passport_given = '" . $this->db->escape($passport_given) . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");			
 		}
 		
 		public function editViberNews($viber_news) {

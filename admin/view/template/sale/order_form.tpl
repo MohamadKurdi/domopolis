@@ -445,15 +445,13 @@
 																<?php } ?></td>
 																<td><?php echo $text_user_agent; ?></td>
 																<td><?php if ($user_agent) { ?><?php echo $user_agent; ?><?php } ?></td>
-																
-																<!-- SOFORP Order Referer - begin -->
+
 																<tr>
 																	<td><?php echo $text_first_referrer; ?></td>
 																	<td><?php echo $first_referrer; ?></td>
 																	<td><?php echo $text_last_referrer; ?></td>
 																	<td><?php echo $last_referrer; ?></td>
 																</tr>
-																<!-- SOFORP Order Referer - end -->
 																
 															</tr>
 															<?php if ($affiliate_id) { ?>
@@ -748,12 +746,7 @@
 																					</tr>
 																					<tr>
 																						<td colspan="2">
-								<? /* if ($customer_info['discount_card']) { ?>
-									<div style="clear:both;"></div>
-									<div style="padding:3px; background:#FFF; border:1px dotted #CCC; display:inline-block; margin-right:8px;">
-									<i class="fa fa-credit-card-alt" aria-hidden="true"></i> Карта # <? echo $customer_info['discount_card']; ?>, скидка <? echo $customer_info['discount_percent']; ?>%
-									</div>
-								<? } */ ?>
+
 								<div style="padding:3px; background:#FFF; border:1px dotted #CCC; display:inline-block; margin-right:8px;">
 									Заказов: <? echo $customer_info['order_count']; ?>
 								</div>
@@ -856,12 +849,33 @@
 											<td>День рождения</td>
 											<td><input type="text" class="date onfocusedit_direct" name="birthday" value="<?php echo ($customer_info['birthday'] != '0000-00-00' && $customer_info['birthday'] != '1970-01-01' && $customer_info['birthday'] != '-0001-11-30')?$customer_info['birthday']:''; ?>"/><span></span></td>						
 											
-											<td>Паспорт серия:</td>
-											<td><input class="" type="text" name="passport_serie" value="<?php echo $customer_info['passport_serie']; ?>" style="width:80%" /><span></span>
+											<td rowspan="2">Паспортные данные</td>
+											<td rowspan="2">
+												<div>
+													<div style="width:45%; float:left;">
+														<div style="margin-bottom:5px;">
+															<small class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Серия, номер</small><br />
+															<input class="" type="text" name="passport_serie" value="<?php echo $customer_info['passport_serie']; ?>" style="width:90%" /><span></span>
+														</div>
+														<div>
+															<small class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">ИНН</small><br />
+															<input class="" type="text" name="passport_inn" value="<?php echo $customer_info['passport_inn']; ?>" style="width:90%" /><span></span>
+														</div>
+													</div>
+
+													<div style="width:45%; float:right;">
+														<div style="margin-bottom:5px;">
+															<small class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Кем выдан</small><br />
+															<input class="" type="text" name="passport_given" value="<?php echo $customer_info['passport_given']; ?>" style="width:90%" /><span></span>
+														</div>
+														<div>
+															<small class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Когда выдан</small><br />
+															<input class="date" type="text" name="passport_date" value="<?php echo $customer_info['passport_date']; ?>" style="width:90%" /><span></span>
+														</div>
+													</div>
+												</div>
 											</td>
-											
-											
-											
+
 										</tr>
 										<tr>
 											
@@ -907,12 +921,6 @@
 															$('#related-orders-td').append(html);										
 														}
 													</script>
-												</td>
-												
-												
-												
-												<td>Паспорт выдан:</td>
-												<td><input class="" type="text" name="passport_given" value="<?php echo $customer_info['passport_given']; ?>" style="width:80%" /><span></span>
 												</td>
 											</tr>
 											<tr>
@@ -3627,12 +3635,15 @@
 							<? } ?>
 							<tr>
 								<td><?php echo $entry_address; ?></td>
-								<td><div  style="max-width:90%!important;"><select name="shipping_address" id="shipping_address" class="wide" style="width:350px;">
+								<td>
+								<div  style="max-width:90%!important;"><select name="shipping_address" id="shipping_address" class="wide" style="width:350px;">
 									<option value="0" selected="selected"><?php echo $text_none; ?></option>
 									<?php foreach ($addresses as $address) { ?>
 										<option value="<?php echo $address['address_id']; ?>"><?php echo $address['city']; ?><?php if ($address['address_1']) { ?>, <?php echo $address['address_1']; ?><?php } ?><? if ($address['verified']) { ?>/ Вериф.<? } ?><? if ($address['for_print']) { ?> Печатн.<? } ?></option>
 									<?php } ?>
-								</select></div></td>
+								</select>
+								</div>
+								</td>
 							</tr>
 							
 							<tr>
@@ -3666,142 +3677,172 @@
 							
 							<tr>
 								<td> <?php echo $entry_firstname; ?></td>
-								<td><input class="onfocusedit_direct" type="text" name="shipping_firstname" value="<?php echo $shipping_firstname; ?>" /><span></span>
+								<td>
+									<input class="onfocusedit_direct" type="text" name="shipping_firstname" value="<?php echo $shipping_firstname; ?>" /><span></span>
 									<?php if ($error_shipping_firstname) { ?>
 										<span class="error"><?php echo $error_shipping_firstname; ?></span>
+									<?php } ?>
+								</td>
+							</tr>
+							<tr>
+								<td> <?php echo $entry_lastname; ?></td>
+								<td><input class="onfocusedit_direct" type="text" name="shipping_lastname" value="<?php echo $shipping_lastname; ?>" /><span></span>
+									<?php if ($error_shipping_lastname) { ?>
+										<span class="error"><?php echo $error_shipping_lastname; ?></span>
 										<?php } ?></td>
 									</tr>
 									<tr>
-										<td> <?php echo $entry_lastname; ?></td>
-										<td><input class="onfocusedit_direct" type="text" name="shipping_lastname" value="<?php echo $shipping_lastname; ?>" /><span></span>
-											<?php if ($error_shipping_lastname) { ?>
-												<span class="error"><?php echo $error_shipping_lastname; ?></span>
-												<?php } ?></td>
-											</tr>
-											<tr>
-												<td>Паспорт серия:</td>
-												<td><input class="onfocusedit_direct" type="text" name="shipping_passport_serie" value="<?php echo $shipping_passport_serie; ?>" /><span></span>
-													<span class="help">Если получатель отличается от плательщика</span></td>
+										<td>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Паспорт серия, номер</span>
+										</td>
+										<td>
+											<input class="onfocusedit_direct" type="text" name="shipping_passport_serie" value="<?php echo $shipping_passport_serie; ?>" /><span></span>
+											<span class="help">Если получатель отличается от плательщика</span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Паспорт дата выдачи</span>
+										</td>
+										<td>
+											<input class="onfocusedit_direct date" type="text" name="shipping_passport_date" value="<?php echo $shipping_passport_date; ?>" /><span></span>
+											<span class="help">Если получатель отличается от плательщика</span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">ИНН</span>
+										</td>
+										<td>
+											<input class="onfocusedit_direct" type="text" name="shipping_passport_inn" value="<?php echo $shipping_passport_inn; ?>" /><span></span>
+											<span class="help">Если получатель отличается от плательщика</span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Паспорт кем выдан</span>
+										</td>
+										<td>
+											<input class="onfocusedit_direct" type="text" name="shipping_passport_given" value="<?php echo $shipping_passport_given; ?>"/><span></span>
+											<span class="help">Если получатель отличается от плательщика</span>
+										</td>
+									</tr>
+									<tr>
+										<td><?php echo $entry_company; ?></td>
+										<td><input class="onfocusedit_direct" type="text" name="shipping_company" value="<?php echo $shipping_company; ?>" /><span></span></td>
+									</tr>
+									<tr>
+										<td> <?php echo $entry_city; ?></td>
+										<td>
+
+											<input class="onfocusedit_direct" type="text" id="shipping_city" name="shipping_city" value="<?php echo $shipping_city; ?>" /><span></span>													
+
+											<? if ($current_shipping_time) { ?>
+												<div style="margin-top:4px;"><div style="font-size:14px; display:inline-block; padding:3px; color:#FFF; background-color:grey;"><i class="fa fa-clock-o"></i>&nbsp;текущее время <? echo $current_shipping_time; ?></div>
+												</div><? } ?>
+
+												<?php if (!$shipping_city) { ?>
+													<script>
+														$(document).ready(function(){
+															$.ajax({
+																url: "index.php?route=sale/order/getCityByIpAddrAjax&ip=<?php echo $ip; ?>&token=<?php echo $token; ?>",
+																type: 'GET',
+																dataType: 'json',
+																beforeSend: function(){
+																	$('input[name=shipping_city]').before("<i class='fa fa-spinner fa-spin'></i>");
+																	$('input[name=shipping_postcode]').before("<i class='fa fa-spinner fa-spin'></i>");
+																},
+																success: function(json){
+																	$('input[name=shipping_city]').parent().children('.fa-spin').remove();
+																	$('input[name=shipping_postcode]').parent().children('.fa-spin').remove();
+
+																	if (json.city){
+																		$('input[name=shipping_city]').val(json.city);
+																		$('input[name=shipping_city]').parent('td').parent('tr').after("<tr><td></td><td style='background-color:#cf4a61; padding:5px; color:#fff;'>Внимание! Город подобран на основании локации клиента! Нужно уточнять!</td></tr>");
+																		$('input[name=shipping_city]').before("<i class='fa fa-question-circle' style='font-size:24px; color:#cf4a61'></i> ");
+																	}
+
+																	if (json.zip){
+																		$('input[name=shipping_postcode]').val(json.zip);
+																		$('input[name=shipping_postcode]').parent('td').parent('tr').after("<tr><td></td><td style='background-color:#cf4a61; padding:5px; color:#fff;' colspan='2'>Внимание! Индекс подобран на основании локации клиента! Нужно уточнять!</td></tr>");
+																		$('input[name=shipping_postcode]').before("<i class='fa fa-question-circle' style='font-size:24px; color:#cf4a61'></i> ");
+																	}							
+																}
+															});
+														});
+													</script>
+												<?php } ?>	
+
+											</td>
+										</tr>
+										<tr>
+											<td><?php echo $entry_address_1; ?></td>
+											<td>
+												<?php if (!empty($custom_shipping_address['shipping_custom_beltway_distance']) && !empty($custom_shipping_address['shipping_custom_beltway_distance']['value'])) { ?>
+													<span id="shipping-mkad-error" class="error"><i class="fa fa-exclamation-triangle"></i> Внимание! Адрес находится за МКАД. Стоимость доставки увеличена.</span>
+												<? } ?>
+												<input class="onfocusedit_direct" type="text" name="shipping_address_1" value="<?php echo $shipping_address_1; ?>" />
+												<span></span>
+												<input class="onchangeedit_direct" type="hidden" id="shipping_address_struct" name="shipping_address_struct" value="<?php echo $shipping_address_struct; ?>" />
+												<span></span>
+												<?php if ($error_shipping_address_1) { ?>
+													<span class="error"><?php echo $error_shipping_address_1; ?></span>
+												<?php } ?>
+
+												<?php if (!$valid_shipping_address_struct) { ?>
+													<span class="error" id="valid_shipping_address_struct"><i class="fa fa-exclamation-triangle"></i> Нет детальной информации о адресе, используй подбор!
+														<?php if ($shipping_code == 'dostavkaplus.sh1') { ?><br /><i class="fa fa-exclamation-triangle"></i> Ошибка уровень 0: Указана доставка курьером! Подбор адреса поможет курьеру не заблудиться в лесу!<?php } ?></span>
+													<?php } ?>
+
+													<?php if ($suggest_get_shipping_address_struct_stage_1) { ?>
+														<br /><span class="error" id="suggest_get_shipping_address_struct_stage_1"><i class="fa fa-exclamation-triangle"></i> Ошибка уровень 1: Получен полный адрес, но нет структуры</span>
+													<?php } ?>
+
+													<?php if ($suggest_get_shipping_address_struct_stage_2) { ?>
+														<br /><span class="error" id="suggest_get_shipping_address_struct_stage_2">
+															<i class="fa fa-exclamation-triangle"></i>Ошибка уровень 2: Доставка курьером, не разобран адрес! Планируется безусловный автоматический поиск адреса и перезапись.</span>
+														<?php } ?>
+
+														<?php if ($use_custom_dadata == 'address') { ?>	
+															<?php echo $shipping_custom_data; ?>														
+														<?php } ?>
+													</td>
 												</tr>
 												<tr>
-													<td>Паспорт выдан:</td>
-													<td><input class="onfocusedit_direct" type="text" name="shipping_passport_given" value="<?php echo $shipping_passport_given; ?>"/><span></span>
-														<span class="help">Если получатель отличается от плательщика</span></td>
-													</tr>
-													<tr>
-														<td><?php echo $entry_company; ?></td>
-														<td><input class="onfocusedit_direct" type="text" name="shipping_company" value="<?php echo $shipping_company; ?>" /><span></span></td>
-													</tr>
-													<tr>
-														<td> <?php echo $entry_city; ?></td>
-														<td>
-															
-															<input class="onfocusedit_direct" type="text" id="shipping_city" name="shipping_city" value="<?php echo $shipping_city; ?>" /><span></span>													
-															
-															<? if ($current_shipping_time) { ?>
-																<div style="margin-top:4px;"><div style="font-size:14px; display:inline-block; padding:3px; color:#FFF; background-color:grey;"><i class="fa fa-clock-o"></i>&nbsp;текущее время <? echo $current_shipping_time; ?></div>
-																</div><? } ?>
-																
-																<?php if (!$shipping_city) { ?>
-																	<script>
-																		$(document).ready(function(){
-																			$.ajax({
-																				url: "index.php?route=sale/order/getCityByIpAddrAjax&ip=<?php echo $ip; ?>&token=<?php echo $token; ?>",
-																				type: 'GET',
-																				dataType: 'json',
-																				beforeSend: function(){
-																					$('input[name=shipping_city]').before("<i class='fa fa-spinner fa-spin'></i>");
-																					$('input[name=shipping_postcode]').before("<i class='fa fa-spinner fa-spin'></i>");
-																				},
-																				success: function(json){
-																					$('input[name=shipping_city]').parent().children('.fa-spin').remove();
-																					$('input[name=shipping_postcode]').parent().children('.fa-spin').remove();
-																					
-																					if (json.city){
-																						$('input[name=shipping_city]').val(json.city);
-																						$('input[name=shipping_city]').parent('td').parent('tr').after("<tr><td></td><td style='background-color:#cf4a61; padding:5px; color:#fff;'>Внимание! Город подобран на основании локации клиента! Нужно уточнять!</td></tr>");
-																						$('input[name=shipping_city]').before("<i class='fa fa-question-circle' style='font-size:24px; color:#cf4a61'></i> ");
-																					}
-																					
-																					if (json.zip){
-																						$('input[name=shipping_postcode]').val(json.zip);
-																						$('input[name=shipping_postcode]').parent('td').parent('tr').after("<tr><td></td><td style='background-color:#cf4a61; padding:5px; color:#fff;' colspan='2'>Внимание! Индекс подобран на основании локации клиента! Нужно уточнять!</td></tr>");
-																						$('input[name=shipping_postcode]').before("<i class='fa fa-question-circle' style='font-size:24px; color:#cf4a61'></i> ");
-																					}							
-																				}
-																			});
-																		});
-																	</script>
-																<?php } ?>	
-																
-															</td>
+													<td><?php echo $entry_address_2; ?></td>
+													<td><input class="onfocusedit_direct" type="text" name="shipping_address_2" value="<?php echo $shipping_address_2; ?>" /><span></span></td>
+												</tr>												
+												<tr>
+													<td><span id="shipping-postcode-required" class="required">*</span> <?php echo $entry_postcode; ?></td>
+													<td>
+														<input class="onfocusedit_direct" type="text" name="shipping_postcode" value="<?php echo $shipping_postcode; ?>" /><span></span>
+														<?php if ($error_shipping_postcode) { ?>
+															<span class="error"><?php echo $error_shipping_postcode; ?></span>
+															<?php } ?>
+														</td>
 														</tr>
 														<tr>
-															<td><?php echo $entry_address_1; ?></td>
-															<td>
-																<?php if (!empty($custom_shipping_address['shipping_custom_beltway_distance']) && !empty($custom_shipping_address['shipping_custom_beltway_distance']['value'])) { ?>
-																	<span id="shipping-mkad-error" class="error"><i class="fa fa-exclamation-triangle"></i> Внимание! Адрес находится за МКАД. Стоимость доставки увеличена.</span>
-																<? } ?>
-																<input class="onfocusedit_direct" type="text" name="shipping_address_1" value="<?php echo $shipping_address_1; ?>" />
-																<span></span>
-																<input class="onchangeedit_direct" type="hidden" id="shipping_address_struct" name="shipping_address_struct" value="<?php echo $shipping_address_struct; ?>" />
-																<span></span>
-																<?php if ($error_shipping_address_1) { ?>
-																	<span class="error"><?php echo $error_shipping_address_1; ?></span>
+															<td> <?php echo $entry_country; ?></td>
+															<td><select name="shipping_country_id" class="onchangeedit_direct">
+																<option value=""><?php echo $text_select; ?></option>
+																<?php foreach ($countries as $country) { ?>
+																	<?php if ($country['country_id'] == $shipping_country_id) { ?>
+																		<option  data-iso="<? echo $country['iso_code_2']; ?>" value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
+																	<?php } else { ?>
+																		<option data-iso="<? echo $country['iso_code_2']; ?>" value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
+																	<?php } ?>
 																<?php } ?>
-																
-																<?php if (!$valid_shipping_address_struct) { ?>
-																	<span class="error" id="valid_shipping_address_struct"><i class="fa fa-exclamation-triangle"></i> Нет детальной информации о адресе, используй подбор!
-																		<?php if ($shipping_code == 'dostavkaplus.sh1') { ?><br /><i class="fa fa-exclamation-triangle"></i> Ошибка уровень 0: Указана доставка курьером! Подбор адреса поможет курьеру не заблудиться в лесу!<?php } ?></span>
-																	<?php } ?>
-																	
-																	<?php if ($suggest_get_shipping_address_struct_stage_1) { ?>
-																		<br /><span class="error" id="suggest_get_shipping_address_struct_stage_1"><i class="fa fa-exclamation-triangle"></i> Ошибка уровень 1: Получен полный адрес, но нет структуры</span>
-																	<?php } ?>
-																	
-																	<?php if ($suggest_get_shipping_address_struct_stage_2) { ?>
-																		<br /><span class="error" id="suggest_get_shipping_address_struct_stage_2">
-																			<i class="fa fa-exclamation-triangle"></i>Ошибка уровень 2: Доставка курьером, не разобран адрес! Планируется безусловный автоматический поиск адреса и перезапись.</span>
-																		<?php } ?>
-																		
-																		<?php if ($use_custom_dadata == 'address') { ?>	
-																			<?php echo $shipping_custom_data; ?>														
-																		<?php } ?>
-																	</td>
-																</tr>
-																<tr>
-																	<td><?php echo $entry_address_2; ?></td>
-																	<td><input class="onfocusedit_direct" type="text" name="shipping_address_2" value="<?php echo $shipping_address_2; ?>" /><span></span></td>
-																</tr>												
-																<tr>
-																	<td><span id="shipping-postcode-required" class="required">*</span> <?php echo $entry_postcode; ?></td>
-																	<td><input class="onfocusedit_direct" type="text" name="shipping_postcode" value="<?php echo $shipping_postcode; ?>" /><span></span>
-																		<?php if ($error_shipping_postcode) { ?>
-																			<span class="error"><?php echo $error_shipping_postcode; ?></span>
-																			<?php } ?></td>
-																		</tr>
-																		<tr>
-																			<td> <?php echo $entry_country; ?></td>
-																			<td><select name="shipping_country_id" class="onchangeedit_direct">
-																				<option value=""><?php echo $text_select; ?></option>
-																				<?php foreach ($countries as $country) { ?>
-																					<?php if ($country['country_id'] == $shipping_country_id) { ?>
-																						<option  data-iso="<? echo $country['iso_code_2']; ?>" value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
-																					<?php } else { ?>
-																						<option data-iso="<? echo $country['iso_code_2']; ?>" value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
-																					<?php } ?>
-																				<?php } ?>
-																			</select><span></span>
-																			<?php if (!$payment_country_id && $ip_geoip_full_info['country_name']) { ?>
-																				<div style="font-size:12px;"><i class="fa fa-globe" aria-hidden="true"></i> Предположительно, страна <? if ($ip_geoip_full_info['country_code'] && file_exists(DIR_APPLICATION . '/view/image/flags/' . mb_strtolower($ip_geoip_full_info['country_code']) . '.png')) { ?>
-																					<img src="<?php echo DIR_FLAGS_NAME; ?><? echo mb_strtolower($ip_geoip_full_info['country_code']); ?>.png" title="<? echo mb_strtolower($ip_geoip_full_info['country_code']) ?>" />
-																				<? } ?>&nbsp;<?php echo $ip_geoip_full_info['country_name']; ?>
-																			</div>
-																		<?php } ?>
-																		<?php if ($error_shipping_country) { ?>
-																			<span class="error"><?php echo $error_shipping_country; ?></span>
-																			<?php } ?></td>
-																		</tr>
+															</select><span></span>
+															<?php if (!$payment_country_id && $ip_geoip_full_info['country_name']) { ?>
+																<div style="font-size:12px;"><i class="fa fa-globe" aria-hidden="true"></i> Предположительно, страна <? if ($ip_geoip_full_info['country_code'] && file_exists(DIR_APPLICATION . '/view/image/flags/' . mb_strtolower($ip_geoip_full_info['country_code']) . '.png')) { ?>
+																	<img src="<?php echo DIR_FLAGS_NAME; ?><? echo mb_strtolower($ip_geoip_full_info['country_code']); ?>.png" title="<? echo mb_strtolower($ip_geoip_full_info['country_code']) ?>" />
+																<? } ?>&nbsp;<?php echo $ip_geoip_full_info['country_name']; ?>
+															</div>
+														<?php } ?>
+														<?php if ($error_shipping_country) { ?>
+															<span class="error"><?php echo $error_shipping_country; ?></span>
+															<?php } ?></td>
+														</tr>
 																		<tr>
 																			<td> <?php echo $entry_zone; ?></td>
 																			<td><select name="shipping_zone_id" class="onchangeedit_direct">

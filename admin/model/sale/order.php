@@ -437,8 +437,10 @@
 			payment_secondary_code = '" . $this->db->escape($data['payment_secondary_code']) . "',
 			shipping_firstname = '" . $this->db->escape($data['shipping_firstname']) . "', 
 			shipping_lastname = '" . $this->db->escape($data['shipping_lastname']) . "',
-			shipping_passport_serie  =  '" . $this->db->escape($data['shipping_passport_serie']) . "',
-			shipping_passport_given   =  '" . $this->db->escape($data['shipping_passport_given']) . "',			
+			shipping_passport_serie  	 =  '" . $this->db->escape($data['shipping_passport_serie']) . "',
+			shipping_passport_date  	 =  '" . $this->db->escape($data['shipping_passport_date']) . "',
+			shipping_passport_inn  	 	 =  '" . $this->db->escape($data['shipping_passport_inn']) . "',
+			shipping_passport_given  	 =  '" . $this->db->escape($data['shipping_passport_given']) . "',			
 			shipping_company = '" . $this->db->escape($data['shipping_company']) . "', 
 			shipping_address_struct = '" . $this->db->escape($data['shipping_address_struct']) . "',  
 			shipping_address_1 = '" . $this->db->escape($data['shipping_address_1']) . "', 
@@ -773,6 +775,8 @@
 			shipping_firstname 		= '" . $this->db->escape(mb_ucfirst($data['shipping_firstname'])) . "', 
 			shipping_lastname 		= '" . $this->db->escape(mb_ucfirst($data['shipping_lastname'])) . "', 
 			shipping_passport_serie  	=  '" . $this->db->escape($data['shipping_passport_serie']) . "',
+			shipping_passport_date  	=  '" . $this->db->escape($data['shipping_passport_date']) . "',
+			shipping_passport_inn  	 	=  '" . $this->db->escape($data['shipping_passport_inn']) . "',
 			shipping_passport_given   	=  '" . $this->db->escape($data['shipping_passport_given']) . "',		
 			shipping_company 			= '" . $this->db->escape($data['shipping_company']) . "', 
 			shipping_address_1 		= '" . $this->db->escape($data['shipping_address_1']) . "', 
@@ -837,9 +841,11 @@
 			$this->customer->addToEMAQueue($data['customer_id']);
 			
 			$this->db->query("UPDATE `customer` SET
-			passport_serie = '" . $this->db->escape($data['passport_serie']) . "',
-			passport_given = '" . $this->db->escape($data['passport_given']) . "'
-			WHERE customer_id = '" . (int)$data['customer_id'] . "'");
+				passport_serie 	= '" . $this->db->escape($data['passport_serie']) . "',
+				passport_date 	= '" . $this->db->escape($data['passport_date']) . "',
+				passport_inn 	= '" . $this->db->escape($data['passport_inn']) . "',
+				passport_given 	= '" . $this->db->escape($data['passport_given']) . "'
+				WHERE customer_id = '" . (int)$data['customer_id'] . "'");
 			
 			if (isset($data['do_update_customer']) && $data['do_update_customer']=='1' && $data['customer_id']){
 				
@@ -847,20 +853,24 @@
 				$this->model_kp_work->updateFieldPlusOne('edit_customer_count');
 				
 				$this->db->query("UPDATE `customer` SET 
-				firstname = '" . $this->db->escape($data['firstname']) . "', 
-				lastname = '" . $this->db->escape($data['lastname']) . "',
-				passport_serie = '" . $this->db->escape($data['passport_serie']) . "',
-				passport_given = '" . $this->db->escape($data['passport_given']) . "',
-				birthday = '" . $this->db->escape(date('Y-m-d', strtotime($data['birthday']))) . "',
-				customer_group_id = '" . (int)$data['customer_group_id'] . "',
-				email = '" . $this->db->escape($data['email']) . "', 
-				telephone = '" . $this->db->escape($data['telephone']) . "',
-				fax = '" . $this->db->escape($data['fax']) . "'				
+				firstname 			= '" . $this->db->escape($data['firstname']) . "', 
+				lastname 			= '" . $this->db->escape($data['lastname']) . "',
+				passport_serie 		= '" . $this->db->escape($data['passport_serie']) . "',
+				passport_date 		= '" . $this->db->escape($data['passport_date']) . "',
+				passport_inn 		= '" . $this->db->escape($data['passport_inn']) . "',
+				passport_given 		= '" . $this->db->escape($data['passport_given']) . "',
+				birthday 			= '" . $this->db->escape(date('Y-m-d', strtotime($data['birthday']))) . "',
+				customer_group_id 	= '" . (int)$data['customer_group_id'] . "',
+				email 				= '" . $this->db->escape($data['email']) . "', 
+				telephone 			= '" . $this->db->escape($data['telephone']) . "',
+				fax 				= '" . $this->db->escape($data['fax']) . "'				
 				WHERE customer_id = '" . (int)$data['customer_id'] . "'");
 				
 				$simple_data = array(
 				'custom_birthday' => $this->db->escape(date('Y-m-d',strtotime($data['birthday']))),
 				'custom_passport_serie' => $this->db->escape($data['passport_serie']),
+				'custom_passport_date' 	=> $this->db->escape($data['passport_date']),
+				'custom_passport_inn' 	=> $this->db->escape($data['passport_inn']),
 				'custom_passport_given' => $this->db->escape($data['passport_given'])
 				);
 				
@@ -871,6 +881,8 @@
 				payment_firstname = '" . $this->db->escape($data['firstname']) . "', 
 				payment_lastname = '" . $this->db->escape($data['lastname']) . "',
 				shipping_passport_serie = '" . $this->db->escape($data['passport_serie']) . "',
+				shipping_passport_date  =  '" . $this->db->escape($data['shipping_passport_date']) . "',
+				shipping_passport_inn  	=  '" . $this->db->escape($data['shipping_passport_inn']) . "',
 				shipping_passport_given = '" . $this->db->escape($data['passport_given']) . "'
 				WHERE order_id = '" . (int)$order_id . "'");
 				
@@ -2244,8 +2256,10 @@
 				'shipping_address_2'      => $order_query->row['shipping_address_2'],
 				'shipping_postcode'       => $order_query->row['shipping_postcode'],
 				'shipping_city'           => $order_query->row['shipping_city'],
-				'shipping_passport_serie'           => $order_query->row['shipping_passport_serie'],
-				'shipping_passport_given'           => $order_query->row['shipping_passport_given'],
+				'shipping_passport_serie' => $order_query->row['shipping_passport_serie'],
+				'shipping_passport_date'  => $order_query->row['shipping_passport_date'],
+				'shipping_passport_inn'   => $order_query->row['shipping_passport_inn'],
+				'shipping_passport_given' => $order_query->row['shipping_passport_given'],
 				'shipping_zone_id'        => $order_query->row['shipping_zone_id'],
 				'shipping_zone'           => $order_query->row['shipping_zone'],
 				'shipping_zone_code'      => $shipping_zone_code,

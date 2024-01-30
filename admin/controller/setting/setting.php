@@ -2387,6 +2387,23 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_ftp_status'] = $this->config->get('config_ftp_status');
         }
+
+        $this->data['mailgates'] = $this->mailAdaptor->getMailGates();
+
+        if (isset($this->request->post['config_mailgate_library'])) {
+            $this->data['config_mailgate_library'] = $this->request->post['config_mailgate_library'];
+        } else {
+            $this->data['config_mailgate_library'] = $this->config->get('config_mailgate_library');
+        }
+
+        if (isset($this->request->post['config_mailgate_marketing_library'])) {
+            $this->data['config_mailgate_marketing_library'] = $this->request->post['config_mailgate_marketing_library'];
+        } else {
+            $this->data['config_mailgate_marketing_library'] = $this->config->get('config_mailgate_marketing_library');
+        }
+
+
+
         
         if (isset($this->request->post['config_mail_protocol'])) {
             $this->data['config_mail_protocol'] = $this->request->post['config_mail_protocol'];
@@ -2400,7 +2417,6 @@ class ControllerSettingSetting extends Controller
             $this->data['config_mail_parameter'] = $this->config->get('config_mail_parameter');
         }
         
-            //TRIGGER MAILS
         if (isset($this->request->post['config_mail_trigger_protocol'])) {
             $this->data['config_mail_trigger_protocol'] = $this->request->post['config_mail_trigger_protocol'];
         } else {
@@ -2457,81 +2473,118 @@ class ControllerSettingSetting extends Controller
         }
 
 
-            //SPARKPOST
-        if (isset($this->request->post['config_sparkpost_bounce_enable'])) {
-            $this->data['config_sparkpost_bounce_enable'] = $this->request->post['config_sparkpost_bounce_enable'];
-        } else {
-            $this->data['config_sparkpost_bounce_enable'] = $this->config->get('config_sparkpost_bounce_enable');
+        $sparkpost_config_keys = [
+          'config_sparkpost_bounce_enable',
+          'config_sparkpost_api_url',
+          'config_sparkpost_api_key',
+          'config_sparkpost_api_user'
+        ];
+
+        foreach ($sparkpost_config_keys as $key) {
+            if (isset($this->request->post[$key])) {
+                $this->data[$key] = $this->request->post[$key];
+            } else {
+                $this->data[$key] = $this->config->get($key);
+            }
         }
 
-        if (isset($this->request->post['config_sparkpost_api_url'])) {
-            $this->data['config_sparkpost_api_url'] = $this->request->post['config_sparkpost_api_url'];
-        } else {
-            $this->data['config_sparkpost_api_url'] = $this->config->get('config_sparkpost_api_url');
-        }
-        
-        if (isset($this->request->post['config_sparkpost_api_key'])) {
-            $this->data['config_sparkpost_api_key'] = $this->request->post['config_sparkpost_api_key'];
-        } else {
-            $this->data['config_sparkpost_api_key'] = $this->config->get('config_sparkpost_api_key');
+        $sendsay_config_keys = [
+          'config_sendsay_enable',
+          'config_sendsay_api_uri',
+          'config_sendsay_api_key',
+          'config_sendsay_enable_marketing',
+          'config_sendsay_enable_webpush',
+          'config_sendsay_webpush_id',
+          'config_sendsay_fid'
+        ];
+
+        foreach ($sendsay_config_keys as $key) {
+            if (isset($this->request->post[$key])) {
+                $this->data[$key] = $this->request->post[$key];
+            } else {
+                $this->data[$key] = $this->config->get($key);
+            }
         }
 
-        if (isset($this->request->post['config_sparkpost_api_user'])) {
-            $this->data['config_sparkpost_api_user'] = $this->request->post['config_sparkpost_api_user'];
-        } else {
-            $this->data['config_sparkpost_api_user'] = $this->config->get('config_sparkpost_api_user');
-        }
-
-            //MAILGUN
         if (isset($this->request->post['config_mailgun_bounce_enable'])) {
+
             $this->data['config_mailgun_bounce_enable'] = $this->request->post['config_mailgun_bounce_enable'];
+
         } else {
+
             $this->data['config_mailgun_bounce_enable'] = $this->config->get('config_mailgun_bounce_enable');
+
         }
 
         if (isset($this->request->post['config_mailgun_api_url'])) {
+
             $this->data['config_mailgun_api_url'] = $this->request->post['config_mailgun_api_url'];
+
         } else {
+
             $this->data['config_mailgun_api_url'] = $this->config->get('config_mailgun_api_url');
+
         }
 
         if (isset($this->request->post['config_mailgun_api_transaction_domain'])) {
+
             $this->data['config_mailgun_api_transaction_domain'] = $this->request->post['config_mailgun_api_transaction_domain'];
+
         } else {
+
             $this->data['config_mailgun_api_transaction_domain'] = $this->config->get('config_mailgun_api_transaction_domain');
+
         }
 
         if (isset($this->request->post['config_mailgun_api_marketing_domain'])) {
+
             $this->data['config_mailgun_api_marketing_domain'] = $this->request->post['config_mailgun_api_marketing_domain'];
+
         } else {
+
             $this->data['config_mailgun_api_marketing_domain'] = $this->config->get('config_mailgun_api_marketing_domain');
+
         }
 
         if (isset($this->request->post['config_mailgun_api_public_key'])) {
+
             $this->data['config_mailgun_api_public_key'] = $this->request->post['config_mailgun_api_public_key'];
+
         } else {
+
             $this->data['config_mailgun_api_public_key'] = $this->config->get('config_mailgun_api_public_key');
+
         }
 
         if (isset($this->request->post['config_mailgun_api_private_key'])) {
+
             $this->data['config_mailgun_api_private_key'] = $this->request->post['config_mailgun_api_private_key'];
+
         } else {
+
             $this->data['config_mailgun_api_private_key'] = $this->config->get('config_mailgun_api_private_key');
+
         }
 
-
         if (isset($this->request->post['config_mailgun_api_signing_key'])) {
+
             $this->data['config_mailgun_api_signing_key'] = $this->request->post['config_mailgun_api_signing_key'];
+
         } else {
+
             $this->data['config_mailgun_api_signing_key'] = $this->config->get('config_mailgun_api_signing_key');
+
         }
 
         if (isset($this->request->post['config_mailgun_mail_limit'])) {
-            $this->data['config_mailgun_mail_limit'] = $this->request->post['config_mailgun_mail_limit'];
-        } else {
-            $this->data['config_mailgun_mail_limit'] = $this->config->get('config_mailgun_mail_limit');
-        }
 
+            $this->data['config_mailgun_mail_limit'] = $this->request->post['config_mailgun_mail_limit'];
+
+        } else {
+
+            $this->data['config_mailgun_mail_limit'] = $this->config->get('config_mailgun_mail_limit');
+
+        }
         
         if (isset($this->request->post['config_mailwizz_enable'])) {
             $this->data['config_mailwizz_enable'] = $this->request->post['config_mailwizz_enable'];

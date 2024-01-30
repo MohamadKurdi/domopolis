@@ -2668,6 +2668,22 @@
 				} else {
 				$this->data['passport_serie'] = '';
 			}
+
+			if (isset($this->request->post['passport_date'])) {
+				$this->data['passport_date'] = $this->request->post['passport_date'];
+				} elseif (!empty($customer_info)) {
+				$this->data['passport_date'] = $customer_info['passport_date'];
+				} else {
+				$this->data['passport_date'] = '';
+			}
+
+			if (isset($this->request->post['passport_inn'])) {
+				$this->data['passport_inn'] = $this->request->post['passport_inn'];
+				} elseif (!empty($customer_info)) {
+				$this->data['passport_inn'] = $customer_info['passport_inn'];
+				} else {
+				$this->data['passport_inn'] = '';
+			}
 			
 			if (isset($this->request->post['passport_given'])) {
 				$this->data['passport_given'] = $this->request->post['passport_given'];

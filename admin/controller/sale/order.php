@@ -3651,6 +3651,22 @@
 				} else {
 				$this->data['shipping_passport_serie'] = '';
 			}
+
+			if (isset($this->request->post['shipping_passport_date'])) {
+				$this->data['shipping_passport_date'] = $this->request->post['shipping_passport_date'];
+				} elseif (!empty($order_info)) {
+				$this->data['shipping_passport_date'] = $order_info['shipping_passport_date'];
+				} else {
+				$this->data['shipping_passport_date'] = '';
+			}
+
+			if (isset($this->request->post['shipping_passport_inn'])) {
+				$this->data['shipping_passport_inn'] = $this->request->post['shipping_passport_inn'];
+				} elseif (!empty($order_info)) {
+				$this->data['shipping_passport_inn'] = $order_info['shipping_passport_inn'];
+				} else {
+				$this->data['shipping_passport_inn'] = '';
+			}
 			
 			if (isset($this->request->post['shipping_passport_given'])) {
 				$this->data['shipping_passport_given'] = $this->request->post['shipping_passport_given'];
@@ -5083,10 +5099,6 @@
 				}			
 				} else {
 				$this->template = 'sale/order_form.tpl';
-			}
-			
-			if ($order_info['order_id'] == 587127 || $order_info['order_id'] == 23038){
-				//	$this->template = 'sale/new_order_form.tpl';
 			}
 			
 			if ($return_data && $order_id){
@@ -8569,7 +8581,6 @@
 			
 			if(!isset($this->request->get['order_id'])){
 				$this->request->get['order_id'] = $order_id;
-				//$this->redirect($this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL'));
 			}							
 			
 			$errors = $this->getOrderErrors($this->request->get['order_id']);

@@ -96,8 +96,24 @@
                     $this->model_account_customer->editViberNews($this->session->data['simple']['edit']['viber_news']);
                 }
 
-                 if ($this->simpleedit->isFieldUsed('birthday')) {
+                if ($this->simpleedit->isFieldUsed('birthday')) {
                     $this->model_account_customer->editBirthDay($this->session->data['simple']['edit']['birthday']);
+                }
+
+                if ($this->simpleedit->isFieldUsed('passport_serie')) {
+                    $this->model_account_customer->editPassportSerie($this->session->data['simple']['edit']['passport_serie']);
+                }
+
+                if ($this->simpleedit->isFieldUsed('passport_date')) {
+                    $this->model_account_customer->editPassportDate($this->session->data['simple']['edit']['passport_date']);
+                }
+
+                if ($this->simpleedit->isFieldUsed('passport_inn')) {
+                    $this->model_account_customer->editPassportInn($this->session->data['simple']['edit']['passport_inn']);
+                }
+
+                if ($this->simpleedit->isFieldUsed('passport_given')) {
+                    $this->model_account_customer->editPassportGiven($this->session->data['simple']['edit']['passport_given']);
                 }
                 
                 $this->session->data['success'] = $this->language->get('text_success');

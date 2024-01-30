@@ -300,8 +300,7 @@
 								$(document).ready(function(){
 									setTimeout(function(){$('#fakefields').hide()}, 100);
 								});
-							</script>
-							
+							</script>							
 						</table>
 						
 						<table class="form" id="customer-table3" style="width:100%">
@@ -312,11 +311,8 @@
 								<td width="25%">
 									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Комментарий / описание</span>
 								</td>
-								<td width="25%">
-									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Паспорт серия</span>
-								</td>
-								<td width="25%">
-									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Паспорт выдан</span>
+								<td width="50%" colspan="2">
+									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Паспортные данные</span>
 								</td>
 							</tr>
 							
@@ -330,10 +326,22 @@
 								</td>
 								
 								<td>
-									<input type="text" autocomplete="off"  name="passport_serie" value="<?php echo $passport_serie; ?>" />
+									<div style="margin-bottom:5px;">
+										<small class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Серия, номер</small><br />
+										<input type="text" autocomplete="off"  name="passport_serie" value="<?php echo $passport_serie; ?>" />
+									</div>
+									<div style="margin-bottom:5px;">
+										<small class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Дата выдачи</small><br />
+										<input type="text" class="date" autocomplete="off"  name="passport_date" value="<?php echo $passport_date; ?>" />
+									</div>
+									<div style="margin-bottom:5px;">
+										<small class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">ИНН</small><br />
+										<input type="text" autocomplete="off"  name="passport_inn" value="<?php echo $passport_inn; ?>" />
+									</div>
 								</td>
 								
 								<td>
+									<small class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Кем выдан</small><br />
 									<textarea name="passport_given" rows="5" cols="30"><? echo $passport_given; ?></textarea>
 								</td>
 								
@@ -371,19 +379,10 @@
 								</td>
 							</tr>
 						</table>
-						
-						
-						<script type="text/javascript">
-							$(function(){
-								//   $('#customer-table').after('<div id="simple_custom_customer" class="simple-container"></div>');
-								//  $('#simple_custom_customer').load('index.php?route=module/simple/custom&token=<?php echo $token; ?>&set=customer&type=customer&id=<?php echo $customer_id; ?>');
-							});
-						</script>
 					</div>
 				</div>	
 				
-				<div id="tab-add">										
-					
+				<div id="tab-add">															
 					<div>
 						<a class="button" id="address-add" style="display:inline-block;float:right;cursor:pointer;" onclick="addAddress();"><?php echo $button_add_address; ?>&nbsp;<img style="vertical-align: top;" src="view/image/add.png" alt="" /></a><div style="clear:both;"></div>
 					</div>
@@ -402,6 +401,7 @@
 										$('#simple_custom_address_<?php echo $address_row; ?>').load('index.php?route=module/simple/custom&set=address&token=<?php echo $token; ?>&type=address&id=<?php echo $address['address_id']; ?>');
 									});
 								</script>
+
 								<table width="100%">
 									<tr><th class="blue_heading" style="color:white;padding: 5px 0;" colspan="4" style="">Адрес <?php echo $address_row; ?>&nbsp;&nbsp;&nbsp;<a class="" style="color:white;cursor:pointer;font-size:10px;padding: 3px;" onclick="$('#tab-address-<?php echo $address_row; ?>').remove();">удалить</a></th></tr>
 									<tr>
@@ -416,8 +416,24 @@
 												<span class="error"><?php echo $error_address_lastname[$address_row]; ?></span>
 											<?php } ?>	
 										</td>
-										<td style="padding:10px 3px;">Паспорт серия</td>
-										<td style="padding:10px 3px;"><input type="text" autocomplete="false"  name="address[<?php echo $address_row; ?>][passport_serie]" value="<?php echo $address['passport_serie']; ?>" style="width:300px;" />
+										
+										<td rowspan="3">
+											<div style="margin-bottom:5px;">
+												<small class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Серия, номер</small><br />
+												<input type="text" autocomplete="off"  name="address[<?php echo $address_row; ?>][passport_serie]" value="<?php echo $address['passport_serie']; ?>" />
+											</div>
+											<div style="margin-bottom:5px;">
+												<small class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Дата выдачи</small><br />
+												<input type="text" class="date" autocomplete="off"  name="address[<?php echo $address_row; ?>][passport_date]" value="<?php echo $address['passport_date']; ?>" />
+											</div>
+											<div style="margin-bottom:5px;">
+												<small class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">ИНН</small><br />
+												<input type="text" autocomplete="off"  name="address[<?php echo $address_row; ?>][passport_inn]" value="<?php echo $address['passport_inn']; ?>" />
+											</div>
+											<div>
+												<small class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Кем выдан</small><br />
+												<textarea name="address[<?php echo $address_row; ?>][passport_given]" rows="5" cols="30"><?php echo $address['passport_given']; ?></textarea>
+											</div>
 										</td>
 									</tr>									
 									
@@ -427,9 +443,7 @@
 											<label for="address[<?php echo $address_row; ?>][default]">Адрес по-умолчанию</label><br />
 											<span class="help">подставляется по-умолчанию при оформлении заказа</span><br />
 										</td>
-									</td>
-									<td rowspan="3">Паспорт выдан</td>
-									<td rowspan="3"><textarea name="address[<?php echo $address_row; ?>][passport_given]" rows="3" cols="30" style="width:300px;"><?php echo $address['passport_given']; ?></textarea></td>
+									</td>									
 								</tr>
 								<tr>
 									<td colspan="2" style="padding:10px 3px;">
@@ -472,7 +486,7 @@
 									
 									<td style="padding:5px 3px;"><?php echo $entry_city; ?></td>
 									<td style="padding:5px 3px;">
-										<input type="text" autocomplete="false"  name="address[<?php echo $address_row; ?>][city]" value="<?php echo $address['city']; ?>" style="width:300px;" />
+										<i class="fa fa-map-marker" aria-hidden="true"></i> <input type="text" autocomplete="false"  name="address[<?php echo $address_row; ?>][city]" value="<?php echo $address['city']; ?>" style="width:300px;" />
 										<?php if (isset($error_address_city[$address_row])) { ?>
 											<span class="error"><?php echo $error_address_city[$address_row]; ?></span>
 										<?php } ?>
@@ -481,11 +495,11 @@
 								<tr>
 									<td style="padding:5px 3px;">Вторая строка адреса</td>
 									<td style="padding:5px 3px;">
-										<i class="fa fa-map-marker" aria-hidden="true"></i><input type="text" autocomplete="false"  name="address[<?php echo $address_row; ?>][address_2]" value="<?php echo $address['address_2']; ?>" style="width:300px;" />
+										<i class="fa fa-map-marker" aria-hidden="true"></i> <input type="text" autocomplete="false"  name="address[<?php echo $address_row; ?>][address_2]" value="<?php echo $address['address_2']; ?>" style="width:300px;" />
 									</td>
 									
 									<td style="padding:5px 3px;"><?php echo $entry_country; ?></td>
-									<td style="padding:5px 3px;"><select name="address[<?php echo $address_row; ?>][country_id]" onchange="country(this, '<?php echo $address_row; ?>', '<?php echo $address['zone_id']; ?>');" style="width:300px;">
+									<td style="padding:5px 3px;"><i class="fa fa-map-marker" aria-hidden="true"></i> <select name="address[<?php echo $address_row; ?>][country_id]" onchange="country(this, '<?php echo $address_row; ?>', '<?php echo $address['zone_id']; ?>');" style="width:300px;">
 										<option value=""><?php echo $text_select; ?></option>
 										<?php foreach ($countries as $country) { ?>
 											<?php if ($country['country_id'] == $address['country_id']) { ?>
@@ -502,7 +516,7 @@
 								</tr>
 								<tr>
 									<td style="padding:5px 3px;"><span id="postcode-required<?php echo $address_row; ?>" class="required">*</span> <?php echo $entry_postcode; ?></td>
-									<td style="padding:5px 3px;"><input type="text" autocomplete="false"  name="address[<?php echo $address_row; ?>][postcode]" value="<?php echo $address['postcode']; ?>" style="width:300px;" /></td>
+									<td style="padding:5px 3px;"><i class="fa fa-map-marker" aria-hidden="true"></i> <input type="text" autocomplete="false"  name="address[<?php echo $address_row; ?>][postcode]" value="<?php echo $address['postcode']; ?>" style="width:300px;" /></td>
 									<td style="padding:5px 3px;"><?php echo $entry_zone; ?></td>
 									<td style="padding:5px 3px;"><select name="address[<?php echo $address_row; ?>][zone_id]">
 									</select>
