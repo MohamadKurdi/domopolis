@@ -7,15 +7,13 @@ class PriceUpdaterQueue
 	
 	const CLASS_NAME = 'hobotix\\Amazon\\PriceUpdaterQueue';
 	
-	private $db;	
-	private $config;
+	private $db		= null;	
+	private $config = null;
 
 
 	public function __construct($registry){
-
 		$this->config 	= $registry->get('config');
 		$this->db 		= $registry->get('db');		
-
 	}
 
 	public function getQueue(){
@@ -40,8 +38,6 @@ class PriceUpdaterQueue
 	}
 
 	public function addToQueue($product_identifier){
-
-		//product_id
 		if (is_numeric($product_identifier)){
 			$this->addProductIDToQueue($product_identifier);
 			return true;
@@ -55,7 +51,5 @@ class PriceUpdaterQueue
 		foreach ($query->rows as $row){
 			$this->addProductIDToQueue($row['product_id']);
 		}
-
 	}
-
 }

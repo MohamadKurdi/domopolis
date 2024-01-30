@@ -33,7 +33,7 @@ class ControllerDPRainForest extends Controller {
 			$this->rainforestAmazon->checkIfPossibleToMakeRequest();
 		}
 		
-	//	$this->fullFillExistentAsins();
+		$this->fullFillExistentAsins();
 	}
 
 	/*
@@ -662,6 +662,179 @@ class ControllerDPRainForest extends Controller {
 			echoLine('[ControllerDPRainForest::addvariantsqueuecron] Variant queue is empty', 'i');				
 		}
 	}
+
+	/*
+	Обработка умного автонаполнения категорий
+	*/
+	public function addasinsbycategorycron(){
+		if (!$this->config->get('config_rainforest_enable_category_queue_parser')){
+			echoLine('[ControllerDPRainForest::addasinsbycategorycron] CRON IS DISABLED IN ADMIN', 'e');
+			return;
+		}
+
+		$this->load->library('hobotix/FPCTimer');
+
+		if ($this->config->has('config_rainforest_category_queue_parser_time_start') && $this->config->has('config_rainforest_category_queue_parser_time_end')){
+			$interval = new \hobotix\Interval($this->config->get('config_rainforest_category_queue_parser_time_start') . '-' . $this->config->get('config_rainforest_category_queue_parser_time_end'));
+			if (!$interval->isNow()){
+				echoLine('[ControllerDPRainForest::addasinsbycategorycron] NOT ALLOWED TIME', 'e');
+				return;
+			} else {
+				echoLine('[ControllerDPRainForest::addasinsbycategorycron] ALLOWED TIME', 's');				
+			}
+		}
+
+		$timer = new \hobotix\FPCTimer();		
+		$categoryWords = $this->rainforestAmazon->categoryRetriever->getCategoriesWordsToParse();	
+		echoLine('[ControllerDPRainForest::addasinsbycategorycron] Total Category Words to scan now: ' . count($categoryWords), 'i');
+
+
+		$page 		= 1;
+		$requests 	= [];
+		foreach ($categoryWords as $categoryWord){
+			if ($categoryWord['category_search_word']){
+				$infoLine = $categoryWord['category_search_word'];
+			} elseif ($categoryWord['category_word_category']){
+				$infoLine = $categoryWord['category_word_category'];
+			}
+
+			echoLine('[ControllerDPRainForest::addasinsbycategorycron] Adding category ' . $categoryWord['name'] . ', and request ' . $infoLine . ' with type ' . $categoryWord['category_word_type'], 's');
+
+			if ((int)$categoryWord['category_word_total_pages'] && (int)$categoryWord['category_word_pages_parsed'] > 0){
+				if ((int)$categoryWord['category_word_pages_parsed'] + 1 <= (int)$categoryWord['category_word_total_pages']){
+					$page = $categoryWord['category_word_pages_parsed'] + 1;
+					echoLine('[ControllerDPRainForest::addasinsbycategorycron] Now parsing page in this request ' . $page, 'w');
+				}
+			}
+
+			$options = [
+				'type' 					=> $categoryWord['category_word_type'],
+				'word_or_uri' 			=> $categoryWord['category_search_word'],
+				'page' 					=> $page,
+				'sort' 					=> $categoryWord['category_search_sort'],
+				'amazon_category_id'	=> $categoryWord['category_word_category_id'],
+			];			
+
+			$request = $this->rainforestAmazon->prepareAmazonRainforestPageRequest($options);
+			echoLine('[ControllerDPRainForest::addasinsbycategorycron] Doing request ' . print_r($request, true), 'i');			
+
+			$requests[$categoryWord['category_search_word_id']] = $request;
+		}
+	
+		$results = $this->rainforestAmazon->categoryRetriever->doMultiRequest($requests);
+
+		foreach ($results as $category_word_id => $results){
+			$categoryWord = $this->rainforestAmazon->categoryRetriever->getCategorySearchWordInfo($category_word_id);
+
+			if ($pagination = $this->rainforestAmazon->processAmazonRainforestPageRequestPaginationResults($results)){
+				echoLine('[ControllerDPRainForest::addasinsbycategorycron] Got pagination, updating. Total pages: ' . $pagination['total_pages'] . ', total results: ' . $pagination['total_results'], 's');
+				$this->rainforestAmazon->categoryRetriever->setCategorySearchWordTotalProducts($category_word_id, $pagination['total_results']);
+				$this->rainforestAmazon->categoryRetriever->setCategorySearchWordTotalPages($category_word_id, $pagination['total_pages']);
+
+				$products = $this->rainforestAmazon->processAmazonRainforestPageRequestProductResults($results);
+				echoLine('[ControllerDPRainForest::addasinsbycategorycron] Got ' . count($products) . ' on this page, starting checks', 'i');
+
+				$good_products = [];
+				foreach ($products as $product){
+					if ($this->rainforestAmazon->productsRetriever->model_product_get->checkIfAsinIsDeleted($product['asin'])){
+						echoLine('[ControllerDPRainForest::addasinsbycategorycron] ' . $product['asin'] . ' is excluded, skip', 'e');
+						continue;
+					}
+
+					if ($this->rainforestAmazon->productsRetriever->model_product_get->getIfAsinIsInQueue($product['asin'])){
+						echoLine('[ControllerDPRainForest::addasinsbycategorycron] ' . $product['asin'] . ' is already in queue, skip', 'e');
+						continue;
+					}
+
+					if ($this->rainforestAmazon->productsRetriever->getProductsByAsin($product['asin'])){
+						echoLine('[ControllerDPRainForest::addasinsbycategorycron] ' . $product['asin'] . ' already exists, skip', 'e');
+						continue;
+					}
+
+					if ($this->rainforestAmazon->productsRetriever->model_product_get->checkIfNameIsExcluded($product['title'], $categoryWord['category_id'])){		
+						$this->rainforestAmazon->productsRetriever->model_product_edit->deleteASINFromQueue($product['asin']);				
+						$this->rainforestAmazon->productsRetriever->model_product_edit->addAsinToIgnored($product['asin'], $product['title']);
+
+						echoLine('[ControllerDPRainForest::addasinsbycategorycron] NAME ' . $product['title'] . ' is excluded, skip', 'w');
+						continue;
+					}
+
+					if (!empty($product['price']) && !empty($product['price']['value'])){
+						if ((float)$categoryWord['category_search_min_price']){
+							if ((float)$product['price']['value'] < (float)$categoryWord['category_search_min_price']){
+								echoLine('[ControllerDPRainForest::addasinsbycategorycron] Price '. (float)$product['price']['value'] .' too low, skip', 'w');				
+								continue;
+							}
+						}
+
+						if ((float)$categoryWord['category_search_max_price']){
+							if ((float)$product['price']['value'] > (float)$categoryWord['category_search_max_price']){
+								echoLine('[ControllerDPRainForest::addasinsbycategorycron] Price '. (float)$product['price']['value'] .' too high, skip', 'w');				
+								continue;
+							}
+						}
+					}	
+
+					echoLine('[ControllerDPRainForest::addasinsbycategorycron] Good product found, ' . $product['asin'] . ' with price ' . $product['price']['value'], 's');
+					$good_products[$product['asin']] = $product;
+				}
+
+				$good_products_asins = array_keys($good_products);
+				$total = count($good_products_asins);
+				$iterations = ceil($total/(int)\hobotix\RainforestAmazon::offerRequestLimits);
+
+				$i=1;
+				$timer = new \hobotix\FPCTimer();		
+				for ($i = 1; $i <= $iterations; $i++){
+					$timer = new \hobotix\FPCTimer();
+					$slice = array_slice($good_products_asins, (int)\hobotix\RainforestAmazon::offerRequestLimits * ($i-1), (int)\hobotix\RainforestAmazon::offerRequestLimits);
+
+					$results = $this->rainforestAmazon->getProductsOffersASYNC($slice);
+
+					if ($results){
+						foreach ($results as $asin => $offers){
+							if ((int)$categoryWord['category_search_min_offers'] > (int)count($offers)){
+								echoLine('[ControllerDPRainForest::addasinsbycategorycron] Product ' . $product['asin'] . ' has ' . count($offers) . ' offers skip', 'e');
+								unset($good_products['asin']);
+							} else {
+								$this->rainforestAmazon->offersParser->addOffersForASIN($asin, $offers);	
+								$count_offers = $this->rainforestAmazon->offersParser->getOffersForASIN($asin);
+
+								if ((int)$categoryWord['category_search_min_offers'] > $count_offers){
+									echoLine('[ControllerDPRainForest::addasinsbycategorycron] Product ' . $product['asin'] . ' has ' . count($offers) . ' after parsing, skip', 'e');
+									unset($good_products['asin']);
+								}
+							}												
+						}
+					}
+
+					echoLine('[ControllerDPRainForest::addasinsbycategorycron] Time for offers iteration: ' . $i . ' from ' . $iterations .': ' . $timer->getTime() . ' s.', 'i');
+					unset($timer);
+				}
+
+				echoLine('[ControllerDPRainForest::addasinsbycategorycron] Totally left ' . count($good_products) . ' after all checks, adding to queue', 'i');				
+
+				$asins_to_add = array_keys($good_products);
+
+				$data = [
+					'asin' 			=> $asins_to_add,
+					'category_id' 	=> $categoryWord['category_id'],
+					'user_id' 		=> $categoryWord['category_word_user_id'],
+				];
+				$this->rainforestAmazon->productsRetriever->model_product_edit->insertAsinToQueue($data);
+				$this->rainforestAmazon->categoryRetriever
+					->setCategorySearchWordLastScan($category_word_id)
+					->updateCategorySearchWordProductAddedPlus($category_word_id, count($asins_to_add))
+					->setCategorySearchWordPagesParsedPlusOne($category_word_id);
+			} else {
+				echoLine('[ControllerDPRainForest::addasinsbycategorycron] Got no pagination, skipping parsing', 'e');
+				continue;
+			}
+
+		}
+		
+	}
+
 
 	/*
 	Обработка очереди добавления ASIN - добавление и обработка данных

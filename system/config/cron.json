@@ -1,23 +1,30 @@
 {
+	"dp/rainforest/addasinsbycategorycron": {
+		"name"		:"Умный парсер категорий Amazon",
+		"config"	:"config.uncached.php",
+		"group"		:"Amazon (Rainforest API)",
+		"main"		:true,
+		"args"		: []
+	},
 	"dp/rainforest/addnewproductscron": {
 		"name"		:"Парсер новых товаров Amazon",
 		"config"	:"config.uncached.php",
 		"group"		:"Amazon (Rainforest API)",
-		"main"		:true,
+		"main"		:false,
 		"args"		: []
 	},
 	"dp/rainforest/editfullproductscron": {
 		"name"		:"Парсер данных о товарах Amazon",
 		"config"	:"config.uncached.php",
 		"group"		:"Amazon (Rainforest API)",
-		"main"		:true,
+		"main"		:false,
 		"args"		: []
 	},
 	"dp/rainforest/parsetechcategory": {
 		"name"		:"Разгребатель технической категории",
 		"config"	:"config.uncached.php",
 		"group"		:"Amazon (Rainforest API)",
-		"main"		:true,
+		"main"		:false,
 		"args"		: []
 	},
 	"dp/rainforest/addasinsqueuecron": {
@@ -52,7 +59,7 @@
 		"name"		:"Парсер данных о товарах Amazon второго уровня",
 		"config"	:"config.uncached.php",
 		"group"		:"Amazon (Rainforest API)",
-		"main"		:true,
+		"main"		:false,
 		"args"		: []
 	},
 	"dp/rainforest/fixunexistentcategoriescron": {

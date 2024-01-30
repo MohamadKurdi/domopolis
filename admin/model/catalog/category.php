@@ -78,17 +78,31 @@ class ModelCatalogCategory extends Model {
 		$this->db->query("DELETE FROM category_search_words WHERE category_id = '" . (int)$category_id . "'");
 		
 		foreach ($data['category_search_words'] as $category_search_word) {
+			if (empty($category_search_word['category_word_user_id'])){
+				$category_search_word['category_word_user_id'] = $this->user->getId();
+			}
+
+			if (empty($category_search_word['category_word_category_id'])){
+				$category_search_word['category_word_category'] = '';
+			}
+
 			$this->db->query("INSERT INTO category_search_words SET 
 				category_id 	= '" . (int)$category_id . "', 
 				category_word_type 				= '" . $this->db->escape($category_search_word['category_word_type']) . "', 
-				category_search_word 			= '" . $this->db->escape($category_search_word['category_search_word']) . "',
+				category_search_word 			= '" . $this->db->escape(trim($category_search_word['category_search_word'])) . "',
+				category_word_category 			= '" . $this->db->escape(trim($category_search_word['category_word_category'])) . "',
+				category_word_category_id 		= '" . $this->db->escape(trim($category_search_word['category_word_category_id'])) . "',
 				category_search_sort 			= '" . $this->db->escape($category_search_word['category_search_sort']) . "', 
 				category_search_min_price 		= '" . (float)$category_search_word['category_search_min_price'] . "', 
 				category_search_max_price 		= '" . (float)$category_search_word['category_search_max_price'] . "', 
 				category_search_min_offers 		= '" . (int)$category_search_word['category_search_min_offers'] . "',  
 				category_word_last_search 		= '" . $this->db->escape($category_search_word['category_word_last_search']) . "', 
-				category_word_total_products 	= '" . (int)$category_search_word['category_word_total_products'] . "', 
-				category_word_product_added 	= '" . (int)$category_search_word['category_word_product_added'] . "'");
+				category_word_total_products 	= '" . (int)$category_search_word['category_word_total_products'] . "',
+				category_word_total_pages 		= '" . (int)$category_search_word['category_word_total_pages'] . "',
+				category_word_pages_parsed 		= '" . (int)$category_search_word['category_word_pages_parsed'] . "',
+				category_word_total_products 	= '" . (int)$category_search_word['category_word_total_products'] . "',
+				category_word_product_added 	= '" . (int)$category_search_word['category_word_product_added'] . "',
+				category_word_user_id 			= '" . (int)$category_search_word['category_word_user_id'] . "'");
 		}
 		
 		$level = 0;		
@@ -286,17 +300,31 @@ class ModelCatalogCategory extends Model {
 		$this->db->query("DELETE FROM category_search_words WHERE category_id = '" . (int)$category_id . "'");
 		
 		foreach ($data['category_search_words'] as $category_search_word) {
+			if (empty($category_search_word['category_word_user_id'])){
+				$category_search_word['category_word_user_id'] = $this->user->getId();
+			}
+
+			if (empty($category_search_word['category_word_category_id'])){
+				$category_search_word['category_word_category'] = '';
+			}
+
 			$this->db->query("INSERT INTO category_search_words SET 
 				category_id 	= '" . (int)$category_id . "', 
 				category_word_type 				= '" . $this->db->escape($category_search_word['category_word_type']) . "', 
-				category_search_word 			= '" . $this->db->escape($category_search_word['category_search_word']) . "',
+				category_search_word 			= '" . $this->db->escape(trim($category_search_word['category_search_word'])) . "',
+				category_word_category 			= '" . $this->db->escape(trim($category_search_word['category_word_category'])) . "',
+				category_word_category_id 		= '" . $this->db->escape(trim($category_search_word['category_word_category_id'])) . "',
 				category_search_sort 			= '" . $this->db->escape($category_search_word['category_search_sort']) . "', 
 				category_search_min_price 		= '" . (float)$category_search_word['category_search_min_price'] . "', 
 				category_search_max_price 		= '" . (float)$category_search_word['category_search_max_price'] . "', 
 				category_search_min_offers 		= '" . (int)$category_search_word['category_search_min_offers'] . "',  
 				category_word_last_search 		= '" . $this->db->escape($category_search_word['category_word_last_search']) . "', 
-				category_word_total_products 	= '" . (int)$category_search_word['category_word_total_products'] . "', 
-				category_word_product_added 	= '" . (int)$category_search_word['category_word_product_added'] . "'");
+				category_word_total_products 	= '" . (int)$category_search_word['category_word_total_products'] . "',
+				category_word_total_pages 		= '" . (int)$category_search_word['category_word_total_pages'] . "',
+				category_word_pages_parsed 		= '" . (int)$category_search_word['category_word_pages_parsed'] . "',
+				category_word_total_products 	= '" . (int)$category_search_word['category_word_total_products'] . "',
+				category_word_product_added 	= '" . (int)$category_search_word['category_word_product_added'] . "',
+				category_word_user_id 			= '" . (int)$category_search_word['category_word_user_id'] . "'");
 		}
 
 		$query = $this->db->query("SELECT * FROM `category_path` WHERE path_id = '" . (int)$category_id . "' ORDER BY level ASC");		
@@ -527,11 +555,7 @@ class ModelCatalogCategory extends Model {
 	public function getCategorySearchWords($category_id){
 		$query = $this->db->query("SELECT * FROM category_search_words WHERE category_id = '" . (int)$category_id . "'");
 		
-		if ($query->num_rows){
-			return $query->rows;
-		} else {
-			return false;
-		}
+		return $query->rows;
 	}
 	
 	public function getFeeds($category_id){

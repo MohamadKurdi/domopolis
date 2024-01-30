@@ -96,11 +96,11 @@ class ControllerKPAmazon extends Controller {
 			$products = $result['seller_products'];
 		}
 
-		$this->data['products'] = [];		
-		$this->data['existent_products'] = [];
-		$this->data['cheap_products'] = [];
-		$this->data['deleted_products'] = [];
-		$this->data['in_queue_products'] = [];
+		$this->data['products'] 			= [];		
+		$this->data['existent_products'] 	= [];
+		$this->data['cheap_products'] 		= [];
+		$this->data['deleted_products'] 	= [];
+		$this->data['in_queue_products'] 	= [];
 
 		foreach ($products as $product){
 			if ($this->rainforestAmazon->productsRetriever->model_product_get->checkIfAsinIsDeleted($product['asin'])){

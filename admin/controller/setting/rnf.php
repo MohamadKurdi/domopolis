@@ -32,6 +32,11 @@ class ControllerSettingRnf extends Controller {
         'config_rainforest_delay_queue_offers',
         'config_rainforest_delay_queue_variants',
 
+        'config_rainforest_enable_category_queue_parser',
+        'config_rainforest_category_queue_parser_time_start',
+        'config_rainforest_category_queue_parser_time_end',
+        'config_rainforest_category_queue_update_period',
+
         'config_rainforest_enable_add_variants_queue_parser',
         'config_rainforest_add_variants_queue_parser_time_start',
         'config_rainforest_add_variants_queue_parser_time_end',
@@ -58,7 +63,9 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_category_update_period',
 		'config_rainforest_max_variants',
 		'config_rainforest_skip_variants',
+		'config_rainforest_skip_min_offers_products',
 		'config_rainforest_skip_low_price_products',
+		'config_rainforest_skip_high_price_products',
 		'config_rainforest_drop_low_price_products',
 		'config_rainforest_drop_low_price_products_for_manual',
 		'config_rainforest_update_period',

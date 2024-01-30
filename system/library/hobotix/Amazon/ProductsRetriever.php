@@ -1439,10 +1439,29 @@ class ProductsRetriever extends RainforestRetriever
 			return 0;
 		}
 
+		$low_price_to_add = (float)$this->config->get('config_rainforest_skip_low_price_products');
+		if (!empty((float)$data['explicit_min_price_to_add'])){
+			$low_price_to_add = (float)$data['explicit_min_price_to_add'];
+		}
+
 		if (!empty($data['amazon_best_price'])){
-			if ($this->config->get('config_rainforest_skip_low_price_products')){
-				if ((float)$data['amazon_best_price'] < (float)$this->config->get('config_rainforest_skip_low_price_products')){
+			if ((float)$low_price_to_add){
+				if ((float)$data['amazon_best_price'] < (float)$low_price_to_add){
 					echoLine('[RainforestRetriever::addSimpleProductWithOnlyAsin] Price '. $data['amazon_best_price'] .' too low, skipping!', 'w');				
+					return 0;
+				}
+			}
+		}	
+
+		$high_price_to_add = (float)$this->config->get('config_rainforest_skip_high_price_products');
+		if (!empty((float)$data['explicit_max_price_to_add'])){
+			$high_price_to_add = (float)$data['explicit_max_price_to_add'];
+		}
+
+		if (!empty($data['amazon_best_price'])){
+			if ((float)$high_price_to_add){
+				if ((float)$data['amazon_best_price'] > (float)$high_price_to_add){
+					echoLine('[RainforestRetriever::addSimpleProductWithOnlyAsin] Price '. $data['amazon_best_price'] .' too high, skipping!', 'w');				
 					return 0;
 				}
 			}

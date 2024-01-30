@@ -57,6 +57,11 @@ class RainforestAmazon
 	public const externalAPIRequestLimits 	= 5;
 
 	/*
+		categoryParserLimit = Сколько отбирать категорий для поиска по словам/ссылкам за один запуск
+	*/
+	public const categoryWordsParserLimit 	= 10;
+
+	/*
 		Лимит для отбора из очереди обработки вариантов
 	*/
 	public const variantQueueLimit 		= 30;
@@ -74,9 +79,22 @@ class RainforestAmazon
 			'product_reward','product_attribute','product_feature','product_sponsored','product_to_store','product_to_category','product_also_bought','product_tmp','product_yam_recommended_prices','product_view_to_purchase','product_sticker','product_special_backup','product_costs','product_price_to_store','product_video','product_to_set','product_variants_ids','product_special','product_similar_to_consider','product_discount','product_sources','product_stock_waits','product_master','product_anyrelated','product_stock_limits','product_to_download','product_related_set','product_also_viewed','product_child','product_price_history','product_recurring','product_status','product_price_national_to_store','product_profile','product_to_tab','product_option_value','product_description','product_product_option','product_shop_by_look','product_stock_status','product_additional_offer','product_filter','product_similar','product','product_image','product_related','product_tab_content','product_to_layout','product_option','product_special_attribute','product_price_national_to_store1','product_front_price','product_video_description','product_product_option_value','product_price_national_to_yam','product_yam_data', 'review','ocfilter_option_value_to_product', 'product_ukrcredits'	
 		];
 
+	public const searchPageTypes = [
+		'standard' 			=> ['name' => 'Simple Category', 		'default' => true],
+		'bestsellers' 		=> ['name' => 'Bestseller Category', 	'default' => false],
+		'store' 			=> ['name' => 'Brand Store', 			'default' => false],
+		'seller_products' 	=> ['name' => 'Seller Products', 		'default' => false],
+		'deals' 			=> ['name' => 'Deals Category', 		'default' => false],
+		'search' 			=> ['name' => 'Search Amazon', 			'default' => false]	
+	];
+
 	public const searchSorts = [
-		
-		
+		'amazon' 			=> ['name' => 'Amazon', 				'default' => true],
+		'price_low_to_high' => ['name' => 'Price Low to High', 		'default' => false],
+		'price_high_to_low' => ['name' => 'Price High to Low',		'default' => false],
+		'featured' 			=> ['name' => 'Featured',				'default' => false],
+		'average_review' 	=> ['name' => 'Best Review First',		'default' => false],
+		'most_recent' 		=> ['name' => 'Recent Added First',		'default' => false]
 	];
 
 		
@@ -301,6 +319,80 @@ class RainforestAmazon
 	}	
 
 	public function searchCategories($filter_name){			
+	}
+
+	public function processAmazonRainforestPageRequestPaginationResults($response){
+		$pagination = [];
+
+		if (!empty($response['pagination'])){
+			$pagination = $response['pagination'];
+		}
+
+		return $pagination;
+	}
+
+	public function processAmazonRainforestPageRequestProductResults($response){
+		$products = [];
+
+		$type = 'unknown';
+		if (!empty($response['request_parameters'])){
+			$type = $response['request_parameters']['type'];
+		}
+
+		if ($type == 'category'){
+			$products = $response['category_results'];
+		} elseif ($type == 'bestsellers'){
+			$products = $response['bestsellers'];
+		} elseif ($type == 'deals'){
+			$products = $response['deals'];
+		} elseif ($type == 'search'){
+			$products = $response['search_results'];
+		} elseif ($type == 'store'){
+			$products = $response['store_results'];
+		} elseif ($type == 'store'){
+			$products = $response['store_results'];
+		} elseif ($type == 'seller_products'){
+			$products = $response['seller_products'];
+		}
+
+		return $products;
+	}
+
+	public function prepareAmazonRainforestPageRequest($options){
+		$request = [];
+
+		if ($options['type'] == 'standard'){
+			$options['type'] = 'category';
+		}
+
+		if ($options['type'] == 'search'){
+			$request = [
+				'type' 			=> $options['type'], 		
+				'search_term' 	=> $options['word_or_uri'],
+				'page' 			=> $options['page'],
+				'sort_by' 		=> $options['sort'],
+			];
+		} elseif (!empty($options['amazon_category_id'])) {
+			$request = [
+				'type' 			=> $options['type'], 		
+				'category_id' 	=> $options['amazon_category_id'],
+				'page' 			=> $options['page'],
+				'sort_by' 		=> $options['sort']
+			];
+		} elseif (!empty($options['word_or_uri'])){
+			$request = [
+				'type' 			=> $options['type'], 		
+				'url' 			=> str_replace('&amp;', '&', $options['word_or_uri']),
+			//	'page' 			=> $options['page'],
+			//	'sort_by' 		=> $options['sort']
+			];
+		}
+
+		if ($options['sort'] == 'amazon'){
+			unset($request['sort_by']);
+		}
+
+		return $request;
 	}
 
 	public function getProductByASIN($asins){

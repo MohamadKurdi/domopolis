@@ -21,9 +21,9 @@ class Suppliers
 	public $supplierMinInnerRatingForUse = -100;
 
 	public function __construct($registry){
-
 		$this->config 	= $registry->get('config');
 		$this->db 		= $registry->get('db');
+		$this->registry = $registry->get('registry');
 
 		$this->supplierMinRatingForUse 		= $this->config->get('config_rainforest_supplierminrating') * 10;
 		$this->supplierMinInnerRatingForUse = $this->config->get('config_rainforest_supplierminrating_inner');

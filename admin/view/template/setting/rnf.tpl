@@ -41,17 +41,17 @@
 
 				<div id="tab-cron">
 					<div style="width:99%; float:left;">
-						<table class="list">
+						<table class="list">							
 							<tr>
 								<td style="white-space: nowrap;color:#7F00FF;">
-									<i class="fa fa-refresh"></i> <b>Парсер новых товаров Amazon</b>
+									<i class="fa fa-refresh"></i> <b>Парсер категорий Amazon</b>
 								</td>
 								<td style="width:220px;" class="center">
-									<input id="config_rainforest_enable_new_parser" type="checkbox" class="checkbox" name="config_rainforest_enable_new_parser" <? if ($config_rainforest_enable_new_parser){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_new_parser"></label>
+									<input id="config_rainforest_enable_category_queue_parser" type="checkbox" class="checkbox" name="config_rainforest_enable_category_queue_parser" <? if ($config_rainforest_enable_category_queue_parser){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_category_queue_parser"></label>
 								</td>
 								<td>
 									<span class="help">
-										<i class="fa fa-info-circle"></i> Этот воркер просматривает категории в поиске новых товаров, либо обычные товары в листинге, либо бестселлеры и добавляет их. Добавляется только название, картинка и цена. Воркер работает только с категориями, которые включены и у которых включен маркер <i>Разрешить загрузку информации о новых товарах</i>.
+										<i class="fa fa-info-circle"></i> Этот воркер просматривает категории в поиске новых товаров в соответствии с вкладкой <span style="color: rgb(0, 173, 7); font-weight: 700; display: inline"><i class="fa fa-star"></i> Автонаполнение Amazon</span>.
 									</span>
 								</td>
 							</tr>
@@ -60,7 +60,7 @@
 									<i class="fa fa-cogs"></i> Интервал загрузки
 								</td>
 								<td>
-									<input type="number" name="config_rainforest_category_update_period" value="<?php echo $config_rainforest_category_update_period; ?>" size="50" style="width:50px;" />
+									<input type="number" name="config_rainforest_category_queue_update_period" value="<?php echo $config_rainforest_category_queue_update_period; ?>" size="50" style="width:50px;" />
 								</td>
 								<td>
 									<span class="help">
@@ -68,14 +68,13 @@
 									</span>
 								</td>
 							</tr>
-
 							<tr>
 								<td class="right">
 									<i class="fa fa-clock-o"></i> Время работы, часы
 								</td>
 								<td>
-									<input type="time" name="config_rainforest_new_parser_time_start" value="<?php echo $config_rainforest_new_parser_time_start; ?>" size="50" style="width:70px;" /> - 
-									<input type="time" name="config_rainforest_new_parser_time_end" value="<?php echo $config_rainforest_new_parser_time_end; ?>" size="50" style="width:70px;" />
+									<input type="time" name="config_rainforest_category_queue_parser_time_start" value="<?php echo $config_rainforest_category_queue_parser_time_start; ?>" size="50" style="width:70px;" /> - 
+									<input type="time" name="config_rainforest_category_queue_parser_time_end" value="<?php echo $config_rainforest_category_queue_parser_time_start; ?>" size="50" style="width:70px;" />
 								</td>
 								<td>
 									<span class="help">
@@ -486,6 +485,48 @@
 									</span>
 								</td>
 							</tr>
+
+							<tr>
+								<td style="white-space: nowrap;color:#7F00FF;">
+									<i class="fa fa-refresh"></i> <b>Парсер новых товаров Amazon</b>
+									<br /><span style="color:red">устаревший воркер, не рекомендуется включать</span>
+								</td>
+								<td style="width:220px;" class="center">
+									<input id="config_rainforest_enable_new_parser" type="checkbox" class="checkbox" name="config_rainforest_enable_new_parser" <? if ($config_rainforest_enable_new_parser){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_new_parser"></label>
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Этот воркер просматривает категории в поиске новых товаров, либо обычные товары в листинге, либо бестселлеры и добавляет их. Добавляется только название, картинка и цена. Воркер работает только с категориями, которые включены и у которых включен маркер <i>Разрешить загрузку информации о новых товарах</i>.
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td class="right">
+									<i class="fa fa-cogs"></i> Интервал загрузки
+								</td>
+								<td>
+									<input type="number" name="config_rainforest_category_update_period" value="<?php echo $config_rainforest_category_update_period; ?>" size="50" style="width:50px;" />
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> При загрузке новых товаров для каждой категории запоминается дата и время. В следующий раз новые товары из категории будут загружены не ранее чем через заданное количество дней.
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td class="right">
+									<i class="fa fa-clock-o"></i> Время работы, часы
+								</td>
+								<td>
+									<input type="time" name="config_rainforest_new_parser_time_start" value="<?php echo $config_rainforest_new_parser_time_start; ?>" size="50" style="width:70px;" /> - 
+									<input type="time" name="config_rainforest_new_parser_time_end" value="<?php echo $config_rainforest_new_parser_time_end; ?>" size="50" style="width:70px;" />
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Добавление выполняется в рабочую базу и сильно ее нагружает. Поэтому лучше ограничивать время запуска, например, ночными часами, чтоб уменьшить нагрузки.
+									</span>
+								</td>
+							</tr>
 						</table>
 					</div>					
 				</div>
@@ -666,6 +707,33 @@
 							</td>
 						</tr>
 
+						<tr>
+							<td class="right">
+								Пропускать товары с количеством офферов менее чем
+							</td>
+							<td>
+								<input type="number" name="config_rainforest_skip_min_offers_products" value="<?php echo $config_rainforest_skip_min_offers_products; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Настройка по-умолчанию для автозаполнения категорий. Не влияет на ручной подбор
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Пропускать товары с ценой больше
+							</td>
+							<td>
+								<input type="number" name="config_rainforest_skip_high_price_products" value="<?php echo $config_rainforest_skip_high_price_products; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Товары с высокой ценой не всегда хорошие. Если задать тут число больше нуля, то товары с ценой больше не будут добавляться. Цена в валюте закупки (евро).
+								</span>
+							</td>
+						</tr>
 
 						<tr>
 							<td class="right">

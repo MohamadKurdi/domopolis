@@ -555,6 +555,14 @@ class ControllerCatalogCategory extends Controller {
 		} else {
 			$this->data['category_search_words'] = [];
 		}
+	
+		$this->load->model('user/user');		
+		foreach ($this->data['category_search_words'] as &$category_search_word){
+			$category_search_word['category_word_user'] = false;
+			if ($category_search_word['category_word_user_id']){
+				$category_search_word['category_word_user'] = $this->model_user_user->getRealUserNameById($category_search_word['category_word_user_id']);
+			}
+		}
 
 		if (isset($this->request->post['category_menu_content'])) {
 			$this->data['category_menu_content'] = $this->request->post['category_menu_content'];
@@ -1438,7 +1446,7 @@ class ControllerCatalogCategory extends Controller {
 			}
 		}
 
-		array_unshift($json, ['path' => 'Не синхронизировать', 'id' => 0]);
+		array_unshift($json, ['path' => 'Не выбрано', 'id' => 0]);
 
 		$this->response->setOutput(json_encode($json));
 	}

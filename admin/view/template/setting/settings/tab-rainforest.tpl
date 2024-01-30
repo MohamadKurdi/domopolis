@@ -378,7 +378,25 @@
 			</td>
 
 			<td style="width:20%">
+				<div>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Воркер умного подбора с категорий</span></p>
+					<select name="config_rainforest_enable_category_queue_parser">
+						<?php if ($config_rainforest_enable_category_queue_parser) { ?>
+							<option value="1" selected="selected">Включить</option>
+							<option value="0">Отключить</option>
+						<?php } else { ?>													
+							<option value="1">Включить</option>
+							<option value="0"  selected="selected">Отключить</option>
+						<? } ?>
+					</select>
+				</div>
 
+				<div>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-clock-o"></i> Время работы</span></p>
+
+					<input type="time" name="config_rainforest_category_queue_parser_time_start" value="<?php echo $config_rainforest_category_queue_parser_time_start; ?>" size="50" style="width:70px;" /> - 
+					<input type="time" name="config_rainforest_category_queue_parser_time_end" value="<?php echo $config_rainforest_category_queue_parser_time_end; ?>" size="50" style="width:70px;" />
+				</div>
 
 			</td>
 
@@ -603,9 +621,20 @@
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Загружать макс вариантов</span></p>
 					=<input type="number" name="config_rainforest_max_variants" value="<?php echo $config_rainforest_max_variants; ?>" size="50" style="width:100px;" />
 				</div>
+
 				<div>
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Пропускать товары с вариантами</span></p>
 					><input type="number" name="config_rainforest_skip_variants" value="<?php echo $config_rainforest_skip_variants; ?>" size="50" style="width:100px;" />
+				</div>
+
+				<div>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Не добавлять товары с меньше офферов</span></p>
+					<input type="number" name="config_rainforest_skip_min_offers_products" value="<?php echo $config_rainforest_skip_min_offers_products; ?>" size="50" style="width:100px;" /> <i class="fa fa-eur"></i>
+				</div>
+
+				<div>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Не добавлять товары с ценой больше</span></p>
+					<input type="number" name="config_rainforest_skip_high_price_products" value="<?php echo $config_rainforest_skip_high_price_products; ?>" size="50" style="width:100px;" /> <i class="fa fa-eur"></i>
 				</div>
 
 				<div>

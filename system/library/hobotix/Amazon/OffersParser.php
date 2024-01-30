@@ -22,6 +22,7 @@ class OffersParser
 		$this->config 	= $registry->get('config');
 		$this->db 		= $registry->get('db');
 		$this->log 		= $registry->get('log');
+		$this->registry = $registry->get('registry');
 
 		require_once(dirname(__FILE__) . '/Suppliers.php');
 		$this->Suppliers = new Suppliers($registry);
@@ -517,7 +518,6 @@ class OffersParser
 
 		foreach ($rfOffers as $key => $rfOffer){		
 			$addThisOffer = true;
-
 			$this->Suppliers->addSupplier($rfOffer->getSellerName(), $rfOffer->getSellerID());
 
 			$seller = $this->Suppliers->getSupplier($rfOffer->getSellerName(), $rfOffer->getSellerID());
@@ -640,6 +640,12 @@ class OffersParser
 		}
 
 		return false;
+	}
+
+	public function getOffersForASIN($asin){
+		$query = $this->db->query("SELECT COUNT(*) as total FROM product_amzn_offers WHERE asin = '" . $this->db->escape($asin) . "'");
+
+		return $query->row['total'];
 	}
 
 	public function addOffersForASIN($asin, $rfOffers){

@@ -3678,6 +3678,18 @@ class ControllerSettingSetting extends Controller
             $this->data['config_rainforest_skip_variants'] = $this->config->get('config_rainforest_skip_variants');
         }
 
+        if (isset($this->request->post['config_rainforest_skip_min_offers_products'])) {
+            $this->data['config_rainforest_skip_min_offers_products'] = $this->request->post['config_rainforest_skip_min_offers_products'];
+        } else {
+            $this->data['config_rainforest_skip_min_offers_products'] = $this->config->get('config_rainforest_skip_min_offers_products');
+        }
+
+        if (isset($this->request->post['config_rainforest_skip_high_price_products'])) {
+            $this->data['config_rainforest_skip_high_price_products'] = $this->request->post['config_rainforest_skip_high_price_products'];
+        } else {
+            $this->data['config_rainforest_skip_high_price_products'] = $this->config->get('config_rainforest_skip_high_price_products');
+        }
+
         if (isset($this->request->post['config_rainforest_skip_low_price_products'])) {
             $this->data['config_rainforest_skip_low_price_products'] = $this->request->post['config_rainforest_skip_low_price_products'];
         } else {
@@ -4045,6 +4057,10 @@ class ControllerSettingSetting extends Controller
         'config_rainforest_enable_data_parser',
         'config_rainforest_data_parser_time_start',
         'config_rainforest_data_parser_time_end',
+
+        'config_rainforest_enable_category_queue_parser',
+        'config_rainforest_category_queue_parser_time_start',
+        'config_rainforest_category_queue_parser_time_end',
 
         'config_rainforest_enable_tech_category_parser',
         'config_rainforest_tech_category_parser_time_start',

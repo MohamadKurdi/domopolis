@@ -66,6 +66,41 @@ class productModelEdit extends hoboModel{
 		return $this;		
 	}
 
+	public function insertAsinToQueue($data) {			
+		if (is_string($data['asin']) && trim($data['asin'])){
+			$asins = explode(',', $data['asin']);
+		}
+		
+		if (is_array($data['asin'])){
+			$asins = $data['asin'];
+		}
+
+		if ($asins){
+			if (empty($data['category_id'])){
+				$data['category_id'] = 0;
+			}
+
+			if (empty($data['brand_logic'])){
+				$data['brand_logic'] = 0;
+			}
+
+			if (empty($data['user_id'])){
+				$data['user_id'] = RAINFOREST_API_USER_ID;
+			}
+
+			foreach ($asins as $asin){
+				$this->db->query("INSERT IGNORE INTO amzn_add_queue SET 
+					asin 			= '" . $this->db->escape(trim($asin)) . "', 
+					category_id 	= '" . (int)$data['category_id'] . "',
+					brand_logic 	= '" . (int)$data['brand_logic'] . "', 
+					user_id 		= '" . (int)$data['user_id'] . "', 
+					date_added 		= NOW()");
+			}
+		}
+
+		return $this;		
+	}
+
 	public function setProductIDInQueue($asin, $product_id){
 		$this->db->query("UPDATE amzn_add_queue SET product_id = '" . (int)$product_id . "' WHERE asin LIKE '" . $this->db->escape($asin) . "'");
 

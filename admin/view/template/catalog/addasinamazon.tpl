@@ -46,12 +46,9 @@
                             <div>
                                 <p class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF;">Тип запроса</p><br />
                                 <select name="type">
-                                    <option value="standard" selected="selected">Обычная категория</option>
-                                    <option value="bestsellers">Bestseller категория</option>
-                                    <option value="store">Brand Store</option>
-                                    <option value="seller_products">Seller Products</option>
-                                    <option value="deals">Deals категория</option>
-                                    <option value="search">Поиск по всему Amazon</option>
+                                    <?php foreach (\hobotix\RainforestAmazon::searchPageTypes as $key => $value) { ?>
+                                        <option value="<?php echo $key; ?>" <?php if ($value['default']) { ?>selected="selected"<?php } ?>><?php echo $value['name']; ?></option>
+                                    <?php } ?>
                                 </select>
                                 <span class="help">должен соответствовать ссылке</span>
                             </div>
@@ -86,12 +83,9 @@
                         <div>
                             <p class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF;">Сортировка</p><br />
                             <select name="sort">
-                                <option value="amazon" selected="selected">Как на Amazon</option>
-                                <option value="price_low_to_high">Дешевые сначала</option>
-                                <option value="price_high_to_low">Дорогие сначала</option>
-                                <option value="featured">Featured сначала</option>
-                                <option value="average_review">По рейтингу</option>
-                                <option value="most_recent">Новинки  сначала</option>
+                               <?php foreach (\hobotix\RainforestAmazon::searchSorts as $key => $value) { ?>
+                                        <option value="<?php echo $key; ?>" <?php if ($value['default']) { ?>selected="selected"<?php } ?>><?php echo $value['name']; ?></option>
+                                    <?php } ?>
                             </select>
                             <span class="help">работает не со всеми типами</span>
                         </div>
