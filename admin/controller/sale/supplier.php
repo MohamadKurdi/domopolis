@@ -50,7 +50,6 @@ class ControllerSaleSupplier extends Controller {
 
 			$this->redirect($this->url->link('sale/supplier/update', 'token=' . $this->session->data['token'] . $url, 'SSL'));			
 		}		
-
 	}
 
 	public function update_categories($supplier_id = null) {
@@ -118,6 +117,8 @@ class ControllerSaleSupplier extends Controller {
 				$this->supplierAdaptor->SupplierProduct->parseProduct($product);
 				$i++;
 			}
+
+			$this->supplierAdaptor->postAction();
 		}
 
 	}
@@ -1079,8 +1080,7 @@ class ControllerSaleSupplier extends Controller {
 			$supplier_attributes = $this->model_sale_supplier->getSupplierAttributes($supplier_info['supplier_id']);
 
 			foreach ($supplier_attributes as $supplier_attribute){
-				if ($supplier_attribute['attribute_id']){
-					$attribute = $this->model_catalog_attribute->getAttribute($supplier_attribute['attribute_id']);
+				if ($supplier_attribute['attribute_id'] && $attribute = $this->model_catalog_attribute->getAttribute($supplier_attribute['attribute_id'])){					
 					$name      = $attribute['name'];			
 				} else {
 					$attribute 	= false;

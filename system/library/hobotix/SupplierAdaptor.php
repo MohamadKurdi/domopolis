@@ -107,6 +107,20 @@ class SupplierAdaptor
 		}
 	}
 
+	public function postActions(){		
+		if (method_exists($this->supplierObject, 'postActions')){
+			try {
+				$results = $this->supplierObject->postActions();
+			} catch (\Exception $e){
+				throw new \Exception ($e->getMessage());
+			}
+		} else {
+			echoLine('[SupplierAdaptor::postActions] No postActions function!', 'e');
+		}		
+
+		return $results;
+	}
+
 	public function getCategories(){		
 		if (method_exists($this->supplierObject, 'getCategories')){
 			try {
