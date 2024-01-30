@@ -99,6 +99,9 @@
 /vendor/
 /composer.lock
 
+#Webpush service worker
+/sw_webpush.js
+
 #Всякая системная шляпа
 /system/cache
 /system/cache_mfp
