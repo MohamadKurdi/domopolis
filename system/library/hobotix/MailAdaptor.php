@@ -8,8 +8,8 @@ class MailAdaptor {
 	private $db  		= null;
 	private $currency  	= null;
 
-	private $mailClass_TransactionObject 	= null;
-	private $mailClass_MarketingObject 		= null;
+	private $mail_TransactionObject 	= null;
+	private $mail_MarketingObject 		= null;
 
 	public function __construct($registry) {		
 		$this->registry = $registry;
@@ -20,20 +20,24 @@ class MailAdaptor {
 		$mailClass_Transaction 	= $this->config->get('config_mailgate_transaction_library');
 		$mailClass_Marketing 	= $this->config->get('config_mailgate_marketing_library');
 
-		if (file_exists(DIR_SYSTEM . '/library/hobotix/Mail/' . $mailClass_Transaction . '.php')){
-			require_once (DIR_SYSTEM . '/library/hobotix/Mail/' . $mailClass_Transaction . '.php');
-			$mailClass_Transaction = "hobotix" . "\\" . "Mail" . "\\" . $mailClass_Transaction;
-			$this->mailClass_TransactionObject = new $mailClass_Transaction($this->registry);			
-		} else {
-			//throw new \Exception('[MailAdaptor::__construct] Can not load mailClass_Transaction library!');
+		if ($mailClass_Transaction){
+			if (file_exists(DIR_SYSTEM . '/library/hobotix/Mail/' . $mailClass_Transaction . '.php')){
+				require_once (DIR_SYSTEM . '/library/hobotix/Mail/' . $mailClass_Transaction . '.php');
+				$mailClass_Transaction = "hobotix" . "\\" . "Mail" . "\\" . $mailClass_Transaction;
+				$this->mail_TransactionObject = new $mailClass_Transaction($this->registry);			
+			} else {
+				throw new \Exception('[MailAdaptor::__construct] Can not load mailClass_Transaction library!');
+			}
 		}
 
-		if (file_exists(DIR_SYSTEM . '/library/hobotix/Mail/' . $mailClass_Marketing . '.php')){
-			require_once (DIR_SYSTEM . '/library/hobotix/Mail/' . $mailClass_Marketing . '.php');
-			$mailClass_Marketing = "hobotix" . "\\" . "Mail" . "\\" . $mailClass_Marketing;
-			$this->mailClass_MarketingObject = new $mailClass_Marketing($this->registry);			
-		} else {
-			//throw new \Exception('[MailAdaptor::__construct] Can not load mailClass_Marketing library!');
+		if ($mailClass_Marketing){
+			if (file_exists(DIR_SYSTEM . '/library/hobotix/Mail/' . $mailClass_Marketing . '.php')){
+				require_once (DIR_SYSTEM . '/library/hobotix/Mail/' . $mailClass_Marketing . '.php');
+				$mailClass_Marketing = "hobotix" . "\\" . "Mail" . "\\" . $mailClass_Marketing;
+				$this->mail_MarketingObject = new $mailClass_Marketing($this->registry);			
+			} else {
+				throw new \Exception('[MailAdaptor::__construct] Can not load mailClass_Marketing library!');
+			}
 		}
 	}
 
@@ -48,8 +52,22 @@ class MailAdaptor {
         return $results;
 	}
 
-	public function send($sms){
-		if (method_exists($this->smsObject, 'sendSMS')){
+	public function sync(){
+		if (method_exists($this->mail_MarketingObject, 'sync')){
+			try {
+				$result = $this->mail_MarketingObject->sync();
+			} catch (\Exception $e){
+				$result = $e->getMessage();
+				echoLine('[MailAdaptor::sync] Error happened: ' . $e->getMessage(), 'e');
+				return false;
+			}
+		} else {
+			echoLine('[MailAdaptor::sync] No sync function in adaptor!', 'e');
+		}	
+	}
+
+	public function send($email){
+		if (method_exists($this->smsObject, 'send')){
 			try {
 				$result = $this->smsObject->sendSMS($sms);
 			} catch (\Exception $e){

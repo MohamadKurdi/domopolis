@@ -32,6 +32,22 @@ function getUkrainianWeekDayDeclenced($weekday) {
 	return $array[$weekday];		
 }
 
+function checkBirthdayOrDate($birthday, $format = 'd.m.Y') {			
+	if ($birthday == '0000-00-00' || $birthday == '1970-01-01'){
+		return false;
+	}
+
+	if (!strtotime($birthday)){
+		return false;
+	}
+
+	if (date('Y-m-d', strtotime($birthday)) <= date('Y-m-d', strtotime('1900-01-01'))){
+		return false;
+	}
+
+	return date($format, strtotime($birthday));
+}
+
 function formatDateInterval($mysqlDate){
 	$date 	= new DateTime($mysqlDate);
 	$now 	= new DateTime(); 

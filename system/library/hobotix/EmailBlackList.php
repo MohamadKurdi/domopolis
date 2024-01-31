@@ -11,6 +11,12 @@
 		private $exclude = ['kitchen-profi', 'ims-group'];
 		
 		private $reacherCONFIG = [];
+
+		private $subscriptionFields = [
+			'newsletter',
+			'newsletter_news',
+			'newsletter_personal'
+		];
 		
 		private $passReacherResults = [
 		'mail.ru',
@@ -101,7 +107,7 @@
 			$email = trim($email);
 			
 			if ($timeout){
-				echoLine('[REACHER] ' . $timeout, 'e');
+				echoLine('[EmailBlackList::Reacher] ' . $timeout, 'e');
 			}
 			
 			$exploded = explode('@', $email);
@@ -115,7 +121,7 @@
 			
 			if ($json = json_decode($json, true)){
 				if(php_sapi_name() == "cli"){
-					echoLine('[REACHER] ' . $email . ': ' . $json['is_reachable'], 's');
+					echoLine('[EmailBlackList::Reacher] ' . $email . ': ' . $json['is_reachable'], 's');
 				}
 				
 				if ($json['is_reachable'] == 'verifier'){
@@ -180,11 +186,10 @@
 				
 				} else {				
 				
-				throw new \Exception ("REACHER FAIL: " . $json);
+				throw new \Exception ("[EmailBlackList::Reacher] Fail happened: " . $json);
 				die($json);
 				
-			}
-			
+			}			
 		}
 
 		public function native($email){
@@ -234,6 +239,15 @@
 			return true;
 		}
 
+		public function checkCustomerSubscription($customer){
+			$total = 0;
+
+			foreach ($this->subscriptionFields as $subscriptionField){
+				$total += (int)$customer[$subscriptionField];
+			}
+
+			return (int)$total;
+		}
 
 		public function checkSubscription($email, $field){
 			if (!$this->check($email)){
@@ -246,8 +260,7 @@
 			}
 
 			return true;
-		}
-		
+		}		
 		
 		public function whitelist($email, $status){
 			$email = trim($email);
@@ -283,8 +296,7 @@
 			
 			$query = $this->db->ncquery("INSERT IGNORE INTO customer_emails_blacklist SET email = '" . $this->db->escape($email) . "', status = '" . $this->db->escape($status) . "'");
 			$query = $this->db->ncquery("UPDATE customer SET mail_status = '" . $this->db->escape($status) . "' WHERE email = '" . $this->db->escape($email) . "'");
-		}
-		
+		}	
 		
 		public function blacklist_remove($email){
 			$email = trim($email);

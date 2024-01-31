@@ -22,6 +22,7 @@
 		"/hobotix/mAlert",
 		"/hobotix/ShortAlias",
 		"/hobotix/SmsAdaptor",
+		"/hobotix/MailAdaptor",
 		"/hobotix/CustomerExtended",
 		"/hobotix/SessionDBHandler",
 		"/hobotix/EmailBlackList",
