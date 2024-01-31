@@ -178,6 +178,41 @@
 							<input type="text" name="config_sendsay_api_uri" value="<?php echo $config_sendsay_api_uri; ?>" size="50" />								
 						</td>
 					</tr>
+					<tr>
+						<td>Лист - 1</td>
+						<td>
+							<input type="text" name="config_sendsay_mapping_newsletter_news" value="<?php echo $config_sendsay_mapping_newsletter_news; ?>" size="50" />
+							<br />
+							<span class="help">Новости, акции компании</span>								
+						</td>
+					</tr>
+					
+					<tr>
+						<td>Лист - 2</td>
+						<td>
+							<input type="text" name="config_sendsay_mapping_newsletter" value="<?php echo $config_sendsay_mapping_newsletter; ?>" size="50" />
+							<br />
+							<span class="help">Информация об акциях, промокодах и скидках</span>								
+						</td>
+					</tr>
+					
+					<tr>
+						<td>Лист - 3</td>
+						<td>
+							<input type="text" name="config_sendsay_mapping_newsletter_personal" value="<?php echo $config_sendsay_mapping_newsletter_personal; ?>" size="50" />
+							<br />
+							<span class="help">Персональные рекомендации</span>								
+						</td>
+					</tr>
+
+					<tr>
+						<td>Нативный домен</td>
+						<td>
+							<input type="text" name="config_sendsay_exclude_native" value="<?php echo $config_sendsay_exclude_native; ?>" size="50" />
+							<br />
+							<span class="help">исключать мейлы с вхождением</span>								
+						</td>
+					</tr>
 				</table>
 
 

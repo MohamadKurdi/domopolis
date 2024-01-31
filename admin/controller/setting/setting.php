@@ -2495,7 +2495,11 @@ class ControllerSettingSetting extends Controller
           'config_sendsay_enable_marketing',
           'config_sendsay_enable_webpush',
           'config_sendsay_webpush_id',
-          'config_sendsay_fid'
+          'config_sendsay_fid',
+          'config_sendsay_exclude_native',
+          'config_sendsay_mapping_newsletter',          
+          'config_sendsay_mapping_newsletter_news',
+          'config_sendsay_mapping_newsletter_personal'
         ];
 
         foreach ($sendsay_config_keys as $key) {
