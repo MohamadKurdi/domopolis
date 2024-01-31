@@ -16,14 +16,12 @@ class ControllerFeedReFeedMaker2 extends Controller
         parent::__construct($registry);            
     }
 
-    private function setStockMode($stock)
-    {
+    private function setStockMode($stock){
         $this->stockMode = $stock;
         return $this;
     }    
 
-    private function openXML()
-    {
+    private function openXML(){
         $output = '';
         $output  = '<?xml version="1.0" encoding="UTF-8" ?>' . PHP_EOL;
         $output .= '<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">' . PHP_EOL;
@@ -46,8 +44,7 @@ class ControllerFeedReFeedMaker2 extends Controller
         }
     }
 
-    private function closeXML()
-    {
+    private function closeXML(){
         $output = '';
         $output .= '  </channel>' . PHP_EOL;
         $output .= '</rss>' . PHP_EOL;
@@ -55,8 +52,7 @@ class ControllerFeedReFeedMaker2 extends Controller
         return $output;
     }
 
-    private function setLanguageID($language_id)
-    {
+    private function setLanguageID($language_id){
         $this->language_id = $language_id;
         $this->load->model('localisation/language');
         $this->urlcode = $this->model_localisation_language->getLanguage($language_id)['urlcode'];
@@ -64,15 +60,13 @@ class ControllerFeedReFeedMaker2 extends Controller
         return $this;
     }
 
-    private function setEanLog()
-    {
+    private function setEanLog(){
         $this->eanLog = new Log('invalid_ean.txt');
         $this->eanLog->clear();
         return $this;
     }
 
-    private function setSteps()
-    {        
+    private function setSteps(){        
         $steps = $this->steps;
 
         if ($this->config->get('config_store_id') != 0) {
@@ -96,8 +90,7 @@ class ControllerFeedReFeedMaker2 extends Controller
         $this->steps = $steps;
     }    
 
-    protected function printItemFast($product, $changeID = true)
-    {
+    protected function printItemFast($product, $changeID = true){
         if (!$product || !(float)$product['price']) {
             return '';
         }
@@ -165,8 +158,7 @@ class ControllerFeedReFeedMaker2 extends Controller
         return $output;
     }
 
-    protected function printItem($product, $changeID = true)
-    {
+    protected function printItem($product, $changeID = true){
 
         if (!$product || !(float)$product['price']) {
             return '';
@@ -360,9 +352,7 @@ class ControllerFeedReFeedMaker2 extends Controller
         return $output;
     }
 
-    public function supplemental()
-    {
-
+    public function supplemental(){
         if ($this->simpleProcess->isRunning('feed/refeedmaker2/makefeed')){   
             echoLine('[makefeed] Process feed/refeedmaker2/makefeed running we can not continue');
             return;
@@ -409,6 +399,10 @@ class ControllerFeedReFeedMaker2 extends Controller
                         'filter_with_variants'  => true,
                         'filter_exclude_certs'  => true
                     );
+
+                    if ($this->config->get('config_rainforest_merchant_skip_low_price_products') && !$this->stockMode){
+                       // $filter['filter_amazon_best_min_price'] = $this->config->get('config_rainforest_merchant_skip_low_price_products');
+                    }
 
                     $total = $this->model_catalog_product->getTotalProducts($filter);
                     $iterations = ceil($total/$this->config->get('config_google_merchant_feed_limit'));
@@ -501,13 +495,11 @@ class ControllerFeedReFeedMaker2 extends Controller
         }
     }
 
-    public function makestockfeed()
-    {
+    public function makestockfeed(){
         $this->setStockMode(true)->makefeed();
     }
 
-    public function makefeed()
-    {        
+    public function makefeed(){        
         $this->rainforestAmazon->offersParser->PriceLogic->updatePricesFromDelayed();    
 
         $this->load->model('catalog/category');
@@ -531,9 +523,9 @@ class ControllerFeedReFeedMaker2 extends Controller
 
             $this->setSteps();
 
-            echoLine('[makefeed] Магазин ' . $store_id);
-            echoLine('[makefeed] Язык ' . $language_id);
-            echoLine('[makefeed] changeID ' . $changeID);
+            echoLine('[ControllerFeedReFeedMaker2::makefeed] Working in store ' . $store_id, 'i');
+            echoLine('[ControllerFeedReFeedMaker2::makefeed] Working with language_id ' . $language_id, 'i');
+            echoLine('[ControllerFeedReFeedMaker2::makefeed] ChangeID mode is ' . $changeID, 'i');
 
             $filter = array(
                 'filter_status'                     => true,
@@ -543,14 +535,18 @@ class ControllerFeedReFeedMaker2 extends Controller
                 'filter_exclude_google_categories'  => true
             );
 
+            if ($this->config->get('config_rainforest_merchant_skip_low_price_products') && !$this->stockMode){
+                $filter['filter_amazon_best_min_price'] = $this->config->get('config_rainforest_merchant_skip_low_price_products');
+            }
+
             if ($this->stockMode) {
                 $filter['filter_current_in_stock'] = true;
             }
 
-            $total = $this->model_catalog_product->getTotalProducts($filter);
+            $total      = $this->model_catalog_product->getTotalProducts($filter);
             $iterations = ceil($total/$this->config->get('config_google_merchant_feed_limit'));
-
-            echoLine('[makefeed] Всего товаров ' . $total);
+            
+            echoLine('[ControllerFeedReFeedMaker2::makefeed] Total products ' . $total, 's');
 
             for ($i = 1; $i <= ($iterations); $i++) {
                 $output = $this->openXML();
@@ -574,7 +570,7 @@ class ControllerFeedReFeedMaker2 extends Controller
                 $totalGet = ceil($this->config->get('config_google_merchant_feed_limit')/$this->config->get('config_google_merchant_one_iteration_limit'));
                 for ($iGet = 1; $iGet <= $totalGet; $iGet++) {
 
-                    $filter = array(
+                    $filter = [
                         'start'                     => ($i-1)*$this->config->get('config_google_merchant_feed_limit') + ($iGet-1)*$this->config->get('config_google_merchant_one_iteration_limit'),
                         'limit'                     => $this->config->get('config_google_merchant_one_iteration_limit'),
                         'filter_status'             => true,
@@ -585,10 +581,14 @@ class ControllerFeedReFeedMaker2 extends Controller
                         'filter_exclude_google_categories'  => true,
                         'sort'                              => 'p.product_id',
                         'order'                             => 'ASC'
-                    );
+                    ];
 
-                    echoLine('[makefeed] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . ($filter['start']) . ' по ' . ($filter['start'] + $filter['limit']));
-                    echoLine('[makefeed] Файл ' . $file);
+                    if ($this->config->get('config_rainforest_merchant_skip_low_price_products') && !$this->stockMode){
+                        $filter['filter_amazon_best_min_price'] = $this->config->get('config_rainforest_merchant_skip_low_price_products');
+                    }
+
+                    echoLine('[ControllerFeedReFeedMaker2::makefeed] Iteration ' . $i . ' from ' . $iterations . ', products from ' . ($filter['start']) . ' to ' . ($filter['start'] + $filter['limit']));
+                    echoLine('[ControllerFeedReFeedMaker2::makefeed] Writing file ' . $file, 'i');
 
                     $products = $this->model_catalog_product->getProducts($filter);
                     $k = 0;

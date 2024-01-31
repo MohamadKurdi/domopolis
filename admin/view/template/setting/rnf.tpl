@@ -751,6 +751,20 @@
 
 						<tr>
 							<td class="right">
+								<i class="fa fa-google"></i> Исключать из фидов товары с ценой меньше
+							</td>
+							<td>
+								<input type="number" name="config_rainforest_merchant_skip_low_price_products" value="<?php echo $config_rainforest_merchant_skip_low_price_products; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> На случай если уже добавлено какое-то количество товаров с низкими ценами, не выгружать их в товарные фиды
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
 								<i class="fa fa-amazon"></i> Удалять или отключать товары с ценой меньше для автоматически добавленных товаров
 							</td>
 							<td style="width:50px;" class="center">

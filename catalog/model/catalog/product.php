@@ -1280,6 +1280,10 @@
 			if (!empty($data['filter_exclude_certs'])) {
 				$sql .= " AND p.location <> 'certificate'";
 			}
+
+			if (!empty($data['filter_amazon_best_min_price'])) {
+				$sql .= " AND p.amazon_best_price >= '" . (float)$data['filter_amazon_best_min_price'] . "'";
+			}
 			
 			if (!empty($data['filterinstock'])) {
 				$sql .= " AND p." . $this->config->get('config_warehouse_identifier') . " > 0";
@@ -1598,6 +1602,10 @@
 			if (!empty($data['filter_exclude_certs'])) {
 				$sql .= " AND p.location <> 'certificate'";
 			}			
+
+			if (!empty($data['filter_amazon_best_min_price'])) {
+				$sql .= " AND p.amazon_best_price >= '" . (float)$data['filter_amazon_best_min_price'] . "'";
+			}
 			
 			if (!empty($data['filter_enable_markdown'])) {
 				$sql .= " AND is_markdown = 1 ";
@@ -1671,7 +1679,7 @@
 					}
 				}
 			}
-						
+
 			$query = $this->db->query($sql);
 			
 			if (empty($data['return_just_ids'])) {				
@@ -2872,6 +2880,10 @@
 
 			if (!empty($data['filter_quantity'])) {
 				$sql .= " AND p.quantity > 0";
+			}
+
+			if (!empty($data['filter_amazon_best_min_price'])) {
+				$sql .= " AND p.amazon_best_price >= '" . (float)$data['filter_amazon_best_min_price'] . "'";
 			}
 
 			if (!empty($data['filter_hotline_exclude'])) {

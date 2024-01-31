@@ -643,6 +643,11 @@
 				</div>
 
 				<div>
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Исключить из мерчанта товары с ценой меньше</span></p>
+					<input type="number" name="config_rainforest_merchant_skip_low_price_products" value="<?php echo $config_rainforest_merchant_skip_low_price_products; ?>" size="50" style="width:100px;" /> <i class="fa fa-eur"></i>
+				</div>
+
+				<div>
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Удалять товары с ценой меньше</span></p>
 					<select name="config_rainforest_drop_low_price_products">
 						<?php if ($config_rainforest_drop_low_price_products) { ?>

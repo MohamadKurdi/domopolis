@@ -3753,6 +3753,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_rainforest_skip_low_price_products'] = $this->config->get('config_rainforest_skip_low_price_products');
         }
 
+        if (isset($this->request->post['config_rainforest_merchant_skip_low_price_products'])) {
+            $this->data['config_rainforest_merchant_skip_low_price_products'] = $this->request->post['config_rainforest_merchant_skip_low_price_products'];
+        } else {
+            $this->data['config_rainforest_merchant_skip_low_price_products'] = $this->config->get('config_rainforest_merchant_skip_low_price_products');
+        }
+
         if (isset($this->request->post['config_rainforest_drop_low_price_products'])) {
             $this->data['config_rainforest_drop_low_price_products'] = $this->request->post['config_rainforest_drop_low_price_products'];
         } else {

@@ -65,6 +65,7 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_skip_variants',
 		'config_rainforest_skip_min_offers_products',
 		'config_rainforest_skip_low_price_products',
+		'config_rainforest_merchant_skip_low_price_products',
 		'config_rainforest_skip_high_price_products',
 		'config_rainforest_drop_low_price_products',
 		'config_rainforest_drop_low_price_products_for_manual',
