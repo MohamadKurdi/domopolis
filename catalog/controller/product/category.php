@@ -69,8 +69,7 @@
 			$this->response->setOutput($this->render());
 		}
 				
-		private function renderSubcategories(){
-			
+		private function renderSubcategories(){			
 			$this->language->load('product/category');
 			
 			foreach ($this->language->loadRetranslate('product/single') as $translationСode => $translationText){
@@ -427,27 +426,26 @@
 				$this->data['heading_title'] = (isset($category_info['seo_h1']) && mb_strlen($category_info['seo_h1']) >= 1)?$category_info['seo_h1']:$category_info['name'];
 				$this->data['tagline'] = $category_info['tagline'];
 				
-				$this->data['text_refine'] = $this->language->get('text_refine');
-				$this->data['text_empty'] = $this->language->get('text_empty');			
-				$this->data['text_quantity'] = $this->language->get('text_quantity');
-				$this->data['text_manufacturer'] = $this->language->get('text_manufacturer');
-				$this->data['text_model'] = $this->language->get('text_model');
-				$this->data['text_price'] = $this->language->get('text_price');
-				$this->data['text_tax'] = $this->language->get('text_tax');
-				$this->data['text_points'] = $this->language->get('text_points');
-				$this->data['text_compare'] = sprintf($this->language->get('text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
-				$this->data['text_display'] = $this->language->get('text_display');
-				$this->data['text_list'] = $this->language->get('text_list');
-				$this->data['text_grid'] = $this->language->get('text_grid');
-				$this->data['text_sort'] = $this->language->get('text_sort');
-				$this->data['text_limit'] = $this->language->get('text_limit');
+				$this->data['text_refine'] 			= $this->language->get('text_refine');
+				$this->data['text_empty'] 			= $this->language->get('text_empty');			
+				$this->data['text_quantity'] 		= $this->language->get('text_quantity');
+				$this->data['text_manufacturer'] 	= $this->language->get('text_manufacturer');
+				$this->data['text_model'] 			= $this->language->get('text_model');
+				$this->data['text_price'] 			= $this->language->get('text_price');
+				$this->data['text_tax'] 			= $this->language->get('text_tax');
+				$this->data['text_points'] 			= $this->language->get('text_points');
+				$this->data['text_compare'] 		= sprintf($this->language->get('text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
+				$this->data['text_display'] 		= $this->language->get('text_display');
+				$this->data['text_list'] 			= $this->language->get('text_list');
+				$this->data['text_grid'] 			= $this->language->get('text_grid');
+				$this->data['text_sort'] 			= $this->language->get('text_sort');
+				$this->data['text_limit'] 			= $this->language->get('text_limit');
 				
 				$this->data['button_cart'] = $this->language->get('button_cart');
 				$this->data['button_wishlist'] = $this->language->get('button_wishlist');
 				$this->data['button_compare'] = $this->language->get('button_compare');
 				$this->data['button_continue'] = $this->language->get('button_continue');
 				
-				// Set the last category breadcrumb		
 				$url = '';
 				
 				if( ! empty( $this->request->get['mfp'] ) ) {
@@ -847,8 +845,7 @@
 						}
 					}
 				}
-				
-				
+								
 				$this->data['intersections'] = array();
 				$this->data['intersections_l2'] = array();
 				if ($category_info['intersections']){
@@ -1263,8 +1260,7 @@
 					$this->data['prev_page'] = false;
 				}
 				
-				//OCFILTER
-				// OCFilter Start
+				
 				$ocfilter_page_info = $this->getChild('module/ocfilter/getPageInfo');
 				
 				if ($ocfilter_page_info) {
@@ -1338,7 +1334,6 @@
 						$this->data['heading_title'] = trim(str_replace('{filter}', '', $this->data['heading_title']));
 					}
 				}
-				//OCFILTER END
 				
 				
 				require_once(DIR_SYSTEM . 'library/microdata/opengraph/category.php');
@@ -1348,9 +1343,16 @@
 				if ($this->config->get('rewardpoints_appinstall')){
 					$this->data['text_retranslate_app_block'] = sprintf($this->data['text_retranslate_app_block_reward'], $this->currency->format($this->config->get('rewardpoints_appinstall'), $this->config->get('config_currency_national'), 1));
 				}
-				
-				//Нужно определить текущий layout, а потом получить его шаблон!
-				//В первую очередь - если назначен лэйаут для категории
+
+				$this->data['categories_path'] = [];
+				foreach ($this->data['breadcrumbs'] as $k => $breadcrumb) {
+					if (!$k) {
+						continue;
+					}
+					$this->data['categories_path'][] = $breadcrumb['text'];
+				}
+
+				$this->data['categories_path'] = implode('/', $this->data['categories_path']) . '/' . $this->data['heading_title'];
 
 				$this->load->model('design/layout');
 				$layout_id = $this->model_catalog_category->getCategoryLayoutId($category_id);

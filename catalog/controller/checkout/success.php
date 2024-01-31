@@ -46,7 +46,7 @@
 			
 			$results = $this->model_catalog_actions->getActionsRAND(3);
 			
-			$this->data['actions_all'] = array();
+			$this->data['actions_all'] = [];
 			foreach ($results as $result) {
 				
 				$date_start = date( 'j', $result['date_start'] ) . ' ' . $this->model_catalog_actions->getMonthName(date( 'n', $result['date_start'] ));
@@ -79,14 +79,12 @@
 							$discount = $this->currency->format($this->tax->calculate($query->row['price'], 0, $this->config->get('config_tax')));
 						}
 					}					
-				}
-								
-				// $this->data['discount'] = $discount;
+				}							
 				
 				$this->data['actions_all'][] = array(
 				'caption'		=> $result['caption'],
-				'date_start'	=> $date_start, //date( $date_format, $result['date_start'] ),
-				'date_end'		=> $date_end, //date( $date_format, $result['date_end'] ),			
+				'date_start'	=> $date_start,
+				'date_end'		=> $date_end,	
 				'date'			=> $date,
 				'thumb'			=> $image,
 				'description'	=> html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8'),
@@ -94,11 +92,17 @@
 				'discount'      => $discount
 				);					
 			}
+
+
+			if (empty($this->session->data['order_id']) && !empty($this->session->data['last_order_id'])){
+				$this->session->data['order_id'] = $this->session->data['last_order_id'];
+			}
 			
 			if (isset($this->session->data['order_id'])) {				
 				$this->session->data['last_order_id'] = $this->session->data['order_id'];
 				$this->load->model('checkout/order');
 				$this->load->model('catalog/product');
+				$this->load->model('tool/image');
 				
 				$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 				$products = $this->model_checkout_order->getOrderProducts($this->session->data['order_id']);
@@ -115,9 +119,9 @@
 					'ecomm_totalvalue' => array()
 					);	
 					
-					$ecomm_itemid = array();
-					$ecomm_itemid2 = array();
-					$ecomm_totalvalue = array();
+					$ecomm_itemid = [];
+					$ecomm_itemid2 = [];
+					$ecomm_totalvalue = [];
 					
 					foreach ($products as $product){
 						$ecomm_itemid[] = $product['product_id'];
@@ -136,9 +140,9 @@
 					'dynx_totalvalue' => array()
 					);	
 					
-					$dynx_itemid = array();
-					$dynx_itemid2 = array();
-					$dynx_totalvalue = array();
+					$dynx_itemid = [];
+					$dynx_itemid2 = [];
+					$dynx_totalvalue = [];
 					
 					foreach ($products as $product){
 						$dynx_itemid[] = $product['product_id'];
@@ -152,11 +156,11 @@
 					
 				}			
 				
-				$transactionProducts = array();
-				$transactionGTINS = array();
-				$hasAllProductsOnStock = false;
+				$transactionProducts 	= [];
+				$transactionGTINS 		= [];
+				$hasAllProductsOnStock 	= false;
 				$hasSomeProductsOnStock = false;
-				$productsOnStock = 0;
+				$productsOnStock 		= 0;
 				
 				foreach ($products as $product){
 					$realProduct = $this->model_catalog_product->getProduct($product['product_id'], false);
@@ -174,10 +178,14 @@
 						}
 						
 						$transactionProduct = array(
-							'id'  			=> $product['product_id'],
+							'id'  			=> $realProduct['product_id'],
+							'url' 			=> $this->url->link('product/product', 'product_id=' . $realProduct['product_id']),
 							'sku' 			=> $realProduct['sku']?$realProduct['sku']:$realProduct['model'],
+							'model' 		=> $realProduct['model'],
 							'name' 			=> $realProduct['name'],
-							'manufacturer' 	=> $realProduct['manufacturer'],
+							'manufacturer' 		=> $realProduct['manufacturer'],
+							'main_category_id'	=> $realProduct['main_category_id'],
+							'image' 		=> $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
 							'category' 		=> $this->model_catalog_product->getGoogleCategoryPath($realProduct['product_id']),
 							'price' 		=> $product['price_national'],
 							'total' 		=> $product['total_national'],
@@ -270,7 +278,7 @@
 			
 			$this->document->setTitle($this->language->get('heading_title'));
 			
-			$this->data['breadcrumbs'] = array(); 
+			$this->data['breadcrumbs'] = []; 
 			
 			$this->data['breadcrumbs'][] = array(
 			'href'      => $this->url->link('common/home'),

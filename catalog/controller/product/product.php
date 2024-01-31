@@ -2048,11 +2048,15 @@ public function index($product_id = false, $just_price = false)
                     }
 
                     $this->data['google_ecommerce_info'] = array(
-                        'price'      => ($product_info['special']) ? $this->currency->format($product_info['special'], '','',false) : $this->currency->format($product_info['price'], '', '', false),
+                        'price'      => ($product_info['special']) ? $this->currency->format($product_info['special'], '','', false) : $this->currency->format($product_info['price'], '', '', false),
+                        'old_price'  => ($product_info['special']) ? $this->currency->format($product_info['price'], '', '', false) : false,
+                        'url'        => $this->url->link('product/product', 'product_id=' . $product_info['product_id']),
                         'brand'      => $this->data['manufacturer'],
                         'name'       => $this->data['heading_title'],
+                        'available'  => $product_info['quantity']?1:0,
                         'category'   => implode('/', $this->data['categories']),
-                        'product_id' => $product_info['product_id'],
+                        'product_id'        => $product_info['product_id'],
+                        'main_category_id'  => $product_info['main_category_id'],
                         'currency'   => $this->config->get('config_regional_currency')
                     );
 
