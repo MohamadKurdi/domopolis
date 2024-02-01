@@ -395,6 +395,7 @@
 	$registry->set('phoneValidator', 	new hobotix\phoneValidator($registry));
 	$registry->set('smsAdaptor', 		new hobotix\SmsAdaptor($registry));
 	$registry->set('otpLogin', 			new hobotix\OTP($registry));
+	$registry->set('emailBlackList', 	new hobotix\EmailBlackList($registry));	
 	$registry->set('customer', 			new hobotix\CustomerExtended($registry));
 	$registry->set('tax', 				new Tax($registry));
 	$registry->set('weight', 			new Weight($registry));
@@ -404,7 +405,6 @@
 	$registry->set('Bitrix24', 			new hobotix\Bitrix24($registry));	
 	$registry->set('mAlert', 			new hobotix\mAlert($registry));	
 	$registry->set('shortAlias', 		new hobotix\shortAlias($registry));
-	$registry->set('emailBlackList', 	new hobotix\EmailBlackList($registry));	
 	$registry->set('elasticSearch', 	new hobotix\ElasticSearch($registry));		
 	$registry->set('courierServices', 	new hobotix\CourierServices($registry));
 	$registry->set('openaiAdaptor', 	new hobotix\OpenAIAdaptor($registry));

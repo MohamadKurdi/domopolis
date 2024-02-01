@@ -3,12 +3,11 @@
 	namespace hobotix;
 	
 	
-	final class EmailBlackList
-	{
+	final class EmailBlackList {
 		
 		private $db		 = null;	
 		private $config	 = null;	
-		private $exclude = ['kitchen-profi', 'ims-group'];
+		private $exclude = [];
 		
 		private $reacherCONFIG = [];
 
@@ -31,6 +30,7 @@
 			
 			$this->config 	= $registry->get('config');
 			$this->db 		= $registry->get('db');
+			$this->exclude  = loadJsonConfig('mailexclude');
 
 			$this->reacherCONFIG = [
 				'URI' 	=> 	$this->config->get('config_reacher_uri'),

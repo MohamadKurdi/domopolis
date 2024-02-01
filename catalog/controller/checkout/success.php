@@ -185,7 +185,7 @@
 							'name' 			=> $realProduct['name'],
 							'manufacturer' 		=> $realProduct['manufacturer'],
 							'main_category_id'	=> $realProduct['main_category_id'],
-							'image' 		=> $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
+							'image' 		=> $this->model_tool_image->resize($realProduct['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
 							'category' 		=> $this->model_catalog_product->getGoogleCategoryPath($realProduct['product_id']),
 							'price' 		=> $product['price_national'],
 							'total' 		=> $product['total_national'],

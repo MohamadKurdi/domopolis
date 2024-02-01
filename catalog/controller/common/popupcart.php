@@ -19,8 +19,11 @@
 			return false;
 		}
 		
-		public function index () {
-			
+		public function index () {													
+			$this->load->model('setting/extension');
+			$this->load->model('tool/image');
+
+
 			if (isset($this->request->request['remove'])) {
 				$this->cart->remove($this->request->request['remove']);
 				unset($this->session->data['vouchers'][$this->request->request['remove']]);
@@ -36,7 +39,7 @@
 						}
 					}								
 				} else {
-						$this->cart->update($this->request->request['update'], $this->request->request['qty']);				
+					$this->cart->update($this->request->request['update'], $this->request->request['qty']);				
 				}
 
 				$this->response->setOutput('update ' . $this->request->request['update'] . ':' . $this->request->request['qty'] . ' success');
@@ -50,8 +53,6 @@
 				foreach ($this->language->loadRetranslate('product/single') as $translationСode => $translationText){
 					$this->data[$translationСode] = $translationText;
 				}								
-								
-				$this->load->model('setting/extension');
 				
 				$total_data = array();
 				$total = 0;
@@ -239,6 +240,48 @@
 						$this->data['href_view_all'] = $this->url->link('product/special');
 					}
 				}
+
+				$this->data['google_ecommerce_info'] = [];
+				$transactionProducts 	= [];
+				$transactionTotal 		= 0;
+				foreach ($this->cart->getProducts() as $product){
+					$realProduct = $this->model_catalog_product->getProduct($product['product_id']);
+
+					$gtin = false;
+					if (BarcodeValidator::IsValidEAN13($realProduct['ean']) || BarcodeValidator::IsValidEAN8($realProduct['ean'])){
+						$gtin = $realProduct['ean'];
+					}
+
+					$transactionProduct = array(
+						'id'  			=> $realProduct['product_id'],
+						'url' 			=> $this->url->link('product/product', 'product_id=' . $realProduct['product_id']),
+						'sku' 			=> $realProduct['sku']?$realProduct['sku']:$realProduct['model'],
+						'model' 		=> $realProduct['model'],
+						'name' 			=> $realProduct['name'],
+						'manufacturer' 		=> $realProduct['manufacturer'],
+						'main_category_id'	=> $realProduct['main_category_id'],
+						'image' 		=> $this->model_tool_image->resize($realProduct['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
+						'category' 		=> $this->model_catalog_product->getGoogleCategoryPath($realProduct['product_id']),
+						'price' 		=> $product['price_national'],
+						'total' 		=> $product['total_national'],
+						'quantity' 		=> $product['quantity'],
+					);
+
+					$transactionTotal += $product['total_national'];
+
+					if ($gtin){
+						$transactionGTINS[] = array('gtin' => $gtin);
+					}
+
+					if (!empty($transactionProduct)){
+						$transactionProduct = array_map('prepareEcommString', $transactionProduct);
+					}
+					$transactionProducts[] = $transactionProduct;			
+				}
+
+				$this->data['google_ecommerce_info'] = array_map('prepareEcommString', $this->data['google_ecommerce_info']);
+				$this->data['google_ecommerce_info']['transactionProducts'] = $transactionProducts;
+				$this->data['google_ecommerce_info']['transactionTotal'] 	= $transactionTotal;
 				
 				$this->data['button_cart'] 		= $this->language->get('button_cart');
 				$this->data['button_wishlist'] 	= $this->language->get('button_wishlist');

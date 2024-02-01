@@ -927,6 +927,7 @@ class ControllerCheckoutQuickorder extends Controller {
 
 		$this->load->model('catalog/product');
 		$this->load->model('setting/extension');
+		$this->load->model('tool/image');
 
 
 		if (!empty($this->request->post['quickorder-dialog-phone']) && $this->phoneValidator->validate($this->request->post['quickorder-dialog-phone'])) {
@@ -1323,7 +1324,7 @@ class ControllerCheckoutQuickorder extends Controller {
 				$json['success'] = true;
 
 				$order_info = $this->model_checkout_order->getOrder($json['order_id']);
-				$products = $this->model_checkout_order->getOrderProducts($json['order_id']);				
+				$products 	= $this->model_checkout_order->getOrderProducts($json['order_id']);				
 				$transactionProducts = [];
 				$this->load->model('catalog/product');
 
@@ -1346,10 +1347,14 @@ class ControllerCheckoutQuickorder extends Controller {
 					}
 
 					$transactionProduct = array(
-						'id'  			=> $product['product_id'],
+						'id'  			=> $realProduct['product_id'],
+						'url' 			=> $this->url->link('product/product', 'product_id=' . $realProduct['product_id']),
 						'sku' 			=> $realProduct['sku']?$realProduct['sku']:$realProduct['model'],
+						'model' 		=> $realProduct['model'],
 						'name' 			=> $realProduct['name'],
-						'brand' 		=> $realProduct['manufacturer'],
+						'manufacturer' 		=> $realProduct['manufacturer'],
+						'main_category_id'	=> $realProduct['main_category_id'],
+						'image' 		=> $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
 						'category' 		=> $this->model_catalog_product->getGoogleCategoryPath($realProduct['product_id']),
 						'price' 		=> $product['price_national'],
 						'total' 		=> $product['total_national'],
@@ -1383,14 +1388,15 @@ class ControllerCheckoutQuickorder extends Controller {
 				}
 
 				$json['google_ecommerce_info'] = array(
-					'transactionId' 			=> $order_info['order_id'],					
+					'transactionId' 			=> $order_info['order_id'],			
+					'transactionTime' 			=> date('Y-m-d H:i:s'),	
 					'transactionCurrency'		=> $this->config->get('config_regional_currency'),
 					'transactionAffiliation'    => $this->config->get('config_url'),
 					'transactionTax'			=> 0.00,
 					'transactionTotal'			=> $this->getOrderTotal($order_info['order_id']),
 					'transactionShipping'		=> 0.00,	
 					'transactionEstimatedDelivery'	=> $transactionEstimatedDelivery,
-					'transactionCountryCode'	=> $this->model_localisation_country->getCountryISO2($this->config->get('config_country_id')),
+					'transactionCountryCode'		=> $this->model_localisation_country->getCountryISO2($this->config->get('config_country_id')),
 				);
 
 				$json['google_ecommerce_info'] = array_map('prepareEcommString', $json['google_ecommerce_info']);

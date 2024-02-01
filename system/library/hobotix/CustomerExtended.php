@@ -434,6 +434,26 @@
 		public function getEmail() {
 			return $this->email;
 		}
+
+		public function getIfRealEmail($email = false) {
+			if (!$this->isLogged()){
+				return false;
+			}
+
+			if (!$email){
+				$email = $this->email;
+			}
+
+			if ($this->registry->get('emailBlackList')->native($email)){
+				return false;
+			}
+
+			if (!$this->registry->get('emailBlackList')->check_correctness($email)){
+				return false;
+			}
+
+			return $email;
+		}
 		
 		public function getBirthday() {			
 			if ($this->birthday == '0000-00-00' || $this->birthday == '1970-01-01'){
