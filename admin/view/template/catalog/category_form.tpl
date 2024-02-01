@@ -1337,8 +1337,8 @@
 											<?php if ($category_search_word['category_word_last_search'] == '0000-00-00 00:00:00') { ?>
 												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 											<?php } else { ?>
-												<?php echo date('Y-m-d', strtotime($category_search_word['category_word_last_search'])); ?><br />
-												<?php echo date('H:i:s', strtotime($category_search_word['category_word_last_search'])); ?>
+												<small><?php echo date('Y-m-d', strtotime($category_search_word['category_word_last_search'])); ?></small><br />
+												<small><?php echo date('H:i:s', strtotime($category_search_word['category_word_last_search'])); ?></small>
 											<?php } ?>
 
 										</td>

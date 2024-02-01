@@ -99,8 +99,7 @@ class ModelCatalogCategory extends Model {
 				category_word_last_search 		= '" . $this->db->escape($category_search_word['category_word_last_search']) . "', 
 				category_word_total_products 	= '" . (int)$category_search_word['category_word_total_products'] . "',
 				category_word_total_pages 		= '" . (int)$category_search_word['category_word_total_pages'] . "',
-				category_word_pages_parsed 		= '" . (int)$category_search_word['category_word_pages_parsed'] . "',
-				category_word_total_products 	= '" . (int)$category_search_word['category_word_total_products'] . "',
+				category_word_pages_parsed 		= '" . (int)$category_search_word['category_word_pages_parsed'] . "',				
 				category_word_product_added 	= '" . (int)$category_search_word['category_word_product_added'] . "',
 				category_word_user_id 			= '" . (int)$category_search_word['category_word_user_id'] . "'");
 		}
@@ -321,8 +320,7 @@ class ModelCatalogCategory extends Model {
 				category_word_last_search 		= '" . $this->db->escape($category_search_word['category_word_last_search']) . "', 
 				category_word_total_products 	= '" . (int)$category_search_word['category_word_total_products'] . "',
 				category_word_total_pages 		= '" . (int)$category_search_word['category_word_total_pages'] . "',
-				category_word_pages_parsed 		= '" . (int)$category_search_word['category_word_pages_parsed'] . "',
-				category_word_total_products 	= '" . (int)$category_search_word['category_word_total_products'] . "',
+				category_word_pages_parsed 		= '" . (int)$category_search_word['category_word_pages_parsed'] . "',				
 				category_word_product_added 	= '" . (int)$category_search_word['category_word_product_added'] . "',
 				category_word_user_id 			= '" . (int)$category_search_word['category_word_user_id'] . "'");
 		}

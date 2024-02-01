@@ -86,15 +86,15 @@
                             </div>
                         </td>
 
-                        <td class="right" style="width:150px;">    
+                        <td class="right" style="width:100px;">    
                             <div>
-                                <a href="<?php echo $filter_problems_href; ?>" class="button" style="color:#CF4A61; border-color:#CF4A61;"><i class="fa fa-exclamation-triangle"></i> Проблемные (<?php echo $filter_problems_count; ?>)</a>
+                                <a href="<?php echo $filter_problems_href; ?>" class="button" style="color:#CF4A61; border-color:#CF4A61;"><i class="fa fa-exclamation-triangle"></i> <?php echo $filter_problems_count; ?></a>
                             </div>
                         </td>
 
-                        <td class="right" style="width:90px;">
+                        <td class="right" style="width:60px;">
                             <div>                                
-                                <a onclick="filter();" class="button">Фильтр</a>
+                                <a onclick="filter();" class="button"><i class="fa fa-filter"></i></a>
                             </div>
                         </td>
                     </tr>

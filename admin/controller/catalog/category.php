@@ -79,14 +79,16 @@ class ControllerCatalogCategory extends Controller {
 				$url .= '&page=' . $this->request->get['page'];
 			}
 
-			if(isset($this->request->post['apply']) and $this->request->post['apply'])
+			if(isset($this->request->post['apply']) and $this->request->post['apply']){
 				$this->redirect($this->url->link('catalog/category/update', 'token=' . $this->session->data['token'] . '&category_id=' . $this->request->get['category_id'] . $url, 'SSL'));
-			else
+			} else {
 				$this->redirect($this->url->link('catalog/category', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+			}		
 		}
 
 		$this->getForm();
 	}
+
 
 	public function delete() {
 		$this->language->load('catalog/category');

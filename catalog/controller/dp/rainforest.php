@@ -692,6 +692,12 @@ class ControllerDPRainForest extends Controller {
 		$page 		= 1;
 		$requests 	= [];
 		foreach ($categoryWords as $categoryWord){
+			if (!$categoryWord['category_search_word'] || !$categoryWord['category_word_category_id']){
+				echoLine('[ControllerDPRainForest::addasinsbycategorycron] Params error, skipping', 'e');
+				continue;
+			}
+
+
 			if ($categoryWord['category_search_word']){
 				$infoLine = $categoryWord['category_search_word'];
 			} elseif ($categoryWord['category_word_category']){
@@ -712,7 +718,7 @@ class ControllerDPRainForest extends Controller {
 				'word_or_uri' 			=> $categoryWord['category_search_word'],
 				'page' 					=> $page,
 				'sort' 					=> $categoryWord['category_search_sort'],
-				'amazon_category_id'	=> $categoryWord['category_word_category_id'],
+				'category_id'			=> $categoryWord['category_word_category_id'],
 			];			
 
 			$request = $this->rainforestAmazon->prepareAmazonRainforestPageRequest($options);
@@ -773,10 +779,12 @@ class ControllerDPRainForest extends Controller {
 								continue;
 							}
 						}
-					}	
 
-					echoLine('[ControllerDPRainForest::addasinsbycategorycron] Good product found, ' . $product['asin'] . ' with price ' . $product['price']['value'], 's');
-					$good_products[$product['asin']] = $product;
+						echoLine('[ControllerDPRainForest::addasinsbycategorycron] Good product found, ' . $product['asin'] . ' with price ' . $product['price']['value'], 's');
+						$good_products[$product['asin']] = $product;
+					} else {
+						echoLine('[ControllerDPRainForest::addasinsbycategorycron] Product without price found', 'e');
+					}
 				}
 
 				$good_products_asins = array_keys($good_products);

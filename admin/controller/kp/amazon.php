@@ -36,8 +36,9 @@ class ControllerKPAmazon extends Controller {
 		];
 
 		$options 	= $this->rainforestAmazon->prepareAmazonRainforestPageRequest($this->request->post);
+
 		$curl 		= $this->rainforestAmazon->categoryRetriever->createRequest($options);
-		$result 	= curl_exec($curl);
+		$result 	= curl_exec($curl);		
 
 		if ($result){
 			$pagination = $this->rainforestAmazon->processAmazonRainforestPageRequestPaginationResults($result);

@@ -378,19 +378,17 @@ class RainforestAmazon
 				'page' 			=> $options['page'],
 				'sort_by' 		=> $options['sort'],
 			];
-		} elseif (!empty($options['amazon_category_id'])) {
+		} elseif (!empty($options['category_id'])) {
 			$request = [
 				'type' 			=> $options['type'], 		
-				'category_id' 	=> $options['amazon_category_id'],
+				'category_id' 	=> $options['category_id'],
 				'page' 			=> $options['page'],
 				'sort_by' 		=> $options['sort']
 			];
 		} elseif (!empty($options['word_or_uri'])){
 			$request = [
 				'type' 			=> $options['type'], 		
-				'url' 			=> str_replace('&amp;', '&', $options['word_or_uri']),
-			//	'page' 			=> $options['page'],
-			//	'sort_by' 		=> $options['sort']
+				'url' 			=> str_replace('&amp;', '&', $options['word_or_uri'])
 			];
 		}
 

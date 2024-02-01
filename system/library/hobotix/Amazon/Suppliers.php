@@ -245,6 +245,11 @@ class Suppliers
 				$sellerData = $this->SellerRetriever->checkData($amazonSellerData);
 
 				if ($sellerData){
+
+					if (empty($sellerData['vat_number'])){
+						$sellerData['vat_number'] = '';
+					}
+
 					echoLine('[Suppliers::addSupplier] Got information from Amazon: ' . $sellerData['name']);					
 					$telephone 	= $this->guessSupplierPhone($sellerData);
 					$email 		= $this->guessSupplierEmail($sellerData);
