@@ -39,7 +39,7 @@ class ControllerCommonPanel extends Controller {
 				$result = json_decode($this->openaiAdaptor->OpenAI->listModels(), true);
 
 				if (!empty($result['data'])){
-					$body = count($result['data']) . ' models';
+					$body = count($result['data']) . ' mdl';
 					$class= 'good';
 				} else {
 					$body  = serialize($result);
