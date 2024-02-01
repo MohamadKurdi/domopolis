@@ -277,6 +277,7 @@ class ControllerCatalogCategory extends Controller {
 					'has_price'       			=> $this->model_catalog_category->getTotalProductNoZeroPriceInCategoryWithSubcategories($result['category_id']),
 					'enabled'       			=> $this->model_catalog_category->getTotalProductNoZeroPriceAndEnabledInCategoryWithSubcategories($result['category_id']),
 					'category_overprice_rules'  => $this->model_catalog_category->countCategoryOverpriceRules($result['category_id']),
+					'category_search_words'		=> $this->model_catalog_category->getCountCategorySearchWords($result['category_id']),
 					'overload_max_wc_multiplier' 		=> $result['overload_max_wc_multiplier'],
 					'overload_max_multiplier' 			=> $result['overload_max_multiplier'],
 					'overload_ignore_volumetric_weight' => $result['overload_ignore_volumetric_weight'],

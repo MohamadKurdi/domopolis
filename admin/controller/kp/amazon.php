@@ -29,6 +29,23 @@ class ControllerKPAmazon extends Controller {
 		$this->response->setOutput(json_encode(['result' => 'success']));
 	}
 
+	public function countPagination(){
+		$pagination = [
+			'total_pages' => 0,
+			'total_results' => 0,
+		];
+
+		$options 	= $this->rainforestAmazon->prepareAmazonRainforestPageRequest($this->request->post);
+		$curl 		= $this->rainforestAmazon->categoryRetriever->createRequest($options);
+		$result 	= curl_exec($curl);
+
+		if ($result){
+			$pagination = $this->rainforestAmazon->processAmazonRainforestPageRequestPaginationResults($result);
+		}
+
+		$this->response->setOutput(json_encode($pagination));
+	}
+
 	public function getRainforestPage(){
 		$url 			= trim($this->request->post['url']);
 		$category 		= trim($this->request->post['category']);
@@ -36,7 +53,6 @@ class ControllerKPAmazon extends Controller {
 		$sort 			= trim($this->request->post['sort']);
 		$search_term 	= trim($this->request->post['search_term']);
 		$type 			= trim($this->request->post['type']);
-
 		$compile 		= !empty($this->request->post['compile'])?1:0;
 		$offers 		= !empty($this->request->post['offers'])?1:0;
 

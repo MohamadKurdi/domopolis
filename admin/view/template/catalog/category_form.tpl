@@ -1060,7 +1060,7 @@
 											<label for="category_overprice_rules_row_<?php echo $category_overprice_rules_row; ?>_discount"></label>
 										</td>
 										<td class="right">
-											<a onclick="$('#category_overprice_rules-row<?php echo $category_overprice_rules_row; ?>').remove();" class="button">Удалить</a>
+											<a onclick="$('#category_overprice_rules-row<?php echo $category_overprice_rules_row; ?>').remove();" class="button"><i class="fa fa-times-circle"></i></a>
 										</td>
 									</tr>
 								</tbody>
@@ -1103,7 +1103,7 @@
 
 								html += '    <td class="center"><input id="category_overprice_rules_row_' + category_overprice_rules_row + '_discount" type="checkbox" class="checkbox" name="category_overprice_rules[' + category_overprice_rules_row + '][discount]" value="1" /><label for="category_overprice_rules_row_' + category_overprice_rules_row + '_discount"></label></td>';
 
-								html += '    <td class="right"><a onclick="$(\'#category_overprice_rules-row' + category_overprice_rules_row + '\').remove();" class="button">Удалить</a></td>';
+								html += '    <td class="right"><a onclick="$(\'#category_overprice_rules-row' + category_overprice_rules_row + '\').remove();" class="button"><i class="fa fa-times-circle"></i></a></td>';
 
 								html += '  </tr>';
 								html += '</tbody>';
@@ -1131,7 +1131,7 @@
 
 							html += '    <td class="center"><input id="category_overprice_rules_row_' + category_overprice_rules_row + '_discount" type="checkbox" class="checkbox" name="category_overprice_rules[' + category_overprice_rules_row + '][discount]" value="1" /><label for="category_overprice_rules_row_' + category_overprice_rules_row + '_discount"></label></td>';
 
-							html += '    <td class="right"><a onclick="$(\'#category_overprice_rules-row' + category_overprice_rules_row + '\').remove();" class="button">Удалить</a></td>';
+							html += '    <td class="right"><a onclick="$(\'#category_overprice_rules-row' + category_overprice_rules_row + '\').remove();" class="button"><i class="fa fa-times-circle"></i></a></td>';
 
 							html += '  </tr>';
 							html += '</tbody>';
@@ -1165,16 +1165,19 @@
 									<td class="center" style="width:100px;">
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Офферов</span>
 									</td>
-									<td class="center" style="width:100px;">
+									<td class="center" style="width:80px;">
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Скан</span>
 									</td>
-									<td class="center" style="width:100px;">
+									<td class="center" style="width:80px;">
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Страниц</span>
 									</td>
-									<td class="center" style="width:100px;">
+									<td class="center" style="width:80px;">
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Товаров</span>
+									</td>
+									<td class="center" style="width:80px;">
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">+Товаров</span>
 									</td>
-									<td class="center" style="width:100px;">
+									<td class="center" style="width:80px;">
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Пользователь</span>
 									</td>
 									<td style="width:100px;">
@@ -1184,6 +1187,41 @@
 							</thead>
 							<?php $category_search_words_row = 0; ?>
 							<script type="text/javascript">
+								function refresh_counters(category_search_words_row){
+									$.ajax({
+										url: 'index.php?route=kp/amazon/countPagination&token=<?php echo $token; ?>',
+										type: 'POST',
+										dataType: 'JSON',
+										data:{
+											'word_or_uri' : $('#input_category_search_words_' + category_search_words_row + '_search_word').val(),
+											'category_id' : $('#input_category_search_words_' + category_search_words_row + '_hidden_category_id').val(),
+											'type' 		  : $('#select_category_search_words_' + category_search_words_row + '_word_type').val(),
+											'sort' 		  : $('#select_category_search_words_' + category_search_words_row + '_category_search_sort').val()
+										},
+										beforeSend: function(){
+											$('#span_category_word_total_pages_' + category_search_words_row).html('<i class="fa fa-spinner fa-spin"></i>');
+											$('#span_category_word_total_products_' + category_search_words_row).html('<i class="fa fa-spinner fa-spin"></i>');
+										},
+										success: function(json){
+											if (json.total_pages){
+												$('#span_category_word_total_pages_' + category_search_words_row).html(json.total_pages);
+											} else {
+												$('#span_category_word_total_pages_' + category_search_words_row).html('<i class="fa fa-times-circle" style="color:#cf4a61"></i>');
+											}
+											
+											if (json.total_results){
+												$('#span_category_word_total_products_' + category_search_words_row).html(json.total_results);
+											} else {
+												$('#span_category_word_total_products_' + category_search_words_row).html('<i class="fa fa-times-circle" style="color:#cf4a61"></i>');
+											}
+										},
+										error: function(json){
+											$('#span_category_word_total_pages_' + category_search_words_row).html('<i class="fa fa-times-circle" style="color:#cf4a61"></i>');
+											$('#span_category_word_total_products_' + category_search_words_row).html('<i class="fa fa-times-circle" style="color:#cf4a61"></i>');
+										}
+									});
+								}
+
 								function setAutocomplete(category_search_words_row){
 									var input = $('#input_category_search_words_' + category_search_words_row + '_category');
 
@@ -1275,7 +1313,7 @@
 											</div>										
 										</td>
 										<td class="center" style="width:100px;">
-											<select name="category_search_words[<?php echo $category_search_words_row; ?>][category_search_sort]">
+											<select id="select_category_search_words_<?php echo $category_search_words_row; ?>_category_search_sort" name="category_search_words[<?php echo $category_search_words_row; ?>][category_search_sort]">
 												<?php foreach (\hobotix\RainforestAmazon::searchSorts as $key => $value) { ?>
 													<option value="<?php echo $key; ?>" <?php if ($category_search_word['category_search_sort'] == $key) { ?>selected="selected"<?php } ?>><?php echo $value['name']; ?></option>
 												<?php } ?>
@@ -1305,15 +1343,27 @@
 
 										</td>
 										<td class="center">
-											<input type="hidden" name="category_search_words[<?php echo $category_search_words_row; ?>][category_word_total_pages]" value="<?php echo $category_search_word['category_word_total_pages'] ?>" />	
+											<input type="hidden" name="category_search_words[<?php echo $category_search_words_row; ?>][category_word_total_pages]" value="<?php echo $category_search_word['category_word_total_pages'] ?>" />
+											<input type="hidden" name="category_search_words[<?php echo $category_search_words_row; ?>][category_word_pages_parsed]" value="<?php echo $category_search_word['category_word_pages_parsed'] ?>" />
+
+											<span id="span_category_word_total_pages_<?php echo $category_search_words_row; ?>">
 												<?php if ($category_search_word['category_word_total_pages']) { ?>
 													<small class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><?php echo $category_search_word['category_word_pages_parsed'] ?></small> / <small class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF"><?php echo $category_search_word['category_word_total_pages'] ?></small> 									
 												<?php } else { ?>
 													<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 												<?php } ?>
+											</span>
+										</td>
+										<td class="center">
+											<input type="hidden" name="category_search_words[<?php echo $category_search_words_row; ?>][category_word_total_products]" value="<?php echo $category_search_word['category_word_total_products'] ?>" />	
 
-											<input type="hidden" name="category_search_words[<?php echo $category_search_words_row; ?>][category_word_total_products]" value="<?php echo $category_search_word['category_word_total_products'] ?>" />
-											<input type="hidden" name="category_search_words[<?php echo $category_search_words_row; ?>][category_word_pages_parsed]" value="<?php echo $category_search_word['category_word_pages_parsed'] ?>" />
+											<span id="span_category_word_total_products_<?php echo $category_search_words_row; ?>">
+												<?php if ($category_search_word['category_word_total_products']) { ?>
+													<small class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><?php echo $category_search_word['category_word_total_products'] ?></small>
+												<?php } else { ?>
+													<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+												<?php } ?>		
+											</span>							
 										</td>
 										<td class="center">
 											<input type="hidden" name="category_search_words[<?php echo $category_search_words_row; ?>][category_word_product_added]" value="<?php echo $category_search_word['category_word_product_added'] ?>" />	
@@ -1334,7 +1384,8 @@
 										</td>
 
 										<td class="right" style="width:100px;">
-											<a onclick="$('#category_search_words-row<?php echo $category_search_words_row; ?>').remove();" class="button">Удалить</a>
+											<a onclick="refresh_counters('<?php echo $category_search_words_row; ?>')" class="button"><i class="fa fa-refresh"></i></a>
+											<a onclick="$('#category_search_words-row<?php echo $category_search_words_row; ?>').remove();" class="button"><i class="fa fa-times-circle"></i></a>
 										</td>										
 									</tr>
 								</tbody>
@@ -1386,7 +1437,7 @@
 								html += '    </td>';
 
 								html += '    <td class="center">';
-								html += '      <select name="category_search_words[' + category_search_words_row + '][category_search_sort]">';
+								html += '      <select id="select_category_search_words_' + category_search_words_row + '_category_search_sort" name="category_search_words[' + category_search_words_row + '][category_search_sort]">';
 								html += '        <?php foreach (\hobotix\RainforestAmazon::searchSorts as $key => $value) { ?>';
 								html += '          <option value="<?php echo $key; ?>" <?php if ($key == 'price_high_to_low') { ?>selected="selected"<?php } ?>><?php echo $value['name']; ?></option>';
 								html += '        <?php } ?>';
@@ -1400,25 +1451,27 @@
 
 								html += '    <td class="center">';
 								html += '      <input type="hidden" name="category_search_words[' + category_search_words_row + '][category_word_last_search]" value="0000-00-00 00:00:00" />';
+								html += '      <i class="fa fa-times-circle" style="color:#cf4a61"></i>';
 								html += '    </td>';
 
 								html += '    <td class="center">';
+								html += '      	<input type="hidden" name="category_search_words[' + category_search_words_row + '][category_word_total_pages]" value="" />';
+								html += '      	<input type="hidden" name="category_search_words[' + category_search_words_row + '][category_word_pages_parsed]" value="" />';
+								html += '		<span id="span_category_word_total_pages_' + category_search_words_row + '">';
+								html += '        	<i class="fa fa-times-circle" style="color:#cf4a61"></i>';
+								html += '       </span>';
+								html += '    </td>';
 
-								html += '      <input type="hidden" name="category_search_words[' + category_search_words_row + '][category_word_total_pages]" value="" />';
-
-								html += '      <?php if ($category_search_word["category_word_total_pages"]) { ?>';
-								html += '        <?php echo $category_search_word["category_word_total_pages"] ?>';  
-								html += '      <?php } else { ?>';
-								html += '        <i class="fa fa-times-circle" style="color:#cf4a61"></i>';
-								html += '      <?php } ?>';
-
+								html += '    <td class="center">';
 								html += '      <input type="hidden" name="category_search_words[' + category_search_words_row + '][category_word_total_products]" value="" />';
-								html += '      <input type="hidden" name="category_search_words[' + category_search_words_row + '][category_word_pages_parsed]" value="" />';
-
+								html += '		<span id="span_category_word_total_products_' + category_search_words_row + '">';
+								html += '        	<i class="fa fa-times-circle" style="color:#cf4a61"></i>';
+								html += '       </span>';
 								html += '    </td>';
 
 								html += '    <td class="center">';
 								html += '      <input type="hidden" name="category_search_words[' + category_search_words_row + '][category_word_product_added]" value="" />';
+								html += '      <i class="fa fa-times-circle" style="color:#cf4a61"></i>';
 								html += '    </td>';
 
 								html += '    <td class="center">';
@@ -1426,7 +1479,7 @@
 								html += '    </td>';
 
 								html += '    <td class="right">';
-								html += '      <a onclick="$(\'#category_search_words-row' + category_search_words_row + '\').remove();" class="button">Удалить</a>';
+								html += '      <a onclick="$(\'#category_search_words-row' + category_search_words_row + '\').remove();" class="button"><i class="fa fa-times-circle"></i></a>';
 								html += '    </td>';
 
 								html += '  </tr>';

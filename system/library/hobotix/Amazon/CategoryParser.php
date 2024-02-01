@@ -169,7 +169,6 @@ class CategoryParser
 		return false;
 	}
 
-
 	public function getCategoryChildren($category_id){
 		$result = $this->doRequest(['parent_id' => $category_id]);
 

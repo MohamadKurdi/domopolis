@@ -17,7 +17,8 @@ class RainforestAmazon
 	public $offersParser 		= null;
 	public $infoUpdater 		= null;
 	public $simpleProductParser = null;
-	public $paramsTranslator 	= null;
+	public $paramsTranslator 	= null;			
+	public $categoryParser 		= null;
 
 	private $telegramBot 	= null;
 	private $tgAlertChatID 	= null;
@@ -80,12 +81,12 @@ class RainforestAmazon
 		];
 
 	public const searchPageTypes = [
+		'search' 			=> ['name' => 'Search Amazon', 			'default' => false],
 		'standard' 			=> ['name' => 'Simple Category', 		'default' => true],
-		'bestsellers' 		=> ['name' => 'Bestseller Category', 	'default' => false],
+		'bestsellers' 		=> ['name' => 'Bestseller Category', 	'default' => false],	
 		'store' 			=> ['name' => 'Brand Store', 			'default' => false],
 		'seller_products' 	=> ['name' => 'Seller Products', 		'default' => false],
-		'deals' 			=> ['name' => 'Deals Category', 		'default' => false],
-		'search' 			=> ['name' => 'Search Amazon', 			'default' => false]	
+		'deals' 			=> ['name' => 'Deals Category', 		'default' => false]		
 	];
 
 	public const searchSorts = [
@@ -96,9 +97,6 @@ class RainforestAmazon
 		'average_review' 	=> ['name' => 'Best Review First',		'default' => false],
 		'most_recent' 		=> ['name' => 'Recent Added First',		'default' => false]
 	];
-
-		
-	public $categoryParser;
 
 	public function __construct($registry){
 
@@ -324,6 +322,10 @@ class RainforestAmazon
 	public function processAmazonRainforestPageRequestPaginationResults($response){
 		$pagination = [];
 
+		if (!is_array($response)){
+			$response = json_decode($response, true);
+		}
+
 		if (!empty($response['pagination'])){
 			$pagination = $response['pagination'];
 		}
@@ -363,6 +365,10 @@ class RainforestAmazon
 
 		if ($options['type'] == 'standard'){
 			$options['type'] = 'category';
+		}
+
+		if (empty($options['page'])){
+			$options['page'] = 1;
 		}
 
 		if ($options['type'] == 'search'){

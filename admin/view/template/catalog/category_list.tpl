@@ -67,10 +67,8 @@
 							<td class="left" style="width:30px;">Статус</td>
 							<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
 								<td class="left" style="width:200px;">Amzn Link</td>
-								<td class="left" style="width:30px;">Amzn Sync</td>
-								<td class="left" style="width:30px;">Amzn Synced</td>
+								<td class="left" style="width:30px;color:#00AD07;">Amzn Auto</td>
 								<td class="left" style="width:30px;">Amzn Final</td>
-								<td class="left" style="width:30px;">Amzn Allow Full</td>	
 								<td class="left" style="width:30px;"><i class="fa fa-refresh"></i>ЦО</td>							
 								<td class="left" style="width:30px;"><i class="fa fa-refresh"></i>Репрайс</td>
 							<?php } ?>
@@ -119,10 +117,8 @@
 										<td class="left" style="width:30px;">Статус</td>
 										<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
 											<td class="left" style="width:200px;">Amzn Link</td>
-											<td class="left" style="width:30px;">Amzn Sync</td>
-											<td class="left" style="width:30px;">Amzn Synced</td>
+											<td class="left" style="width:30px;color:#00AD07;">Amzn Auto</td>
 											<td class="left" style="width:30px;">Amzn Final</td>
-											<td class="left" style="width:30px;">Amzn Allow Full</td>
 											<td class="left" style="width:30px;"><i class="fa fa-refresh"></i>ЦО</td>
 											<td class="left" style="width:30px;"><i class="fa fa-refresh"></i>Репрайс</td>								
 										<?php } ?>
@@ -231,22 +227,10 @@
 													</td>	
 
 													<td class="center">
-														<? if ($category['amazon_sync_enable']) { ?>
-															<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+														<? if ($category['category_search_words']) { ?>
+															<b style="color:#4ea24e"><?php echo $category['category_search_words']; ?></b>
 														<? } else { ?>
 															<i class="fa fa-times-circle" style="color:#cf4a61"></i>
-														<? } ?>
-													</td>
-
-													<td class="center">
-														<? if ($category['amazon_sync_enable']) { ?>
-															<? if ($category['amazon_synced']) { ?>
-																<i class="fa fa-check-circle" style="color:#4ea24e"></i>
-															<? } else { ?>
-																<i class="fa fa-times-circle" style="color:#cf4a61"></i>
-															<? } ?>
-														<? } else { ?>
-															<i class="fa fa-question-circle" style="color:#7F00FF"></i>
 														<? } ?>
 													</td>
 
@@ -257,14 +241,6 @@
 															<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 														<? } ?>
 													</td>		
-
-													<td class="center">
-														<? if ($category['amazon_can_get_full']) { ?>
-															<i class="fa fa-check-circle" style="color:#4ea24e"></i>
-														<? } else { ?>
-															<i class="fa fa-times-circle" style="color:#cf4a61"></i>
-														<? } ?>
-													</td>
 
 													<td class="center">
 														<? if ($category['category_overprice_rules']) { ?>

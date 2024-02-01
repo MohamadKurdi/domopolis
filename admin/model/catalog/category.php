@@ -557,6 +557,12 @@ class ModelCatalogCategory extends Model {
 		
 		return $query->rows;
 	}
+
+	public function getCountCategorySearchWords($category_id){
+		$query = $this->db->query("SELECT COUNT(*) as total FROM category_search_words WHERE category_id = '" . (int)$category_id . "'");
+		
+		return $query->row['total'];
+	}
 	
 	public function getFeeds($category_id){
 		$query = $this->db->query("SELECT * FROM yandex_feeds WHERE entity_type = 'c' AND entity_id = '" . (int)$category_id . "'");
