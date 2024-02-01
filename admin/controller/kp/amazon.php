@@ -47,14 +47,14 @@ class ControllerKPAmazon extends Controller {
 	}
 
 	public function getRainforestPage(){
-		$url 			= trim($this->request->post['url']);
-		$category 		= trim($this->request->post['category']);
-		$page 			= (int)($this->request->post['page']);
-		$sort 			= trim($this->request->post['sort']);
-		$search_term 	= trim($this->request->post['search_term']);
-		$type 			= trim($this->request->post['type']);
-		$compile 		= !empty($this->request->post['compile'])?1:0;
-		$offers 		= !empty($this->request->post['offers'])?1:0;
+		$url 			= trim($this->request->data['url']);
+		$category 		= trim($this->request->data['category']);
+		$page 			= (int)($this->request->data['page']);
+		$sort 			= trim($this->request->data['sort']);
+		$search_term 	= trim($this->request->data['search_term']);
+		$type 			= trim($this->request->data['type']);
+		$compile 		= !empty($this->request->data['compile'])?1:0;
+		$offers 		= !empty($this->request->data['offers'])?1:0;
 
 		if ($type == 'standard'){
 			$type = 'category';
@@ -65,7 +65,6 @@ class ControllerKPAmazon extends Controller {
 				'type' 			=> $type, 		
 				'search_term' 	=> $search_term,
 				'page' 			=> $page,
-				'sort_by' 		=> $sort
 			];
 
 			if ($sort != 'amazon'){
@@ -88,7 +87,7 @@ class ControllerKPAmazon extends Controller {
 			if ($sort != 'amazon'){
 				$options['sort_by'] = $sort;
 			}
-		}
+		}		
 
 		$curl = $this->rainforestAmazon->categoryRetriever->createRequest($options);
 		$result = curl_exec($curl);
