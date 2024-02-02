@@ -2217,6 +2217,29 @@
 			return $attributes;
 		}
 
+		public function getProductAttributesFull($product_id) {
+			$product_attribute_data = [];
+			
+			$product_attribute_query = $this->db->query("SELECT attribute_id FROM product_attribute WHERE product_id = '" . (int)$product_id . "' GROUP BY attribute_id");
+			
+			foreach ($product_attribute_query->rows as $product_attribute) {
+				$product_attribute_description_data = [];
+				
+				$product_attribute_description_query = $this->db->query("SELECT * FROM product_attribute WHERE product_id = '" . (int)$product_id . "' AND attribute_id = '" . (int)$product_attribute['attribute_id'] . "'");
+				
+				foreach ($product_attribute_description_query->rows as $product_attribute_description) {
+					$product_attribute_description_data[$product_attribute_description['language_id']] = array('text' => $product_attribute_description['text']);
+				}
+				
+				$product_attribute_data[] = array(
+				'attribute_id'                  => $product_attribute['attribute_id'],
+				'product_attribute_description' => $product_attribute_description_data
+				);
+			}
+			
+			return $product_attribute_data;
+		}
+
 		public function getIfOptionIsProduct($option_id, $product_option_value_id){
 			
 			$check_value_query = $this->db->query("SELECT this_is_product_id FROM product_option_value WHERE product_option_id = '" . (int)$option_id . "' AND product_option_value_id = '" . (int)$product_option_value_id . "'");
@@ -2343,6 +2366,43 @@
 			$query = $this->db->query("SELECT * FROM product_discount WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND quantity > 1 AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity ASC, priority ASC, price ASC");
 			
 			return $query->rows;
+		}
+
+		public function getProductDescriptions($product_id) {
+			$product_description_data = [];
+			
+			$query = $this->db->query("SELECT * FROM product_description WHERE product_id = '" . (int)$product_id . "'");
+			
+			foreach ($query->rows as $result) {
+				$product_description_data[$result['language_id']] = array(
+				'name'             	=> $result['name'],
+				'short_name_d'     	=> $result['short_name_d'],
+				'name_of_option'   	=> $result['name_of_option'],
+				'description'      	=> $result['description'],
+				'description_full'  => $result['description_full'],
+				'meta_keyword'     	=> $result['meta_keyword'],
+                'seo_title'        	=> $result['seo_title'],
+				'seo_h1' 				=> $result['seo_h1'],
+                'meta_description' 		=> $result['meta_description'],
+				'tag'              		=> $result['tag'],
+				'color'              	=> $result['color'],
+				'material'              => $result['material'],
+				'material'              => $result['material'],
+				'variant_name'          => $result['variant_name'],
+				'variant_name_1'        => $result['variant_name_1'],
+				'variant_name_2'        => $result['variant_name_2'],
+				'variant_value_1'       => $result['variant_value_1'],
+				'variant_value_2'		=> $result['variant_value_2'],
+				'translated'			=> $result['translated'],
+				'markdown_appearance'  	=> $result['markdown_appearance'],
+				'markdown_condition' 	=> $result['markdown_condition'],
+				'markdown_pack'			=> $result['markdown_pack'],
+				'markdown_equipment'	=> $result['markdown_equipment'],				
+				'manufacturer_name'		=> $result['manufacturer_name']
+				);
+			}
+			
+			return $product_description_data;
 		}
 		
 		public function getProductImages($product_id){
