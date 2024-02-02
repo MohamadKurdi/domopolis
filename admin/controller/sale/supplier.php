@@ -40,7 +40,7 @@ class ControllerSaleSupplier extends Controller {
 
 		if ($supplier && $supplier['parser']){
 			$this->supplierAdaptor->use($supplier['parser'], $supplier);
-			$this->supplierAdaptor->SupplierCategory->clearCategories($this->supplierAdaptor->getCategories());
+			$this->supplierAdaptor->SupplierCategory->clearCategories($supplier_id);
 		}
 
 		if (!is_cli()){

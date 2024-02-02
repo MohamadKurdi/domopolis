@@ -647,7 +647,7 @@
         }           
 
         $.ajax({
-            url : 'index.php?route=sale/supplier/field&token=<?php echo $token; ?>',
+            url : 'index.php?route=sale/supplier/field_category&token=<?php echo $token; ?>',
             data: {
                 supplier_category_id: supplier_category_id,
                 field:    	  field,
