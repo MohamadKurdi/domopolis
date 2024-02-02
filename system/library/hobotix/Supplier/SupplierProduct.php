@@ -55,9 +55,8 @@ class SupplierProduct extends SupplierFrameworkClass {
 		
 		$this->parseProductStatus($product_id, $product);
 		$this->parseProductStock($product_id, $product);		
-		$this->parseProductPrice($product_id, $product);		
+		$this->parseProductPrice($product_id, $product);	
 	}
-
 
 	public function parseProductStatus($product_id, $product, $supplier_id = null){
 		if (!$supplier_id){
@@ -205,7 +204,10 @@ class SupplierProduct extends SupplierFrameworkClass {
 
 	public function parseProductImages($product_id, $product){
 		if (!empty($product['image'])){
-			$this->model_edit->editProductFields($product_id, [['name' => 'image', 'type' => 'varchar', 'value' => $this->getImage($product['image'])]]);
+			$image = $this->getImage($product['image']);
+			echoLine('[SupplierProduct::parseProductImages] Got image: ' . $image, 's');
+
+			$this->model_edit->editProductFields($product_id, [['name' => 'image', 'type' => 'varchar', 'value' => $image]]);
 		}
 
 		if (!empty($product['images'])){

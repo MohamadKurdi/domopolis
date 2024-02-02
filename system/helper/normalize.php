@@ -233,12 +233,26 @@ function shortentext($text, $length = 150){
 	return trim(implode(' ', array_slice($exploded, 0, $i - 1)), '()., ');
 }
 
-function atrim($string){	
-	$string = preg_replace('/(\x{200e}|\x{200f})/u', '', $string);
-	$string = str_replace(['"', '“', '„'], "'", $string);
-	$string = trim($string);
+function atrim_array($array) {	
+	$result = [];
+	foreach ($array as $key => $value) {
+		if (is_array($value)) {
+			$result[$key] = atrim_array($value); 
+		} else if (is_string($value)) {
+			$result[$key] = atrim($value);
+		} else {
+			$result[$key] = $value;
+		}
+	}
+	return $result;
+}
 
-	return $string;
+function atrim($var){	
+	$string = preg_replace('/(\x{200e}|\x{200f})/u', '', $var);
+	$string = str_replace(['"', '“', '„'], "'", $var);
+	$string = trim($var);
+
+	return $var;
 }
 
 function clean_string( $string ) {

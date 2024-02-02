@@ -20,7 +20,11 @@ class SupplierCategory extends SupplierFrameworkClass {
 			foreach ($query->rows as $row){
 				$this->categories[$row['supplier_category']] 				= $row['category_id'];
 				$this->categories_full[$row['supplier_category']]			= $row;
-				$this->categories_ids[$row['supplier_infeed_id']]			= $row;
+
+				if ($row['supplier_infeed_id']){
+					$this->categories_ids[$row['supplier_infeed_id']]			= $row['category_id'];
+					$this->categories_ids_full[$row['supplier_infeed_id']]		= $row;
+				}
 
 				if ($row['supplier_category_full']){
 					$this->categories_extended[$row['supplier_category_full']] 	= $row['category_id'];
@@ -78,7 +82,7 @@ class SupplierCategory extends SupplierFrameworkClass {
 		$this->setCategories($supplier_id);
 
 		if (is_numeric($supplier_category) && !empty($this->categories_ids[$supplier_category])){
-			return $this->categories_ids[$supplier_category];
+			return $this->categories_ids_full[$supplier_category];
 		}
 
 		if (!empty($this->categories_full[$supplier_category])){

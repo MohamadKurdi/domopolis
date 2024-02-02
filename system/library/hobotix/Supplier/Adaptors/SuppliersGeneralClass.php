@@ -14,6 +14,15 @@ class SuppliersGeneralClass {
 		$this->config 			= $registry->get('config');
 		$this->db 				= $registry->get('db'); 
 		$this->log 				= $registry->get('log');
+
+		require_once(dirname(__FILE__) . '/../Models/hoboModel.php');	
+		require_once(dirname(__FILE__) . '/../Models/modelEdit.php');
+		require_once(dirname(__FILE__) . '/../Models/modelGet.php');
+		require_once(dirname(__FILE__) . '/../Models/modelCachedGet.php');
+
+		$this->model_edit 		= new \hobotix\Supplier\Model\modelEdit($registry);
+		$this->model_get 		= new \hobotix\Supplier\Model\modelGet($registry);
+		$this->model_cached_get = new \hobotix\Supplier\Model\modelCachedGet($registry);
 	}
 
 	public function setFeed($feed){		

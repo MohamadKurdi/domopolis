@@ -79,7 +79,12 @@ class SupplierFrameworkClass {
 		$real_language_code_from = $this->registry->get('language')->mapCode($language_code_from);		
 
 		foreach ($this->registry->get('languages') as $language_code => $language) {
-			$real_language_code_to =  $this->registry->get('language')->mapCode($language_code);	
+			$real_language_code_to =  $this->registry->get('language')->mapCode($language_code);
+
+			if (!empty($data[$language_code]) && !empty($data[$language_code]['translate_from'])){
+				$real_explicit_language_code_from = $this->registry->get('language')->mapCode($data[$language_code]['translate_from']);
+				$data[$language_code] = $this->translateAdaptor->translate(atrim($data[$language_code]['translate_data']), ($real_explicit_language_code_from)?$real_explicit_language_code_from:false, $real_language_code_to, true);
+			}	
 
 			if ($language_code == $language_code_from){
 				if (!empty($data[$real_language_code_from])){
@@ -164,9 +169,9 @@ class SupplierFrameworkClass {
 			}
 		}
 
-		echoLine('[SupplierClass::getImage] Trying to get: ' . $supplierImage . ' -> ' . $localImageName, 's');
+		echoLine('[SupplierClass::getImage] Trying to get: ' . $supplierImage . ' -> ' . $fullLocalImagePath, 's');
 
-		return $localImageDir . $localImageName;
+		return $relativeLocalImagePath;
 	}	
 
 }

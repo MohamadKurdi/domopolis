@@ -20,6 +20,10 @@ class Language {
 		}
 	}
 
+	public function getMappings(){
+		return loadJsonConfig('language_mapping');
+	}
+
 	public function mapCode($language_code){
 		$mappings = loadJsonConfig('language_mapping');
 

@@ -107,7 +107,7 @@ class SupplierAdaptor
 		}
 	}
 
-	public function postAction(){		
+	public function postAction(){					
 		if (method_exists($this->supplierObject, 'postAction')){
 			try {
 				$results = $this->supplierObject->postAction();
@@ -117,8 +117,18 @@ class SupplierAdaptor
 		} else {
 			echoLine('[SupplierAdaptor::postActions] No postActions function!', 'e');
 		}		
+	}
 
-		return $results;
+	public function postProductAction($product_id){		
+		if (method_exists($this->supplierObject, 'postAction')){
+			try {
+				$results = $this->supplierObject->postAction($product_id);
+			} catch (\Exception $e){
+				throw new \Exception ($e->getMessage());
+			}
+		} else {
+			echoLine('[SupplierAdaptor::postProductAction] No postProductAction function!', 'e');
+		}		
 	}
 
 	public function getCategories(){		
@@ -177,8 +187,8 @@ class SupplierAdaptor
 						}
 					}
 
-					array_map('atrim', $product['name']);
-					array_map('atrim', $product['description']);
+					atrim_array($product['name']);
+					atrim_array($product['description']);
 
 					$results[] = [
 						'supplier_product_id' 	=> atrim($product['supplier_product_id']),

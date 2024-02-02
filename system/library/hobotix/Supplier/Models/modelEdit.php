@@ -16,10 +16,16 @@ class modelEdit extends hoboModel{
 		'material'
 	];
 
+	private $featureAttributes = null;
+
 	public function editProductFields($product_id, $fields){
 		$sql = "UPDATE `product` SET ";
 
 		foreach ($fields as $field){
+
+			if (empty($field['type'])){
+				$field['type'] = 'varchar';
+			}
 
 			if ($field['type'] == 'int'){
 				$implode[] = " `" . $field['name'] . "` = '" . (int)$field['value'] . "'";
@@ -39,7 +45,7 @@ class modelEdit extends hoboModel{
 
 			if ($field['type'] == 'datetime'){
 				$implode[] = " `" . $field['name'] . "` = '" . date('Y-m-d H:i:s', strtotime($field['value'])) . "'";
-			}				
+			}			
 		}
 
 		$implode[] = " `date_modified` = NOW() ";
@@ -161,22 +167,43 @@ class modelEdit extends hoboModel{
 		}		
 	}
 
-
-	public function editProductDescriptions($product_id, $data){			
+	public function editProductDescriptions($product_id, $data, $explicit_id = false){			
 		foreach ($data as $language_id => $value) {
-			$this->db->query("UPDATE product_description SET 
+
+			if ($explicit_id){
+				if ($explicit_id && $language_id != $explicit_id){
+					continue;
+				}
+			}
+
+			$this->db->query("INSERT INTO product_description SET 
 				description 		= '" . $this->db->escape($value['description']) . "',				
-				translated 			= '" . (int)$value['translated'] . "'
-				WHERE product_id 	= '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
+				translated 			= '" . (int)$value['translated'] . "',
+				product_id 			= '" . (int)$product_id . "',
+				language_id 		= '" . (int)$language_id . "'
+				ON DUPLICATE KEY UPDATE
+				description 				= '" . $this->db->escape($value['description']) . "',				
+				translated 			= '" . (int)$value['translated'] . "'");
 		}
 	}
 
-	public function editProductNames($product_id, $data){			
+	public function editProductNames($product_id, $data, $explicit_id = false){			
 		foreach ($data as $language_id => $value) {
-			$this->db->query("UPDATE product_description SET 
+
+			if ($explicit_id){
+				if ($explicit_id && $language_id != $explicit_id){
+					continue;
+				}
+			}
+
+			$this->db->query("INSERT INTO product_description SET 
 				name 				= '" . $this->db->escape($value['name']) . "',				
-				translated 			= '" . (int)$value['translated'] . "'
-				WHERE product_id 	= '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
+				translated 			= '" . (int)$value['translated'] . "',
+				product_id 			= '" . (int)$product_id . "',
+				language_id 		= '" . (int)$language_id . "'
+				ON DUPLICATE KEY UPDATE
+				name 				= '" . $this->db->escape($value['name']) . "',				
+				translated 			= '" . (int)$value['translated'] . "'");
 		}
 	}
 
