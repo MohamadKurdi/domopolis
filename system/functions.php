@@ -68,6 +68,33 @@ if (!function_exists('echoLine')){
 	}
 }
 
+if (!function_exists('echoSimple')){
+	function echoSimple($line, $type = 'l'){
+		if (php_sapi_name() === 'cli'){
+			switch ($type) {
+				case 'e':
+				echo "\033[31m$line \033[0m" . ' ';
+				break;
+				case 's':
+				echo "\033[32m$line \033[0m". ' ';
+				break;
+				case 'w':
+				echo "\033[33m$line \033[0m". ' ';
+				break;  
+				case 'i':
+				echo "\033[36m$line \033[0m". ' ';
+				break;    
+				case 'l':
+				echo $line . ' ';
+				break;  
+				default:
+				echo $line . ' ';
+				break;
+			}
+		}
+	}
+}
+
 function thisIsAjax($request = false){
 	if (!$request){
 		if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
