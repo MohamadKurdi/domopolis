@@ -3,9 +3,7 @@ class ControllerFeedJSONFeed extends Controller {
 	private $sql 	= "SELECT product_id FROM product 
 						WHERE manufacturer_id NOT IN (202, 201, 609) 
 						AND product_id NOT IN (SELECT product_id FROM supplier_products) 
-						AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id = 6473)
-						AND product_id IN (SELECT product_id FROM product_image)  
-						AND status = 1 LIMIT 1";
+						AND status = 1";
 	private $file 	= 'products_feed0.json';
 
 	public function getCategories() {
@@ -67,13 +65,19 @@ class ControllerFeedJSONFeed extends Controller {
 				echoSimple($i, 'w');
 			}
 
-			$json['products'][$row['product_id']] = [];
+			$product = $this->model_catalog_product->getProduct($row['product_id']);
 
-			$json['products'][$row['product_id']]['product'] 		= $this->model_catalog_product->getProduct($row['product_id']);
-			$json['products'][$row['product_id']]['images'] 		= $this->model_catalog_product->getProductImages($row['product_id']);
-			$json['products'][$row['product_id']]['descriptions'] 	= $this->model_catalog_product->getProductDescriptions($row['product_id']);
-			$json['products'][$row['product_id']]['attributes'] 	= $this->model_catalog_product->getProductAttributesFlat($row['product_id']);
-			$json['products'][$row['product_id']]['attributes_full']= $this->model_catalog_product->getProductAttributesFull($row['product_id']);			
+			if ($product){
+				$json['products'][$row['product_id']] = [];			
+
+				$json['products'][$row['product_id']]['product'] 		= $this->model_catalog_product->getProduct($row['product_id']);
+				$json['products'][$row['product_id']]['images'] 		= $this->model_catalog_product->getProductImages($row['product_id']);
+				$json['products'][$row['product_id']]['descriptions'] 	= $this->model_catalog_product->getProductDescriptions($row['product_id']);
+				$json['products'][$row['product_id']]['attributes'] 	= $this->model_catalog_product->getProductAttributesFlat($row['product_id']);
+				$json['products'][$row['product_id']]['attributes_full']= $this->model_catalog_product->getProductAttributesFull($row['product_id']);			
+			} else {
+				echoSimple($row['product_id'], 'e');
+			}
 
 			$i++;	
 		}
