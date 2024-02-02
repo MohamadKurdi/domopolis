@@ -20,6 +20,7 @@ class SupplierCategory extends SupplierFrameworkClass {
 			foreach ($query->rows as $row){
 				$this->categories[$row['supplier_category']] 				= $row['category_id'];
 				$this->categories_full[$row['supplier_category']]			= $row;
+				$this->categories_ids[$row['supplier_infeed_id']]			= $row;
 
 				if ($row['supplier_category_full']){
 					$this->categories_extended[$row['supplier_category_full']] 	= $row['category_id'];
@@ -62,6 +63,7 @@ class SupplierCategory extends SupplierFrameworkClass {
 				supplier_category 		= '" . $this->db->escape($category['category_name']) . "',
 				supplier_category_full	= '" . $this->db->escape($category['category_name_full']) . "'
 				ON DUPLICATE KEY UPDATE
+				supplier_infeed_id 		= '" . $this->db->escape($category['category_id']) . "',				
 				supplier_infeed_parent	= '" . $this->db->escape($category['parent_id']) . "',
 				supplier_category 		= '" . $this->db->escape($category['category_name']) . "',
 				supplier_category_full	= '" . $this->db->escape($category['category_name_full']) . "'");
@@ -74,6 +76,10 @@ class SupplierCategory extends SupplierFrameworkClass {
 		}
 		
 		$this->setCategories($supplier_id);
+
+		if (is_numeric($supplier_category) && !empty($this->categories_ids[$supplier_category])){
+			return $this->categories_ids[$supplier_category];
+		}
 
 		if (!empty($this->categories_full[$supplier_category])){
 			return $this->categories_full[$supplier_category];
@@ -88,6 +94,10 @@ class SupplierCategory extends SupplierFrameworkClass {
 		}
 
 		$this->setCategories($supplier_id);
+
+		if (is_numeric($supplier_category) && !empty($this->categories_ids[$supplier_category])){
+			return $this->categories_ids[$supplier_category];
+		}
 
 		if (!empty($this->categories[$supplier_category])){
 			return $this->categories[$supplier_category];

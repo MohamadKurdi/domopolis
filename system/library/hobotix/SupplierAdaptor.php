@@ -107,10 +107,10 @@ class SupplierAdaptor
 		}
 	}
 
-	public function postActions(){		
-		if (method_exists($this->supplierObject, 'postActions')){
+	public function postAction(){		
+		if (method_exists($this->supplierObject, 'postAction')){
 			try {
-				$results = $this->supplierObject->postActions();
+				$results = $this->supplierObject->postAction();
 			} catch (\Exception $e){
 				throw new \Exception ($e->getMessage());
 			}

@@ -300,7 +300,7 @@ class SupplierProduct extends SupplierFrameworkClass {
 	}
 
 	public function addProductSimple($product){
-		if (isset($product['status'])){
+		if (isset($product['status']) && $this->getSupplierSetting('auto_enable')){
 			$status = $product['status'];
 		} else {
 			$status = $this->getSupplierSetting('auto_enable');
