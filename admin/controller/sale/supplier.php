@@ -52,6 +52,29 @@ class ControllerSaleSupplier extends Controller {
 		}		
 	}
 
+	public function clear_attributes($supplier_id = null) {
+		$this->load->model('sale/supplier');
+
+		if (!$supplier_id){
+			$supplier_id = $this->request->get['supplier_id'];
+		}
+
+		$supplier = $this->model_sale_supplier->getSupplier($supplier_id);		
+
+		if ($supplier && $supplier['parser']){
+			$this->supplierAdaptor->use($supplier['parser'], $supplier);
+			$this->supplierAdaptor->SupplierAttribute->clearAttributes($supplier_id);
+		}
+
+		if (!is_cli()){
+			$this->session->data['success'] = $this->language->get('text_success');
+
+			$url .= '&supplier_id=' . $this->request->get['supplier_id'];
+
+			$this->redirect($this->url->link('sale/supplier/update', 'token=' . $this->session->data['token'] . $url, 'SSL'));			
+		}		
+	}
+
 	public function update_categories($supplier_id = null) {
 		$this->load->model('sale/supplier');
 
@@ -731,6 +754,7 @@ class ControllerSaleSupplier extends Controller {
 		$this->load->model('sale/supplier');
 		$this->load->model('catalog/category');
 		$this->load->model('localisation/language');        
+		$this->load->model('catalog/attribute');  
 
         $this->data['languages'] = $this->model_localisation_language->getLanguages();
 

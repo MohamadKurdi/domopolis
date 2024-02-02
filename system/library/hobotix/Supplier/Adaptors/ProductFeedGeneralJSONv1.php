@@ -27,7 +27,27 @@ class ProductFeedGeneralJSONv1 extends SuppliersGeneralClass {
 		return $categories;
 	}
 
+	public function getAttributes(){
+		$product_attributes = [];
 
+		if (!$this->getContent()){
+			$this->setContent();
+		}
+
+		if (!empty($this->content['products'])){
+			foreach ($this->content['products'] as $key => $product){
+				if (!empty($product['attributes'])){
+					foreach ($product['attributes'] as $attribute){
+						if (trim($attribute['attribute_name'])){
+							$product_attributes[$attribute['attribute_name']] = $attribute['attribute_name'];
+						}
+					}
+				}
+			}			
+		}
+
+		return $product_attributes;
+	}
 
 
 

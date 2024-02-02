@@ -542,7 +542,7 @@
 								<div style="text-align:left;">
 									<?php if ($supplier_attribute['guessed']) { ?>
 										<?php foreach ($supplier_attribute['guessed'] as $guessed) { ?>
-											<span style="border-bottom:1px dashed grey; cursor:pointer; margin-right:10px; font-size:10px;" onclick="$('#attribute_id<?php echo $supplier_attribute['supplier_attribute_id']; ?>').val('<?php echo $guessed['attribute_id']; ?>').trigger('change'); $('#attribute_<?php echo $supplier_attribute['supplier_attribute_id']; ?>').val('<?php echo $guessed['name']; ?>'); ">
+											<span style="border-bottom:1px dashed grey; cursor:pointer; margin-right:10px; font-size:10px;" onclick="$('#attribute_id_<?php echo $supplier_attribute['supplier_attribute_id']; ?>').val('<?php echo $guessed['attribute_id']; ?>').trigger('change'); $('#attribute_<?php echo $supplier_attribute['supplier_attribute_id']; ?>').val('<?php echo $guessed['name']; ?>'); ">
 												<?php echo $guessed['name']; ?>
 											</span>
 										<?php } ?>
