@@ -10,8 +10,22 @@ class SupplierProduct extends SupplierFrameworkClass {
 
 		echoLine('[SupplierProduct::parseProduct] Working with product: ' . $product['sku'], 'w');
 
+		if (empty($product['category'])){
+			if ($this->getSupplierSetting('skip_no_category')){
+				echoLine('[SupplierProduct::parseProduct] Category is not set at all, skipping', 'e');	
+				return;
+			}		
+		}
+
 		if (!empty($product['category'])){
-			$category = $this->registry->get('supplierAdaptor')->SupplierCategory->getCategoryMatchFull($product['category']);			
+			$category = $this->registry->get('supplierAdaptor')->SupplierCategory->getCategoryMatchFull($product['category']);	
+
+			if ($this->getSupplierSetting('skip_no_category')){
+				if (!$category){
+					echoLine('[SupplierProduct::parseProduct] Category is not matched, skipping', 'e');	
+					return;
+				}
+			}
 
 			if ($category && !$category['products']){
 				echoLine('[SupplierProduct::parseProduct] Category ' . $product['category'] . ' has marker not to add products, skipping', 'e');
@@ -320,7 +334,8 @@ class SupplierProduct extends SupplierFrameworkClass {
 			model 					= '" . $this->db->escape($product['model']) . "', 
 			sku 					= '" . $this->db->escape($product['sku']) . "', 		
 			ean 					= '" . $this->db->escape($product['ean']) . "',
-			added_from_amazon 		= '0', 			
+			added_from_amazon 		= '0', 	
+			added_from_supplier		= '" . (int)$this->supplier_id . "',		
 			stock_status_id 		= '" . (int)$stock_status_id . "',
 			manufacturer_id 		= '" . (int)$product['manufacturer_id'] . "',
 			quantity 				= '" . (int)$quantity . "',

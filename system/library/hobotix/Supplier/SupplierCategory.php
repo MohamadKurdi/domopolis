@@ -74,6 +74,7 @@ class SupplierCategory extends SupplierFrameworkClass {
 		}
 	}
 
+
 	public function getCategoryMatchFull($supplier_category, $supplier_id = null){
 		if (!$supplier_id){
 			$supplier_id = $this->supplier_id;
@@ -81,7 +82,7 @@ class SupplierCategory extends SupplierFrameworkClass {
 		
 		$this->setCategories($supplier_id);
 
-		if (is_numeric($supplier_category) && !empty($this->categories_ids[$supplier_category])){
+		if (is_numeric($supplier_category) && !empty($this->categories_ids_full[$supplier_category])){
 			return $this->categories_ids_full[$supplier_category];
 		}
 

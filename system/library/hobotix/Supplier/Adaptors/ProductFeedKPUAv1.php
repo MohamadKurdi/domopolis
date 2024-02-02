@@ -84,7 +84,7 @@ class ProductFeedKPUAv1 extends SuppliersGeneralClass {
 				foreach ($product['attributes'] as $attribute){
 					$product_attributes[$attribute['attribute_name']] = [
 						'name' => [
-							'ua' 	=> $attribute['attribute_name'] 
+							'uk' 	=> $attribute['attribute_name'] 
 						],
 						'text' => [
 							'uk' 	=> $attribute['attribute_value'] 
@@ -98,7 +98,7 @@ class ProductFeedKPUAv1 extends SuppliersGeneralClass {
 						'name'					=> ['uk' => ['translate_from' => 'ru', 'translate_data' => $product['descriptions'][5]['name']]],
 						'description'			=> ['uk' => ['translate_from' => 'ru', 'translate_data' => $product['descriptions'][5]['description']]],
 						'model' 				=> $product['product']['model'],
-						'sku' 					=> $product['product']['sku'],
+						'sku' 					=> !empty($product['product']['sku'])?$product['product']['sku']:('KP'.$product['product']['product_id']),
 						'image' 				=> $image,
 						'images' 				=> $images,
 						'stock' 				=> ($product['product']['quantity'] > 0)?true:false,
@@ -127,22 +127,30 @@ class ProductFeedKPUAv1 extends SuppliersGeneralClass {
 
 				$product_id = $this->model_get->getProductFromSupplierMatchTable($product['product'], 'supplier_product_id');
 
-				echoLine('[ProductFeedKPUAv1::postAction] Found match product, updating: ' . $product_id, 'w');
+				if ($product_id){			
+					$query = $this->db->query("SELECT added_from_supplier FROM product WHERE product_id = '" . (int)$product_id ."' AND date_added >= DATE_SUB(NOW(), INTERVAL 2 HOUR)");
 
-				foreach (['ean', 'asin', 'location', 'mpn', 'weight', 'price', 'weight_class_id', 'length', 'width', 'height', 'length_class_id', 'pack_weight', 'pack_weight_class_id', 'pack_length', 'pack_width', 'pack_height', 'pack_length_class_id'] as $key){
-					if (!empty($product['product'][$key])){
-						$this->model_edit->editProductFields($product_id, [['name' => $key, 'value' => $product['product'][$key]]]);
+					if (!$query->num_rows || $query->row['added_from_supplier'] != '34779'){
+						echoLine('[ProductFeedKPUAv1::postAction] Not added from current supplier or time high, skipping: ' . $product_id, 'w');
+						continue;
 					}
-				}
 
-				$this->model_edit->editProductNames($product_id, $product['descriptions'], 26);
-				$this->model_edit->editProductDescriptions($product_id, $product['descriptions'], 26);
+					echoLine('[ProductFeedKPUAv1::postAction] Found match product, updating: ' . $product_id, 'w');
+
+					foreach (['ean', 'asin', 'location', 'mpn', 'weight', 'price', 'weight_class_id', 'length', 'width', 'height', 'length_class_id', 'pack_weight', 'pack_weight_class_id', 'pack_length', 'pack_width', 'pack_height', 'pack_length_class_id'] as $key){
+						if (!empty($product['product'][$key])){
+							$this->model_edit->editProductFields($product_id, [['name' => $key, 'value' => $product['product'][$key]]]);
+						}
+					}
+
+					$this->model_edit->editProductNames($product_id, $product['descriptions'], 26);
+					$this->model_edit->editProductDescriptions($product_id, $product['descriptions'], 26);
+				}
+			}
+
+			if ($this->config->get('config_rainforest_enable_offers_only_for_filled')){
+				$this->db->query("UPDATE product SET filled_from_amazon = 1 WHERE added_from_supplier = '34779'");
 			}
 		}
-
 	}
-
-
-
-
 }

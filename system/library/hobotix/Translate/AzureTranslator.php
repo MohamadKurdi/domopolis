@@ -21,7 +21,7 @@ class AzureTranslator
 	public function __construct($registry){
 		$this->db 		= $registry->get('db');
 		$this->config 	= $registry->get('config');
-		$this->setDebug(false);
+		$this->setDebug(true);
 	}
 
 	public function setDebug($debug){
@@ -137,7 +137,7 @@ class AzureTranslator
 
 				if ($this->debug){										
 					echoLine('[AzureTranslator] Translating ' . $from . ' -> ' . $to);
-					echoLine('[AzureTranslator] ' . $text . ' -> ' . $json[0]['translations'][0]['text']);
+					echoLine('[AzureTranslator] ' . substr($text, 0, 500) . ' -> ' . substr($json[0]['translations'][0]['text'], 0, 500));
 				}
 
 				return $json[0]['translations'][0]['text'];
