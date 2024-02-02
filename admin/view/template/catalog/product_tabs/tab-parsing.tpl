@@ -11,16 +11,16 @@
 		<table class="form">
 			<tr>																					
 				<td>
-					<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF0000; color:#FFF">Исключить из YAM</span>
+					<span class="status_color" style="display:inline-block; padding:3px 5px; background:#CF4A61; color:#FFF">Исключить из YAM</span>
 				</td>
 				<td>
-					<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF0000; color:#FFF">Код товара YAM</span>
+					<span class="status_color" style="display:inline-block; padding:3px 5px; background:#CF4A61; color:#FFF">Код товара YAM</span>
 				</td>
 				<td>
 					<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Включить Priceva/PriceControl</span>
 				</td>
 				<td>
-					<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF0000; color:#FFF">Исключить из Priceva/PriceControl</span>
+					<span class="status_color" style="display:inline-block; padding:3px 5px; background:#CF4A61; color:#FFF">Исключить из Priceva/PriceControl</span>
 				</td>																					
 			</tr>
 
@@ -70,7 +70,7 @@
 		<table class="form">
 			<tr>																					
 				<td>
-					<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF0000; color:#FFF">Исключить из Hotline</span>
+					<span class="status_color" style="display:inline-block; padding:3px 5px; background:#CF4A61; color:#FFF">Исключить из Hotline</span>
 				</td>									
 			</tr>
 			<tr style="border-bottom:1px dashed gray">
@@ -112,11 +112,26 @@
 		</tr>
 	</table>
 
+	<table class="form">
+		<tr>
+			<td style="width:15%">
+				<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Поставщик - источник товара</span>
+			</td>
+			<td>
+				<select name="added_from_supplier">
+					<option value="0" <?php if (!$added_from_supplier) { ?>selected="selected"<? } ?>>Не добавлен от поставщика</option>
+					<?php foreach ($parser_suppliers as $supplier) { ?>
+						<option value="<?php echo $supplier['supplier_id']; ?>" <?php if ($supplier['supplier_id'] == $added_from_supplier) { ?>selected="selected"<? } ?>><?php echo $supplier['supplier_name']; ?></option>
+					<?php } ?>
+				</select>																					
+			</td>
+		</tr>
+	</table>
 
 	<table class="form">
 		<tr>
 			<td style="width:15%">
-				<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF0000; color:#FFF">Неликвидный товар</span>
+				<span class="status_color" style="display:inline-block; padding:3px 5px; background:#CF4A61; color:#FFF">Неликвидный товар</span>
 			</td>
 			<td style="width:15%">
 				<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Закупочная цена</span>

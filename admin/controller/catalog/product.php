@@ -1350,7 +1350,7 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['added_from_amazon'] = $product_info['added_from_amazon'];
 		} else {
 			$this->data['added_from_amazon'] = 0;
-		}
+		}	
 
 		if (isset($this->request->post['fill_from_amazon'])) {
 			$this->data['fill_from_amazon'] = $this->request->post['fill_from_amazon'];
@@ -1444,6 +1444,7 @@ class ControllerCatalogProduct extends Controller {
 		}				
 
 		$this->data['product_suppliers'] = [];
+		$this->data['parser_suppliers']  = $this->model_sale_supplier->getSuppliers(['filter_parser_enabled' => 1]);
 		if (!empty($this->request->get['product_id'])){
 			$product_suppliers = $this->model_sale_supplier->getProductSuppliers($this->request->get['product_id']);
 
@@ -1457,6 +1458,18 @@ class ControllerCatalogProduct extends Controller {
 					'quantity' 		=> $product_supplier['quantity']
 				];
 			}
+		}
+
+		if (isset($this->request->post['added_from_supplier'])) {
+			$this->data['added_from_supplier'] = $this->request->post['added_from_supplier'];
+		} elseif (!empty($product_info)) {
+			$this->data['added_from_supplier'] = $product_info['added_from_supplier'];
+		} else {
+			$this->data['added_from_supplier'] = 0;
+		}
+		
+		if ($this->data['added_from_supplier']){
+			$this->data['added_from_supplier_info'] = $this->model_sale_supplier->getSupplier($this->data['added_from_supplier']);
 		}
 		
 		$this->data['stores'] = $this->model_setting_store->getStores();

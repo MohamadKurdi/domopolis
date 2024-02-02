@@ -255,7 +255,17 @@
 											<option value="<?php echo $store_id; ?>"<?php echo (!is_null($filters[$col]) && (string)$store_id == $filters[$col]) ? ' selected="selected"' : ''; ?>><?php echo $s['name']; ?></option>
 										<?php } ?>
 									</select>
-								</td>								
+								</td>		
+								<?php break;
+								case 'added_from_supplier': ?>
+								<td class="<?php echo $column_info[$col]['align']; ?>" style="width:40px;">
+									<select name="filter_<?php echo $col; ?>" class="filter <?php echo $col; ?>">
+										<option value="*"></option>
+										<?php foreach ($parser_suppliers as $ps) { ?>
+											<option value="<?php echo $ps['supplier_id']; ?>"<?php echo (!is_null($filters[$col]) && $ps['supplier_id'] == $filters[$col]) ? ' selected="selected"' : ''; ?>><?php echo $ps['supplier_name']; ?></option>
+										<?php } ?>
+									</select>
+								</td>						
 								<?php break;
 								case 'length_class': ?>
 								<td class="<?php echo $column_info[$col]['align']; ?>">
