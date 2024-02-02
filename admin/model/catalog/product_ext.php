@@ -108,19 +108,20 @@ class ModelCatalogProductExt extends Model {
         }
 
         $int_filters = array(
-            'tax_class'         => 'p.tax_class_id',
-            'length_class'      => 'p.length_class_id',
-            'weight_class'      => 'p.weight_class_id',
-            'manufacturer'      => 'p.manufacturer_id',
-            'stock_status'      => 'p.stock_status_id',
-            'subtract'          => 'p.subtract',
-            'id'                => 'p.product_id',
-            'main_variant_id'   => 'p.main_variant_id',
-            'status'            => 'p.status',
-            'fill_from_amazon'  => 'p.fill_from_amazon',
-            'filled_from_amazon'=> 'p.filled_from_amazon',
-            'amzn_no_offers'    => 'p.amzn_no_offers',
-            'requires_shipping' => 'p.shipping',
+            'tax_class'             => 'p.tax_class_id',
+            'length_class'          => 'p.length_class_id',
+            'weight_class'          => 'p.weight_class_id',
+            'manufacturer'          => 'p.manufacturer_id',
+            'stock_status'          => 'p.stock_status_id',
+            'subtract'              => 'p.subtract',
+            'id'                    => 'p.product_id',
+            'main_variant_id'       => 'p.main_variant_id',
+            'added_from_supplier'   => 'p.added_from_supplier',
+            'status'                => 'p.status',
+            'fill_from_amazon'      => 'p.fill_from_amazon',
+            'filled_from_amazon'    => 'p.filled_from_amazon',
+            'amzn_no_offers'        => 'p.amzn_no_offers',
+            'requires_shipping'     => 'p.shipping',
             );
 
         foreach ($int_filters as $key => $value) {
@@ -427,19 +428,20 @@ class ModelCatalogProductExt extends Model {
         }
 
         $int_filters = array(
-            'tax_class'         => 'p.tax_class_id',
-            'length_class'      => 'p.length_class_id',
-            'weight_class'      => 'p.weight_class_id',
-            'manufacturer'      => 'p.manufacturer_id',
-            'stock_status'      => 'p.stock_status_id',
-            'subtract'          => 'p.subtract',
-            'id'                => 'p.product_id',
-            'main_variant_id'   => 'p.main_variant_id',
-            'status'            => 'p.status',
-            'fill_from_amazon'  => 'p.fill_from_amazon',
-            'filled_from_amazon'=> 'p.filled_from_amazon',
-            'amzn_no_offers'    => 'p.amzn_no_offers',
-            'requires_shipping' => 'p.shipping',
+            'tax_class'             => 'p.tax_class_id',
+            'length_class'          => 'p.length_class_id',
+            'weight_class'          => 'p.weight_class_id',
+            'manufacturer'          => 'p.manufacturer_id',
+            'stock_status'          => 'p.stock_status_id',
+            'subtract'              => 'p.subtract',
+            'id'                    => 'p.product_id',
+            'main_variant_id'       => 'p.main_variant_id',
+            'added_from_supplier'   => 'p.added_from_supplier',
+            'status'                => 'p.status',
+            'fill_from_amazon'      => 'p.fill_from_amazon',
+            'filled_from_amazon'    => 'p.filled_from_amazon',
+            'amzn_no_offers'        => 'p.amzn_no_offers',
+            'requires_shipping'     => 'p.shipping',
             );
 
         foreach ($int_filters as $key => $value) {

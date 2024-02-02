@@ -404,10 +404,11 @@
 
 					<table class="form">
 						<tr>
-							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">В фиде РРЦ</span></td>
-							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Обновлять наличие</span></td>
-							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Обновлять цену</span></td>
-							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Сразу включать товары</span></td>
+							<td width="15%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">В фиде РРЦ</span></td>
+							<td width="15%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Обновлять наличие</span></td>
+							<td width="15%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Обновлять цену</span></td>
+							<td width="15%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Сразу включать товары</span></td>
+							<td width="15%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Пропускать без категорий</span></td>
 							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Загрузить Атрибуты</span></td>
 						</tr>
 						<tr>
@@ -447,6 +448,17 @@
 							<td>
 								<select name="auto_enable">
 									<?php if ($auto_enable) { ?>
+										<option value="1" selected="selected">Включить</option>
+										<option value="0">Отключить</option>
+									<?php } else { ?>													
+										<option value="1">Включить</option>
+										<option value="0"  selected="selected">Отключить</option>
+									<? } ?>
+								</select>
+							</td>
+							<td>
+								<select name="skip_no_category">
+									<?php if ($skip_no_category) { ?>
 										<option value="1" selected="selected">Включить</option>
 										<option value="0">Отключить</option>
 									<?php } else { ?>													

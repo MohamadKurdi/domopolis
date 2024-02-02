@@ -99,6 +99,7 @@ $_['column_isbn']               = 'ISBN';
 $_['column_mpn']                = 'MPN';
 $_['column_id']                 = 'ID';
 $_['column_manufacturer']       = 'Бренд';
+$_['column_added_from_supplier']       = 'Поставщик';
 $_['column_category']           = 'Категория';
 $_['column_location']           = 'Location';
 $_['column_seo']                = 'SEO Keyword';

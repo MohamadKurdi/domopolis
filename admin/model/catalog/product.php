@@ -105,6 +105,7 @@
 				priceva_disable 	= '" . (int)$data['priceva_disable'] . "',
 				hotline_disable 	= '" . (int)$data['hotline_disable'] . "',
 				amzn_ignore 		= '" . (int)$data['amzn_ignore'] . "',
+				added_from_supplier	= '" . (int)$data['added_from_supplier'] . "',
 				date_added 			= NOW()");
 			
 			$product_id = $this->db->getLastId();
@@ -636,7 +637,8 @@
 				amzn_last_search 		= '" . $this->db->escape($data['amzn_last_search']) . "', 
 				amzn_ignore 			= '" . (int)$data['amzn_ignore'] . "',  
 				fill_from_amazon 		= '" . (int)$data['fill_from_amazon'] . "', 
-				amzn_last_offers 		= '" . $this->db->escape($data['amzn_last_offers']) . "',  
+				amzn_last_offers 		= '" . $this->db->escape($data['amzn_last_offers']) . "',
+				added_from_supplier 	= '" . (int)$data['added_from_supplier'] . "', 
 				date_modified 			= NOW() 
 				WHERE product_id = '" . (int)$product_id . "'");
 

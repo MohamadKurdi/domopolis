@@ -40,6 +40,7 @@ class ModelSaleSupplier extends Model {
 		currency 				= '" . $this->db->escape($data['currency']) . "',
 		parser_status 			= '" . (int)$data['parser_status'] . "',
 		auto_enable 			= '" . (int)$data['auto_enable'] . "',
+		skip_no_category 		= '" . (int)$data['skip_no_category'] . "',
 		same_as_warehouse 		= '" . (int)$data['same_as_warehouse'] . "',
 		stock 					= '" . (int)$data['stock'] . "',
 		prices 					= '" . (int)$data['prices'] . "'");
@@ -89,6 +90,7 @@ class ModelSaleSupplier extends Model {
 		rrp_in_feed 			= '" . (int)$data['rrp_in_feed'] . "',
 		parser_status 			= '" . (int)$data['parser_status'] . "',
 		auto_enable 			= '" . (int)$data['auto_enable'] . "',
+		skip_no_category 		= '" . (int)$data['skip_no_category'] . "',
 		same_as_warehouse 		= '" . (int)$data['same_as_warehouse'] . "',
 		stock 					= '" . (int)$data['stock'] . "',
 		prices 					= '" . (int)$data['prices'] . "'
@@ -294,8 +296,7 @@ class ModelSaleSupplier extends Model {
 			FROM local_supplier_products lsp
 			LEFT JOIN suppliers s ON s.supplier_id = lsp.supplier_id
 			WHERE 
-			lsp.product_id = '" . (int)$product_id . "'
-			");
+			lsp.product_id = '" . (int)$product_id . "'");
 		
 		if ($query->num_rows){
 			return $query->rows;		
@@ -314,8 +315,7 @@ class ModelSaleSupplier extends Model {
 			FROM local_supplier_products lsp
 			LEFT JOIN suppliers s ON s.supplier_id = lsp.supplier_id
 			WHERE 
-			lsp.product_id = '" . (int)$product_id . "'
-			");
+			lsp.product_id = '" . (int)$product_id . "'");
 		
 		if ($query->num_rows){
 			return $query->rows;		
@@ -484,6 +484,10 @@ class ModelSaleSupplier extends Model {
 
 		if (!empty($data['filter_has_number'])) {
 			$sql .= " AND vat_number <> ''";
+		}
+
+		if (!empty($data['filter_parser_enabled'])) {
+			$sql .= " AND parser_status = 1";
 		}
 		
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

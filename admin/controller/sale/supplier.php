@@ -646,6 +646,7 @@ class ControllerSaleSupplier extends Controller {
 				'stock'     			=> $result['stock'],
 				'prices'     			=> $result['prices'],
 				'auto_enable'     		=> $result['auto_enable'],
+				'skip_no_category'     	=> $result['skip_no_category'],
 				'same_as_warehouse'     => $result['same_as_warehouse'],
 				'parser'     			=> $result['parser'],
 				'parser_status'     	=> $result['parser_status'],
@@ -1015,6 +1016,14 @@ class ControllerSaleSupplier extends Controller {
 			$this->data['auto_enable'] = $supplier_info['auto_enable'];
 		} else {
 			$this->data['auto_enable'] = 0;
+		}
+
+		if (isset($this->request->post['skip_no_category'])) {
+			$this->data['skip_no_category'] = $this->request->post['skip_no_category'];
+		} elseif (!empty($supplier_info)) {
+			$this->data['skip_no_category'] = $supplier_info['skip_no_category'];
+		} else {
+			$this->data['skip_no_category'] = 0;
 		}
 		
 		if (isset($this->request->post['same_as_warehouse'])) {
