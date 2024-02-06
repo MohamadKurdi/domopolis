@@ -22,6 +22,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/vzaichikov/bsg-php"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/vzaichikov/notificore-php"
         }
     ],
     
@@ -82,7 +86,8 @@
         "jbroadway/urlify": "^1.2",
         "league/csv": "^9.0",
         "google/recaptcha": "^1.3",
-        "lazzard/php-ftp-client": "^1.7"            
+        "lazzard/php-ftp-client": "^1.7",
+        "vzaichikov/notificore-php": "dev-master"            
     },
     "config": {
         "platform-check": false,
