@@ -589,9 +589,7 @@ class Mail {
 
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($json));
-		$result = json_decode(curl_exec($ch), true);
-
-		var_dump($result);
+		$result = json_decode(curl_exec($ch), true);		
 
 		if (is_array($result)){
 			if (isset($result['track.id']) && isset($result['track.id'])){
