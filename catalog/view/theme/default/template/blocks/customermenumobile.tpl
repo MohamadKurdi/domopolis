@@ -1,6 +1,12 @@
 <?php include($this->checkTemplate(dirname(__FILE__), '/google_sso_widget.tpl')); ?>
-
-<?php if ($logged) { ?>
+<script>
+	window._customer_data_loaded        = true;
+</script>
+<?php if ($logged) { ?>		
+	<script>
+		window._customer_data_customer_id 	= '<?php echo $customer_id; ?>';
+		window._customer_data_real_email 	= '<?php echo $real_email; ?>';
+	</script>
 	<div id="top-customer-block-content-for-compile" class="hidden" hidden>
 		<button class="profile" onclick="location.href='<?php echo $account; ?>'">
 			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

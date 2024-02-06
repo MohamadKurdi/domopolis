@@ -580,11 +580,17 @@
 				$this->data['edit'] = $this->url->link('account/edit');
 				$this->data['password'] = $this->url->link('account/password');
 				$this->data['address'] = $this->url->link('account/address');
-				
-				
+								
 				//Выход
 				$this->data['text_logout'] = $this->language->get('text_logout');
 				$this->data['logout'] = $this->url->link('account/logout');
+
+				if ($this->customer->getIfRealEmail()){
+					$this->data['real_email'] = $this->customer->getIfRealEmail();
+				} else {
+					$this->data['real_email'] = false;
+				}
+				$this->data['customer_id'] = $this->customer->getID();
 				
 				$this->data['points_active'] = $this->customer->getRewardPoints();
 				$this->data['points_active_formatted'] = $this->currency->formatBonus($this->data['points_active']);
@@ -592,9 +598,9 @@
 			}
 			
 			if (!empty($this->request->get['x']) && $this->request->get['x'] == 'm'){
-				$this->template = $this->config->get('config_template') . '/template/blocks/customermenumobile.tpl';
+				$this->template = 'blocks/customermenumobile.tpl';
 			} else {
-				$this->template = $this->config->get('config_template') . '/template/blocks/customermenu.tpl';
+				$this->template = 'blocks/customermenu.tpl';
 			}
 			
 			

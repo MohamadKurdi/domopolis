@@ -310,8 +310,6 @@
 				);
 			}
 			
-			
-			//overloading for getChild
 			if (isset($args['path']) && $args['path']){
 				$this->request->get['path'] = $args['path'];
 			}
@@ -361,9 +359,9 @@
 					
 					if ($_category_info) {
 						$this->data['breadcrumbs'][] = array(
-						'text'      => $_category_info['name'],
-						'href'      => $this->url->link('product/category', 'path=' . $path . $url),
-						'separator' => $this->language->get('text_separator')
+							'text'      => $_category_info['name'],
+							'href'      => $this->url->link('product/category', 'path=' . $path . $url),
+							'separator' => $this->language->get('text_separator')
 						);
 					}
 				}

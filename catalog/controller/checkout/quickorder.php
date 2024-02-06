@@ -20,8 +20,8 @@ class ControllerCheckoutQuickorder extends Controller {
 	}
 
 	public function loadtemplate() {
-		$this->data['mask'] = $this->config->get('config_phonemask');
-		$this->data['country'] = $this->config->get('config_countryname');
+		$this->data['mask'] 	= $this->config->get('config_phonemask');
+		$this->data['country'] 	= $this->config->get('config_countryname');
 		if ($this->customer->isLogged()) {      
 			$this->data['email'] = $this->customer->getEmail();
 			$this->data['telephone'] = $this->customer->getTelephone();
@@ -34,12 +34,11 @@ class ControllerCheckoutQuickorder extends Controller {
 			$this->data[$translationСode] = $translationText;
 		}
 
-
 		$this->data['config_google_merchant_id'] = $this->config->get('config_google_merchant_id');			
 
 		$key = md5(time());
-		$this->data['quickorder_key'] = $key;
-		$this->session->data['quickorder_key'] = $key;		
+		$this->data['quickorder_key'] 			= $key;
+		$this->session->data['quickorder_key'] 	= $key;		
 
 		$this->template = 'checkout/quickorder.tpl';
 

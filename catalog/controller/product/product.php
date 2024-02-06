@@ -2053,6 +2053,7 @@ public function index($product_id = false, $just_price = false)
                         'url'        => $this->url->link('product/product', 'product_id=' . $product_info['product_id']),
                         'brand'      => $this->data['manufacturer'],
                         'name'       => $this->data['heading_title'],
+                        'model'      => $this->data['model'],
                         'available'  => $product_info['quantity']?1:0,
                         'category'   => implode('/', $this->data['categories']),
                         'product_id'        => $product_info['product_id'],
