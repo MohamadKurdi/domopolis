@@ -541,7 +541,7 @@
 			$data = array_merge($data, $actionTemplate, $customer, $mail_info);					
 			
 			$mail = new Mail($this->registry); 
-			$mail->setProtocol($this->config->get('config_mail_protocol'));
+			$mail->setProtocol($this->config->get('config_mail_trigger_protocol'));
 			$mail->setEmailTemplate(new EmailTemplate($this->request, $this->registry));
 			$mail->setFrom($this->config->get('config_mail_trigger_mail_from'));
 			$mail->setSender($this->config->get('config_mail_trigger_name_from'));

@@ -1,17 +1,17 @@
 <?php
 class Mail {
-	protected $to;
-	protected $from;
-	protected $sender;
-	protected $subject;
-	protected $replyTo;
-	protected $bcc;
-	protected $cc;
-	protected $emailtemplate;
-	protected $is_marketing;
-	protected $text;
-	protected $html;
-	protected $attachments = [];	
+	protected $to 			= null;
+	protected $from 		= null;
+	protected $setSender	= null;
+	protected $subject 		= null;
+	protected $replyTo  	= null;
+	protected $bcc  		= null;
+	protected $cc 			= null;
+	protected $emailtemplate= null;
+	protected $is_marketing = null;
+	protected $text 		= null;
+	protected $html 		= null;
+	protected $attachments 	= [];	
 
 	public $protocol 	= 'mail';
 	public $newline 	= "\n";
@@ -147,12 +147,12 @@ class Mail {
 			$this->preparemail()->send_sendmail();
 		}
 
-		if ($this->protocol == 'smtp') {
-			$this->preparemail()->send_smtp();
+		if ($this->protocol == 'sendsay') {
+			return $this->preparemail()->send_sendsay();
 		}
 
-		if ($this->protocol == 'sendsay') {
-			$this->preparemail()->send_sendsay();
+		if ($this->protocol == 'smtp') {
+			$this->preparemail()->send_smtp();
 		}
 
 		return 0;
@@ -551,6 +551,10 @@ class Mail {
 			}
 		}
 
+		if (!$this->text){
+			$this->text = strip_tags($this->html);
+		}
+
 		$json = [
 			'action' => 'issue.send',
 			'letter' => [
@@ -586,6 +590,8 @@ class Mail {
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($json));
 		$result = json_decode(curl_exec($ch), true);
+
+		var_dump($result);
 
 		if (is_array($result)){
 			if (isset($result['track.id']) && isset($result['track.id'])){
