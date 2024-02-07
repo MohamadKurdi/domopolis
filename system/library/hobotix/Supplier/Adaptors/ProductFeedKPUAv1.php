@@ -148,6 +148,8 @@ class ProductFeedKPUAv1 extends SuppliersGeneralClass {
 				}
 			}
 
+			$this->db->query("UPDATE product SET amzn_ignore = 1 WHERE added_from_supplier = '34779'");
+
 			if ($this->config->get('config_rainforest_enable_offers_only_for_filled')){
 				$this->db->query("UPDATE product SET filled_from_amazon = 1 WHERE added_from_supplier = '34779'");
 			}

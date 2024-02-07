@@ -1,7 +1,7 @@
 <?php
 	final class Encryption {
-		private $key;
-		private $iv;
+		private $key 	= null;
+		private $iv 	= null;
 		
 		public function __construct($key) {
 			$this->key = hash('sha256', $key, true);
