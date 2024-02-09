@@ -902,6 +902,7 @@
                     minDate: min ? min : null,
                     maxDate: max ? max : null,
                     useCurrent: false,
+                    format: 'YYYY-MM-DD',
                     showButtonPanel: false,
                     language: self.params.languageCode,
                     locale: self.params.languageCode,
@@ -920,6 +921,7 @@
             } else if (typeof($(this).datepicker) !== "undefined") {
                 $(this).datepicker({
                     firstDay: 1,
+                    format: 'YYYY/MM/DD',
                     beforeShowDay: onlyWeekdays ? checkWeekendAndHoliday : (days ? checkDays : null),
                     minDate: min ? min : null,
                     maxDate: max ? max : null,
