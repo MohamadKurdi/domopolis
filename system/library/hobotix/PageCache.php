@@ -5,10 +5,15 @@ namespace hobotix;
 final class PageCache{
 	private $lifetime 		= 600;
 	private $gzLevel 		= 4;
+	private $minify 		= false;
+
 	private $crawlerDetect 	= null;
 	private $mobileDetect 	= null;
 	private $htmlMinifier 	= null;
-	private $db;
+
+	private $db 			= null;
+	private $log 			= null;
+	private $cache 			= null;
 
 	private $cacheableRoutes = array();
 	private $excludeRoutes = array();
@@ -249,7 +254,11 @@ final class PageCache{
 
 	public function writeCache($cache){		
 		if ($this->validateIfToCache()){
-			$cache = gzencode($this->minifyCache($cache), $this->gzLevel);
+			if ($this->minify && $this->htmlMinifier){
+				$cache = $this->minifyCache($cache);
+			}
+
+			$cache = gzencode($cache, $this->gzLevel);			
 			file_put_contents($this->prepareCacheDirAndGetCachePath(), $cache);			
 		}				
 	}

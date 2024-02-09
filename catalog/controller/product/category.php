@@ -421,8 +421,8 @@
 				
 				$this->document->addScript('catalog/view/javascript/jquery/jquery.total-storage.min.js');
 				
-				$this->data['heading_title'] = (isset($category_info['seo_h1']) && mb_strlen($category_info['seo_h1']) >= 1)?$category_info['seo_h1']:$category_info['name'];
-				$this->data['tagline'] = $category_info['tagline'];
+				$this->data['heading_title'] 	= (isset($category_info['seo_h1']) && mb_strlen($category_info['seo_h1']) >= 1)?$category_info['seo_h1']:$category_info['name'];
+				$this->data['tagline'] 			= html_entity_decode($category_info['tagline'], ENT_QUOTES, 'UTF-8');
 				
 				$this->data['text_refine'] 			= $this->language->get('text_refine');
 				$this->data['text_empty'] 			= $this->language->get('text_empty');			

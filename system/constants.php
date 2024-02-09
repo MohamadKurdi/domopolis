@@ -25,24 +25,21 @@ if ((isset($_GET['hello']) && $_GET['hello'] == 'world')){
 } else {
 
 	if (thisIsAjax()){
+		header('X-DEBUG-REASON: thisIsAjax');
 		define('IS_DEBUG', false);
 		define('DEV_ENVIRONMENT', false);
 
 	} elseif (is_cli()) {
-
+		header('X-DEBUG-REASON: is_cli');
 		define('IS_DEBUG', true);
 		define('DEV_ENVIRONMENT', false);
-
 	} elseif (!empty($ipsConfig['debug']) && !empty($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], $ipsConfig['debug'])) {
 		header('X-DEBUG-REASON: ipsConfig');
 		define('IS_DEBUG', true);
 		define('DEV_ENVIRONMENT', false);
-
 	} else {
-
 		define('IS_DEBUG', false);
-		define('DEV_ENVIRONMENT', false);
-		
+		define('DEV_ENVIRONMENT', false);		
 	}
 
 	if (isset($_GET['hello']) && $_GET['hello'] == 'justsql'){
