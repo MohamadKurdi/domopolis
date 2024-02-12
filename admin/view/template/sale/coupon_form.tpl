@@ -270,17 +270,20 @@
 						</tr>
 
 						<tr>
-							<td><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Товары</span>
+							<td>
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Товары</span>
 								<br /><span class="help">Конкретные товары, к которым применим промокод</span>
 							</td>
-							<td><input type="text" name="product" value="" style="width:200px;" /></td>
-							
-							
-							<td><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Категории</span>
+							<td>
+								<input type="text" name="product" value="" style="width:200px;" />
+							</td>														
+							<td>
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Категории</span>
 								<br /><span class="help">Выбрать все товары в выбранной категории</span>
 							</td>
-							<td><input type="text" name="category" value="" style="width:200px;" /></td>
-							
+							<td>
+								<input type="text" name="category" value="" style="width:200px;" />
+							</td>							
 						</tr>
 						<tr>
 							<td>&nbsp;</td>
@@ -307,17 +310,22 @@
 						</tr>
 						
 						<tr>
-							<td><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Коллекции</span> <br /><span class="help">Выбрать все товары коллекции.</span></td>
-							<td><input type="text" name="collection" value="" style="width:200px;" /></td>
+							<td>
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Коллекции</span> 
+								<br /><span class="help">Выбрать все товары коллекции.</span>
+							</td>
+							<td>
+								<input type="text" name="collection" value="" style="width:200px;" />
+							</td>
 							
 							<td><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Бренды</span>
 							<br /><span class="help">Выбрать все товары бренда.</span></td>
-							<td><input type="text" name="manufacturer" value="" style="width:200px;" /></td>
-							
+							<td><input type="text" name="manufacturer" value="" style="width:200px;" /></td>							
 						</tr>
 						<tr>
 							<td>&nbsp;</td>
-							<td><div id="coupon-collection" class="scrollbox">
+							<td>
+								<div id="coupon-collection" class="scrollbox">
 								<?php $class = 'odd'; ?>
 								<?php foreach ($coupon_collection as $coupon_collection) { ?>
 									<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
@@ -325,7 +333,8 @@
 										<input type="hidden" name="coupon_collection[]" value="<?php echo $coupon_collection['collection_id']; ?>" />
 									</div>
 								<?php } ?>
-							</div></td>
+							</div>
+							</td>
 							
 							
 							<td>&nbsp;</td>
@@ -337,8 +346,7 @@
 										<input type="hidden" name="coupon_manufacturer[]" value="<?php echo $coupon_manufacturer['manufacturer_id']; ?>" />
 									</div>
 								<?php } ?>
-							</div></td>
-							
+							</div></td>							
 						</tr>  
 						
 						
