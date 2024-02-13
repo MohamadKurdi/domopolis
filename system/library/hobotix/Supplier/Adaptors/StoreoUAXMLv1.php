@@ -147,8 +147,6 @@ class StoreoUAXMLv1 extends SuppliersGeneralClass {
 								'attributes'            => $product_attributes,
 								'raw' 					=> json_encode($offer)
 							];
-
-							break;
 						}
 					}
 				}
