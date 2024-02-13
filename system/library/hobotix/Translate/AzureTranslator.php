@@ -137,7 +137,7 @@ class AzureTranslator
 
 				if ($this->debug){										
 					echoLine('[AzureTranslator] Translating ' . $from . ' -> ' . $to);
-					echoLine('[AzureTranslator] ' . substr($text, 0, 500) . ' -> ' . substr($json[0]['translations'][0]['text'], 0, 500));
+					echoLine('[AzureTranslator] ' . substr($text, 0, 100) . ' -> ' . substr($json[0]['translations'][0]['text'], 0, 100));
 				}
 
 				return $json[0]['translations'][0]['text'];
