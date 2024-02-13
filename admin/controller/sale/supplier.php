@@ -121,12 +121,20 @@ class ControllerSaleSupplier extends Controller {
 		}		
 	}
 
-	public function cron(){
+	public function cron($supplier_id = null){
 		$suppliers = $this->supplierAdaptor->getSuppliers();
 
 		echoLine('[ControllerSaleSupplier::cron] Got ' . count($suppliers) . ' suppliers', 's');
 
 		foreach ($suppliers as $supplier){
+
+			if ($supplier_id){
+				if ($supplier['supplier_id'] <> $supplier_id){
+					echoLine('[ControllerSaleSupplier::cron] Exact supplier id provided, skipping others', 'w');
+					continue;
+				}
+			}
+
 			$this->supplierAdaptor->use($supplier['parser'], $supplier);
 			echoLine('[ControllerSaleSupplier::cron] Working with supplier ' . $supplier['supplier_name'], 'i');
 

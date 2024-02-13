@@ -164,7 +164,20 @@ class ModelSaleSupplier extends Model {
 			'limit' 		=> 5
 		];
 
-		return $this->model_catalog_attribute->getAttributes($data);
+		$attributes = $this->model_catalog_attribute->getAttributes($data);
+
+		if (!$attributes){
+			$regex = '/^(.*?)(?:\s*\([^)]+\))?$/';
+			$result = preg_match($regex, $name, $matches);
+
+			if ($result) {
+				$data['filter_name'] = $matches[1];
+  				$attributes = $this->model_catalog_attribute->getAttributes($data);
+			}
+
+		}
+
+		return $attributes;
 	}
 
 	public function getSupplierAttributes($supplier_id) {
