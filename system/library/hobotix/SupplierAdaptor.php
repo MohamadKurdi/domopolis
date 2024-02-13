@@ -198,6 +198,7 @@ class SupplierAdaptor
 						'model' 				=> !empty($product['model'])?atrim($product['model']):atrim($product['supplier_product_id']),
 						'sku' 					=> !empty($product['sku'])?atrim($product['sku']):atrim($product['supplier_product_id']),
 						'ean' 					=> !empty($product['ean'])?atrim($product['ean']):'',
+						'asin' 					=> !empty($product['asin'])?atrim($product['asin']):'',
 						'image' 				=> !empty($product['image'])?atrim($product['image']):'',
 						'images' 				=> !empty($product['images'])?$product['images']:[],
 						'stock' 				=> isset($product['stock'])?$product['stock']:true,

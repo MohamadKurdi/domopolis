@@ -65,11 +65,30 @@ class SupplierProduct extends SupplierFrameworkClass {
 			$this->parseProductImages($product_id, $product);			
 			$this->parseProductDescriptions($product_id, $product);
 			$this->parseProductAttributes($product_id, $product);
+			$this->parseProductOtherData($product_id, $product);
 		}
 		
 		$this->parseProductStatus($product_id, $product);
 		$this->parseProductStock($product_id, $product);		
 		$this->parseProductPrice($product_id, $product);	
+	}
+
+	public function parseProductOtherData($product_id, $product){
+		$fields = ['ean' => 'ean', 'asin' => 'asin'];
+
+		$data = [];
+		foreach ($fields as $external_field => $internal_field){
+			if (!empty($product[$external_field])){
+				$data[] = [
+					'name' 	=> $internal_field,
+					'value' => $product[$external_field]
+				];			
+			}
+		}
+
+		if ($data){
+			$this->model_edit->editProductFields($product_id, $data);
+		}
 	}
 
 	public function parseProductStatus($product_id, $product, $supplier_id = null){

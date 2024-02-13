@@ -18,7 +18,7 @@ class PriceLogic extends SupplierFrameworkClass {
 
 	public function updateProductPriceInDatabase($product_id, $price){
 		if ($is_on_stock = $this->getIfProductIsInWarehouse($product_id)){
-			echoLine('[PriceLogic::disableProduct] Product is in warehouse, ' . $is_on_stock . ' pieces, skipping setting price!', 'e');
+			echoLine('[PriceLogic::updateProductPriceInDatabase] Product is in warehouse, ' . $is_on_stock . ' pieces, skipping setting price!', 'e');
 			return;
 		}
 
@@ -41,7 +41,7 @@ class PriceLogic extends SupplierFrameworkClass {
 
 	public function updateProductPriceNationalToStoreInDatabase($product_id, $price, $store_id){
 		if ($is_on_stock = $this->getIfProductIsInWarehouse($product_id)){
-			echoLine('[PriceLogic::disableProduct] Product is in warehouse, ' . $is_on_stock . ' pieces, skipping setting price!', 'e');
+			echoLine('[PriceLogic::updateProductPriceNationalToStoreInDatabase] Product is in warehouse, ' . $is_on_stock . ' pieces, skipping setting price!', 'e');
 			return;
 		}
 
