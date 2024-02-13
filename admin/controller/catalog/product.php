@@ -2000,6 +2000,17 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['product_stock_status'] = [];
 		}
 
+		$this->load->model('localisation/product_groups');
+		$this->data['product_groups'] = $this->model_localisation_product_groups->getProductGroups();
+
+		if (isset($this->request->post['product_group_id'])) {
+			$this->data['product_group_id'] = $this->request->post['product_group_id'];
+		} elseif (!empty($product_info)) {
+			$this->data['product_group_id'] = $product_info['product_group_id'];
+		} else {
+			$this->data['product_group_id'] = 0;
+		}
+
 		if (isset($this->request->post['status'])) {
 			$this->data['status'] = $this->request->post['status'];
 		} elseif (!empty($product_info)) {

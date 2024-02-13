@@ -73,7 +73,7 @@
 				</table>
 				<table class="form">
 					<tr>
-						<td>
+						<td style="width:50%">
 							<?php echo $entry_access; ?><br />
 							<div class="scrollbox" style="min-height: 600px;">
 								<?php $class = 'odd'; ?>
@@ -93,7 +93,7 @@
 							<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);"><?php echo $text_select_all; ?></a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);"><?php echo $text_unselect_all; ?></a>
 						</td>
 						
-						<td>
+						<td style="width:50%">
 							<?php echo $entry_modify; ?><br />
 							<div class="scrollbox" style="min-height: 600px;">
 								<?php $class = 'odd'; ?>

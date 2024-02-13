@@ -1,7 +1,6 @@
 <?php
 	
-    class ModelCatalogProduct extends Model
-    {
+    class ModelCatalogProduct extends Model{
 		
     	public function getProductActiveCoupons($product_id){
     		if (!$this->config->get('coupon_status')){
@@ -269,6 +268,8 @@
 							'amazon_product_link' 	=> $result['amazon_product_link'],
 							'amazon_offers_type' 	=> $result['amazon_offers_type'],
 							'amazon_seller_quality' => $result['amazon_seller_quality'],
+							'product_group_id'      => $result['product_group_id'],
+							'product_quality_group' => $result['product_quality_group'],
 							'amazon_best_price' 	=> $this->currency->format($result['amazon_best_price'], $this->config->get('config_currency'), 1),
 							'costprice'	   	   		=> $this->currency->format($result['costprice'], $this->config->get('config_currency'), 1),
 							'profitability'	   	   	=> $result['profitability']
@@ -369,9 +370,13 @@
 			
 			if (!$product_data) {
 				$sql = '';		
-				$sql .= "SELECT DISTINCT *, ";				
+				$sql .= "SELECT DISTINCT *, ";								
+				if ($this->config->get('config_product_quality_groups_enable')){
+					$sql .= ' pg.*, ';
+				}
 				if ($simple != 'simple'){
 					$sql .= " p.image, p.asin, p.xhasvideo as has_video, p.xrating as rating, p.xreviews as reviews, p.sort_order, ";
+
 					$sql .= " pd.name AS name, pd.color AS color, pd.material AS material, pd.alt_image, pd.title_image, pd.manufacturer_name, ";
 					$sql .= " m.name AS manufacturer, m.image as manufacturer_img, ";
 					$sql .= " (SELECT st.set_id FROM `set` st WHERE p.product_id = st.product_id LIMIT 1) as set_id, ";
@@ -446,6 +451,10 @@
 				$sql .= " FROM product p 
 				LEFT JOIN product_description pd ON (p.product_id = pd.product_id) ";
 
+				if ($this->config->get('config_product_quality_groups_enable')){
+					$sql .= " LEFT JOIN product_groups pg ON (pg.product_group_id = p.product_group_id) ";
+				}
+
 				if (!$this->config->get('config_single_store_enable')){
 					$sql .= " LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) ";
 				}
@@ -475,7 +484,6 @@
 						$query->row['currency'] = $this->config->get('config_regional_currency');
 					}
 
-					//overloading manufacturer
 					if (empty($query->row['manufacturer']) || empty($query->row['manufacturer_id'])){
 						$query->row['manufacturer'] = $query->row['manufacturer_name'];
 					}
@@ -503,9 +511,9 @@
 						$query->row['price'] = $query->row['store_overload_price'];
 					}
 					
-					$do_percent = true;
-					$overload_price_national = false;
-					$has_rrp = false;
+					$do_percent 				= true;
+					$overload_price_national 	= false;
+					$has_rrp 					= false;
 					if (!empty($query->row['store_overload_price_national'])) {
 						$query->row['price'] = $this->currency->convert($query->row['store_overload_price_national'],
 						$this->config->get('config_regional_currency'), $this->config->get('config_currency'), false, false);
@@ -590,8 +598,7 @@
 							$additional_offer_product = $this->getProduct($query->row['additional_offer_product_id']);
 						}
 					}
-					
-					//Логика подмены SKU
+										
 					if ($this->config->get('config_product_replace_sku_with_product_id')){
 						$query->row['sku'] 		= $query->row['product_id'];
 						$query->row['model'] 	= $query->row['product_id'];
@@ -602,12 +609,10 @@
 						}
 					}
 
-					//Логика переназначения статусов наличия
 					if (!empty($query->row['overload_stock_status_id']) && !empty($query->row['overload_stock_status'])){
 						$query->row['stock_status_id'] 	= $query->row['overload_stock_status_id'];
 						$query->row['stock_status'] 	= $query->row['overload_stock_status'];
 					}
-
 
 					if ($query->row['local_supplier_warehouse_in_stock']){						
 						$query->row['quantity_stock'] 			= $query->row['local_supplier_warehouse_in_stock'] + $query->row[$this->config->get('config_warehouse_identifier')];						
@@ -619,7 +624,6 @@
 						$query->row['stock_status']				= $overload_stock_status_query->row['name'];
 					}
 
-					//Логика работы только со складом, отменяет переназначение статуса на складе
 					if ($this->config->get('config_warehouse_only')){
 						if (!$query->row[$this->config->get('config_warehouse_identifier')] && !$query->row['local_supplier_warehouse_in_stock']){
 							$query->row['quantity_stock'] 			= 0;
@@ -631,8 +635,19 @@
 						}
 					}
 
-					if ($simple == 'simple'){
+					$product_quality_group_data = [];
+					if ($this->config->get('config_product_quality_groups_enable') && !empty($query->row['product_group_id'])){
+						$product_quality_group_data = [
+							'name' 			=> $query->row['product_group_name'],
+							'text_color' 	=> $query->row['product_group_text_color'],
+							'bg_color' 		=> $query->row['product_group_bg_color'],
+							'fa_icon' 		=> $query->row['product_group_fa_icon'],
+							'feed' 			=> $query->row['product_group_feed'],
+							'feed_file' 	=> $query->row['product_group_feed_file']
+						];
+					}
 
+					if ($simple == 'simple'){
 						$product_data = [
 							'product_id'               => $query->row['product_id'],
 							'price'                    => $price_opt,
@@ -645,6 +660,8 @@
 							'special'                  => $special,
 							'has_video' 			   => $query->row['xhasvideo'],
 							'asin' 			   		   => $query->row['asin'],
+							'product_group_id'         => $query->row['product_group_id'],
+							'product_quality_group'    => $product_quality_group_data,
 							'special_date_end'         => $query->row['special_date_end'],
 							'quantity'                 => $query->row['quantity'],							
 							'local_supplier_in_stock'  			=> $query->row['local_supplier_in_stock'],
@@ -713,6 +730,8 @@
 							'quantity_stockAS'         => $query->row['quantity_stockM'],
 							'stock_status'             => $query->row['stock_status'],
 							'stock_status_id'          => $query->row['stock_status_id'],
+							'product_group_id'         => $query->row['product_group_id'],
+							'product_quality_group'    => $product_quality_group_data,
 							'image'                    => $query->row['image'],
 							'images'                   => $query->row['images'],
 							'main_category_id'         => $query->row['main_category_id'],
@@ -1223,6 +1242,10 @@
 				}
 				
 				$sql .= ")";
+			}
+
+			if (!empty($data['filter_product_group_id'])) {
+				$sql .= " AND p.product_group_id = '" . (int)$data['filter_product_group_id'] . "'";
 			}
 			
 			if (!empty($data['filter_manufacturer_id'])) {
@@ -2867,6 +2890,10 @@
 						$sql .= " AND p.product_id IN (SELECT product_id FROM product_to_category p2ci WHERE p2ci.category_id IN (" . implode(',', $filter_category_id_intersect) . ")";
 					}
 				}
+			}
+
+			if (!empty($data['filter_product_group_id'])) {
+				$sql .= " AND p.product_group_id = '" . (int)$data['filter_product_group_id'] . "'";
 			}
 			
 			if (!empty($data['filter_manufacturer_id'])) {

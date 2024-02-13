@@ -308,6 +308,11 @@
 										<li><a href="<?php echo $language; ?>"><?php echo $text_language; ?></a></li>
 										<li><a href="<?php echo $currency; ?>"><?php echo $text_currency; ?></a></li>
 										<li><a href="<?php echo $stock_status; ?>"><?php echo $text_stock_status; ?></a></li>
+
+										<?php if ($this->config->get('config_product_quality_groups_enable')) { ?>
+										<li><a href="<?php echo $product_groups; ?>">Группы качества товаров</a></li>
+										<?php } ?>
+
 										<li><a href="<?php echo $order_status; ?>"><?php echo $text_order_status; ?></a></li>
 										<li><a href="<?php echo $return_status; ?>"><?php echo $text_return_status; ?></a></li>
 										<li><a href="<?php echo $return_action; ?>"><?php echo $text_return_action; ?></a></li>

@@ -113,6 +113,7 @@ class ModelCatalogProductExt extends Model {
             'weight_class'          => 'p.weight_class_id',
             'manufacturer'          => 'p.manufacturer_id',
             'stock_status'          => 'p.stock_status_id',
+            'product_group'         => 'p.product_group_id',
             'subtract'              => 'p.subtract',
             'id'                    => 'p.product_id',
             'main_variant_id'       => 'p.main_variant_id',
@@ -433,6 +434,7 @@ class ModelCatalogProductExt extends Model {
             'weight_class'          => 'p.weight_class_id',
             'manufacturer'          => 'p.manufacturer_id',
             'stock_status'          => 'p.stock_status_id',
+            'product_group'         => 'p.product_group_id',
             'subtract'              => 'p.subtract',
             'id'                    => 'p.product_id',
             'main_variant_id'       => 'p.main_variant_id',
@@ -612,14 +614,12 @@ class ModelCatalogProductExt extends Model {
         return $this->productCount;
     }
 
-    public function quickEditProduct($product_id, $column, $value, $lang_id=null, $data=null) {
+    public function quickEditProduct($product_id, $column, $value, $lang_id = null, $data = null) {
         $this->load->model('catalog/product');
 
-        $editable = array('manufacturer', 'image', 'name', 'tag', 'model', 'sku', 'asin', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'location', 'quantity', 'price', 'price_delayed', 'cost', 'weight', 'status', 'fill_from_amazon', 'sort_order', 'tax_class', 'minimum', 'subtract', 'stock_status', 'shipping', 'date_available', 'length', 'width', 'height', 'length_class', 'weight_class', 'points');
+        $editable = array('manufacturer', 'image', 'name', 'tag', 'model', 'sku', 'asin', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'location', 'quantity', 'price', 'price_delayed', 'cost', 'weight', 'status', 'fill_from_amazon', 'sort_order', 'tax_class', 'minimum', 'subtract', 'stock_status', 'product_group', 'shipping', 'date_available', 'length', 'width', 'height', 'length_class', 'weight_class', 'points');
         $result = false;
         if (in_array($column, $editable)) {
-
-
             if ($column == 'status'){
                 if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']){                    
                     $this->db->query("UPDATE product SET status     = '" . (int)$value . "' WHERE main_variant_id = '" . (int)$product_id . "'");                                 
@@ -638,21 +638,22 @@ class ModelCatalogProductExt extends Model {
                 }
             }
 
-            if (in_array($column, array('image', 'model', 'sku', 'upc', 'asin', 'ean', 'jan', 'mpn', 'isbn', 'location', 'date_available')))
+            if (in_array($column, array('image', 'model', 'sku', 'upc', 'asin', 'ean', 'jan', 'mpn', 'isbn', 'location', 'date_available'))){
                 $result = $this->db->query("UPDATE product SET " . $column . " = '" . $this->db->escape($value) . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
-            else if (in_array($column, array('quantity', 'sort_order', 'status', 'minimum', 'subtract', 'shipping', 'points')))
+            } elseif (in_array($column, array('quantity', 'sort_order', 'status', 'minimum', 'subtract', 'shipping', 'points'))) {
                 $result = $this->db->query("UPDATE product SET " . $column . " = '" . (int)$value . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
-            else if (in_array($column, array('manufacturer', 'tax_class', 'stock_status', 'length_class', 'weight_class')))
+            }  elseif (in_array($column, array('manufacturer', 'tax_class', 'stock_status', 'product_group', 'length_class', 'weight_class'))){
+                if ((int)$value < 0){ $value = 0; }
                 $result = $this->db->query("UPDATE product SET " . $column . "_id = '" . (int)$value . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
-            else if (in_array($column, array('name', 'tag')))
+            } elseif (in_array($column, array('name', 'tag'))) {
                 $result = $this->db->query("UPDATE product_description SET " . $column . " = '" . $this->db->escape($value) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$lang_id . "'");
 
                 if ($column == 'name'){
                     $this->model_catalog_product->syncProductNamesInOrders($product_id, $lang_id, $value);
                 }
-
-            else
+            } else {
                 $result = $this->db->query("UPDATE product SET " . $column . " = '" . (float)$value . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
+            }
         } else if ($column == 'seo') {
             $this->db->query("DELETE FROM url_alias WHERE query = 'product_id=" . (int)$product_id. "'");
             if (!empty($value))

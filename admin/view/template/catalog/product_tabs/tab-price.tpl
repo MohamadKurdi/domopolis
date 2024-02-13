@@ -81,6 +81,52 @@
 						</tr>
 					</table>
 
+					<?php if ($this->config->get('config_product_quality_groups_enable')) { ?>
+					<h2><span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(255, 120, 21); color:#FFF">Группа качества товара</span></h2>
+					<input type="hidden" id="product_group_id" name="product_group_id" value="<?php echo $product_group_id; ?>" />
+					<style>
+						.product_group{
+							padding:5px;
+							float:left;
+							margin-left:5px;
+							border:4px solid white;	
+							cursor: pointer;						
+						}
+						.product_group.active{
+							border:4px solid;	
+							border-color:rgb(255, 120, 21);	
+						}
+					</style>
+					<table class="form">
+						<tr>
+							<td class="left">
+								<span data-product-group-id="0" class="product_group <?php if ($product_group_id == 0) { ?>active<?php } ?>" style="color:#FFF; background-color:#000"><i class="fa fa-times-circle" ></i> Не в группе</span>
+
+								<?php foreach ($product_groups as $product_group) { ?>
+									<span data-product-group-id="<?php echo $product_group['product_group_id']; ?>" class="product_group <?php if ($product_group['product_group_id'] == $product_group_id) { ?>active<?php } ?>" style="color:#<?php echo $product_group['product_group_text_color']; ?>; background-color:#<?php echo $product_group['product_group_bg_color']; ?>">
+
+										<?php if ($product_group['product_group_fa_icon']) { ?>
+                      							<i class="fa <?php echo $product_group['product_group_fa_icon']; ?>"></i>
+                      					<?php } ?>
+
+										<?php echo $product_group['product_group_name'] ?>											
+									</span>
+								<?php } ?>
+
+								<script>
+									$('.product_group').click(function(){
+										$('.product_group').removeClass('active');
+										$(this).addClass('active');
+										$('#product_group_id').val($(this).attr('data-product-group-id'));
+									});
+								</script>
+							</td>							
+						</tr>
+					</table>
+					<?php } else { ?>	
+						<input type="hidden" id="product_group_id" name="product_group_id" value="0" />
+					<?php } ?>
+
 
 					<h2><span class="status_color" style="display:inline-block; padding:3px 5px; background:#CF4A61; color:#FFF">Цены локальных поставщиков</span></h2>
 					<table class="list">

@@ -493,6 +493,15 @@ class ControllerCatalogProductExt extends Controller {
                             } else {
                                 $columns[$column] = ((int)$result['status'] ? $this->language->get('text_enabled') : '<span style="color:#cf4a61;">' . $this->language->get('text_disabled') . '</span>');
                             }
+                        } else if ($column == 'product_group') {
+                            if ((int)$result['product_group_id']) {
+                                $this->load->model('localisation/product_groups');
+                                $product_group = $this->model_localisation_product_groups->getProductGroup($result['product_group_id']);
+
+                                $columns[$column] = '<small style="padding:5px 7px; border-radius:4px; color:#' . $product_group['product_group_text_color'] . '; background-color:#' . $product_group['product_group_bg_color'] . '"><i class="fa ' . $product_group['product_group_fa_icon'] . '" ></i></small>';
+                            } else {
+                                $columns[$column] = '<small style="padding:5px 7px; border-radius:4px;; color:#FFF; background-color:#000"><i class="fa fa-times-circle" ></i> </small>';
+                            }                        
                         } elseif ($column == 'filled_from_amazon') {
                             if ((int)$result['filled_from_amazon'] || !$this->config->get('aqe_highlight_status')) {
                                 $columns[$column] = ((int)$result['filled_from_amazon'] ? $this->language->get('text_yes') : $this->language->get('text_no'));
@@ -633,7 +642,21 @@ class ControllerCatalogProductExt extends Controller {
             $this->data['stock_status_select'] = addslashes(json_encode(array()));
         }
 
-        if (in_array("added_from_supplier", $column_order)) {
+         if (in_array("product_group", $column_order)) {
+            $this->load->model('localisation/product_groups');
+            $this->data['product_groups'] = $this->model_localisation_product_groups->getProductGroups();
+            $pg_select = [];
+            $pg_select['0'] = 'Выбери группу';
+            foreach ($this->data['product_groups'] as $pg) {
+                $pg_select[$pg['product_group_id']] = $pg['product_group_name'];
+            }
+            $pg_select['-1'] = 'Не в группе';
+            $this->data['product_groups_select'] = addslashes(json_encode($pg_select));
+        } else {
+            $this->data['product_groups_select'] = addslashes(json_encode(array()));
+        }
+
+        if (in_array("length_class", $column_order)) {
             $this->load->model('localisation/length_class');
             $this->data['length_classes'] = $this->model_localisation_length_class->getLengthClasses();
             $lc_select = [];
@@ -652,7 +675,7 @@ class ControllerCatalogProductExt extends Controller {
             foreach ($this->data['parser_suppliers'] as $ps) {
                 $ps_select[$ps['supplier_id']] = $ps['supplier_name'];
             }
-            $this->data['parser_suppliers_select'] = addslashes(json_encode($lc_select));
+            $this->data['parser_suppliers_select'] = addslashes(json_encode($ps_select));
         } else {
             $this->data['parser_suppliers_select'] = addslashes(json_encode(array()));
         }        
@@ -1285,6 +1308,7 @@ class ControllerCatalogProductExt extends Controller {
                 $column = "shipping";
             }
             $result = $this->model_catalog_product_ext->quickEditProduct($id, $column, $value, $lang_id, $this->request->post);
+
             if ($result) {
                 $json['success'] = $this->language->get('text_success');
                 if (in_array($column, array('model', 'sku', 'upc', 'asin', 'location', 'seo', 'attributes', 'discounts', 'images', 'options', 'profiles', 'related', 'specials', 'descriptions')))
@@ -1323,6 +1347,13 @@ class ControllerCatalogProductExt extends Controller {
                         $json['value'] = $stock_status['name'];
                     else
                         $json['value'] = '';
+                } else if ($column == 'product_group') {
+                    $this->load->model('localisation/product_groups');
+                    $product_group = $this->model_localisation_product_groups->getProductGroup((int)$value);
+                    if ($product_group)
+                        $json['value'] = '<small style="padding:5px 7px; border-radius:4px; color:#' . $product_group['product_group_text_color'] . '; background-color:#' . $product_group['product_group_bg_color'] . '"><i class="fa ' . $product_group['product_group_fa_icon'] . '" ></i></small>';
+                    else
+                        $json['value'] = '<small style="padding:5px 7px; border-radius:4px; color:#FFF; background-color:#000"><i class="fa fa-times-circle" ></i> </small>';
                 } else if ($column == 'length_class') {
                     $this->load->model('localisation/length_class');
                     $length_class = $this->model_localisation_length_class->getLengthClass((int)$value);
@@ -1560,7 +1591,6 @@ class ControllerCatalogProductExt extends Controller {
         if (in_array($column, array("category"))) {
             switch ($column) {
                 case 'category':
-                    // Nothing to check here, p_c may be missing if no categories have been selected for the product
                     break;
                 default:
                     $this->error['warning'] = $this->language->get('error_update');

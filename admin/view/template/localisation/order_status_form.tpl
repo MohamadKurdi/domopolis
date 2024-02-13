@@ -91,9 +91,9 @@
 		$.fn.jPicker.defaults.images.clientPath='view/image/';
 		var LiveCallbackElement = $('#Live'),
 		LiveCallbackButton = $('#LiveButton');
-		$('#pick_status_txt_color').jPicker({window:{title:'Binded Example'},color:{active:new $.jPicker.Color({ahex:'993300ff'})}});
-		$('#pick_status_bg_color').jPicker({window:{title:'Binded Example'},color:{active:new $.jPicker.Color({ahex:'993300ff'})}});
-		$('#pick_front_bg_color').jPicker({window:{title:'Binded Example'},color:{active:new $.jPicker.Color({ahex:'993300ff'})}});
+		$('#pick_status_txt_color').jPicker({window:{title:'Выбор цвета'},color:{active:new $.jPicker.Color({ahex:'993300ff'})}});
+		$('#pick_status_bg_color').jPicker({window:{title:'Выбор цвета'},color:{active:new $.jPicker.Color({ahex:'993300ff'})}});
+		$('#pick_front_bg_color').jPicker({window:{title:'Выбор цвета'},color:{active:new $.jPicker.Color({ahex:'993300ff'})}});
 	});
 </script>
 <?php echo $footer; ?>	

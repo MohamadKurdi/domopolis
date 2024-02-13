@@ -297,20 +297,21 @@ class ControllerCommonHeader extends Controller
             $this->data['rnf'] = $this->url->link('setting/rnf', 'token=' . $this->session->data['token']);
 
             $this->data['store'] = HTTPS_CATALOG;
-            $this->data['stock_status'] = $this->url->link('localisation/stock_status', 'token=' . $this->session->data['token']);
-            $this->data['tax_class'] = $this->url->link('localisation/tax_class', 'token=' . $this->session->data['token']);
-            $this->data['tax_rate'] = $this->url->link('localisation/tax_rate', 'token=' . $this->session->data['token']);
-            $this->data['total'] = $this->url->link('extension/total', 'token=' . $this->session->data['token']);
-            $this->data['user'] = $this->url->link('user/user', 'token=' . $this->session->data['token']);
-            $this->data['user_ticket'] = $this->url->link('user/ticket', 'token=' . $this->session->data['token']);                    
-            $this->data['manager_quality'] = $this->url->link('kp/managerquality', 'token=' . $this->session->data['token']);
-            $this->data['user_sip'] = $this->url->link('user/user_sip', 'token=' . $this->session->data['token']);
+            $this->data['stock_status']     = $this->url->link('localisation/stock_status', 'token=' . $this->session->data['token']);
+            $this->data['product_groups']   = $this->url->link('localisation/product_groups', 'token=' . $this->session->data['token']);
+            $this->data['tax_class']    = $this->url->link('localisation/tax_class', 'token=' . $this->session->data['token']);
+            $this->data['tax_rate']     = $this->url->link('localisation/tax_rate', 'token=' . $this->session->data['token']);
+            $this->data['total']        = $this->url->link('extension/total', 'token=' . $this->session->data['token']);
+            $this->data['user']         = $this->url->link('user/user', 'token=' . $this->session->data['token']);
+            $this->data['user_ticket']  = $this->url->link('user/ticket', 'token=' . $this->session->data['token']);                    
+            $this->data['manager_quality']  = $this->url->link('kp/managerquality', 'token=' . $this->session->data['token']);
+            $this->data['user_sip']         = $this->url->link('user/user_sip', 'token=' . $this->session->data['token']);
             $this->data['user_sip_history'] = $this->user->getIPBX()?$this->url->link('user/user_sip/history', 'user_id='.$this->user->getID().'&token=' . $this->session->data['token'], 'SSL'):false;
-            $this->data['user_alerts'] = $this->url->link('user/user_alerts', 'token=' . $this->session->data['token']);
+            $this->data['user_alerts']      = $this->url->link('user/user_alerts', 'token=' . $this->session->data['token']);
 
-            $this->data['user_myworktime'] = $this->url->link('user/mywork', 'token=' . $this->session->data['token']);
-            $this->data['user_worktime'] = $this->url->link('user/work', 'token=' . $this->session->data['token']);
-            $this->data['user_content'] = $this->url->link('user/content', 'token=' . $this->session->data['token']);
+            $this->data['user_myworktime']  = $this->url->link('user/mywork', 'token=' . $this->session->data['token']);
+            $this->data['user_worktime']    = $this->url->link('user/work', 'token=' . $this->session->data['token']);
+            $this->data['user_content']     = $this->url->link('user/content', 'token=' . $this->session->data['token']);
 
             $this->data['salary_manager'] = $this->url->link('kp/salary/countManagers', 'token=' . $this->session->data['token']);
             $this->data['salary_customerservice'] = $this->url->link('kp/salary/countCustomerService', 'token=' . $this->session->data['token']);

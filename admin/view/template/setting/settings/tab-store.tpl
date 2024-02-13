@@ -464,6 +464,20 @@
 						</select>
 						<br />
 						<span class="help">если не используются - отключить</span>	
+
+
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Группы качества товаров</span></p>
+						<select type="select" name="config_product_quality_groups_enable">
+							<? if ($config_product_quality_groups_enable) { ?>
+								<option value="1" selected='selected' >Включить</option>
+								<option value="0" >Отключить</option>
+							<? } else { ?>
+								<option value="1" >Включить</option>
+								<option value="0"  selected='selected' >Отключить</option>
+							<? } ?>       
+						</select>
+						<br />
+						<span class="help">если не используются - отключить</span>	
 				</td>
 			</tr>
 		</table>

@@ -298,11 +298,22 @@
 								</td>
 								<?php break;
 								case 'stock_status': ?>
-								<td class="<?php echo $column_info[$col]['align']; ?>">
+								<td class="<?php echo $column_info[$col]['align']; ?>" style="width:50px;">
 									<select name="filter_<?php echo $col; ?>" class="filter <?php echo $col; ?>">
 										<option value="*"></option>
 										<?php foreach ($stock_statuses as $ss) { ?>
 											<option value="<?php echo $ss['stock_status_id']; ?>"<?php echo (!is_null($filters[$col]) && $ss['stock_status_id'] == $filters[$col]) ? ' selected="selected"' : ''; ?>><?php echo $ss['name']; ?></option>
+										<?php } ?>
+									</select>
+								</td>
+								<?php break;
+								case 'product_group': ?>
+								<td class="<?php echo $column_info[$col]['align']; ?>" style="width:50px;">
+									<select name="filter_<?php echo $col; ?>" class="filter <?php echo $col; ?>" style="width:50px;">
+										<option value="*"></option>
+										<option value="0"<?php echo (!is_null($filters[$col]) && $filters[$col] == '*') ? ' selected="selected"' : ''; ?>><?php echo $text_none; ?></option>
+										<?php foreach ($product_groups as $pg) { ?>
+											<option value="<?php echo $pg['product_group_id']; ?>"<?php echo (!is_null($filters[$col]) && $pg['product_group_id'] == $filters[$col]) ? ' selected="selected"' : ''; ?>><?php echo $pg['product_group_name']; ?></option>
 										<?php } ?>
 									</select>
 								</td>
@@ -809,6 +820,17 @@
 				return quick_update(this, value, settings, '<?php echo $update_url; ?>');
 				}, {
 				data      : '<?php echo trim($stock_status_select); ?>',
+				type      : 'select',
+				indicator : "<?php echo $text_saving; ?>",
+				tooltip   : "<?php echo ($this->config->get('aqe_quick_edit_on') == 'dblclick') ? $text_double_click_edit : $text_click_edit; ?>",
+				event     : "<?php echo $this->config->get('aqe_quick_edit_on'); ?>",
+				placeholder : "",
+				onblur    : "cancel",
+			});
+			$(".pg_quick_edit").editable(function(value, settings) {
+				return quick_update(this, value, settings, '<?php echo $update_url; ?>');
+				}, {
+				data      : '<?php echo trim($product_groups_select); ?>',
 				type      : 'select',
 				indicator : "<?php echo $text_saving; ?>",
 				tooltip   : "<?php echo ($this->config->get('aqe_quick_edit_on') == 'dblclick') ? $text_double_click_edit : $text_click_edit; ?>",

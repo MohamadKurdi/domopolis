@@ -89,6 +89,7 @@ $_['column_amazon_offers_type'] 	= 'Офферы';
 $_['column_amazon_seller_quality'] 	= 'Качество';
 $_['column_product_offers_count'] 	= 'Заказов';
 $_['column_product_warehouse_count'] 	= 'Склад';
+$_['column_product_group'] 	= 'Группа';
 $_['column_tag']                = 'Product Tags';
 $_['column_sku']                = 'SKU';
 $_['column_asin']               = 'ASIN';

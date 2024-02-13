@@ -5,6 +5,8 @@ class ControllerFeedReFeedMaker2 extends Controller
     private $maxNameLength  = 150;
 
     private $stockMode              = false;
+    private $productGroupID         = false;
+    private $productGroupFeed       = false;
     private $exclude_language_id    = null;
     private $language_id            = null;
     private $languages              = [];
@@ -19,7 +21,17 @@ class ControllerFeedReFeedMaker2 extends Controller
     private function setStockMode($stock){
         $this->stockMode = $stock;
         return $this;
-    }    
+    } 
+
+    private function setProductGroupId($product_group_id){                
+        $this->productGroupID = $product_group_id;
+        return $this;
+    }     
+
+    private function setProductGroupFeed($product_group_feed){                
+        $this->productGroupFeed = $product_group_feed;        
+        return $this;
+    }  
 
     private function openXML(){
         $output = '';
@@ -66,7 +78,7 @@ class ControllerFeedReFeedMaker2 extends Controller
         return $this;
     }
 
-    private function setSteps(){        
+    private function setSteps(){
         $steps = $this->steps;
 
         if ($this->config->get('config_store_id') != 0) {
@@ -134,12 +146,20 @@ class ControllerFeedReFeedMaker2 extends Controller
 
         $output = str_replace(max($this->steps), 'MORE', $output);
 
-        if ((float)$product['special']) {
-             $output .= '  <g:custom_label_2><![CDATA[HAS_DISCOUNT]]></g:custom_label_2>' . PHP_EOL;
+        if ((float)$product['special'] || $product['has_video']) {
+            if ((float)$product['special'] && $product['has_video']){
+                $output .= '  <g:custom_label_2><![CDATA[PRODUCT_HAS_DISCOUNT_AND_VIDEO]]></g:custom_label_2>' . PHP_EOL;
+            } elseif ((float)$product['special']){
+                $output .= '  <g:custom_label_2><![CDATA[PRODUCT_HAS_DISCOUNT]]></g:custom_label_2>' . PHP_EOL;
+            } elseif ($product['has_video']){
+                $output .= '  <g:custom_label_2><![CDATA[PRODUCT_HAS_VIDEO]]></g:custom_label_2>' . PHP_EOL;
+            }
         }
 
-        if ($product['has_video']) {
-             $output .= '  <g:custom_label_3><![CDATA[HAS_VIDEO]]></g:custom_label_3>' . PHP_EOL;
+        if ($this->config->get('config_product_quality_groups_enable')){
+            if ($product['product_group_id'] && !empty($product['product_quality_group']['feed']) && !empty($product['product_quality_group']['feed_file'])) {
+               $output .= '  <g:custom_label_3><![CDATA[PRODUCT_GROUP_'. trim(mb_strtoupper($product['product_quality_group']['feed_file'])) .']]></g:custom_label_3>' . PHP_EOL;
+           }
         }
 
         $offersInfo = $this->rainforestAmazon->offersParser->checkIfAsinHasAmazonAndPrimeOffers($product['asin']);
@@ -306,13 +326,21 @@ class ControllerFeedReFeedMaker2 extends Controller
 
         $output = str_replace(max($this->steps), 'MORE', $output);
 
-        if ((float)$product['special']) {
-             $output .= '  <g:custom_label_2><![CDATA[HAS_DISCOUNT]]></g:custom_label_2>' . PHP_EOL;
+        if ((float)$product['special'] || $product['has_video']) {
+            if ((float)$product['special'] && $product['has_video']){
+                $output .= '  <g:custom_label_2><![CDATA[PRODUCT_HAS_DISCOUNT_AND_VIDEO]]></g:custom_label_2>' . PHP_EOL;
+            } elseif ((float)$product['special']){
+                $output .= '  <g:custom_label_2><![CDATA[PRODUCT_HAS_DISCOUNT]]></g:custom_label_2>' . PHP_EOL;
+            } elseif ($product['has_video']){
+                $output .= '  <g:custom_label_2><![CDATA[PRODUCT_HAS_VIDEO]]></g:custom_label_2>' . PHP_EOL;
+            }
         }
 
-        if ($product['has_video']) {
-             $output .= '  <g:custom_label_3><![CDATA[HAS_VIDEO]]></g:custom_label_3>' . PHP_EOL;
-        }
+        if ($this->config->get('config_product_quality_groups_enable')){
+            if ($product['product_group_id'] && !empty($product['product_quality_group']['feed']) && !empty($product['product_quality_group']['feed_file'])) {
+               $output .= '  <g:custom_label_3><![CDATA[PRODUCT_GROUP_'. trim(mb_strtoupper($product['product_quality_group']['feed_file'])) .']]></g:custom_label_3>' . PHP_EOL;
+           }
+       }
 
         $offersInfo = $this->rainforestAmazon->offersParser->checkIfAsinHasAmazonAndPrimeOffers($product['asin']);
         if ($offersInfo['HAS_AMAZON'] && $offersInfo['HAS_PRIME']){
@@ -438,7 +466,6 @@ class ControllerFeedReFeedMaker2 extends Controller
 
                         $totalGet = ceil($this->config->get('config_google_merchant_feed_limit')/$this->config->get('config_google_merchant_one_iteration_limit'));
                         for ($iGet = 1; $iGet <= $totalGet; $iGet++) {
-
                             $filter = array(
                                 'start'                     => ($i-1)*$this->config->get('config_google_merchant_feed_limit') + ($iGet-1)*$this->config->get('config_google_merchant_one_iteration_limit'),
                                 'limit'                     => $this->config->get('config_google_merchant_one_iteration_limit'),
@@ -451,7 +478,9 @@ class ControllerFeedReFeedMaker2 extends Controller
                                 'order'                     => 'ASC'
                             );
 
-                            echoLine('[supplemental] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . ($filter['start']) . ' по ' . ($filter['start'] + $filter['limit']));                           
+                            echoLine('[ControllerFeedReFeedMaker2::supplemental] Iteration ' . $i . ' from ' . $iterations . ', products from ' . ($filter['start']) . ' to ' . ($filter['start'] + $filter['limit']), 'i');
+                            echoLine('[ControllerFeedReFeedMaker2::supplemental] Writing file ' . $file, 'w');
+                                                    
                             $products = $this->model_catalog_product->getProducts($filter);
                             if (!$products){
                                 break;
@@ -489,19 +518,12 @@ class ControllerFeedReFeedMaker2 extends Controller
 
                     $output_full .= $this->closeXML();
                     file_put_contents($file_full, $output_full);
-
                 }
             }
         }
     }
 
-    public function makestockfeed(){
-        $this->setStockMode(true)->makefeed();
-    }
-
-    public function makefeed(){        
-        $this->rainforestAmazon->offersParser->PriceLogic->updatePricesFromDelayed();    
-
+    public function makefeed_real(){
         $this->load->model('catalog/category');
         $this->load->model('catalog/product');
         $this->load->model('localisation/currency');
@@ -535,6 +557,10 @@ class ControllerFeedReFeedMaker2 extends Controller
                 'filter_exclude_google_categories'  => true
             );
 
+            if ($this->productGroupID){
+                $filter['filter_product_group_id'] = $this->productGroupID;
+            }
+
             if ($this->config->get('config_rainforest_merchant_skip_low_price_products') && !$this->stockMode){
                 $filter['filter_amazon_best_min_price'] = $this->config->get('config_rainforest_merchant_skip_low_price_products');
             }
@@ -563,13 +589,25 @@ class ControllerFeedReFeedMaker2 extends Controller
                     $file = DIR_REFEEDS . 'remarketing_full_feed_' . $store_id . '_' . $i . '.xml';
                 }
 
-                if ($this->stockMode) {
-                    $file = str_replace('remarketing_full_feed_', 'merchant_stock_feed_', $file);
+                if ($this->productGroupID && $this->productGroupFeed){
+                    if ($this->stockMode) {
+                         $file = str_replace('remarketing_full_feed_', 'merchant_stock_group_feed_' . trim(mb_strtolower($this->productGroupFeed)) . '_', $file);
+                    } else {
+                        $file = str_replace('remarketing_full_feed_', 'remarketing_group_feed_' . trim(mb_strtolower($this->productGroupFeed)) . '_', $file);
+                    }
+                } else {
+                    if ($this->stockMode) {
+                        $file = str_replace('remarketing_full_feed_1', 'merchant_stock_feed_', $file);
+                    }
                 }
-
+                
                 $totalGet = ceil($this->config->get('config_google_merchant_feed_limit')/$this->config->get('config_google_merchant_one_iteration_limit'));
-                for ($iGet = 1; $iGet <= $totalGet; $iGet++) {
 
+                if ($total < $this->config->get('config_google_merchant_one_iteration_limit')){
+                    $totalGet = 1;
+                }                
+
+                for ($iGet = 1; $iGet <= $totalGet; $iGet++) {
                     $filter = [
                         'start'                     => ($i-1)*$this->config->get('config_google_merchant_feed_limit') + ($iGet-1)*$this->config->get('config_google_merchant_one_iteration_limit'),
                         'limit'                     => $this->config->get('config_google_merchant_one_iteration_limit'),
@@ -583,12 +621,17 @@ class ControllerFeedReFeedMaker2 extends Controller
                         'order'                             => 'ASC'
                     ];
 
+                    if ($this->productGroupID){
+                        $filter['filter_product_group_id'] = $this->productGroupID;
+                    }
+
                     if ($this->config->get('config_rainforest_merchant_skip_low_price_products') && !$this->stockMode){
                         $filter['filter_amazon_best_min_price'] = $this->config->get('config_rainforest_merchant_skip_low_price_products');
                     }
 
-                    echoLine('[ControllerFeedReFeedMaker2::makefeed] Iteration ' . $i . ' from ' . $iterations . ', products from ' . ($filter['start']) . ' to ' . ($filter['start'] + $filter['limit']));
-                    echoLine('[ControllerFeedReFeedMaker2::makefeed] Writing file ' . $file, 'i');
+
+                    echoLine('[ControllerFeedReFeedMaker2::makefeed] Iteration ' . $i . ' from ' . $iterations . ', products from ' . ($filter['start']) . ' to ' . ($filter['start'] + $filter['limit']), 'i');
+                    echoLine('[ControllerFeedReFeedMaker2::makefeed] Writing file ' . $file, 'w');
 
                     $products = $this->model_catalog_product->getProducts($filter);
                     $k = 0;
@@ -605,6 +648,11 @@ class ControllerFeedReFeedMaker2 extends Controller
                     }
 
                     echoLine('');
+
+                    if ($totalGet == 1){
+                        echoLine('Dirty hack, breaking due to only one totalGet!', 'e');
+                        break;
+                    }
                 }
 
                 $output .= $this->closeXML();
@@ -617,9 +665,42 @@ class ControllerFeedReFeedMaker2 extends Controller
 
                 echoLine('[makefeed] Времени на итерацию ' . $timer->getTime() . ' сек.');
                 unset($timer);
-            }
-        }
 
-        $this->cleanUp();
+                if ($iterations == 1){
+                    echoLine('Dirty hack, breaking due to only one iteration!', 'e');
+                    break;
+                }
+            }
+        }        
+    }
+
+    public function makefeed(){
+        $this->rainforestAmazon->offersParser->PriceLogic->updatePricesFromDelayed();
+        $this->makefeed_real();
+
+        $this->makegroupfeeds();
+        $this->setProductGroupId(false)->setProductGroupFeed(false);     
+
+        $this->cleanUp();   
+    }
+
+    public function makegroupfeeds(){
+        if ($this->config->get('config_product_quality_groups_enable')){
+            echoLine('[ControllerFeedReFeedMaker2::makeproductgroupfeeds] Quality groups enabled', 'w');
+            $query = $this->db->query("SELECT * FROM product_groups WHERE product_group_feed = 1 AND product_group_feed_file <> ''");
+
+            foreach ($query->rows as $product_group){
+                echoLine('[ControllerFeedReFeedMaker2::makeproductgroupfeeds] Working with group ' . $product_group['product_group_name'], 'i');
+                $this->setProductGroupId($product_group['product_group_id'])->setProductGroupFeed($product_group['product_group_feed_file']);
+                $this->makefeed_real();
+            }
+
+        } else {
+            echoLine('[ControllerFeedReFeedMaker2::makeproductgroupfeeds] Quality groups disabled', 'e');
+        }
+    }
+
+    public function makestockfeed(){
+        $this->setStockMode(true)->makefeed_real();
     }
 }

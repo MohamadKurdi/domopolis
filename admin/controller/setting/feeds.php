@@ -2,9 +2,11 @@
 class ControllerSettingFeeds extends Controller
 {
     private $feeds = [
-        'Google Merchant Наличие'           => 'merchant_stock_feed',
-        'Google Merchant Supplemental'      => 'supplemental_feed',
-        'Ремаркетинг Фид (Facebook, Google' => 'remarketing_full_feed',
+        'Google Merchant Наличие'               => 'merchant_stock_feed',
+        'Google Merchant Supplemental'          => 'supplemental_feed',
+        'Ремаркетинг Фид (Facebook, Google)'    => 'remarketing_full_feed',
+
+        'Ремаркетинг Фид по группам'        => 'remarketing_group_feed',
 
         'Хотлайн Фид'                       => 'hotline_full',
         'Yandex Полный Фид'                 => 'yandex_fast_full_feed',
