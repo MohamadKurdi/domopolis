@@ -11,6 +11,8 @@
 	<i class="fa fa-ambulance"></i> Что происходит с контентом?			
 </div>
 <div class="dashboard-content" style="min-height:91px;">
+	<div>
+		<div style="width:50%; float:left;">
 			<table class="list big small-bottom-margin">
 				<thead>
 					<tr>
@@ -42,14 +44,14 @@
 			</table>
 			<table class="list big small-bottom-margin">
 				<tr class="small">
-						<td style="color:#66c7a3">Total</td>
-						<td style="color:#66c7a3">Variants</td>
-						<td style="color:#fa4934"><a style="color:#fa4934" href="<?php echo $filter_total_products_enabled; ?>">Enabled<i class="fa fa-filter"></i></a></td>
-						<td style="color:#3276c2"><a style="color:#3276c2" href="<?php echo $filter_total_products_in_tech; ?>">Tech<i class="fa fa-filter"></i></a></td>
-						<td style="color:#24a4c1"><a style="color:#24a4c1" href="<?php echo $filter_total_product_parsed; ?>">Ready <i class="fa fa-filter"></i></a></td>
-						<td style="color:#24a4c1">To load</td>
-						<td style="color:#fa4934">Doubles</td>						
-					</tr>
+					<td style="color:#66c7a3">Total</td>
+					<td style="color:#66c7a3">Variants</td>
+					<td style="color:#fa4934"><a style="color:#fa4934" href="<?php echo $filter_total_products_enabled; ?>">Enabled<i class="fa fa-filter"></i></a></td>
+					<td style="color:#3276c2"><a style="color:#3276c2" href="<?php echo $filter_total_products_in_tech; ?>">Tech<i class="fa fa-filter"></i></a></td>
+					<td style="color:#24a4c1"><a style="color:#24a4c1" href="<?php echo $filter_total_product_parsed; ?>">Ready <i class="fa fa-filter"></i></a></td>
+					<td style="color:#24a4c1">To load</td>
+					<td style="color:#fa4934">Doubles</td>						
+				</tr>
 				<tr class="small">
 					<td><?php echo $total_products; ?></td>
 					<td><?php echo $total_products_no_variants; ?></td>
@@ -60,7 +62,8 @@
 					<td style="color:#fa4934"><?php echo $total_products_double_asin; ?></td>
 				</tr>				
 			</table>
-
+		</div>
+		<div style="width:50%; float:left;">
 			<table class="list big small-bottom-margin">
 				<thead>
 					<tr>
@@ -87,8 +90,12 @@
 					<td><?php echo $total_product_have_offers; ?></td>
 					<td><?php echo $total_product_have_no_offers; ?></td>
 				</tr>		
-			</table>			
-
+			</table>	
+		</div>
+		<div class="clr"></div>		
+	</div>
+	<div>
+		<div style="width:50%; float:left;">
 			<table class="list big small-bottom-margin no-top-border">
 				<thead>
 					<tr>
@@ -110,7 +117,8 @@
 					</tr>
 				</thead>
 			</table>
-
+		</div>
+		<div style="width:50%; float:left;">	
 			<table class="list big small-bottom-margin no-top-border">
 				<thead>
 					<tr>
@@ -133,6 +141,8 @@
 						<td><?php echo $translated_total_month; ?></td>
 					</tr>
 				</thead>
-
 			</table>
+		</div>
+		<div class="clr"></div>		
+	</div>
 </div>

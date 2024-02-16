@@ -100,9 +100,8 @@ class ControllerLocalisationProductGroups extends Controller {
 			'limit' => $this->config->get('config_limit_admin')
 		);
 
-		$product_group_total = $this->model_localisation_product_groups->getTotalProductGroups();
-
-		$results = $this->model_localisation_product_groups->getProductGroups($data);
+		$product_group_total 	= $this->model_localisation_product_groups->getTotalProductGroups();
+		$results 				= $this->model_localisation_product_groups->getProductGroups($data);
 
 		$this->data['product_groups'] = array();
 
@@ -115,15 +114,17 @@ class ControllerLocalisationProductGroups extends Controller {
 			);
 
 			$this->data['product_groups'][] = array(
-				'product_group_id' 			=> $result['product_group_id'],
-				'product_group_name'    	=> $result['product_group_name'],
-				'product_group_feed'       	=> $result['product_group_feed'],
-				'product_group_feed_file'  	=> $result['product_group_feed_file'],
-				'product_group_text_color'  => $result['product_group_text_color'],
-				'product_group_bg_color'    => $result['product_group_bg_color'],
-				'product_group_fa_icon'    	=> $result['product_group_fa_icon'],
-				'selected'   		=> isset($this->request->post['selected']) && in_array($result['product_group_id'], $this->request->post['selected']),
-				'action'     		=> $action
+				'product_group_id' 						=> $result['product_group_id'],
+				'product_group_name'    				=> $result['product_group_name'],
+				'product_group_feed'       				=> $result['product_group_feed'],
+				'product_group_exclude_remarketing'  	=> $result['product_group_exclude_remarketing'],
+				'product_group_feed_file'  				=> $result['product_group_feed_file'],
+				'product_group_text_color'  			=> $result['product_group_text_color'],
+				'product_group_bg_color'    			=> $result['product_group_bg_color'],
+				'product_group_fa_icon'    				=> $result['product_group_fa_icon'],
+				'product_group_total_products'			=> $this->model_localisation_product_groups->getProductGroupProducts($result['product_group_id']),
+				'selected'   							=> isset($this->request->post['selected']) && in_array($result['product_group_id'], $this->request->post['selected']),
+				'action'     							=> $action
 			);
 		}
 
@@ -230,7 +231,15 @@ class ControllerLocalisationProductGroups extends Controller {
 		} elseif (!empty($product_group_info)) {  
 			$this->data['product_group_feed'] = $product_group_info['product_group_feed'];
 		} else {
-			$this->data['product_group_feed'] = '';
+			$this->data['product_group_feed'] = 0;
+		}
+
+		if (isset($this->request->post['product_group_exclude_remarketing'])) {
+			$this->data['product_group_exclude_remarketing'] = $this->request->post['product_group_exclude_remarketing'];
+		} elseif (!empty($product_group_info)) {  
+			$this->data['product_group_exclude_remarketing'] = $product_group_info['product_group_exclude_remarketing'];
+		} else {
+			$this->data['product_group_exclude_remarketing'] = 0;
 		}
 
 		if (isset($this->request->post['product_group_feed_file'])) {

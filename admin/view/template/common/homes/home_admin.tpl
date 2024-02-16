@@ -34,26 +34,19 @@
 	<tr>
 		<td style="width:40%;">
 			<table style="width:100%" cellspacing="0">
-				<div class="prettystats delayed-load" data-route='common/home/loadPrettyStats'>
-					
-				</div>
-				<div class="homecharts delayed-load" data-route='common/home/loadChartStats'>
-					
-				</div>
-			</table>
-			
+				<div class="prettystats delayed-load" data-route='common/home/loadPrettyStats'></div>
+				<div class="homecharts delayed-load" data-route='common/home/loadChartStats'></div>
+			</table>			
 		</td>
 		
 		<td class="table-admin" style="width:60%;">
-
 			<?php if ($this->config->get('config_amazon_product_stats_enable')) { ?>
-				<div id="amazon_stats" style="width:49%; float:left;" class="amazonstats delayed-load" data-route='common/home/loadProductStats'>
-				</div>
+				<div id="amazon_stats" style="width:100%;" class="amazonstats delayed-load" data-route='common/home/loadProductStats'></div>
+				<div style="clear:both;  height:10px;" ></div>
 			<?php } ?>
 
 
-			<div id="order_filters" <?php if ($stores_count == 1) { ?>style="width:50%; float:right;"<?php } ?> class="filters delayed-load" data-route='common/home/loadOrderStats'>
-			</div>
+			<div id="order_filters" <?php if ($stores_count == 1) { ?>style="width:100%;"<?php } ?> class="filters delayed-load" data-route='common/home/loadOrderStats'></div>
 
 			<div style="clear:both;  height:10px;" ></div>			
 			<div id="monitor">
@@ -82,31 +75,31 @@
 				</div>
 
 				<?php if ($this->config->get('config_openai_enable')) { ?>
-				<div class="tile-block narrow">
-					<div class="tile info-loader unknown" data-path="common/panel/getOpenAIInfo" data-update-interval="300000">
-						<div class="tile-heading">🤖 OpenAI API</div>
-						<div class="tile-body">
-							<span class="tile-result"></span>
+					<div class="tile-block narrow">
+						<div class="tile info-loader unknown" data-path="common/panel/getOpenAIInfo" data-update-interval="300000">
+							<div class="tile-heading">🤖 OpenAI API</div>
+							<div class="tile-body">
+								<span class="tile-result"></span>
+							</div>
+							<div class="tile-footer">
+								всякие умные штуки
+							</div>
 						</div>
-						<div class="tile-footer">
-							всякие умные штуки
-						</div>
-					</div>
-				</div>	
+					</div>	
 				<?php } ?>
 
 				<?php if ($this->config->get('config_translation_library')) { ?>
-				<div class="tile-block">
-					<div class="tile info-loader unknown" data-path="common/panel/get<?php echo $this->config->get('config_translation_library'); ?>Info" data-update-interval="600000">
-						<div class="tile-heading">🤖 <?php echo $this->config->get('config_translation_library'); ?> API</div>
-						<div class="tile-body">
-							<span class="tile-result small"></span>
-						</div>
-						<div class="tile-footer">
-							<?php echo $this->config->get('config_translation_library'); ?>
+					<div class="tile-block">
+						<div class="tile info-loader unknown" data-path="common/panel/get<?php echo $this->config->get('config_translation_library'); ?>Info" data-update-interval="600000">
+							<div class="tile-heading">🤖 <?php echo $this->config->get('config_translation_library'); ?> API</div>
+							<div class="tile-body">
+								<span class="tile-result small"></span>
+							</div>
+							<div class="tile-footer">
+								<?php echo $this->config->get('config_translation_library'); ?>
+							</div>
 						</div>
 					</div>
-				</div>
 				<?php } ?>
 
 			</div>	
@@ -128,59 +121,59 @@
 </table>
 
 <script>
-		function updateStats(elem, uri){
+	function updateStats(elem, uri){
 
-			$.ajax({
-					url: uri,
-					type: 'GET',
-					async: true,
-					dataType: 'json',
-					beforeSend: function(){
-						$(elem).removeClass('unknown').removeClass('good').removeClass('warn').removeClass('bad').addClass('unknown');
-						$(elem).children('.tile-body').children('.tile-result').html('<i class="fa fa-spinner fa-spin">');
-					},		
-					success: function(json){					
-						$(elem).children('.tile-body').children('.tile-result').html(json.body);
-						if (json.footer){
-							$(elem).children('.tile-footer').html(json.footer);
-						}
-						$(elem).removeClass('unknown').removeClass('good').removeClass('warn').removeClass('bad').addClass(json.class);
-					},
-					error: function(error){
-						console.log(error);
-						$(elem).removeClass('unknown').removeClass('good').removeClass('warn').removeClass('bad').addClass('bad');
-					}
-				});
-
-		}
-
-		function initUpdateStats(){
-			$('div.info-loader').each(async function(index, elem){
-				let uri = 'index.php?route='+ $(elem).attr('data-path') +'&nolog=1&token=<?php echo $token; ?>';
-
-				if ($(elem).attr('data-x')){
-					uri += ('&x=' + $(elem).attr('data-x'));
+		$.ajax({
+			url: uri,
+			type: 'GET',
+			async: true,
+			dataType: 'json',
+			beforeSend: function(){
+				$(elem).removeClass('unknown').removeClass('good').removeClass('warn').removeClass('bad').addClass('unknown');
+				$(elem).children('.tile-body').children('.tile-result').html('<i class="fa fa-spinner fa-spin">');
+			},		
+			success: function(json){					
+				$(elem).children('.tile-body').children('.tile-result').html(json.body);
+				if (json.footer){
+					$(elem).children('.tile-footer').html(json.footer);
 				}
-
-				if ($(elem).attr('data-defer')){
-					setTimeout(function(){ updateStats(elem, uri); } , $(elem).attr('data-defer')); 
-					console.log($(elem).attr('data-path') + ' setTimeout ' +  $(elem).attr('data-defer'));
-				} else {
-
-					if ($(elem).attr('data-update-interval')){
-						setInterval(function(){ updateStats(elem, uri); } , $(elem).attr('data-update-interval')); 
-						updateStats(elem, uri);
-						console.log($(elem).attr('data-path') + ' setInterval ' +  $(elem).attr('data-update-interval'));
-					} else {
-						setInterval(function(){ updateStats(elem, uri); } , 10000); 
-						updateStats(elem, uri);
-					}
-				}
-
-			});
-		}
-
-		$(document).ready(function() {			  
-			initUpdateStats();
+				$(elem).removeClass('unknown').removeClass('good').removeClass('warn').removeClass('bad').addClass(json.class);
+			},
+			error: function(error){
+				console.log(error);
+				$(elem).removeClass('unknown').removeClass('good').removeClass('warn').removeClass('bad').addClass('bad');
+			}
 		});
-	</script>
+
+	}
+
+	function initUpdateStats(){
+		$('div.info-loader').each(async function(index, elem){
+			let uri = 'index.php?route='+ $(elem).attr('data-path') +'&nolog=1&token=<?php echo $token; ?>';
+
+			if ($(elem).attr('data-x')){
+				uri += ('&x=' + $(elem).attr('data-x'));
+			}
+
+			if ($(elem).attr('data-defer')){
+				setTimeout(function(){ updateStats(elem, uri); } , $(elem).attr('data-defer')); 
+				console.log($(elem).attr('data-path') + ' setTimeout ' +  $(elem).attr('data-defer'));
+			} else {
+
+				if ($(elem).attr('data-update-interval')){
+					setInterval(function(){ updateStats(elem, uri); } , $(elem).attr('data-update-interval')); 
+					updateStats(elem, uri);
+					console.log($(elem).attr('data-path') + ' setInterval ' +  $(elem).attr('data-update-interval'));
+				} else {
+					setInterval(function(){ updateStats(elem, uri); } , 10000); 
+					updateStats(elem, uri);
+				}
+			}
+
+		});
+	}
+
+	$(document).ready(function() {			  
+		initUpdateStats();
+	});
+</script>

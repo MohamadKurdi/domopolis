@@ -35,6 +35,24 @@
               <?php } ?>
             </td>
           </tr>
+
+          <tr>
+            <td>Исключить из общих фидов</td>
+            <td>
+              <select name="product_group_exclude_remarketing">
+                <?php if ($product_group_exclude_remarketing) { ?>
+                  <option value="1" selected="selected"><?php echo $text_yes; ?></option>
+                  <option value="0"><?php echo $text_no; ?></option>
+                <?php } else { ?>
+                  <option value="1"><?php echo $text_yes; ?></option>
+                  <option value="0" selected="selected"><?php echo $text_no; ?></option>
+                <?php } ?>
+              </select><br />
+              <span class="help">
+                   <i class="fa fa-info-circle"></i> исключает товары этой группы из общих фидов ремаркетинга
+              </span>
+            </td>
+          </tr>
           
           <tr>
             <td><?php echo $entry_feed; ?></td>
@@ -47,7 +65,10 @@
                   <option value="1"><?php echo $text_yes; ?></option>
                   <option value="0" selected="selected"><?php echo $text_no; ?></option>
                 <?php } ?>
-              </select>
+              </select><br />
+               <span class="help">
+                   <i class="fa fa-info-circle"></i> создавать ли отдельный фид для товаров этой группы
+                </span>
             </td>
           </tr>
           

@@ -31,6 +31,14 @@ function normalizeSKU($sku){
 	return preg_replace("([^0-9])", "", $sku);
 }
 
+function arrayToInt($array){
+	return array_map('toInt', $array);
+}
+
+function toInt($item){
+	return (int)$item;
+}
+
 function extractNumeric($string){
 	return preg_replace('/[^0-9.,]/', '', $string);
 }

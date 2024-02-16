@@ -36,10 +36,12 @@
               </td>
               <td class="center"></td>
               <td class="center"><?php echo $column_name; ?></td>
-              <td class="center"><?php echo $column_feed; ?></td>
-              <td class="center"><?php echo $column_feed_file; ?></td>  
+              <td class="center">В общем фиде</td>  
+              <td class="center">Отдельный фид</td>
+              <td class="center">Файл своего фида</td>  
               <td class="center">Подсветка</td>
               <td class="center"><?php echo $column_icon; ?></td>
+              <td class="center">Товаров</td>
               <td class="center"><?php echo $column_action; ?></td>
             </tr>
           </thead>
@@ -63,6 +65,14 @@
 
                   <td class="center">
                     <?php echo $product_group['product_group_name']; ?>
+                  </td>
+
+                   <td class="center">
+                    <?php if (!$product_group['product_group_exclude_remarketing']) { ?>
+                        <i class="fa fa-check-circle" style="color:#4ea24e"></i>
+                    <?php } else { ?>
+                        <i class="fa fa-times-circle" style="color:#cf4a61"></i>
+                    <?php } ?>
                   </td>
 
                   <td class="center">
@@ -89,6 +99,12 @@
                     <?php } else { ?>
                       <i class="fa fa-times-circle" style="color:#cf4a61"></i>
                     <?php } ?>
+                  </td>
+
+                  <td class="center">
+                    <span style="padding:5px; background-color:#000; color:#fff;">
+                      <?php echo $product_group['product_group_total_products']; ?>
+                    </span>
                   </td>
 
                   <td class="right">

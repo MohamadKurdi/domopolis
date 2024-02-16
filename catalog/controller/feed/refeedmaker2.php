@@ -5,8 +5,9 @@ class ControllerFeedReFeedMaker2 extends Controller
     private $maxNameLength  = 150;
 
     private $stockMode              = false;
-    private $productGroupID         = false;
+    private $productGroupID         = false;    
     private $productGroupFeed       = false;
+    private $productGroupsBad       = [];
     private $exclude_language_id    = null;
     private $language_id            = null;
     private $languages              = [];
@@ -15,7 +16,16 @@ class ControllerFeedReFeedMaker2 extends Controller
 
 
     public function __construct($registry){
-        parent::__construct($registry);            
+        parent::__construct($registry); 
+
+        if ($this->config->get('config_product_quality_groups_enable')){
+           $this->load->model('catalog/product');     
+           $productGroupsBad = $this->model_catalog_product->getProductGroups(['filter_product_group_exclude_remarketing' => true]);
+
+           foreach ($productGroupsBad as $productGroupBad){
+                $this->productGroupsBad[] = $productGroupBad['product_group_id'];
+           }
+        }              
     }
 
     private function setStockMode($stock){
@@ -382,7 +392,7 @@ class ControllerFeedReFeedMaker2 extends Controller
 
     public function supplemental(){
         if ($this->simpleProcess->isRunning('feed/refeedmaker2/makefeed')){   
-            echoLine('[makefeed] Process feed/refeedmaker2/makefeed running we can not continue');
+            echoLine('[ControllerFeedReFeedMaker2::supplemental] Process feed/refeedmaker2/makefeed running we can not continue', 'e');
             return;
         }
 
@@ -417,9 +427,9 @@ class ControllerFeedReFeedMaker2 extends Controller
 
                     $this->setSteps();
 
-                    echoLine('[supplemental] Магазин ' . $store_id);
-                    echoLine('[supplemental] Язык ' . $language_id);
-                    echoLine('[supplemental] changeID ' . $changeID);
+                    echoLine('[ControllerFeedReFeedMaker2::supplemental] Working in store ' . $store_id, 'w');
+                    echoLine('[ControllerFeedReFeedMaker2::supplemental] Working with language_id  ' . $language_id, 'w');
+                    echoLine('[ControllerFeedReFeedMaker2::supplemental] changeID mode is' . $changeID, 'w');
 
                     $filter = array(
                         'filter_status'         => true,
@@ -429,7 +439,11 @@ class ControllerFeedReFeedMaker2 extends Controller
                     );
 
                     if ($this->config->get('config_rainforest_merchant_skip_low_price_products') && !$this->stockMode){
-                       // $filter['filter_amazon_best_min_price'] = $this->config->get('config_rainforest_merchant_skip_low_price_products');
+                        $filter['filter_amazon_best_min_price'] = $this->config->get('config_rainforest_merchant_skip_low_price_products');
+                    }
+
+                    if ($this->productGroupsBad){
+                        $filter['filter_exclude_product_groups'] = $this->productGroupsBad;
                     }
 
                     $total = $this->model_catalog_product->getTotalProducts($filter);
@@ -478,6 +492,10 @@ class ControllerFeedReFeedMaker2 extends Controller
                                 'order'                     => 'ASC'
                             );
 
+                             if ($this->productGroupsBad){
+                                $filter['filter_exclude_product_groups'] = $this->productGroupsBad;
+                            }
+
                             echoLine('[ControllerFeedReFeedMaker2::supplemental] Iteration ' . $i . ' from ' . $iterations . ', products from ' . ($filter['start']) . ' to ' . ($filter['start'] + $filter['limit']), 'i');
                             echoLine('[ControllerFeedReFeedMaker2::supplemental] Writing file ' . $file, 'w');
                                                     
@@ -508,11 +526,10 @@ class ControllerFeedReFeedMaker2 extends Controller
                         file_put_contents($file, $output);
 
                         echoLine('');
-                        echoLine('[supplemental] памяти занято ' . convertSize(memory_get_usage(true)));
-                        echoLine('[supplemental] собираем мусор, освобождаем память ' . convertSize(memory_get_usage(true)));
+                        echoLine('[ControllerFeedReFeedMaker2::supplemental] memory used ' . convertSize(memory_get_usage(true)));                        
                         gc_collect_cycles();
-
-                        echoLine('[supplemental] времени на итерацию ' . $timer->getTime() . ' сек.');
+                        echoLine('[ControllerFeedReFeedMaker2::supplemental] collecting garbage ' . convertSize(memory_get_usage(true)));
+                        echoLine('[ControllerFeedReFeedMaker2::supplemental] iteration time ' . $timer->getTime() . ' s.');
                         unset($timer);
                     }
 
@@ -561,6 +578,10 @@ class ControllerFeedReFeedMaker2 extends Controller
                 $filter['filter_product_group_id'] = $this->productGroupID;
             }
 
+            if ($this->productGroupsBad){
+                $filter['filter_exclude_product_groups'] = $this->productGroupsBad;
+            }
+
             if ($this->config->get('config_rainforest_merchant_skip_low_price_products') && !$this->stockMode){
                 $filter['filter_amazon_best_min_price'] = $this->config->get('config_rainforest_merchant_skip_low_price_products');
             }
@@ -573,7 +594,6 @@ class ControllerFeedReFeedMaker2 extends Controller
             $iterations = ceil($total/$this->config->get('config_google_merchant_feed_limit'));
             
             echoLine('[ControllerFeedReFeedMaker2::makefeed] Total products ' . $total, 's');
-
             for ($i = 1; $i <= ($iterations); $i++) {
                 $output = $this->openXML();
 
@@ -625,6 +645,10 @@ class ControllerFeedReFeedMaker2 extends Controller
                         $filter['filter_product_group_id'] = $this->productGroupID;
                     }
 
+                    if ($this->productGroupsBad){
+                        $filter['filter_exclude_product_groups'] = $this->productGroupsBad;
+                    }
+
                     if ($this->config->get('config_rainforest_merchant_skip_low_price_products') && !$this->stockMode){
                         $filter['filter_amazon_best_min_price'] = $this->config->get('config_rainforest_merchant_skip_low_price_products');
                     }
@@ -659,11 +683,10 @@ class ControllerFeedReFeedMaker2 extends Controller
                 file_put_contents($file, $output);
 
                 echoLine('');
-                echoLine('[makefeed] памяти занято ' . convertSize(memory_get_usage(true)));
-                echoLine('[makefeed] собираем мусор, освобождаем память ' . convertSize(memory_get_usage(true)));
+                echoLine('[ControllerFeedReFeedMaker2::makefeed] memory used ' . convertSize(memory_get_usage(true)));                        
                 gc_collect_cycles();
-
-                echoLine('[makefeed] Времени на итерацию ' . $timer->getTime() . ' сек.');
+                echoLine('[ControllerFeedReFeedMaker2::makefeed] collecting garbage ' . convertSize(memory_get_usage(true)));
+                echoLine('[ControllerFeedReFeedMaker2::makefeed] iteration time ' . $timer->getTime() . ' s.');
                 unset($timer);
 
                 if ($iterations == 1){

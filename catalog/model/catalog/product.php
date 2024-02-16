@@ -1247,6 +1247,10 @@
 			if (!empty($data['filter_product_group_id'])) {
 				$sql .= " AND p.product_group_id = '" . (int)$data['filter_product_group_id'] . "'";
 			}
+
+			if (!empty($data['filter_exclude_product_groups'])) {
+				$sql .= " AND (p.product_group_id NOT IN  (" . implode(', ', arrayToInt($data['filter_exclude_product_groups'])) . "))";
+			}
 			
 			if (!empty($data['filter_manufacturer_id'])) {
 				$sql .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer_id'] . "'";
@@ -2895,6 +2899,10 @@
 			if (!empty($data['filter_product_group_id'])) {
 				$sql .= " AND p.product_group_id = '" . (int)$data['filter_product_group_id'] . "'";
 			}
+
+			if (!empty($data['filter_exclude_product_groups'])) {
+				$sql .= " AND (p.product_group_id NOT IN  (" . implode(', ', arrayToInt($data['filter_exclude_product_groups'])) . "))";
+			}
 			
 			if (!empty($data['filter_manufacturer_id'])) {
 				$sql .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer_id'] . "'";
@@ -3741,6 +3749,19 @@
 			$stock_data['stock_color'] 		= ($result['stock_status_id'] == $this->config->get('config_stock_status_id')) ? '#4C6600' : '#BA0000';
 			
 			return $stock_data;		
+		}
+
+
+		public function getProductGroups($filter_data = []){
+			$sql = "SELECT * FROM product_groups WHERE 1 ";
+
+			if (isset($filter_data['filter_product_group_exclude_remarketing'])){
+				$sql .= " AND product_group_exclude_remarketing = '" . (int)$filter_data['filter_product_group_exclude_remarketing'] . "'";
+			}
+
+			$query = $this->db->query($sql);
+
+			return $query->rows;
 		}
 		
 	}																													
