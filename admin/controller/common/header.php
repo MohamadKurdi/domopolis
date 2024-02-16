@@ -260,6 +260,8 @@ class ControllerCommonHeader extends Controller
             $this->data['payment'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token']);
             
             $this->data['addasin']          = $this->url->link('catalog/addasin', 'token=' . $this->session->data['token']);
+            $this->data['addasin_amazonv1'] = $this->url->link('catalog/addasin/amazon', 'token=' . $this->session->data['token']);
+            $this->data['addasin_amazonv2'] = $this->url->link('catalog/addasin/amazonv2', 'token=' . $this->session->data['token']);
             $this->data['addasin_report']   = $this->url->link('catalog/addasin/report', 'token=' . $this->session->data['token']);
             $this->data['total_product_in_asin_queue'] = $this->model_report_product->getCountWaitingInASINQueue();
 

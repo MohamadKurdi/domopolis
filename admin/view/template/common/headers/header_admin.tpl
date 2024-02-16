@@ -124,9 +124,18 @@
 						<li id="catalog"><a class="top"><i class="fa fa-bars icon_menu"></i><?php echo $text_catalog; ?></a>
 							<ul>
 								<li><a class="home_icon_style" href="<?php echo $category; ?>"><i class="fa fa-minus"></i><span><?php echo $text_category; ?></span></a></li>								
-								<li><a class="home_icon_style" href="<?php echo $product; ?>"><i class="fa fa-cubes"></i><span><?php echo $text_product; ?></span></a></li>								
-								<li><a class="home_icon_style" href="<?php echo $addasin; ?>"><i class="fa fa-amazon"></i><span>Добавление по ASIN</span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $product_deletedasin; ?>"><i class="fa fa-amazon"></i><span>Исключенные ASIN</span></a></li>     
+								<li><a class="home_icon_style" href="<?php echo $product; ?>"><i class="fa fa-cubes"></i><span><?php echo $text_product; ?></span></a></li>	
+								<li><a class="home_icon_style parent"><i class="fa fa-amazon"></i><span>Фреймворк Amazon</span></a>
+									<ul>
+										<li><a href="<?php echo $addasin_amazonv1; ?>"><i class="fa fa-amazon"></i> <span>Просмотр Amazon v1</span></a></li>
+										<li><a href="<?php echo $addasin_amazonv2; ?>"><i class="fa fa-amazon"></i> <span>Просмотр Amazon v2</span></a></li>
+										<li><a href="<?php echo $addasin; ?>"><i class="fa fa-amazon"></i> <span>Очередь добавления ASIN</span></a></li>
+										<li><a href="<?php echo $product_deletedasin; ?>"><i class="fa fa-amazon"></i> <span>Исключенные ASIN</span></a></li>
+										<li><a href="<?php echo $addasin_report; ?>"><i class="fa fa-file-text-o"></i> <span>Отчет по добавлениям</span></a></li>
+									</ul>
+								</li>
+
+								     
 								<li><a class="home_icon_style parent"><i class="fa fa-file-text-o"></i><span><?php echo $text_attribute; ?></span></a>
 									<ul>
 										<li><a href="<?php echo $attribute; ?>"><?php echo $text_attribute; ?></a></li>

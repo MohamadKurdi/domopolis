@@ -13,6 +13,10 @@
 			$this->response->setOutput($json);
 		}
 		
+		public function cat(){
+			$this->response->setOutput(\hobotix\CatLoader::getRandomCatGif(300));
+		}
+
 		public function loadNotifications(){
 			$this->data['token'] = $this->session->data['token'];
 			$this->language->load('common/header');
