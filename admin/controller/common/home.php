@@ -153,7 +153,7 @@
 			$this->load->model('setting/setting');
 			$this->load->model('sale/affiliate');
 			
-			$this->data['orders'] = array(); 
+			$this->data['orders'] = []; 
 			
 			$data = array(
 			'sort'  => 'o.date_added',
@@ -165,7 +165,7 @@
 			$results = $this->model_sale_order->getOrders($data);		
 			
 			foreach ($results as $result) {
-				$action = array();
+				$action = [];
 				
 				$action[] = array(
 				'text' => 'Открыть заказ',
@@ -179,7 +179,7 @@
 				}	
 				
 				$products = $this->model_sale_order->getOrderProductsList($result['order_id']);
-				$order_products = array();
+				$order_products = [];
 				
 				$zero_price_products = [];
 				foreach ($products as $product) {
@@ -191,7 +191,7 @@
 				$total_orders = $this->model_sale_order->getTotalOrdersByCustomerId($result['customer_id']);
 				$totals = $this->model_sale_order->getOrderTotals($result['order_id']);
 				
-				$totals2 = array();
+				$totals2 = [];
 				$total_discount = 0;
 				$sub_total = 0;
 				foreach ($totals as $tmp_total){
@@ -461,6 +461,57 @@
 
 			$this->response->setOutput($this->render());
 		}
+
+		private function getOrderData($period, $store, $filter_addon = []) {
+			$currency = $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', $store['store_id']);
+
+			switch ($period) {
+				case 'today':
+				$start_date = date('Y-m-d'); 
+				$end_date = date('Y-m-d');
+				break;
+
+				case 'yesterday':
+				$start_date = date('Y-m-d', strtotime('-1 day'));
+				$end_date = date('Y-m-d', strtotime('-1 day'));
+				break;
+
+				case 'week':
+				$start_date = date('Y-m-d', strtotime('-1 week'));  
+				$end_date = date('Y-m-d');
+				break;
+
+				case 'month':
+				$start_date = date('Y-m-d', strtotime('-1 month'));
+				$end_date = date('Y-m-d');
+				break;
+
+				case 'year':
+				$start_date = date('Y-m-d', strtotime('-1 year'));
+				$end_date = date('Y-m-d');
+				break;
+			}
+
+			$filter_data = [
+				'filter_order_store_id' 		=> $store['store_id'],
+				'filter_date_added'  			=> $start_date,
+				'filter_date_added_to' 			=> $end_date,
+				'filter_order_status_notnull' 	=> true,  
+				'filter_not_preorder' 			=> true,
+				'return_array' 					=> true  
+			];
+
+			$filter_data = array_merge($filter_data, $filter_addon);	
+
+			$orders 			= $this->model_sale_order->getTotalOrders($filter_data);			
+			$orders['discount'] = $this->model_sale_order->getTotalOrdersDiscounts($filter_data); 
+			$orders['percent'] 	= $orders['sum']?round(($orders['discount'] / $orders['sum'])*100, 2):0;
+
+			$orders['sum'] 		= $this->currency->format($orders['sum'], $currency,'1');				
+			$orders['discount'] = $this->currency->format($orders['discount'], $currency,'1');
+
+			return $orders;
+		}
 		
 		public function loadOrderStats(){
 			
@@ -469,127 +520,53 @@
 			$this->load->model('sale/order');
 			$this->load->model('localisation/country');
 			
-			$this->data['order_filters'] = array();
-			$this->data['fast_counters'] = array();
+			$this->data['order_filters'] = [];
+			$this->data['fast_counters'] = [];
 
 			$this->data['stores_count'] = count($this->model_setting_store->getStores());
 
-			foreach ($this->model_setting_store->getStores() as $store){
-				
-				
+			foreach ($this->model_setting_store->getStores() as $store){								
 				if ($store['store_id'] == 18){
 					continue;
 				}
 				
 				$currency = $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', $store['store_id']);
 				
-				//FAST COUNTERS
 				$this->data['fast_counters'][$store['store_id']] = array(
 				'store_id' 		=> $store['store_id'],
 				'pwainstall'	=> $this->model_setting_setting->getCounter('pwainstall', $store['store_id']),
 				'pwasession'	=> $this->model_setting_setting->getCounter('pwasession', $store['store_id']),
 				'pwaorders'		=> $this->model_setting_setting->getPWAOrders($store['store_id']),
-				
-				//FAST REWARD COUNTERS
 				'rewardplus'	=> $this->currency->format($this->model_setting_setting->getRewardPlus($store['store_id']), $currency,'1'),
 				'rewardminus'	=> $this->currency->format($this->model_setting_setting->getRewardMinus($store['store_id']), $currency,'1'),
 				'rewardtotal'	=> $this->currency->format($this->model_setting_setting->getRewardTotal($store['store_id']), $currency,'1'),
 				'rewardorders'	=> $this->model_setting_setting->getRewardOrders($store['store_id'])
-				);
+				);								
 				
+				foreach (['today', 'yesterday', 'week', 'month', 'year'] as $period){
+					${$period . '_orders'} = $this->getOrderData($period, $store);
+				}
+
+				foreach (['today', 'yesterday', 'week', 'month', 'year'] as $period){
+					${$period . '_ok_orders'} = $this->getOrderData($period, $store, ['filter_order_status_id' => 'except_cancelled']);
+				}
 				
-				
-				$filter_data = array(
-				'filter_order_store_id' 		=> $store['store_id'],
-				'filter_date_added'	  			=> date('Y-m-d'),
-				'filter_date_added_to'			=> date('Y-m-d'),
-				'filter_order_status_notnull' 	=> true,
-				'filter_not_preorder'			=> true,
-				'return_array' 					=> true
-				);
-				
-				$today_orders = $this->model_sale_order->getTotalOrders($filter_data);
-				$today_orders['discount'] = $this->model_sale_order->getTotalOrdersDiscounts($filter_data);
-				$today_orders['percent'] = $today_orders['sum']?round(($today_orders['discount'] / $today_orders['sum'])*100, 2):0;
-				
-				$today_orders['sum'] = $this->currency->format($today_orders['sum'], $currency,'1');				
-				$today_orders['discount'] = $this->currency->format($today_orders['discount'], $currency,'1');
-				
-				$filter_data = array(
-				'filter_order_store_id' 		=> $store['store_id'],
-				'filter_date_added'	  			=> date('Y-m-d', strtotime('-1 day')),
-				'filter_date_added_to'			=> date('Y-m-d', strtotime('-1 day')),
-				'filter_order_status_notnull' 	=> true,
-				'filter_not_preorder'			=> true,
-				'return_array' 					=> true
-				);
-				
-				$yesterday_orders = $this->model_sale_order->getTotalOrders($filter_data);
-				$yesterday_orders['discount'] = $this->model_sale_order->getTotalOrdersDiscounts($filter_data);
-				$yesterday_orders['percent'] = ($yesterday_orders['sum'] > 0)?round(($yesterday_orders['discount'] / $yesterday_orders['sum'])*100, 2):0;
-				
-				$yesterday_orders['sum'] = $this->currency->format($yesterday_orders['sum'], $currency,'1');				
-				$yesterday_orders['discount'] = $this->currency->format($yesterday_orders['discount'], $currency,'1');
-				
-				$filter_data = array(
-				'filter_order_store_id' 		=> $store['store_id'],
-				'filter_date_added'	  			=> date('Y-m-d', strtotime('-1 week')),
-				'filter_date_added_to'			=> date('Y-m-d'),
-				'filter_order_status_notnull' 	=> true,
-				'filter_not_preorder'			=> true,
-				'return_array' 					=> true
-				);
-				
-				$week_orders = $this->model_sale_order->getTotalOrders($filter_data);
-				$week_orders['discount'] = $this->model_sale_order->getTotalOrdersDiscounts($filter_data);
-				$week_orders['percent'] = $week_orders['sum']?round(($week_orders['discount'] / $week_orders['sum'])*100, 2):0;
-				
-				$week_orders['sum'] = $this->currency->format($week_orders['sum'], $currency,'1');
-				$week_orders['discount'] = $this->currency->format($week_orders['discount'], $currency,'1');
-				
-				$filter_data = array(
-				'filter_order_store_id' 		=> $store['store_id'],
-				'filter_date_added'	  			=> date('Y-m-d', strtotime('-1 month')),
-				'filter_date_added_to'			=> date('Y-m-d'),
-				'filter_order_status_notnull' 	=> true,
-				'filter_not_preorder'			=> true,
-				'return_array' 					=> true
-				);
-				
-				$month_orders = $this->model_sale_order->getTotalOrders($filter_data);
-				$month_orders['discount'] = $this->model_sale_order->getTotalOrdersDiscounts($filter_data);
-				$month_orders['percent'] = $month_orders['sum']?round(($month_orders['discount'] / $month_orders['sum'])*100, 2):0;
-				
-				$month_orders['sum'] = $this->currency->format($month_orders['sum'], $currency,'1');				
-				$month_orders['discount'] = $this->currency->format($month_orders['discount'], $currency,'1');
-				
-				$filter_data = array(
-				'filter_order_store_id' 		=> $store['store_id'],
-				'filter_date_added'	  			=> date('Y-m-d', strtotime('-1 year')),
-				'filter_date_added_to'			=> date('Y-m-d'),
-				'filter_order_status_notnull' 	=> true,
-				'filter_not_preorder'			=> true,
-				'return_array' 					=> true
-				);
-				
-				$year_orders = $this->model_sale_order->getTotalOrders($filter_data);
-				$year_orders['discount'] = $this->model_sale_order->getTotalOrdersDiscounts($filter_data);
-				$year_orders['percent'] = $year_orders['sum']?round(($year_orders['discount'] / $year_orders['sum'])*100, 2):0;
-				
-				$year_orders['sum'] = $this->currency->format($year_orders['sum'], $currency,'1');				
-				$year_orders['discount'] = $this->currency->format($year_orders['discount'], $currency,'1');
-				
-				$this->data['order_filters'][] = array(
+				$this->data['order_filters'][] = [
 				'store_id' 		   => $store['store_id'],
 				'name' 		   	   => $store['name'],
 				'today_orders'	   => $today_orders,
 				'yesterday_orders' => $yesterday_orders,
 				'week_orders' 	   => $week_orders,
 				'month_orders' 	   => $month_orders,
-				'year_orders' 	   => $year_orders,				
+				'year_orders' 	   => $year_orders,		
+				'today_ok_orders'	  => $today_ok_orders,
+				'yesterday_ok_orders' => $yesterday_ok_orders,
+				'week_ok_orders' 	  => $week_ok_orders,
+				'month_ok_orders' 	  => $month_ok_orders,
+				'year_ok_orders' 	  => $year_ok_orders,		
 				'language'		   => $this->model_setting_setting->getKeySettingValue('config', 'config_language', $store['store_id']),
 				'filter_href'	   => $this->url->link('sale/order', 'filter_order_store_id=' . $store['store_id'] . '&token=' . $this->session->data['token'], 'SSL')
-				);
+				];
 			}
 			
 			$this->template = 'homestats/orderstats.tpl';
@@ -641,7 +618,7 @@
 			
 			
 			
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -803,11 +780,11 @@
 		public function cancelchart() {
 			$this->language->load('common/home');
 			
-			$data = array();
+			$data = [];
 			
-			$data['order'] = array();
-			$data['customer'] = array();
-			$data['xaxis'] = array();
+			$data['order'] = [];
+			$data['customer'] = [];
+			$data['xaxis'] = [];
 			
 			$data['order']['label'] = $this->language->get('text_order');
 			$data['customer']['label'] = $this->language->get('text_customer');
@@ -823,7 +800,7 @@
 				case 'week_orders':
 				$date_start = strtotime('-' . date('w') . ' days'); 
 				
-				$data['cancelled_order'] = array();
+				$data['cancelled_order'] = [];
 				$data['cancelled_order']['label'] = 'Отмененные за день заказы';
 				
 				for ($i = 0; $i < 7; $i++) {
@@ -859,11 +836,11 @@
 			
 			$this->language->load('common/home');
 			
-			$data = array();
+			$data = [];
 			
-			$data['order'] = array();									
-			$data['loyal_order'] = array();
-			$data['xaxis'] = array();
+			$data['order'] = [];									
+			$data['loyal_order'] = [];
+			$data['xaxis'] = [];
 			
 			$data['order']['label'] = $this->language->get('text_order');
 			$data['loyal_order']['label'] = 'Из них повторных заказов';
@@ -913,11 +890,11 @@
 		public function chart() {
 			$this->language->load('common/home');
 			
-			$data = array();
+			$data = [];
 			
-			$data['order'] = array();
-			$data['customer'] = array();
-			$data['xaxis'] = array();
+			$data['order'] = [];
+			$data['customer'] = [];
+			$data['xaxis'] = [];
 			
 			$data['order']['label'] = $this->language->get('text_order');
 			$data['customer']['label'] = $this->language->get('text_customer');
@@ -980,7 +957,7 @@
 				case 'week_orders':
 				$date_start = strtotime('-' . date('w') . ' days'); 
 				
-				$data['cancelled_order'] = array();
+				$data['cancelled_order'] = [];
 				$data['cancelled_order']['label'] = 'Из них отменено заказов';
 				
 				for ($i = 0; $i < 7; $i++) {
@@ -1111,7 +1088,7 @@
 				'error/permission'
 				);
 				
-				$config_ignore = array();
+				$config_ignore = [];
 				
 				if ($this->config->get('config_token_ignore')) {
 					$config_ignore = unserialize($this->config->get('config_token_ignore'));
@@ -1183,13 +1160,13 @@
 		}	
 		
 		public function getCustomersOnlineAjax(){
-			$data = array();
+			$data = [];
 			$this->load->model('report/online');
 			echo ($this->model_report_online->getTotalCustomersOnlineNotBotsFast());
 		}
 		
 		public function getCustomersOnlineAppAjax(){
-			$data = array();
+			$data = [];
 			$this->load->model('report/online');
 			echo ($this->model_report_online->getTotalCustomersOnlineAppSessionsNotBotsFast());
 		}

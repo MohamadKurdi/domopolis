@@ -3071,6 +3071,12 @@
 			if (!empty($data['filter_date_added_to'])) {
 				$sql .= " AND DATE(date_added) <= DATE('" . $this->db->escape($data['filter_date_added_to']) . "')";
 			}
+
+			if (isset($data['filter_order_status_id']) && !is_null($data['filter_order_status_id'])) {
+				if ($data['filter_order_status_id'] == 'except_cancelled') {
+					$sql .= " AND (o.order_status_id > 0 AND o.order_status_id <> '" . $this->config->get('config_cancelled_status_id') . "')";	
+				}					
+			}
 			
 			if (!empty($data['filter_order_status_notnull'])){
 				$sql .= " AND o.order_status_id > 0";
@@ -3146,6 +3152,8 @@
 					$sql .= " WHERE (o.order_status_id = '" . $this->config->get('config_cancelled_status_id') . "' AND o.order_id IN (SELECT order_id FROM `order_history` WHERE order_status_id IN (" . implode(',', array($this->config->get('config_confirmed_nopaid_order_status_id'))) . ")) AND o.order_id NOT IN (SELECT order_id FROM `order_history` WHERE order_status_id IN (" . implode(',', array($this->config->get('config_total_paid_order_status_id'), (int)$this->config->get('config_prepayment_paid_order_status_id')))  . ")))";
 					} elseif ($data['filter_order_status_id'] == 'cancel_with_payment') {
 					$sql .= " WHERE (o.order_status_id = '" . $this->config->get('config_cancelled_status_id') . "' AND o.order_id IN (SELECT order_id FROM `order_history` WHERE order_status_id IN (" . implode(',', array($this->config->get('config_total_paid_order_status_id'), (int)$this->config->get('config_prepayment_paid_order_status_id'))) . ")))";
+					} elseif ($data['filter_order_status_id'] == 'except_cancelled') {
+					$sql .= " WHERE (o.order_status_id > 0 AND o.order_status_id <> '" . $this->config->get('config_cancelled_status_id') . "')";		
 					} elseif ($data['filter_order_status_id'] == 'cancel_with_process') {
 					$sql .= " WHERE (o.order_status_id = '" . $this->config->get('config_cancelled_status_id') . "' AND o.order_id IN (SELECT order_id FROM `order_history` WHERE order_status_id IN (2,19,25)))";				
 					} elseif ($data['filter_order_status_id'] == 'birthday_discount_used') {
@@ -3155,10 +3163,10 @@
 					} elseif ($data['filter_order_status_id'] == 'nbt_csi') {
 					$sql .= " WHERE (c.nbt_csi = 1)";
 					} elseif (strpos($data['filter_order_status_id'], 'need_csi') !== false) {						
-					$_ss = explode('_', $data['filter_order_status_id']);
-					$_oid = (int)$_ss[2];
+					$exploded 			= explode('_', $data['filter_order_status_id']);
+					$order_id_single 	= (int)$exploded[2];
 					
-					$sql .= " WHERE (o.order_status_id = '" . (int)$_oid . "' AND o.csi_average = 0 AND o.csi_reject = 0 AND c.nbt_csi = 0)";
+					$sql .= " WHERE (o.order_status_id = '" . (int)$order_id_single . "' AND o.csi_average = 0 AND o.csi_reject = 0 AND c.nbt_csi = 0)";
 					} else {
 					$sql .= " WHERE o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
 				}
@@ -3167,8 +3175,7 @@
 				} else {
 				$sql .= " WHERE o.order_status_id > 0";
 			}
-			
-			
+						
 			if (!empty($data['filter_order_id'])) {				
 				if (is_numeric($data['filter_order_id'])){
 					$sql .= " AND o.order_id = '" . (int)$data['filter_order_id'] . "'";
@@ -3225,7 +3232,6 @@
 			
 			if (!empty($data['filter_customer'])) {
 				if (is_numeric($data['filter_customer'])){
-					//$sql .= " AND (o.customer_id = '" . (int)$data['filter_customer'] . "' OR REPLACE(c.discount_card, ' ', '') LIKE '" . (int)$data['filter_customer'] ."')";
 					$sql .= " AND (o.customer_id = '" . (int)$data['filter_customer'] . "')";
 					} else {
 					$sql .= " AND (CONCAT(o.firstname, ' ', o.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%' 
@@ -3248,10 +3254,8 @@
 			}
 			
 			if (isset($data['filter_order_status_id']) && !is_null($data['filter_order_status_id']) && !is_numeric($data['filter_order_status_id'])) {
-				if (strpos($data['filter_order_status_id'], 'need_csi') !== false){
-					
-					$sql .= " AND DATE(o.date_modified) >= DATE('" . date('Y-m-d', strtotime('-1 month')) . "') AND DATE(o.date_added) >= DATE('" . date('Y-m-d', strtotime('-2 month')) . "')";
-					
+				if (strpos($data['filter_order_status_id'], 'need_csi') !== false){					
+					$sql .= " AND DATE(o.date_modified) >= DATE('" . date('Y-m-d', strtotime('-1 month')) . "') AND DATE(o.date_added) >= DATE('" . date('Y-m-d', strtotime('-2 month')) . "')";					
 				}
 			}
 			
