@@ -73,6 +73,7 @@ require_once(DIR_SYSTEM . 'library/hobotix/Fiscalisation.php');
 require_once(DIR_SYSTEM . 'library/hobotix/SupplierAdaptor.php');
 require_once(DIR_SYSTEM . 'library/hobotix/QRCodeExtender.php');
 require_once(DIR_SYSTEM . 'library/hobotix/CouponRandom.php');
+require_once(DIR_SYSTEM . 'library/hobotix/CatLoader.php');
 
 $registry 	= new Registry();
 $loader 	= new Loader($registry);
