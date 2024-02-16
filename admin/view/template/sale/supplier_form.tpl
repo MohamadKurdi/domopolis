@@ -342,10 +342,11 @@
 					<table class="form">
 						<tr>
 							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Фид данных</span></td>
-							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Библиотека разбора</span></td>
+							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Библиотека разбора</span></td>
 							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Поле</span></td>
 							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Язык в фиде</span></td>
 							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Парсить</span></td>													
+							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Фильтр в админке</span></td>
 							<td width="10%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Валюта</span></td>
 							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Загрузить категории</span></td>
 						</tr>
@@ -389,7 +390,18 @@
 										<option value="0"  selected="selected">Отключить</option>
 									<? } ?>
 								</select>
-							</td>														
+							</td>
+							<td>
+								<select name="admin_status">
+									<?php if ($admin_status) { ?>
+										<option value="1" selected="selected">Включить</option>
+										<option value="0">Отключить</option>
+									<?php } else { ?>													
+										<option value="1">Включить</option>
+										<option value="0"  selected="selected">Отключить</option>
+									<? } ?>
+								</select>
+							</td>															
 							<td>
 								<input type="text" name="currency" value="<?php echo $currency; ?>" style="width:50px"/>
 							</td>							

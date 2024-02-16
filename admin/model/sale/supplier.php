@@ -39,6 +39,7 @@ class ModelSaleSupplier extends Model {
 		parser 					= '" . $this->db->escape($data['parser']) . "',
 		currency 				= '" . $this->db->escape($data['currency']) . "',
 		parser_status 			= '" . (int)$data['parser_status'] . "',
+		admin_status 			= '" . (int)$data['admin_status'] . "',
 		auto_enable 			= '" . (int)$data['auto_enable'] . "',
 		skip_no_category 		= '" . (int)$data['skip_no_category'] . "',
 		same_as_warehouse 		= '" . (int)$data['same_as_warehouse'] . "',
@@ -89,6 +90,7 @@ class ModelSaleSupplier extends Model {
 		currency 				= '" . $this->db->escape($data['currency']) . "',
 		rrp_in_feed 			= '" . (int)$data['rrp_in_feed'] . "',
 		parser_status 			= '" . (int)$data['parser_status'] . "',
+		admin_status 			= '" . (int)$data['admin_status'] . "',
 		auto_enable 			= '" . (int)$data['auto_enable'] . "',
 		skip_no_category 		= '" . (int)$data['skip_no_category'] . "',
 		same_as_warehouse 		= '" . (int)$data['same_as_warehouse'] . "',
@@ -501,6 +503,10 @@ class ModelSaleSupplier extends Model {
 
 		if (!empty($data['filter_parser_enabled'])) {
 			$sql .= " AND parser_status = 1";
+		}
+
+		if (!empty($data['filter_admin_enabled'])) {
+			$sql .= " AND admin_status = 1";
 		}
 		
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

@@ -994,6 +994,14 @@ class ControllerSaleSupplier extends Controller {
 			$this->data['parser_status'] = 0;
 		}
 
+		if (isset($this->request->post['admin_status'])) {
+			$this->data['admin_status'] = $this->request->post['admin_status'];
+		} elseif (!empty($supplier_info)) {
+			$this->data['admin_status'] = $supplier_info['admin_status'];
+		} else {
+			$this->data['admin_status'] = 0;
+		}
+
 		if (isset($this->request->post['rrp_in_feed'])) {
 			$this->data['rrp_in_feed'] = $this->request->post['rrp_in_feed'];
 		} elseif (!empty($supplier_info)) {

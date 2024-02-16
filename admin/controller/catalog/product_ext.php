@@ -670,7 +670,7 @@ class ControllerCatalogProductExt extends Controller {
 
         if (in_array("added_from_supplier", $column_order)) {
             $this->load->model('sale/supplier');
-            $this->data['parser_suppliers']  = $this->model_sale_supplier->getSuppliers(['filter_parser_enabled' => 1]);
+            $this->data['parser_suppliers']  = $this->model_sale_supplier->getSuppliers(['filter_admin_enabled' => 1]);
             $ps_select = [];
             foreach ($this->data['parser_suppliers'] as $ps) {
                 $ps_select[$ps['supplier_id']] = $ps['supplier_name'];
