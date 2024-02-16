@@ -32,6 +32,7 @@
 			$sql = "SELECT * FROM category_search_words csw ";
 			$sql .= " LEFT JOIN category_description cd ON (csw.category_id = cd.category_id) ";
 			$sql .= "	WHERE cd.language_id = '" . $this->config->get('config_language_id') . "'";
+			$sql .= " 	AND category_search_auto = 1";
 			$sql .= "	AND category_word_type <> 'disabled'";
 			$sql .= "	AND ( ";
 			$sql .= " (csw.category_word_last_search = '0000-00-00 00:00:00' OR DATE(csw.category_word_last_search) <= DATE('" . date('Y-m-d', strtotime('-' . $this->config->get('config_rainforest_category_queue_update_period') . ' day')) . "')) ";

@@ -189,6 +189,17 @@
 			return $users;
 		}
 
+		public function getUsersFromCategoryWords(){
+			$query = $this->db->query("SELECT DISTINCT category_word_user_id as user_id FROM category_search_words WHERE 1");
+
+			$users = [];
+			foreach ($query->rows as $row){
+				$users[] = $row['user_id'];
+			}
+
+			return $users;
+		}
+
 		public function getProductsInASINQueue($data = []) {
 			$sql = "SELECT adq.*, pd.name, pd2.name as rnf_name,
 				p.image, 

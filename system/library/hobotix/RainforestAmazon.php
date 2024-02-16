@@ -98,6 +98,21 @@ class RainforestAmazon
 		'most_recent' 		=> ['name' => 'Recent Added First',		'default' => false]
 	];
 
+	public const validationReasons = [
+		'checkIfAsinIsDeleted' 	=> 'Asin deleted',
+		'getIfAsinIsInQueue' 	=> 'Asin in queue',
+		'getProductsByAsin' 	=> 'Product exists',
+		'checkIfNameIsExcluded' => 'Global name exclusion',
+		'validate_name' 		=> 'Rule name validation',
+		'min_rating'	 		=> 'Min rating less',
+		'min_reviews'	 		=> 'Min review less',
+		'prime_filter'	 		=> 'Prime filter',
+		'no_price'		 		=> 'No price',
+		'min_price'		 		=> 'Price less',
+		'max_price'		 		=> 'Price more',
+		'min_offers'		 	=> 'Min offers'
+	];
+
 	public function __construct($registry){
 
 		$this->config 			= $registry->get('config');
@@ -328,6 +343,13 @@ class RainforestAmazon
 
 		if (!empty($response['pagination'])){
 			$pagination = $response['pagination'];
+		} else {
+			$products = $this->processAmazonRainforestPageRequestProductResults($response);
+
+			$pagination = [
+				'total_results' => count($products),
+				'total_pages' 	=> 1,
+			];
 		}
 
 		return $pagination;

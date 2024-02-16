@@ -311,7 +311,7 @@
           'Знакомлюсь с Памелой Андерсон..'
           ];
 
-        $('#text-counter').append(funnyPhrases[Math.floor(Math.random()*funnyPhrases.length)] + '<br/>');
+        $('#text-counter').html(funnyPhrases[Math.floor(Math.random()*funnyPhrases.length)] + '<br/>');
     }
 
     function iM() {
@@ -358,52 +358,59 @@
         var sort            = $('select[name=sort]').val();
         var brand_logic     = $('select[name=brand_logic]').children("option:selected").val();
 
-        var counterhtml = '<div style="text-align:center; padding-top:20px; color:#00ad07">';
-        counterhtml += '<i class="fa fa-spinner fa-spin" style="font-size:128px"></i>';
-        counterhtml += '<br /><br />';
-        counterhtml += '<span id="milliseconds-counter" style="font-size:24px;"></span>';
-        counterhtml += '<br /><br />';        
-        counterhtml += '<span style="color:#cf4a61"><i class="fa fa-lock"></i> Все поля ввода заблокированы на время запроса</span>';
-        counterhtml += '<br /><br />';
-        counterhtml += '<span id="text-counter" style="font-size:14px;"></span>';
-        counterhtml += '<br /><br />';
-        counterhtml += 'Загрузка занимает некоторое время (до 20 секунд), ждите и улыбайтесь';
-        counterhtml +='</div>';
+        let catUrl;
+        async function getCat() {
+            const response = await fetch('index.php?route=common/home/cat&token=<?php echo $token; ?>');
+            catUrl = await response.text();
+        }
 
-        if (url || category || search_term){
-            $.ajax({
-                type: 'POST',
-                dataType: 'html',
-                url: 'index.php?route=kp/amazon/getRainforestPage&token=<?php echo $token; ?>',
-                data: {
-                    type:       type,
-                    url:        url,
-                    category:      category,
-                    brand_logic:   brand_logic,
-                    search_term: search_term,
-                    page:       page,
-                    sort:       sort,
-                },
-                beforeSend: function(){
-                    $('#result').html(counterhtml);
+        getCat().then(() => { 
 
-                    setAllDisabled();
+            var counterhtml = '<div style="text-align:center; padding-top:20px; color:#00ad07">';
+            counterhtml += catUrl;
+            counterhtml += '<br /><br />';
+            counterhtml += '<span id="milliseconds-counter" style="font-size:24px;"></span>';
+            counterhtml += '<br /><br />';        
+            counterhtml += '<span style="color:#cf4a61"><i class="fa fa-lock"></i> Все поля ввода заблокированы на время запроса</span>';
+            counterhtml += '<br /><br />';
+            counterhtml += '<span id="text-counter" style="font-size:14px;"></span>';
+            counterhtml +='</div>';
 
-                    window.msc = 0;
-                    window.intrvl = setInterval(iM, 10);
-                    window.intrvl2 = setInterval(iS, 2000);
-                },
-                success: function(html){                                        
-                    $('#result').html(html);
+            if (url || category || search_term){
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'html',
+                    url: 'index.php?route=kp/amazon/getRainforestPage&token=<?php echo $token; ?>',
+                    data: {
+                        type:       type,
+                        url:        url,
+                        category:      category,
+                        brand_logic:   brand_logic,
+                        search_term: search_term,
+                        page:       page,
+                        sort:       sort,
+                    },
+                    beforeSend: function(){
+                        $('#result').html(counterhtml);
 
-                    setAllEnabled();
+                        setAllDisabled();
 
-                    clearInterval(window.intrvl);
-                    clearInterval(window.intrvl2);
-                }
-            });      
-        }           
-    }
+                        window.msc = 0;
+                        window.intrvl = setInterval(iM, 10);
+                        window.intrvl2 = setInterval(iS, 2000);
+                    },
+                    success: function(html){                                        
+                        $('#result').html(html);
+
+                        setAllEnabled();
+
+                        clearInterval(window.intrvl);
+                        clearInterval(window.intrvl2);
+                    }
+                });
+            }      
+        });            
+    }   
 
     $('input[name=page], select[name=sort]').on('change', function() {
        reload();

@@ -697,7 +697,6 @@ class ControllerDPRainForest extends Controller {
 				continue;
 			}
 
-
 			if ($categoryWord['category_search_word']){
 				$infoLine = $categoryWord['category_search_word'];
 			} elseif ($categoryWord['category_word_category']){
@@ -729,15 +728,15 @@ class ControllerDPRainForest extends Controller {
 	
 		$results = $this->rainforestAmazon->categoryRetriever->doMultiRequest($requests);
 
-		foreach ($results as $category_word_id => $results){
+		foreach ($results as $category_word_id => $result){
 			$categoryWord = $this->rainforestAmazon->categoryRetriever->getCategorySearchWordInfo($category_word_id);
 
-			if ($pagination = $this->rainforestAmazon->processAmazonRainforestPageRequestPaginationResults($results)){
+			if ($pagination = $this->rainforestAmazon->processAmazonRainforestPageRequestPaginationResults($result)){
 				echoLine('[ControllerDPRainForest::addasinsbycategorycron] Got pagination, updating. Total pages: ' . $pagination['total_pages'] . ', total results: ' . $pagination['total_results'], 's');
 				$this->rainforestAmazon->categoryRetriever->setCategorySearchWordTotalProducts($category_word_id, $pagination['total_results']);
 				$this->rainforestAmazon->categoryRetriever->setCategorySearchWordTotalPages($category_word_id, $pagination['total_pages']);
 
-				$products = $this->rainforestAmazon->processAmazonRainforestPageRequestProductResults($results);
+				$products = $this->rainforestAmazon->processAmazonRainforestPageRequestProductResults($result);
 				echoLine('[ControllerDPRainForest::addasinsbycategorycron] Got ' . count($products) . ' on this page, starting checks', 'i');
 
 				$good_products = [];
@@ -765,6 +764,54 @@ class ControllerDPRainForest extends Controller {
 						continue;
 					}
 
+					if (!empty(trim($categoryWord['category_search_exact_words']))){
+						$category_search_exact_words = prepareEOLArray($categoryWord['category_search_exact_words']);
+
+						if ($category_search_exact_words){
+							if (!validate_name($product['title'], $category_search_exact_words, $validation_reason)){
+								echoLine('[ControllerDPRainForest::addasinsbycategorycron] NAME ' . $product['title'] . ' validation failed!', 'w');
+								echoLine('[ControllerDPRainForest::addasinsbycategorycron] Reason is '. $validation_reason, 'w');
+								continue;
+							}
+						}
+					}
+
+					if ((float)$categoryWord['category_search_min_rating'] > 0){
+						if (empty($product['rating'])){
+							echoLine('[ControllerDPRainForest::addasinsbycategorycron] Min rating is on, and product ' . $product['title'] . ' has no rating, skip', 'w');
+							continue;
+						} else {
+							if ((float)$product['rating'] < (float)$categoryWord['category_search_min_rating']){
+								echoLine('[ControllerDPRainForest::addasinsbycategorycron] Min rating is on, and product ' . $product['title'] . ' has ' . (float)$product['rating'] . ', skip', 'w');
+								continue;
+							}
+						}
+					}
+
+					if ((int)$categoryWord['category_search_min_reviews'] > 0){
+						if (empty($product['ratings_total'])){
+							echoLine('[ControllerDPRainForest::addasinsbycategorycron] Min rewiews is on, and product ' . $product['title'] . ' has no rewiews, skip', 'w');
+							continue;
+						} else {
+							if ((int)$product['ratings_total'] < (int)$categoryWord['category_search_min_reviews']){
+								echoLine('[ControllerDPRainForest::addasinsbycategorycron] Min rewiews is on, and product ' . $product['title'] . ' has ' . (float)$product['ratings_total'] . ', skip', 'w');
+								continue;
+							}
+						}
+					}
+
+					if ((bool)$categoryWord['category_search_has_prime']){
+						if (empty($product['is_prime'])){
+							echoLine('[ControllerDPRainForest::addasinsbycategorycron] Only prime logic is on, and product ' . $product['title'] . ' is not prime, skip', 'w');
+							continue;
+						}
+					}
+
+					if (empty($product['price']) || empty($product['price']['value'])){
+						echoLine('[ControllerDPRainForest::addasinsbycategorycron] Price not found, skip', 'w');				
+						continue;
+					}
+
 					if (!empty($product['price']) && !empty($product['price']['value'])){
 						if ((float)$categoryWord['category_search_min_price']){
 							if ((float)$product['price']['value'] < (float)$categoryWord['category_search_min_price']){
@@ -779,12 +826,14 @@ class ControllerDPRainForest extends Controller {
 								continue;
 							}
 						}
-
-						echoLine('[ControllerDPRainForest::addasinsbycategorycron] Good product found, ' . $product['asin'] . ' with price ' . $product['price']['value'], 's');
-						$good_products[$product['asin']] = $product;
 					} else {
 						echoLine('[ControllerDPRainForest::addasinsbycategorycron] Product without price found', 'e');
+						continue;
 					}
+
+
+					echoLine('[ControllerDPRainForest::addasinsbycategorycron] Good product found, ' . $product['asin'] . ' with price ' . $product['price']['value'], 's');
+					$good_products[$product['asin']] = $product;
 				}
 
 				$good_products_asins = array_keys($good_products);

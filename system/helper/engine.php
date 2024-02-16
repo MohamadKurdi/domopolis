@@ -158,6 +158,92 @@ function tryToGuessPageType($request){
 	return false;
 }
 
+function validate_name(string $string, $words, &$reason = null):bool {    
+    $rules = [];
+
+    if (!is_array($words)){
+    	$words = prepareEOLArray($words);
+    }
+
+    foreach ($words as $word){
+    	$type = mb_substr($word, 0, 1);
+
+    	switch ($type){
+        	case '[':
+        		$type = 'required';
+        		break;
+
+        	case '(':
+        		$type = 'optional';
+        		break;
+
+        	case '{':
+        		$type = 'excluded';
+        		break;
+
+        	default:
+        		$type = 'pass';
+        		break;
+        }
+
+        if (empty($rules[$type])){
+        	$rules[$type] = [];
+        }
+
+        $keywords 	= explode(',', trim($word, '{}[]()'));
+        $keywords   = array_map('trim', $keywords);
+        $keywords 	= array_map('mb_strtolower', $keywords);
+
+        $rules[$type] = array_merge($rules[$type], $keywords);
+    }
+
+    $string = mb_strtolower($string);
+    echoLine('[validate_name] Validating string: ' . $string, 'i');
+
+    foreach ($rules as $type => $keywords) {
+        switch ($type) {
+            case 'required':
+                foreach ($keywords as $keyword) {
+                    if (mb_stripos($string, $keyword) === false) {
+                    	echoLine('[validate_name] No required keyword ' . $keyword, 'e');
+                    	$reason = 'Нет обязательного вхождения слова ' . $keyword;
+                        return false;
+                    }
+                }
+                break;
+            case 'optional':
+                $matched = false;
+                foreach ($keywords as $keyword) {
+                    if (mb_stripos($string, $keyword) !== false) {
+                        $matched = true;
+                        break;
+                    }
+                }
+                if (!$matched) {
+                	echoLine('[validate_name] No any optional keyword: ' . implode(', ', $keywords), 'e');
+                	$reason = 'Нет не одного вхождения необязательных слов: ' . implode(', ', $keywords);
+                    return false;
+                }
+                break;
+            case 'excluded':
+                foreach ($keywords as $keyword) {
+                    if (mb_stripos($string, $keyword) !== false) {
+                    	echoLine('[validate_name] Forbidden keyword match ' . $keyword, 'e');
+						$reason = 'Найдено запрещенное слово ' . $keyword;
+                        return false;
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    $reason = 'Проверка пройдена, товар будет добавлен';
+    return true;
+}
+
+
 function getproductname($item) {
 	return $item['name'];
 }

@@ -1,6 +1,12 @@
 <?php
 class ControllerKPAmazon extends Controller {
+	private $json = [];
 
+	public function counters(){
+		$categoryWord = $this->rainforestAmazon->categoryRetriever->getCategorySearchWordInfo($this->request->data['category_word_id']);
+
+		$this->response->setOutput(json_encode($categoryWord));
+	}
 
 	public function add(){
 		$this->load->model('report/product');
@@ -11,6 +17,10 @@ class ControllerKPAmazon extends Controller {
 
 		if ($asin){
 			$this->model_report_product->insertAsinToQueue(['asin' => $asin, 'category_id' => $category_id, 'brand_logic' => $brand_logic]);	
+
+			if (!empty($this->request->post['category_word_id'])){
+				$this->rainforestAmazon->categoryRetriever->updateCategorySearchWordProductAddedPlus($this->request->post['category_word_id'], 1);
+			}
 		}
 
 		$this->response->setOutput(json_encode(['result' => 'success']));
@@ -169,6 +179,208 @@ class ControllerKPAmazon extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
+	public function getCategoryWordSearchResults(){
+		$pages 		= [];
+		$offers 	= [];
+		foreach ($this->request->data['checkboxes'] as $category_word_id){
+			$pages[$category_word_id] = $this->request->data['pages'][$category_word_id];
+		}
+
+		foreach ($pages as $category_word_id => $page){
+			$categoryWord = $this->rainforestAmazon->categoryRetriever->getCategorySearchWordInfo($category_word_id);
+
+			$options = [
+				'type' 					=> $categoryWord['category_word_type'],
+				'word_or_uri' 			=> $categoryWord['category_search_word'],
+				'page' 					=> $page,
+				'sort' 					=> $categoryWord['category_search_sort'],
+				'category_id'			=> $categoryWord['category_word_category_id'],
+			];			
+
+			$request = $this->rainforestAmazon->prepareAmazonRainforestPageRequest($options);
+			$requests[$categoryWord['category_search_word_id']] = $request;
+		}
+
+		$results = $this->rainforestAmazon->categoryRetriever->doMultiRequest($requests);
+
+	//	$results = json_decode(file_get_contents(DIR_SYSTEM . '/temp/rainforest.json'), true);
+
+		$this->data['results'] = [];
+		foreach ($results as $category_word_id => $result){
+			$categoryWord = $this->rainforestAmazon->categoryRetriever->getCategorySearchWordInfo($category_word_id);			
+
+			$title = \hobotix\RainforestAmazon::searchPageTypes[$categoryWord['category_word_type']]['name'] . ': ';
+			if (!empty($categoryWord['category_search_word'])) {
+				$title .= $categoryWord['category_search_word'];
+			} else {
+				$title .= $categoryWord['category_word_category'];
+			}
+
+			$products_good 	= [];			
+			$products_bad 	= [
+				'checkIfAsinIsDeleted' 	=> [],
+				'getIfAsinIsInQueue' 	=> [],
+				'getProductsByAsin' 	=> [],
+				'checkIfNameIsExcluded' => [],
+				'validate_name' 		=> [],
+				'min_rating'	 		=> [],
+				'min_reviews'	 		=> [],
+				'prime_filter'	 		=> [],
+				'no_price'		 		=> [],
+				'min_price'		 		=> [],
+				'max_price'		 		=> [],
+				'min_offers'		 	=> [],
+			];
+			$products_after_first_exclusions = [];
+
+			if ($pagination = $this->rainforestAmazon->processAmazonRainforestPageRequestPaginationResults($result)){
+				$this->rainforestAmazon->categoryRetriever->setCategorySearchWordTotalProducts($category_word_id, $pagination['total_results']);
+				$this->rainforestAmazon->categoryRetriever->setCategorySearchWordTotalPages($category_word_id, $pagination['total_pages']);
+			}
+
+			$products = $this->rainforestAmazon->processAmazonRainforestPageRequestProductResults($result);
+
+			$pagination['total_product_on_page'] = count($products);
+			foreach ($products as &$product){
+				if ($this->rainforestAmazon->productsRetriever->model_product_get->checkIfAsinIsDeleted($product['asin'])){
+					$products_bad['checkIfAsinIsDeleted'][] = $product;
+					continue;
+				}
+
+				if ($this->rainforestAmazon->productsRetriever->model_product_get->getIfAsinIsInQueue($product['asin'])){
+					$products_bad['getIfAsinIsInQueue'][] = $product;
+					continue;
+				}
+
+				if ($this->rainforestAmazon->productsRetriever->getProductsByAsin($product['asin'])){
+					$products_bad['getProductsByAsin'][] = $product;
+					continue;
+				}
+
+				if ($this->rainforestAmazon->productsRetriever->model_product_get->checkIfNameIsExcluded($product['title'], $categoryWord['category_id'])){		
+					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteASINFromQueue($product['asin']);				
+					$products_bad['checkIfNameIsExcluded'][] = $product;
+					continue;
+				}
+
+				if (!empty(trim($categoryWord['category_search_exact_words']))){
+					$category_search_exact_words = prepareEOLArray($categoryWord['category_search_exact_words']);
+
+					if ($category_search_exact_words){
+						if (!validate_name($product['title'], $category_search_exact_words, $validation_reason)){
+							$product['validation_name_reason'] 		= $validation_reason;
+							$products_bad['validate_name'][] 		= $product;
+							continue;
+						}
+					}
+				}
+
+				if ((float)$categoryWord['category_search_min_rating'] > 0){
+					if (empty($product['rating'])){
+						$products_bad['min_rating'][] 	= $product;
+						continue;
+					} else {
+						if ((float)$product['rating'] < (float)$categoryWord['category_search_min_rating']){
+							$products_bad['min_rating'][] 	= $product;
+							continue;
+						}
+					}
+				}
+
+				if ((int)$categoryWord['category_search_min_reviews'] > 0){
+					if (empty($product['ratings_total'])){
+						$products_bad['min_reviews'][] 	= $product;
+						continue;
+					} else {
+						if ((int)$product['ratings_total'] < (int)$categoryWord['category_search_min_reviews']){
+							$products_bad['min_reviews'][] 	= $product;
+							continue;
+						}
+					}
+				}
+
+				if ((bool)$categoryWord['category_search_has_prime']){
+					if (empty($product['is_prime'])){
+						$products_bad['prime_filter'][] 	= $product;
+						continue;
+					}
+				}
+
+				if (empty($product['price']) || empty($product['price']['value'])){
+					$products_bad['no_price'][] 	= $product;		
+				}
+
+				if (!empty($product['price']) && !empty($product['price']['value'])){
+					if ((float)$categoryWord['category_search_min_price']){
+						if ((float)$product['price']['value'] < (float)$categoryWord['category_search_min_price']){
+							$products_bad['min_price'][] 	= $product;				
+							continue;
+						}
+					}
+
+					if ((float)$categoryWord['category_search_max_price']){
+						if ((float)$product['price']['value'] > (float)$categoryWord['category_search_max_price']){
+							$products_bad['max_price'][] 	= $product;					
+							continue;
+						}
+					}
+				}
+
+				$products_good[$product['asin']] = $product;
+			}
+
+			if (!empty($this->request->data['offers']) && !empty($this->request->data['offers'][$category_word_id])){
+				$good_products_asins = array_keys($products_good);
+				$total = count($good_products_asins);
+				$iterations = ceil($total/(int)\hobotix\RainforestAmazon::offerRequestLimits);
+
+				for ($i = 1; $i <= $iterations; $i++){
+					$timer = new \hobotix\FPCTimer();
+					$slice = array_slice($good_products_asins, (int)\hobotix\RainforestAmazon::offerRequestLimits * ($i-1), (int)\hobotix\RainforestAmazon::offerRequestLimits);
+
+					$results = $this->rainforestAmazon->getProductsOffersASYNC($slice);
+
+					if ($results){
+						foreach ($results as $asin => $offers){
+							$products_good[$asin]['count_offers_before'] = (int)count($offers);
+
+							if ((int)$categoryWord['category_search_min_offers'] > (int)count($offers)){								
+								$products_bad['min_offers'][] 	= $products_good[$asin];
+								unset($products_good[$asin]);
+							} else {
+								$this->rainforestAmazon->offersParser->addOffersForASIN($asin, $offers);	
+								$count_offers = $this->rainforestAmazon->offersParser->getOffersForASIN($asin);
+
+								$products_good[$asin]['count_offers_after'] = (int)count_offers;
+
+								if ((int)$categoryWord['category_search_min_offers'] > $count_offers){
+									$products_bad['min_offers'][] 	= $products_good[$asin];
+									unset($products_good[$asin]);
+								}
+							}												
+						}
+					}
+				}
+			}
+
+			$this->rainforestAmazon->categoryRetriever
+					->setCategorySearchWordLastScan($category_word_id)
+					->setCategorySearchWordPagesParsed($category_word_id, $page);
+
+			$this->data['results'][$category_word_id] = [
+				'title' 		=> $title,
+				'page' 			=> $page,
+				'pagination' 	=> $pagination,
+				'products' 		=> $products_good,
+				'products_bad' 	=> $products_bad
+			];
+		}
+
+		$this->template = 'kp/amazon_category_results_extended.tpl';
+		$this->response->setOutput($this->render());
+	}
+
+
 	public function getProductOffers(){
 		$product_id = (int)$this->request->get['product_id'];
 
@@ -306,6 +518,75 @@ class ControllerKPAmazon extends Controller {
 		$this->template = 'sale/amazon_offers_list.tpl';
 
 		$this->response->setOutput($this->render());
+	}
+
+	public function load_category_search_words(){
+		$this->load->model('catalog/category');
+		$this->load->model('user/user');
+
+		$filter_data = [
+			'filter_category_id' 	=> $this->request->get['category_id'],
+			'filter_user_id' 		=> $this->request->get['user_id'],
+			'filter_auto' 			=> $this->request->get['filter_auto'],
+		];
+
+		$this->data['category_search_words'] = $this->model_catalog_category->getCategorySearchWordsFilter($filter_data);
+
+		foreach ($this->data['category_search_words'] as &$category_search_word){
+			$category_search_word['category_word_user'] = $this->model_user_user->getRealUserNameById($category_search_word['category_word_user_id']);
+			$category_search_word['category_search_min_price'] = $this->currency->format_with_left($category_search_word['category_search_min_price'], $this->config->get('config_currency'), 1);
+			$category_search_word['category_search_max_price'] = $this->currency->format_with_left($category_search_word['category_search_max_price'], $this->config->get('config_currency'), 1);
+		}
+
+		$this->template = 'kp/category_search_words.tpl';
+		$this->response->setOutput($this->render());
+	}
+
+
+	public function random_name(){		
+		$result = [];
+
+		$query = $this->db->query("SELECT name FROM product_description pd 
+			LEFT JOIN product p ON (pd.product_id = p.product_id) 
+			LEFT JOIN product_to_category p2c ON (p2c.product_id = p.product_id) 
+			WHERE 
+			p2c.category_id 	= '" . (int)$this->request->get['category_id'] . "'
+			AND language_id 	= '" . $this->config->get('config_rainforest_source_language_id') . "' 
+			AND name <> ''
+			ORDER BY RAND() LIMIT 5");
+
+		if (!$query->rows){
+			$query = $this->db->query("SELECT name FROM product_description pd 
+			LEFT JOIN product p ON (pd.product_id = p.product_id) 			
+			WHERE 
+			language_id 	= '" . $this->config->get('config_rainforest_source_language_id') . "' 
+			AND name <> ''
+			ORDER BY RAND() LIMIT 5");
+		}
+
+		foreach ($query->rows as $row){
+			$result[] = $row['name'];
+		}
+
+		$this->response->setOutput(implode(PHP_EOL, $result));
+	}
+
+	public function validate_name(){
+		$rules 	= $this->request->data['rules'];
+		$texts 	= explode(PHP_EOL, $this->request->data['text']);
+
+		$html = '';
+		foreach ($texts as $text){
+			$status = validate_name($text, $rules, $result);
+
+			$html .= '<tr>';
+			$html .= '<td style="width:60%" class="' . ($status?'validate_success':'validate_fail') . '">' . $text . '</td>';
+			$html .= '<td class="' . ($status?'validate_success':'validate_fail') . '">' . $result . '</td>';
+			$html .= '</tr>';
+		}
+		
+
+		$this->response->setOutput($html);
 	}
 
 }		

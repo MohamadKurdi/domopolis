@@ -96,7 +96,7 @@ class ModelCatalogCategory extends Model {
 				category_search_min_price 		= '" . (float)$category_search_word['category_search_min_price'] . "', 
 				category_search_max_price 		= '" . (float)$category_search_word['category_search_max_price'] . "', 
 				category_search_min_offers 		= '" . (int)$category_search_word['category_search_min_offers'] . "',
-				category_search_min_rating 		= '" . (int)$category_search_word['category_search_min_rating'] . "',
+				category_search_min_rating 		= '" . (float)$category_search_word['category_search_min_rating'] . "',
   				category_search_min_reviews 	= '" . (int)$category_search_word['category_search_min_reviews'] . "',
   				category_search_has_prime 		= '" . (int)$category_search_word['category_search_has_prime'] . "',
   				category_search_exact_words 	= '" . $this->db->escape($category_search_word['category_search_exact_words']) . "',
@@ -322,7 +322,7 @@ class ModelCatalogCategory extends Model {
 				category_search_min_price 		= '" . (float)$category_search_word['category_search_min_price'] . "', 
 				category_search_max_price 		= '" . (float)$category_search_word['category_search_max_price'] . "', 
 				category_search_min_offers 		= '" . (int)$category_search_word['category_search_min_offers'] . "',
-				category_search_min_rating 		= '" . (int)$category_search_word['category_search_min_rating'] . "',
+				category_search_min_rating 		= '" . (float)$category_search_word['category_search_min_rating'] . "',
   				category_search_min_reviews 	= '" . (int)$category_search_word['category_search_min_reviews'] . "',
   				category_search_has_prime 		= '" . (int)$category_search_word['category_search_has_prime'] . "',
   				category_search_exact_words 	= '" . $this->db->escape($category_search_word['category_search_exact_words']) . "',
@@ -558,6 +558,28 @@ class ModelCatalogCategory extends Model {
 		}
 		
 		return $related_categories;		
+	}
+
+	public function getCategorySearchWordsFilter($filter_data = []){
+		$sql = "SELECT * FROM category_search_words WHERE category_word_type <> 'disabled' ";
+		
+		if (!empty($filter_data['filter_category_id'])){
+			$sql .= " AND category_id = '" . (int)$filter_data['filter_category_id'] . "'";
+		} else {
+			$sql .= " AND category_id = '0'";
+		}
+
+		if (!empty($filter_data['filter_user_id'])){
+			$sql .= " AND category_word_user_id = '" . (int)$filter_data['filter_user_id'] . "'";
+		}
+
+		if (empty($filter_data['filter_auto'])){
+			$sql .= " AND category_search_auto = '0'";
+		}
+
+		$query = $this->db->query($sql);
+		
+		return $query->rows;
 	}
 
 	public function getCategorySearchWords($category_id){

@@ -276,6 +276,55 @@
 			$this->response->setOutput($this->render());
 		}
 
+		public function amazonv2(){
+			$this->load->language('report/product_viewed');
+			$this->load->model('report/product');
+			$this->load->model('user/user');
+
+
+			$this->document->setTitle('Добавление товаров с Amazon v2');
+			$this->data['heading_title'] = 'Просмотр Amazon';
+
+			$this->data['token'] = $this->session->data['token'];
+
+			$this->data['queue'] 	= $this->url->link('catalog/addasin',  'token=' . $this->session->data['token']);
+
+			if (isset($this->session->data['error'])) {
+				$this->data['error_warning'] = $this->session->data['error'];				
+				unset($this->session->data['error']);
+				} elseif (isset($this->error['warning'])) {
+				$this->data['error_warning'] = $this->error['warning'];
+				} else {
+				$this->data['error_warning'] = '';
+			}
+			
+			if (isset($this->session->data['success'])) {
+				$this->data['success'] = $this->session->data['success'];
+				
+				unset($this->session->data['success']);
+				} else {
+				$this->data['success'] = '';
+			}
+
+			$this->data['users'] = [];			
+			$users = $this->model_report_product->getUsersFromCategoryWords();
+
+			foreach ($users as $user_id){
+				$this->data['users'][] = [
+					'user' 		=> $this->model_user_user->getRealUserNameById($user_id),
+					'user_id' 	=> $user_id
+				];
+			}
+
+			$this->template = 'catalog/addasinamazonv2.tpl';
+			$this->children = array(
+				'common/header',
+				'common/footer'
+			);
+			
+			$this->response->setOutput($this->render());
+		}
+
 		public function delete() {			
 			$this->load->model('report/product');
 			$url = '';
@@ -582,6 +631,7 @@
 			$this->data['filter_problems_href'] 	= $this->url->link('catalog/addasin',  'token=' . $this->session->data['token'] . $url . '&filter_problems=1');	
 
 			$this->data['amazon'] 	= $this->url->link('catalog/addasin/amazon',  'token=' . $this->session->data['token']);			
+			$this->data['amazonv2'] = $this->url->link('catalog/addasin/amazonv2',  'token=' . $this->session->data['token']);
 
 
 			$this->template = 'catalog/addasin.tpl';

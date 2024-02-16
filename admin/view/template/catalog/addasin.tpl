@@ -53,7 +53,10 @@
             <h1><?php echo $heading_title; ?></h1>
             <div id="rnf-status" style="float: left; line-height: 26px; padding-top: 5px; margin-left:20px;" class="delayed-load short-delayed-load" data-route='setting/rnf/getRainForestStats' data-reload="5000"></div>   
 
-            <div class="buttons"><a href="<?php echo $amazon; ?>" class="button"><i class="fa fa-amazon"></i> Смотреть на Amazon <sup style="color:#CF4A61">beta</sup></a></div>   
+            <div class="buttons">
+                <a href="<?php echo $amazon; ?>" class="button" style="border-color:#00ad07; color:#00ad07;"><i class="fa fa-amazon"></i> Смотреть на Amazon v1</a>
+                <a href="<?php echo $amazonv2; ?>" class="button" style="border-color:#7F00FF; color:#7F00FF;"><i class="fa fa-amazon"></i> Смотреть на Amazon v2</a>
+            </div>   
 
             <div class="clr"></div>
             <span class="help"><i class="fa fa-info-circle"></i> Для работы очереди добавления должны быть включены обслуживающие крон-задачи</span>        
@@ -78,7 +81,7 @@
                         <td class="left" style="width:200px;">    
                             <div>
                                 <select name="filter_user_id">
-                                    <option value="*">Пользователь</option>
+                                    <option value="*">Все пользователи</option>
                                     <? foreach ($users as $user) { ?>
                                         <option value="<?php echo $user['user_id']; ?>" <?php if ($user['user_id'] == $filter_user_id) { ?>selected="selected"<? } ?>><?php echo $user['user']; ?></option>
                                     <? } ?>   

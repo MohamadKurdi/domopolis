@@ -373,7 +373,7 @@ class ControllerCatalogCategory extends Controller {
 		$this->data['rollup'] 		= $this->url->link('catalog/category/rollup', 'token=' . $this->session->data['token'] . $url);
 		$this->data['hidedisabled'] = $this->url->link('catalog/category/hidedisabled', 'token=' . $this->session->data['token'] . $url);
 		$this->data['simpleview'] 	= $this->url->link('catalog/category/simpleview', 'token=' . $this->session->data['token'] . $url);
-		$this->data['rollup_all'] 	= $this->url->link('catalog/category/rollup_all', 'token=' . $this->session->data['token'] . $url);
+		$this->data['rollup_all'] 	= $this->url->link('catalog/category/rollup_all', 'token=' . $this->session->data['token'] . $url);		
 
 		$this->data['rollup_enabled'] 		= !empty($this->session->data['category_rollup']);
 		$this->data['hidedisabled_enabled'] = !empty($this->session->data['category_hidedisabled']);
@@ -527,7 +527,10 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['action'] = $this->url->link('catalog/category/update', 'token=' . $this->session->data['token'] . '&category_id=' . $this->request->get['category_id']);
 		}
 
-		$this->data['cancel'] = $this->url->link('catalog/category', 'token=' . $this->session->data['token']);
+		$this->data['cancel'] 			= $this->url->link('catalog/category', 'token=' . $this->session->data['token']);
+		$this->data['random_name'] 		= $this->url->link('kp/amazon/random_name', 'token=' . $this->session->data['token']  . '&category_id=' . $this->request->get['category_id']);
+		$this->data['validate_name'] 	= $this->url->link('kp/amazon/validate_name', 'token=' . $this->session->data['token']);
+
 
 		if (isset($this->request->get['category_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$category_info = $this->model_catalog_category->getCategory($this->request->get['category_id']);			
