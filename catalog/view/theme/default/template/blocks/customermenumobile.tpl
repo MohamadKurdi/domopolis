@@ -61,5 +61,4 @@
 		</svg>
 		<span><?php echo $text_retranslate_26; ?></span>
 	</button>
-
-	<?php } ?>
+<?php } ?>

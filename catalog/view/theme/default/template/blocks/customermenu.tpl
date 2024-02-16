@@ -6,7 +6,7 @@
 	<script>
 		window._customer_data_customer_id 	= '<?php echo $customer_id; ?>';
 		window._customer_data_real_email 	= '<?php echo $real_email; ?>';
-	</script>						
+	</script>			
 		<button class="profile" >
 			<a href="<?php echo $account; ?>" class="user-names"><?php echo $user_name_short; ?></a>
 			<svg width="38" height="38" viewBox="0 0 38 38" fill="none"
@@ -231,7 +231,6 @@
 					</button>	
 					 <? } ?>
 				</div>
-			</div>
-			
+			</div>			
 		</div>
 <?php } ?>
