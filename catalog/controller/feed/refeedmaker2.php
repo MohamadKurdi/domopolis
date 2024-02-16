@@ -681,7 +681,8 @@ class ControllerFeedReFeedMaker2 extends Controller
         $this->makegroupfeeds();
         $this->setProductGroupId(false)->setProductGroupFeed(false);     
 
-        $this->cleanUp();   
+        $this->cleanUp(); 
+        $this->cache->flush();  
     }
 
     public function makegroupfeeds(){

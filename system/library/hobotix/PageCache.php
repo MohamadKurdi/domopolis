@@ -148,7 +148,7 @@ final class PageCache{
 
 		if (defined('CRAWLER_SESSION_DETECTED') && CRAWLER_SESSION_DETECTED){
 			if (!defined('PAGESPEED_SESSION_DETECTED') || !PAGESPEED_SESSION_DETECTED){
-			//	return false;
+				return false;
 			}
 		}
 
