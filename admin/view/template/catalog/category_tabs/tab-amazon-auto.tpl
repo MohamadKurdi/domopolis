@@ -1,5 +1,4 @@
 <div id="tab-amazon-auto">
-	<h1 style="color:red">НАХОДИТСЯ В РАЗРАБОТКЕ, НЕ ТРОГАТЬ!</h1>
 	<table class="form" id="category_search_words" >
 		<thead>
 			<tr>

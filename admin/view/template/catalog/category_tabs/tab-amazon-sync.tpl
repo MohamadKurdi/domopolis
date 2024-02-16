@@ -90,6 +90,7 @@
 					
 
 					<div style="margin-top:10px; padding:10px; border:1px dashed grey;">
+						<h1 style="color:red">Логика назначения скидок находится в разработке.</h1>
 						<h2 style="color:#FF9900;">AMAZON RAINFOREST API - репрайс</h2>
 						<table class="form">
 							<tr>
