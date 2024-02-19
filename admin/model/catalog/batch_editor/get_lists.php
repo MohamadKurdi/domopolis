@@ -375,16 +375,8 @@ class ModelCatalogBatchEditorGetLists extends Model {
 		return $filters;
 	}
 	
-	public function getCategories() {
-		$categories = $this->cache->get('batch_editor.categories_all.' . (int) $this->config->get('config_language_id'));
-		
-		if (!$categories) {
-			$categories = $this->getCategory();
-			
-			$this->cache->set('batch_editor.categories_all.' . (int) $this->config->get('config_language_id'), $categories);
-		}
-		
-		return $categories;
+	public function getCategories() {					
+		return $this->getCategory();				
 	}
 	
 	public function getCategory($parent_id = 0) {
@@ -414,4 +406,3 @@ class ModelCatalogBatchEditorGetLists extends Model {
 		}
 	}
 }
-?>

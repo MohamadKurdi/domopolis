@@ -182,7 +182,11 @@ class ControllerModuleBatchEditor extends Controller {
 			$this->data['column_' . $column] = $this->language->get('column_' . $column);
 		}
 		
-		$lists = array ('manufacturer_id', 'stock_status_id', 'categories', 'customer_groups', 'tax_class_id', 'length_class_id', 'weight_class_id', 'discount_actions', 'calculate', 'stores', 'downloads', 'languages', 'attributes', 'layouts');
+		$lists = array ('stock_status_id', 'categories', 'customer_groups', 'tax_class_id', 'length_class_id', 'weight_class_id', 'discount_actions', 'calculate', 'stores', 'downloads', 'languages', 'attributes', 'layouts');
+
+		if (!$this->config->get('config_csvprice_pro_disable_manufacturers')){
+			$lists[] = 'manufacturer_id';
+		}
 		
 		if ($this->validateField('asticker_id', 'product')) {
 			$lists[] = 'asticker_id';
