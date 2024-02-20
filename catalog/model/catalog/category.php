@@ -32,7 +32,7 @@ class ModelCatalogCategory extends Model {
 			$limit = (int)$limit;
 		}
 
-		$sql = "SELECT *, IFNULL(cd.menu_name, cd.name) as name 
+		$sql = "SELECT DISTINCT(c.category_id), c.*, IFNULL(cd.menu_name, cd.name) as name 
 		FROM category c 
 		LEFT JOIN category_description cd ON (c.category_id = cd.category_id) ";
 

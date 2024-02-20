@@ -1,6 +1,6 @@
 <?
 
-class ControllerApiDeliveryServices extends Controller { 
+class ControllerApiDeliveryServices extends Controller {
 	public function index(){
 		if (!is_cli()){
 			die('CLI ONLY');
