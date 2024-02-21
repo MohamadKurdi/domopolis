@@ -1,12 +1,9 @@
 <?php
 
-//CLOUDFLARE
 if (isset($_SERVER["HTTP_CF_CONNECTING_IP"]) && $_SERVER["HTTP_CF_CONNECTING_IP"]) {
 	$_SERVER["REMOTE_ADDR"] = $_SERVER["HTTP_CF_CONNECTING_IP"];
 }
 
-
-//CLI MODE
 if (is_cli()){
 	define('CLI_MODE', true);
 } else {
@@ -15,31 +12,34 @@ if (is_cli()){
 
 $ipsConfig = loadJsonConfig('ips');
 
-//DEBUG
-if ((isset($_GET['hello']) && $_GET['hello'] == 'world')){
-	header('X-DEBUG-REASON: hello=world');
-	define('IS_DEBUG', true);
-	define('DEV_ENVIRONMENT', true);
-	define('DEBUGSQL', true);
-
+$_HEADERS = getallheaders();
+if (isset($_HEADERS['X-Hello']) && $_HEADERS['X-Hello'] == 'world'){
+	header('X-DEBUG-REASON: HEADER hello=world');
+	define('IS_DEBUG', 			true);
+	define('DEV_ENVIRONMENT', 	true);
+	define('DEBUGSQL', 			true);
+} elseif ((isset($_GET['hello']) && $_GET['hello'] == 'world')){
+	header('X-DEBUG-REASON: GET hello=world');
+	define('IS_DEBUG', 			true);
+	define('DEV_ENVIRONMENT', 	true);
+	define('DEBUGSQL', 			true);
 } else {
-
 	if (thisIsAjax()){
 		header('X-DEBUG-REASON: thisIsAjax');
-		define('IS_DEBUG', false);
-		define('DEV_ENVIRONMENT', false);
+		define('IS_DEBUG', 			false);
+		define('DEV_ENVIRONMENT', 	false);
 
 	} elseif (is_cli()) {
 		header('X-DEBUG-REASON: is_cli');
-		define('IS_DEBUG', true);
-		define('DEV_ENVIRONMENT', false);
+		define('IS_DEBUG', 			true);
+		define('DEV_ENVIRONMENT', 	false);
 	} elseif (!empty($ipsConfig['debug']) && !empty($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], $ipsConfig['debug'])) {
 		header('X-DEBUG-REASON: ipsConfig');
-		define('IS_DEBUG', true);
-		define('DEV_ENVIRONMENT', false);
+		define('IS_DEBUG', 			true);
+		define('DEV_ENVIRONMENT', 	false);
 	} else {
-		define('IS_DEBUG', false);
-		define('DEV_ENVIRONMENT', false);		
+		define('IS_DEBUG', 			false);
+		define('DEV_ENVIRONMENT', 	false);		
 	}
 
 	if (isset($_GET['hello']) && $_GET['hello'] == 'justsql'){

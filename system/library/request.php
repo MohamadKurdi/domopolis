@@ -6,6 +6,7 @@ class Request {
 	public $files 	= [];
 	public $server 	= [];
 	public $data 	= [];
+	public $headers	= [];
 	public $method  = 'GET';
 
 	private $numericParams = [
@@ -32,6 +33,7 @@ class Request {
 		$this->cookie 	= $_COOKIE;
 		$this->files 	= $_FILES;
 		$this->server 	= $_SERVER;
+		$this->headers  = $this->clean(getallheaders());
 		if (!empty($_SERVER['REQUEST_METHOD'])){
 			$this->method 	= $_SERVER['REQUEST_METHOD'];
 		}
