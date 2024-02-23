@@ -1,6 +1,8 @@
 <!--footer__down-->
 
-
+    <?php if ($this->config->get('social_auth_google_app_id') && $this->config->get('social_auth_google_enable_sso_widget')) { ?> 
+    <div class="hidden ajax-module-reloadable" data-modpath="api/google/widget" data-reloadable-group="customer"></div>  
+    <?php } ?>
 <?php include($this->checkTemplate(dirname(__FILE__),'/../structured/footer_pwainstall.tpl')); ?>
 
 <div class="footer__down">
