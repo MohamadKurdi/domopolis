@@ -94,7 +94,7 @@ class SmsAdaptor {
 	}
 
 	public function sendViber($viber){
-		if ($this->config->get('config_smsgate_library_enable_viber') && method_exists($this->smsObject, 'sendViber')){
+		if (($this->config->get('config_smsgate_library_enable_viber') || !empty($viber['test_mode'])) && method_exists($this->smsObject, 'sendViber')){
 			try {
 				$result = $this->smsObject->sendViber($viber);
 			} catch (\Exception $e){
