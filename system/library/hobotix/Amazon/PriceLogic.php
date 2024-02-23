@@ -635,31 +635,46 @@ class PriceLogic
 
 	public function updateProfitability($product_id = false){
 		if ($product_id){
-			$this->db->query("UPDATE product SET profitability = ((price - costprice)/price*100) WHERE product_id = '" . (int)$product_id . "' AND price > 0");
+			$sql = "UPDATE product SET profitability = ((price - costprice)/price*100) WHERE product_id = '" . (int)$product_id . "' AND price > 0";
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 		} else {
-			$this->db->query("UPDATE product SET profitability = ((price - costprice)/price*100) WHERE price > 0");
+			$sql = "UPDATE product SET profitability = ((price - costprice)/price*100) WHERE price > 0";
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 		}
 	}
 	
-	public function updatePricesFromDelayed(){		
+	public function updatePricesFromDelayed(){
 		if ($this->config->get('config_rainforest_delay_price_setting')){
-			echoLine('[PriceLogic::updatePricesFromDelayed] DELAYED PRICES IS ON!', 'w');
+			echoLine('\[PriceLogic::updatePricesFromDelayed\] DELAYED PRICES IS ON!', 'w');
 
-			$this->db->query("UPDATE product SET price = price_delayed WHERE price_delayed > 0");			
-			$this->db->query("UPDATE product SET price_delayed = 0 WHERE price_delayed > 0");		
+			$sql = "UPDATE product SET price = price_delayed WHERE price_delayed > 0";
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 
-			$this->db->query("UPDATE product SET price_special = price_special_delayed WHERE price_special_delayed > 0");			
-			$this->db->query("UPDATE product SET price_special_delayed = 0 WHERE price_special_delayed > 0");	
+			$sql = "UPDATE product SET price_delayed = 0 WHERE price_delayed > 0";  
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 
-			$this->updateProfitability();	
+			$sql = "UPDATE product SET price_special = price_special_delayed WHERE price_special_delayed > 0";
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 
-			$this->db->query("UPDATE product_price_to_store SET price = price_delayed WHERE price_delayed > 0");	
-			$this->db->query("UPDATE product_price_to_store SET price_delayed = 0 WHERE price_delayed > 0");	
+			$sql = "UPDATE product SET price_special_delayed = 0 WHERE price_special_delayed > 0";
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 
-			$this->db->query("UPDATE product_price_national_to_store SET price = price_delayed WHERE price_delayed > 0");	
-			$this->db->query("UPDATE product_price_national_to_store SET price_delayed = 0 WHERE price_delayed > 0");				
+			$this->updateProfitability();
+
+			$sql = "UPDATE product_price_to_store SET price = price_delayed WHERE price_delayed > 0";
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
+
+			$sql = "UPDATE product_price_to_store SET price_delayed = 0 WHERE price_delayed > 0";
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
+
+			$sql = "UPDATE product_price_national_to_store SET price = price_delayed WHERE price_delayed > 0";
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
+
+			$sql = "UPDATE product_price_national_to_store SET price_delayed = 0 WHERE price_delayed > 0";
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
+
 		} else {
-			echoLine('[PriceLogic::updatePricesFromDelayed] DELAYED PRICES IS OFF, UPDATING IN LIVE!', 'w');
+			echoLine('\[PriceLogic::updatePricesFromDelayed\] DELAYED PRICES IS OFF, UPDATING IN LIVE!', 'w');
 		}
 	}
 
@@ -669,16 +684,20 @@ class PriceLogic
 			$field = 'price_delayed';
 		}
 
-		$this->db->query("UPDATE product SET 
+		$sql = "UPDATE product SET 
 			" . $field . " 		= '" . (float)$price . "' 
 			WHERE product_id 	= '" . (int)$product_id . "' 
-			AND is_markdown 	= 0");
+			AND is_markdown 	= 0";
 
-		$this->db->query("UPDATE product SET 
+		$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
+
+		$sql = "UPDATE product SET 
 			price 				= '" . (float)$price . "' 
 			WHERE product_id 	= '" . (int)$product_id . "' 
 			AND price = 0
-			AND is_markdown 	= 0");
+			AND is_markdown 	= 0";
+
+		$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 
 		$this->updateProfitability($product_id);
 
@@ -691,16 +710,20 @@ class PriceLogic
 			$field = 'price_special_delayed';
 		}
 
-		$this->db->query("UPDATE product SET 
+		$sql = "UPDATE product SET 
 			" . $field . " 		= '" . (float)$special . "' 
 			WHERE product_id 	= '" . (int)$product_id . "' 
-			AND is_markdown 	= 0");
+			AND is_markdown 	= 0";
 
-		$this->db->query("UPDATE product SET 
+		$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
+
+		$sql = "UPDATE product SET 
 			price_special 		= '" . (float)$special . "' 
 			WHERE product_id 	= '" . (int)$product_id . "' 
 			AND price_special 	= 0
-			AND is_markdown 	= 0");
+			AND is_markdown 	= 0";
+
+		$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 
 		$this->updateProfitability($product_id);
 
@@ -708,10 +731,12 @@ class PriceLogic
 	}
 
 	public function updateProductCostPriceInDatabase($product_id, $costprice){
-		$this->db->query("UPDATE product SET 
+		$sql = "UPDATE product SET 
 			costprice 			= '" . (float)$costprice . "' 
 			WHERE product_id 	= '" . (int)$product_id . "'
-			AND is_markdown 	= 0");		
+			AND is_markdown 	= 0";		
+
+		$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 
 		$this->updateProfitability($product_id);
 
@@ -725,7 +750,7 @@ class PriceLogic
 			$field = 'price_delayed';
 		}
 
-		$this->db->query("INSERT INTO product_price_to_store SET 
+		$sql = "INSERT INTO product_price_to_store SET 
 			store_id 			= '" . (int)$store_id . "',
 			product_id 			= '" . (int)$product_id . "',
 			" . $field . " 		= '" . (float)$price . "',
@@ -735,13 +760,17 @@ class PriceLogic
 			ON DUPLICATE KEY UPDATE
 			" . $field . " 		= '" . (float)$price . "',
 			settled_from_1c 	= '0',
-			dot_not_overload_1c = '0'");
+			dot_not_overload_1c = '0'";
 
-		$this->db->query("UPDATE product_price_to_store SET 
+		$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
+
+		$sql = "UPDATE product_price_to_store SET 
 			price 				= '" . (float)$price . "'		
 			WHERE store_id = '" . (int)$store_id . "'
 			AND product_id = '" . (int)$product_id . "'
-			AND price = '0'");
+			AND price = '0'";
+
+		$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 
 		$this->priceUpdaterQueue->addToQueue($product_id);
 	}
@@ -1072,13 +1101,13 @@ class PriceLogic
 			echoLine('[PriceLogic::setProductNoOffers] ' . $asin  . ', setting status marker config_rainforest_nooffers_status_id', 'e');
 			$sql = "UPDATE product SET stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id') . "' ";
 			$sql .= " WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 1 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0)";
-			$this->db->query($sql);		
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));		
 
 			echoLine('[PriceLogic::setProductNoOffers] ' . $asin  . ', clearing status overload table', 'e');
 			$sql = "DELETE FROM product_stock_status ";
 			$sql .= " WHERE product_id IN ";
 			$sql .= " (SELECT product_id FROM product WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 1 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0))";
-			$this->db->query($sql);			
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));		
 		}
 
 		if ($this->config->get('config_rainforest_nooffers_action_for_manual') && $this->config->get('config_rainforest_nooffers_status_id_for_manual')){
@@ -1086,13 +1115,13 @@ class PriceLogic
 			echoLine('[PriceLogic::setProductNoOffers] ' . $asin  . ', setting status marker config_rainforest_nooffers_status_id_for_manual', 'e');
 			$sql = "UPDATE product SET stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id_for_manual') . "' ";
 			$sql .= " WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 0 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0)";
-			$this->db->query($sql);						
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));						
 
 			echoLine('[PriceLogic::setProductNoOffers] ' . $asin  . ', clearing status overload table', 'e');
 			$sql = "DELETE FROM product_stock_status ";
 			$sql .= " WHERE product_id IN ";
 			$sql .= " (SELECT product_id FROM product WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 0 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0))";
-			$this->db->query($sql);			
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));			
 		}
 	}
 
@@ -1105,15 +1134,14 @@ class PriceLogic
 			$sql = "UPDATE product SET stock_status_id = '" . (int)$this->config->get('config_stock_status_id') . "' ";
 			$sql .= " WHERE asin = '" . $this->db->escape($asin) . "'  AND added_from_amazon = 1 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 ";
 			$sql .= " AND (stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id') . "' OR stock_status_id = '" . (int)$this->config->get('config_not_in_stock_status_id') ."')";
-
-			$this->db->query($sql);
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 
 			echoLine('[PriceLogic::setProductOffers] ' . $asin . ', clearing status overload table', 's');
 			$sql = "DELETE FROM product_stock_status ";
 			$sql .= " WHERE product_id IN ";
 			$sql .= " (SELECT product_id FROM product WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 1  AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 ";
 			$sql .= "AND (stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id') . "' OR stock_status_id = '" . (int)$this->config->get('config_not_in_stock_status_id') ."'))";
-			$this->db->query($sql);
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 		}
 
 		if ($this->config->get('config_rainforest_nooffers_action_for_manual') && $this->config->get('config_rainforest_nooffers_status_id_for_manual', 's')){
@@ -1122,14 +1150,14 @@ class PriceLogic
 			$sql .= " WHERE asin = '" . $this->db->escape($asin) . "'  AND added_from_amazon = 1 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 ";
 			$sql .= " AND (stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id') . "' OR stock_status_id = '" . (int)$this->config->get('config_not_in_stock_status_id') ."')";
 
-			$this->db->query($sql);
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 
 			echoLine('[PriceLogic::setProductOffers] ' . $asin . ', clearing status overload table', 's');
 			$sql = "DELETE FROM product_stock_status ";
 			$sql .= " WHERE product_id IN ";
 			$sql .= " (SELECT product_id FROM product WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 1  AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 ";
 			$sql .= "AND (stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id') . "' OR stock_status_id = '" . (int)$this->config->get('config_not_in_stock_status_id') ."'))";
-			$this->db->query($sql);
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 		}
 	}
 
@@ -1146,10 +1174,11 @@ class PriceLogic
 			$sql .= " product_id = '" . (int)$product_id . "', ";
 			$sql .= " stock_status_id = '" . $this->config->get('config_in_stock_status_id') . "' ";
 			$sql .= " ON DUPLICATE KEY UPDATE stock_status_id = '" . $this->config->get('config_in_stock_status_id') . "'";
-			$this->db->query($sql);		
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));		
 
 			if ($this->config->get('config_single_store_enable')){
-				$this->db->query("UPDATE product SET stock_status_id = '" . (int)$this->config->get('config_in_stock_status_id') . "' WHERE product_id = '" . (int)$product_id . "'");
+				$sql = "UPDATE product SET stock_status_id = '" . (int)$this->config->get('config_in_stock_status_id') . "' WHERE product_id = '" . (int)$product_id . "'";
+				$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 			}		
 		}
 	}
@@ -1169,7 +1198,7 @@ class PriceLogic
 				AND stock_status_id = '" . $this->config->get('config_in_stock_status_id') . "')
 				ON DUPLICATE KEY UPDATE stock_status_id = '" . (int)$data['stock_status_id'] . "'";
 		
-		$this->db->query($sql);
+		$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 	}
 
 	/*
@@ -1185,14 +1214,17 @@ class PriceLogic
 
 			#Глобальное обновление где больше нуля
 			echoLine('[PriceLogic::setProductStockStatusesGlobal] setting config_stock_status_id for products in stock on Amazon: ' . $this->config->get('config_stock_status_id'), 's');
-			$this->db->query("UPDATE product SET stock_status_id = '" . $this->config->get('config_stock_status_id') . "' WHERE status = 1 AND stock_status_id <> '" . $this->config->get('config_stock_status_id') . "' AND (added_from_amazon = 1 AND amzn_no_offers = 0)");
+			$sql = "UPDATE product SET stock_status_id = '" . $this->config->get('config_stock_status_id') . "' WHERE status = 1 AND stock_status_id <> '" . $this->config->get('config_stock_status_id') . "' AND (added_from_amazon = 1 AND amzn_no_offers = 0)";
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 
 			echoLine('[PriceLogic::setProductStockStatusesGlobal] setting config_stock_status_id for products in stock on warehouses: ' . $this->config->get('config_stock_status_id'), 's');
-			$this->db->query("UPDATE product SET stock_status_id = '" . $this->config->get('config_stock_status_id') . "' WHERE status = 1 AND stock_status_id <> '" . $this->config->get('config_stock_status_id') . "' AND (" . $this->buildStockQueryField() . " > 0)");		
+			$sql = "UPDATE product SET stock_status_id = '" . $this->config->get('config_stock_status_id') . "' WHERE status = 1 AND stock_status_id <> '" . $this->config->get('config_stock_status_id') . "' AND (" . $this->buildStockQueryField() . " > 0)";	
+			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 
 			if ($this->config->get('config_single_store_enable')){
 				echoLine('[PriceLogic::setProductStockStatusesGlobal] setting config_in_stock_status_id for products in stock on warehouses ' . $this->config->get('config_in_stock_status_id'), 's');
-				$this->db->query("UPDATE product SET stock_status_id = '" . $this->config->get('config_in_stock_status_id') . "' WHERE status = 1 AND stock_status_id <> '" . $this->config->get('config_in_stock_status_id') . "' AND (`" . $warehouse_identifier . "` > 0)");	
+				$sql = "UPDATE product SET stock_status_id = '" . $this->config->get('config_in_stock_status_id') . "' WHERE status = 1 AND stock_status_id <> '" . $this->config->get('config_in_stock_status_id') . "' AND (`" . $warehouse_identifier . "` > 0)";
+				$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 			}	
 
 			$data = [

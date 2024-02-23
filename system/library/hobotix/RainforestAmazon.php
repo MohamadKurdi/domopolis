@@ -123,7 +123,21 @@ class RainforestAmazon
 		$rainforestLogger = new Amazon\RainforestLogger($registry);
 
 		if ($this->config->get('config_rainforest_enable_api') && $this->config->get('config_rainforest_api_key')){
-			$this->rfClient = new \CaponicaAmazonRainforest\Client\RainforestClient(['api_key' => trim($this->config->get('config_rainforest_api_key'))], $rainforestLogger);
+			$config = [
+				'api_key' 		=> trim($this->config->get('config_rainforest_api_key')),
+				'debug_output' 	=> (bool)$this->config->get('config_rainforest_debug_library'),
+				'debug_http' 	=> (bool)$this->config->get('config_rainforest_debug_http_library'),				
+			];
+
+			if ($this->config->get('config_rainforest_debug_library')){
+				$config['debug_file_path'] = DIR_LOGS . 'rainforest_debug_log.txt';
+			}
+
+			if ($this->config->get('config_rainforest_debug_request_timeout')){
+				$config['http_timeout'] = (int)$this->config->get('config_rainforest_debug_request_timeout');
+			}
+
+			$this->rfClient = new \CaponicaAmazonRainforest\Client\RainforestClient($config, $rainforestLogger);
 		} else {
 			$this->rfClient = null;
 		}		

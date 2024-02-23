@@ -294,7 +294,7 @@ class ControllerKPRainForest extends Controller {
 
 
 		if (!$this->config->get('config_rainforest_enable_pricing')){
-			echoLine('[parseofferscron] RNF AMAZON PRICING NOT ENABLED', 'e');
+			echoLine('[ControllerKPRainForest::parseofferscron] RNF AMAZON PRICING NOT ENABLED', 'e');
 			return;
 		}
 
@@ -308,7 +308,7 @@ class ControllerKPRainForest extends Controller {
 
 		$total = count($products);
 		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::offerRequestLimits);
-		echoLine('[parseofferscron] Total ' . $total . ' products!', 'i');
+		echoLine('[ControllerKPRainForest::parseofferscron] Total ' . $total . ' products!', 'i');
 
 		$i=1;
 		$timer = new \hobotix\FPCTimer();		
@@ -324,7 +324,7 @@ class ControllerKPRainForest extends Controller {
 				}
 			}
 
-			echoLine('[parseofferscron] Time for iteration: ' . $i . ' from ' . $iterations .': ' . $timer->getTime() . ' s.', 'i');
+			echoLine('[ControllerKPRainForest::parseofferscron] Time for iteration: ' . $i . ' from ' . $iterations .': ' . $timer->getTime() . ' s.', 'i');
 			unset($timer);
 		}
 		
@@ -390,9 +390,12 @@ class ControllerKPRainForest extends Controller {
 			$results = $this->rainforestAmazon->getProductsOffersASYNC($slice);
 
 			if ($results){
-				foreach ($results as $asin => $offers){				
+				try {
 					$this->rainforestAmazon->offersParser->addOffersForASIN($asin, $offers);
 					$this->rainforestAmazon->offersParser->clearProductsAmazonQueue($asin);
+				} catch (\Exception $e){
+					echoLine('[ControllerKPRainForest::parseofferscron] Caught Exception, exiting.' . $e->getMessage());
+					return;
 				}
 			}
 
@@ -409,7 +412,7 @@ class ControllerKPRainForest extends Controller {
 		}
 
 		if (!$this->config->get('config_rainforest_enable_pricing')){
-			echoLine('[parseofferscron] RNF AMAZON PRICING NOT ENABLED', 'e');
+			echoLine('[ControllerKPRainForest::parseofferscron] RNF AMAZON PRICING NOT ENABLED', 'e');
 			return;
 		}
 
@@ -431,10 +434,10 @@ class ControllerKPRainForest extends Controller {
 		$products = $this->rainforestAmazon->offersParser->getProductsToGetOffers();			
 
 		$total = count($products);
-		echoLine('[parseofferscron] Total products to update: ' . $total, 'i');
+		echoLine('[ControllerKPRainForest::parseofferscron] Total products to update: ' . $total, 'i');
 		
 		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::offerRequestLimits);
-		echoLine('[parseofferscron] Total ' . $total . ' products!', 'i');
+		echoLine('[ControllerKPRainForest::parseofferscron] Total ' . $total . ' products!', 'i');
 
 		$i=1;
 		$timer = new \hobotix\FPCTimer();		
@@ -446,14 +449,19 @@ class ControllerKPRainForest extends Controller {
 			$results = $this->rainforestAmazon->getProductsOffersASYNC($slice);
 
 			if ($results){
-				foreach ($results as $asin => $offers){				
-					$this->rainforestAmazon->offersParser->addOffersForASIN($asin, $offers);
-					$this->rainforestAmazon->offersParser->clearProductsAmazonQueue($asin);
+				foreach ($results as $asin => $offers){			
+					try {
+						$this->rainforestAmazon->offersParser->addOffersForASIN($asin, $offers);
+						$this->rainforestAmazon->offersParser->clearProductsAmazonQueue($asin);
+					} catch (\Exception $e){
+						echoLine('[ControllerKPRainForest::parseofferscron] Caught Exception, exiting.' . $e->getMessage());
+						return;
+					}
 				}
 
 			}
 
-			echoLine('[parseofferscron] Time for iteration: ' . $i . ' from ' . $iterations .': ' . $timer->getTime() . ' s.', 'i');
+			echoLine('[ControllerKPRainForest::parseofferscron] Time for iteration: ' . $i . ' from ' . $iterations .': ' . $timer->getTime() . ' s.', 'i');
 			unset($timer);
 		}
 	}

@@ -53,8 +53,12 @@ if (!class_exists('DB')){
 			return $this->database;			
 		}
 
-		public function query($sql) {
+		public function query($sql, $debug = false) {
 			$result = false;
+
+			if ($debug && is_cli()){
+				echoLine('[DB::query] Running Query: ' . reparseEOLSToSpace($sql), 'd');
+			}
 
 			if (defined('DEBUGSQL') && DEBUGSQL) {		
 				$queryTimer = new \hobotix\FPCTimer();
@@ -90,11 +94,15 @@ if (!class_exists('DB')){
 			return $result;
 		}
 
-		public function ncquery($sql) {
+		public function ncquery($sql, $debug = false) {
 			return $this->non_cached_query($sql);
 		}
 
-		public function non_cached_query($sql) {
+		public function non_cached_query($sql, $debug = false) {
+			if ($debug && is_cli()){
+				echoLine('[DB::ncquery] Running Query: ' . reparseEOLSToSpace($sql), 'd');
+			}
+
 			if (defined('DEBUGSQL') && DEBUGSQL) {		
 				$queryTimer = new \hobotix\FPCTimer();
 
@@ -113,7 +121,6 @@ if (!class_exists('DB')){
 				return $result;
 
 			} else {
-
 				return $this->connection->non_cached_query($sql);
 			}
 		}
