@@ -1,4 +1,3 @@
-<?php include($this->checkTemplate(dirname(__FILE__), '/google_sso_widget.tpl')); ?>
 <script>
 	window._customer_data_loaded        = true;
 </script>

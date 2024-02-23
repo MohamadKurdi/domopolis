@@ -1,4 +1,4 @@
-<?php if (!$this->customer->isLogged() && $this->config->get('social_auth_google_app_id') && $this->config->get('social_auth_google_enable_sso_widget')) { ?>
+<?php if (!$logged && $this->config->get('social_auth_google_app_id') && $this->config->get('social_auth_google_enable_sso_widget')) { ?>
     <script>
         var google_auth_script = document.createElement('script');
         google_auth_script.onload = function () {
