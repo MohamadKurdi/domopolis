@@ -29,7 +29,7 @@
 			<div id="tabs" class="htabs">
 				<a href="#tab-cron"><span style="color:#7F00FF;"><i class="fa fa-refresh"></i> Cron</span></a>
 				<a href="#tab-cron-results"><span style="color:#0054b3;"><i class="fa fa-refresh"></i> Статистика фреймворка</span></a>
-				<a href="#tab-external-api"><span style="color:#cf4a61;"><i class="fa fa-cogs"></i> External API</span></a>
+				<a href="#tab-external-api"><span style="color:#cf4a61;"><i class="fa fa-cogs"></i> External API, Framework Debug</span></a>
 				<a href="#tab-products"><span style="color:#00ad07;"><i class="fa fa-cogs"></i> Настройки добавления товаров</span></a>
 				<a href="#tab-pricelogic"><span style="color:#D69241;"><i class="fa fa-cogs"></i> Настройки ценообразования</span></a>
 				<a href="#tab-priceformula"><span style="color:#ff7815;"><i class="fa fa-calculator"></i> Ценовая модель</span></a>
@@ -538,7 +538,107 @@
 					<table class="list">
 						<tr>
 							<td colspan="3" class="left" style="color:#00ad07;">
-								<i class="fa fa-cogs"></i> <b>🤖 Настройки переводчика</b>
+								<i class="fa fa-code"></i> <b>Debug</b>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Library Debug
+							</td>
+							<td  class="center">
+								<input id="config_rainforest_debug_library" type="checkbox" class="checkbox" name="config_rainforest_debug_library" <? if ($config_rainforest_debug_library){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_debug_library"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Подробные логи для библиотеки AmazonRainforest (только нативные запросы библиотеки)
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								Library HTTP Debug
+							</td>
+							<td  class="center">
+								<input id="config_rainforest_debug_http_library" type="checkbox" class="checkbox" name="config_rainforest_debug_http_library" <? if ($config_rainforest_debug_http_library){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_debug_http_library"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Подробные логи для HTTP-запросов библиотеки AmazonRainforest (только нативные запросы библиотеки)
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td  class="right">
+								Offers Debug
+							</td>
+							<td  class="center">
+								<input id="config_rainforest_debug_offers" type="checkbox" class="checkbox" name="config_rainforest_debug_offers" <? if ($config_rainforest_debug_offers){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_debug_offers"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Подробные логи для запросов офферов<sup style="color:red">DEV</sup>
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td  class="right">
+								Products Debug
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_debug_products" type="checkbox" class="checkbox" name="config_rainforest_debug_products" <? if ($config_rainforest_debug_products){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_debug_products"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Подробные логи для запросов товаров<sup style="color:red">DEV</sup>
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td  class="right">
+								Categories Debug
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_debug_categories" type="checkbox" class="checkbox" name="config_rainforest_debug_categories" <? if ($config_rainforest_debug_categories){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_debug_categories"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Подробные логи для запросов категорий<sup style="color:red">DEV</sup>
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td  class="right">
+								Request Timeout
+							</td>
+							<td style="width:50px;" class="center">
+								<input type="number" name="config_rainforest_debug_request_timeout" value="<?php echo $config_rainforest_debug_request_timeout; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Таймаут запросов к Rainforest API, сек (только нативные запросы библиотеки)
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td  class="right">
+								PriceLogic Mysql Debug
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_debug_mysql_pricelogic" type="checkbox" class="checkbox" name="config_rainforest_debug_mysql_pricelogic" <? if ($config_rainforest_debug_mysql_pricelogic){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_debug_mysql_pricelogic"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Выводить в консоль выполняемые запросы
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td colspan="3" class="left" style="color:#00ad07;">
+								<i class="fa fa-cogs"></i> <b>🤖 Настройки переводчика External API</b>
 							</td>
 						</tr>
 
@@ -562,7 +662,7 @@
 
 						<tr>
 							<td colspan="3" class="left" style="color:#00ad07;">
-								<i class="fa fa-cogs"></i> <b>Обработчик данных</b>
+								<i class="fa fa-cogs"></i> <b>Обработчик данных External API</b>
 							</td>
 						</tr>
 						<tr>

@@ -59,6 +59,17 @@ class ControllerSettingRnf extends Controller {
         'config_enable_seogen_cron'
 	];
 
+	private $debug_settings = [
+		'config_rainforest_debug_library',
+		'config_rainforest_debug_http_library',			
+		'config_rainforest_debug_offers',
+		'config_rainforest_debug_products',
+		'config_rainforest_debug_categories',
+
+		'config_rainforest_debug_request_timeout',
+		'config_rainforest_debug_mysql_pricelogic'
+	];
+
 	private $other_settings = [
 		'config_rainforest_category_update_period',
 		'config_rainforest_max_variants',
@@ -209,6 +220,10 @@ class ControllerSettingRnf extends Controller {
 		foreach ($this->cron_settings as $cron_setting){
 			$this->data[$cron_setting] = $this->config->get($cron_setting);		
 		}		
+
+		foreach ($this->debug_settings as $debug_setting){
+			$this->data[$debug_setting] = $this->config->get($debug_setting);		
+		}
 
 		foreach ($this->other_settings as $other_setting){
 			$this->data[$other_setting] = $this->config->get($other_setting);		
