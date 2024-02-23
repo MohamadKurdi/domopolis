@@ -116,10 +116,12 @@ function reTemplate($array, $string){
 		$from[] = $key;
 		$to[]	= $value;
 	}
-
-	$string = str_replace($from, $to, $string);
-	$string = str_replace('  ', ' ', $string);
-	$string = trim($string);
+	
+	if (!empty($string)){	
+		$string = str_replace($from, $to, $string);
+		$string = str_replace('  ', ' ', $string);
+		$string = trim($string);
+	}
 
 	return $string;
 }

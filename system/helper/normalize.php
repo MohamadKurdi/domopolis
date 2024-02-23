@@ -17,11 +17,23 @@ function removeLeftGT($s){
 	return trim($s);
 }	
 
+function reparseEOLSToSpace($st){
+	$ste = explode(PHP_EOL, $st);
+
+	foreach ($ste as &$smste){
+		$smste = trim($smste);
+		$smste = str_replace('  ', ' ', $smste);
+	}
+
+	return implode(' ', $ste);	
+}
+
 function reparseEOLSToSlash($st){			
 	$ste = explode(PHP_EOL, $st);
 
 	foreach ($ste as &$smste){
 		$smste = trim($smste);
+		$smste = str_replace('  ', ' ', $smste);
 	}
 
 	return implode(' / ', $ste);			
@@ -94,6 +106,10 @@ function preparePhone($phone){
 	$phone = '+' . preg_replace("/\D+/", "", $phone);
 
 	return $phone;
+}
+
+function preparePhoneNoPlus($phone){
+	return preg_replace("/\D+/", "", $phone);
 }
 
 function prepareFileName($filename){
