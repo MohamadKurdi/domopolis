@@ -70,7 +70,10 @@ if (!function_exists('echoLine')){
 				break;  
 				case 'i':
 				echo "\033[36m$line \033[0m" . PHP_EOL;
-				break;    
+				break;
+				case 'd':
+				echo "\033[35m$line \033[0m" . PHP_EOL;
+				break;        
 				case 'l':
 				echo $line . PHP_EOL;
 				break;  
