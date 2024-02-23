@@ -17,7 +17,6 @@ class ControllerDPService extends Controller {
 		$this->log->debug($this->url->link('common/home'));
 	}
 
-
 	private function do_resize($image, $w, $h){
 		$new_image = $this->model_tool_image->resize_avif($image, $w, $h);
         echoLine('[preresize] ' . $image . ' -> ' . $new_image . ' ('. $w . '*' . $h . ')', 's');
