@@ -39,28 +39,28 @@ class BSGWorld {
 	public function sendViber($viber){
 		echoLine('[BSGWorld::sendViber] Sending Viber to number ' . preparePhone($viber['to']), 'i');
 
-		$viberClient = $bsg->getViberClient();
+		$viberClient = $this->BSG->getViberClient();
 
 		$viberOptions = ['viber' => []];
 
 		if (!empty($viber['picture_url'])){
-			$viberOptions['viber']['img'] = $viber['picture_url'];
+			$viberOptions['img'] = $viber['picture_url'];
 		}
 
 		if (!empty($viber['button_txt'])){
-			$viberOptions['viber']['caption'] 	= $viber['button_txt'];
-			$viberOptions['viber']['action'] 	= $viber['button_url'];
+			$viberOptions['caption'] 	= $viber['button_txt'];
+			$viberOptions['action'] 	= $viber['button_url'];
 		}
 
 		if (!empty($viber['messageSms'])){
-			$viberOptions['viber']['alt_route'] = [
+			$viberOptions['alt_route'] = [
 				'originator' 	=> $this->config->get('config_sms_from'),
 				'text' 			=> $viber['messageSms']
 			];
 		}
 
 		$viberClient->addMessage(
-			$to 			= 	preparePhone($viber['to']), 
+			$to 			= 	[['msisdn' => preparePhoneNoPlus($viber['to'])]], 
 			$text 			= 	$viber['message'], 
 			$viber_options	=	$viberOptions, 
 			$alpha_name 	= 	$this->config->get('config_viber_from'), 
@@ -72,7 +72,7 @@ class BSGWorld {
 			$validity	=	3600,
 			$tariff		=	NULL, 
 			$only_price	=	false
-		);
+		);		
 
 		if ($this->check($answer['result'][0])){
 			$viberClient->clearMessages();

@@ -38,8 +38,7 @@ final class OTP {
             return self::MAX_TRIES_EXCEEDED;
         }
 
-        $otpCode    = $this->setOTPCode($telephone);
-            
+        $otpCode    = $this->setOTPCode($telephone);            
         $senderID = $this->smsAdaptor->sendSMSOTP(['telephone' => $telephone], ['otp_code' => $otpCode]);            
 
         if (!$senderID){
