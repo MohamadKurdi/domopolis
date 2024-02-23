@@ -36,7 +36,7 @@
 		public function getAddress($address_id) {
 			$address_query = $this->db->ncquery("SELECT DISTINCT * FROM address WHERE address_id = '" . (int)$address_id . "' AND customer_id = '" . (int)$this->customer->getId() . "'");
 			
-			if (!$address_query->row['country_id']){
+			if (!$address_query->num_rows || !$address_query->row['country_id']){
 				$address_query->row['country_id'] = $this->config->get('config_country_id');
 			}
 			
