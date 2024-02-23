@@ -2,6 +2,10 @@
 
 class ControllerAPIGoogle extends Controller {	
 
+	public function widget(){
+		$this->template = 'blocks/google_sso_widget.tpl';
+		$this->response->setOutput($this->render());
+	}
 
 	public function bad(){
 		header("HTTP/1.1 401 Unauthorized");
@@ -69,7 +73,6 @@ class ControllerAPIGoogle extends Controller {
 
 		return json_encode($result);
 	}
-
 
 	public function login(){
 		if (empty($this->request->post['credential'])){
