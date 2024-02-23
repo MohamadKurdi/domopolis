@@ -62,9 +62,11 @@
 				$class 		= $action->getClass();				
 				$controller = new $class($this->registry);
 				
-				$controller->{$action->getMethod()}($action->getArgs());
-				
-				return $controller->output;
+				if ($this->hasAction($child, $args = [])){
+					$controller->{$action->getMethod()}($action->getArgs());				
+					return $controller->output;
+				}
+
 				} else {
 				trigger_error('Error: Could not load controller ' . $child . '!');
 				exit();					

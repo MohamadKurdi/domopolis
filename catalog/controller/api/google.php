@@ -3,6 +3,7 @@
 class ControllerAPIGoogle extends Controller {	
 
 	public function widget(){
+		$this->data['logged'] = $this->customer->isLogged();
 		$this->template = 'blocks/google_sso_widget.tpl';
 		$this->response->setOutput($this->render());
 	}
