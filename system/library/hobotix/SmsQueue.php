@@ -19,7 +19,9 @@ class smsQueue {
 			return false;
 		}
 		
-		$this->db->query("INSERT INTO `queue_sms` SET `body`='". base64_encode(json_encode($data)) ."'");		
+		$this->db->query("INSERT INTO `queue_sms` SET 
+			`body`=	'". base64_encode(json_encode($data)) ."',
+			`raw` =	'". $this->db->escape(json_encode($data)) ."'");		
 		
 		return $this->db->getLastId();			
 	}

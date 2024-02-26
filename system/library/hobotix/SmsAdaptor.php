@@ -74,26 +74,43 @@ class SmsAdaptor {
 	}
 
 	public function sendSMS($sms){
-		if (method_exists($this->smsObject, 'sendSMS')){
-			try {
-				$result = $this->smsObject->sendSMS($sms);
-			} catch (\Exception $e){
-				$result = $e->getMessage();
-				return false;
+		$result = false;
+
+		if ($this->config->get('config_smsgate_library_enable_viber_fallback')){
+			echoLine('[SmsAdaptor::sendSMS] Viber priority setting is on, setting viber', 'w');
+
+			if (empty($sms['messageSms'])){
+				$sms['messageSms'] = $sms['message'];
 			}
+
+			$result = $this->sendViber($sms);
+		} 
+
+		if (!$result){
+			if (method_exists($this->smsObject, 'sendSMS')){
+				try {
+					$result = $this->smsObject->sendSMS($sms);
+				} catch (\Exception $e){
+					$result = $e->getMessage();
+					return false;
+				}
+			}
+
+			if (empty($result)){
+				echoLine('[SmsAdaptor::sendSMS] Could not send SMS!', 'e');
+				return false;
+			}			
+
+			echoLine('[SmsAdaptor::sendSMS] Sent SMS, got ID: ' . $result, 's');
+
 		}
-
-		if (empty($result)){
-			echoLine('[SmsAdaptor::sendSMS] Could not send SMS!', 'e');
-			return false;
-		}			
-
-		echoLine('[SmsAdaptor::sendSMS] Sent SMS, got ID: ' . $result, 's');
 
 		return $result;
 	}
 
 	public function sendViber($viber){
+		$result = false;
+
 		if (($this->config->get('config_smsgate_library_enable_viber') || !empty($viber['test_mode'])) && method_exists($this->smsObject, 'sendViber')){
 			try {
 				$result = $this->smsObject->sendViber($viber);
