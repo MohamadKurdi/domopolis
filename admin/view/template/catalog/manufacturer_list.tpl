@@ -14,7 +14,11 @@
 	<div class="box">
 		<div class="heading order_head">
 			<h1><img src="view/image/shipping.png" alt="" /> <?php echo $heading_title; ?></h1>
-			<div class="buttons"><a href="<?php echo $insert; ?>" class="button"><?php echo $button_insert; ?></a><a onclick="$('form').submit();" class="button"><?php echo $button_delete; ?></a></div>
+			<div class="buttons">
+				<a href="<?php echo $recalculate; ?>" class="button"><i class="fa fa-refresh"></i> Пересчитать товары</a>
+				<a href="<?php echo $insert; ?>" class="button"><?php echo $button_insert; ?></a>
+				<a onclick="$('form').submit();" class="button"><?php echo $button_delete; ?></a>
+			</div>
 		</div>
 		<div class="content">
 			<form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
@@ -27,29 +31,43 @@
 							<td class="right">ID</td>
 							<td class="right">Лого</td>
 							<td class="left">
-							<?php if ($sort == 'name') { ?>
-								<a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
+								<?php if ($sort == 'name') { ?>
+									<a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
 								<?php } else { ?>
-								<a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
-							<?php } ?>
+									<a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
+								<?php } ?>
 							</td>
-							<td class="right"><?php if ($sort == 'sort_order') { ?>
-								<a href="<?php echo $sort_sort_order; ?>" class="<?php echo strtolower($order); ?>">Сортировка</a>
+							<td class="center">
+								<?php if ($sort == 'sort_order') { ?>
+									<a href="<?php echo $sort_sort_order; ?>" class="<?php echo strtolower($order); ?>">Сортировка</a>
 								<?php } else { ?>
-								<a href="<?php echo $sort_sort_order; ?>">Сортировка</a>
-							<?php } ?></td>
-							<td class="right" style="word-wrap: normal; width:50px;">Новинка</td>
-							<td class="right" style="word-wrap: normal; width:100px;">Товаров</td>
-							<td class="right" style="word-wrap: normal; min-width:100px;">Домашняя</td>
-							<td class="right" style="word-wrap: normal; width:50px;">Только товары</td>
+									<a href="<?php echo $sort_sort_order; ?>">Сортировка</a>
+								<?php } ?>
+							</td>
+							<td class="center" style="word-wrap: normal; width:50px;">Новинка</td>
+							<td class="center" style="word-wrap: normal; width:100px;">
+								<?php if ($sort == 'products_total') { ?>
+									<a href="<?php echo $sort_products_total; ?>" class="<?php echo strtolower($order); ?>">Товаров всего</a>
+								<?php } else { ?>
+									<a href="<?php echo $sort_products_total; ?>">Товаров всего</a>
+								<?php } ?>
+							</td>
+							<td class="center" style="word-wrap: normal; width:100px;">
+								<?php if ($sort == 'products_total_enabled') { ?>
+									<a href="<?php echo $sort_products_total_enabled; ?>" class="<?php echo strtolower($order); ?>">Товаров вкл</a>
+								<?php } else { ?>
+									<a href="<?php echo $sort_products_total_enabled; ?>">Товаров вкл</a>
+								<?php } ?>
+							</td>
+							<td class="center" style="word-wrap: normal; min-width:50px;">Домашняя</td>
+							<td class="center" style="word-wrap: normal; width:80px;">Только товары</td>
 							<?php if ($this->config->get('config_hotline_feed_enable')) { ?>
-								<td class="right" style="word-wrap: normal; width:50px;">Hotline</td>
+								<td class="center" style="word-wrap: normal; width:50px;">Hotline</td>
 							<?php } ?>
-							<td class="right" style="word-wrap: normal; min-width:100px;">Магазины</td>
-							<td class="right" style="word-wrap: normal; min-width:100px;">Добавлен</td>
-							<td class="right" style="word-wrap: normal; min-width:100px;">Страна</td>
-							<td class="right" style="word-wrap: normal; min-width:100px;">SEO URL</td>
-							<td class="right" style="word-wrap: normal; min-width:100px; max-width: 200px;">Альтернативные</td>
+							<td class="center" style="word-wrap: normal; min-width:100px;">Магазины</td>
+							<td class="center" style="word-wrap: normal; min-width:100px;">Страна</td>
+							<td class="center" style="word-wrap: normal; min-width:100px;">SEO URL</td>
+							<td class="center" style="word-wrap: normal; min-width:100px; max-width: 200px;">Альтернативные</td>
 							<td class="right"><?php echo $column_action; ?></td>
 						</tr>
 					</thead>
@@ -65,18 +83,19 @@
 										<?php } ?>
 									</td>
 									
-									<td class="left" width='50px'>
+									<td class="center" width='50px'>
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#000; color:#FFF"><b><?php echo $manufacturer['manufacturer_id']; ?></b></span>									
 									</td>
 
-									<td class="left" width='1'>
+									<td class="center" width='1'>
 										<img src='<?php echo $manufacturer['image']; ?>' loading="lazy" />										
 									</td>
 									
 									<td class="left">
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><b><?php echo $manufacturer['name']; ?></b></span>
 									</td>
-									<td class="right">										
+
+									<td class="center">										
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#000; color:#FFF"><b><?php echo $manufacturer['sort_order']; ?></b></span>
 									</td>
 
@@ -88,10 +107,24 @@
 										<? } ?>
 									</td>
 									
-									<td class="right">
-										<span class="status_color" style="display:inline-block; padding:3px 5px; background:<?php if ($manufacturer['total_products']) { ?>#00ad07<?php } else { ?>#cf4a61<?php } ?>; color:#FFF">
-											<b><?php echo $manufacturer['total_products']; ?></b>
+									<td class="center">
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:<?php if ($manufacturer['products_total']) { ?>#00ad07<?php } else { ?>#cf4a61<?php } ?>; color:#FFF">
+											<b><?php echo $manufacturer['products_total']; ?></b>
 										</span>
+
+										<?php if ((int)$manufacturer['products_total_rt'] <> (int)$manufacturer['products_total']) { ?>
+											<span class="status_color" style="margin-left:4px; display:inline-block; padding:3px 5px; background:#ff7815;  color:#FFF"><b><?php echo $manufacturer['products_total_rt']; ?></b></span>
+										<?php } ?>
+									</td>
+
+									<td class="center">
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:<?php if ($manufacturer['products_total_enabled']) { ?>#00ad07<?php } else { ?>#cf4a61<?php } ?>; color:#FFF">
+											<b><?php echo $manufacturer['products_total_enabled']; ?></b>
+										</span>
+
+										<?php if ((int)$manufacturer['products_total_enabled_rt'] <> (int)$manufacturer['products_total_enabled']) { ?>
+											<span class="status_color" style="margin-left:4px; display:inline-block; padding:3px 5px; background:#ff7815;  color:#FFF"><b><?php echo $manufacturer['products_total_enabled_rt']; ?></b></span>
+										<?php } ?>
 									</td>
 
 									<td class="center">
@@ -120,16 +153,12 @@
 										</td>
 									<?php } ?>
 									
-									<td class="left">										
+									<td class="center">										
 										<?php foreach ($stores as $store) { ?>												
 											<?php if (in_array($store['store_id'], $manufacturer['stores'])) { ?>
-												<div><?php echo $store['name']; ?></div>
+												<div><small><?php echo $store['name']; ?></small></div>
 											<?php } ?>												
 										<?php } ?>									
-									</td>
-
-									<td class="center">
-										<small><?php echo $manufacturer['date_added']; ?></small>
 									</td>
 									
 									<td class="left">										
@@ -170,6 +199,7 @@
 											</div>
 										<?php } ?>
 									</td>
+
 									<td class="right"><?php foreach ($manufacturer['action'] as $action) { ?>
 										<a class="button" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>								
 									<?php } ?>

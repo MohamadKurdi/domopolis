@@ -302,7 +302,7 @@
 			}
 		}
 		
-		public function getManufacturers($data = array()) {
+		public function getManufacturers($data = []) {
 			$sql = "SELECT * FROM manufacturer WHERE 1";
 			
 			if (!empty($data['filter_name'])) {
@@ -317,10 +317,12 @@
 				$sql .= " AND manufacturer_id IN (SELECT manufacturer_id FROM product WHERE product_id IN (SELECT product_id FROM priceva_data WHERE store_id = '" . (int)$data['filter_priceva_store_id'] . "'))";
 			}
 			
-			$sort_data = array(
-			'name',
-			'sort_order'
-			);	
+			$sort_data = [
+				'name',
+				'sort_order',
+				'products_total',
+				'products_total_enabled',
+			];	
 			
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'];	
@@ -377,6 +379,12 @@
 		
 		public function getTotalProductsByManufacturer($manufacturer_id) {
 			$query = $this->db->query("SELECT COUNT(*) AS total FROM product WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			
+			return $query->row['total'];
+		}
+
+		public function getTotalProductsEnabledByManufacturer($manufacturer_id) {
+			$query = $this->db->query("SELECT COUNT(*) AS total FROM product WHERE manufacturer_id = '" . (int)$manufacturer_id . "' AND status = 1");
 			
 			return $query->row['total'];
 		}

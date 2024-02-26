@@ -154,6 +154,33 @@ class Response {
   }
 
   /**
+   * Set XLSX response
+   *
+   * @param array|object $html HTML data
+   *
+   * @return Response object for chaining
+   */
+  public function setXLSX($html, $filename) {
+    $this->addHeader('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    $this->addHeader('Content-Disposition: attachment;filename=' . $filename);
+    $this->addHeader('Cache-Control: max-age=0');
+
+    $phpSpreadsheetObject = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+    $phpSheetObject       = $phpSpreadsheetObject->getActiveSheet();
+
+    $phpSheetObject->fromHTML($html);
+
+    $phpSpreadsheetWriterObject = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet); 
+
+    $xlsx = '';
+    $phpSpreadsheetWriterObject->save('php://output', $xlsx, true);
+
+    $this->output = $xlsx;
+    
+    return $this;
+  }
+
+  /**
    * Set JSON response
    *
    * @param array|object $json JSON data

@@ -176,6 +176,13 @@
 			$this->db->query("UPDATE category SET final = 0 WHERE 1");
 			$this->db->query("UPDATE category SET final = 1 WHERE category_id NOT IN ( SELECT parent_id FROM ( SELECT parent_id FROM category ) AS subquery )");			
 
+			echoLine('[optimizeProductsDB] Подсчёт продаж по брендам', 'i');	
+			$this->db->query("UPDATE manufacturer SET bought_for_month = (SELECT SUM(quantity) FROM order_product op WHERE op.product_id IN (SELECT product_id FROM product WHERE manufacturer_id = manufacturer.manufacturer_id) AND op.order_id IN (SELECT o.order_id FROM `order` o WHERE o.order_status_id > 0 AND DATE(o.date_added) >= DATE(DATE_SUB(NOW(),INTERVAL 30 DAY))))");
+
+			echoLine('[optimizeProductsDB] Подсчёт количества товаров по брендам', 'i');	
+			$this->db->query("UPDATE manufacturer SET products_total 			= (SELECT count(product_id) AS total FROM product WHERE manufacturer_id = manufacturer.manufacturer_id)");
+			$this->db->query("UPDATE manufacturer SET products_total_enabled 	= (SELECT count(product_id) AS total FROM product WHERE status = 1 AND manufacturer_id = manufacturer.manufacturer_id)");
+
 			echoLine('[optimizeProductsDB] Выравнивание количества со складами', 'i');
 			$this->db->query("UPDATE product SET quantity = (quantity_stock + quantity_stockK + quantity_stockM) WHERE quantity < (quantity_stock + quantity_stockK + quantity_stockM)");
 

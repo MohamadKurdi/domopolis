@@ -7,6 +7,19 @@
 		private $mapFrom 					= ['intersection_id'];
 		private $mapTo 						= ['category_id'];
 		private $allowedGetParams			= ['tracking','utm_term','utm_source','utm_medium','utm_campaign','utoken','oid','gclid','hello','search'];
+
+		private $doNotCheckRoutes 			= [
+			'error/not_found',
+			'feed/robots_txt',
+			'feed/google_sitemap'
+		];
+
+		private $doNotCheckRoutesPartly		= [
+			'payment/',
+			'kp/errorreport',
+			'yamarket/api',
+			'api/'
+		];
 		
 		public function __construct($registry) {
 			parent::__construct($registry);			
@@ -26,7 +39,7 @@
 			$this->rebuildAllCaches();
 		}			
 
-		private function getKeyword($query){			
+		private function getKeyword($query){
 			$exploded_query = explode('=', $query);
 			if ($this->config->get('config_seo_url_from_id') && $this->registry->has('short_uri_queries') && count($exploded_query) == '2' && !empty($this->registry->get('short_uri_queries')[$exploded_query[0]])){
 				return $this->registry->get('short_uri_queries')[$exploded_query[0]] . (int)$exploded_query[1];				
@@ -56,7 +69,7 @@
 			return false;
 		}
 		
-		private function checkIfUriISUnrouted($uri){			
+		private function checkIfUriISUnrouted($uri){
 			if (stripos($uri, 'index.php?route=') !== false){
 				return true;
 			}
@@ -64,11 +77,11 @@
 			return false;
 		}
 		
-		private function mapQuery($query){			
+		private function mapQuery($query){
 			return str_replace($this->mapFrom, $this->mapTo, $query);		
 		}
 		
-		private function mapQueryRev($query){			
+		private function mapQueryRev($query){
 			return str_replace($this->mapTo, $this->mapFrom, $query);		
 		}
 		
@@ -81,7 +94,7 @@
 			return $this->config->get('config_language');		
 		}
 		
-		private function getFullLanguageByCode($code){			
+		private function getFullLanguageByCode($code){
 			if (!empty($this->registry->get('languages')[$code])){
 				return $this->registry->get('languages')[$code];
 			}
@@ -137,7 +150,7 @@
 			}
 		}
 		
-		private function resetCache($language_id){						
+		private function resetCache($language_id){
 			if ($cache_data = $this->cache->get('seo_pro.structure.' . $language_id)){			
 				$this->cache_data = $cache_data;
 				} else {
@@ -967,30 +980,17 @@
 			return $path[$category_id];
 		}
 		
-		private function validate() {		
-			$do_not_check_routes = array(
-			'error/not_found',
-			'feed/robots_txt',
-			'feed/google_sitemap'
-			);
-			
-			$do_not_check_routes_partly = array(
-			'payment/',
-			'kp/errorreport',
-			'yamarket/api',
-			'api/'
-			);
-			
+		private function validate() {
 			if( isset( $this->request->get['route'] ) && strpos( $this->request->get['route'], 'module/mega_filter' ) !== false ) {
 				return;
 			}
 			
-			if (isset($this->request->get['route']) && in_array($this->request->get['route'], $do_not_check_routes)) {
+			if (isset($this->request->get['route']) && in_array($this->request->get['route'], $this->doNotCheckRoutes)) {
 				return;
 			}
 			
-			foreach ($do_not_check_routes_partly as $_dncrp){
-				if (isset($this->request->get['route']) && strpos( $this->request->get['route'], $_dncrp ) !== false) {
+			foreach ($this->doNotCheckRoutesPartly as $nonCheckedRoute){
+				if (isset($this->request->get['route']) && strpos($this->request->get['route'], $nonCheckedRoute) !== false) {
 					return;
 				}
 			}

@@ -8,25 +8,32 @@
   <div class="box">
     <div class="heading order_head">
       <h1><img src="view/image/report.png" alt="" /> <?php echo $heading_title; ?></h1>
+
+      <div class="buttons">
+        <a href="<?php echo $download_xlsx; ?>" target="_blank" class="button"><i class="fa fa-file-excel-o"></i> XLSX</a>
+        <a onclick="filter();" class="button"><i class="fa fa-filter"></i> <?php echo $button_filter; ?></a>
+      </div>
     </div>
     <div class="content">
       <table class="form">
         <tr>
           <td>
             <p><?php echo $entry_date_start; ?></p>
-            <input type="text" name="filter_date_start" value="<?php echo $filter_date_start; ?>" id="date-start" size="12" /></td>
+            <input type="text" name="filter_date_start" value="<?php echo $filter_date_start; ?>" id="date-start" size="12" />
+          </td>
           <td>
             <p><?php echo $entry_date_end; ?></p>
-            <input type="text" name="filter_date_end" value="<?php echo $filter_date_end; ?>" id="date-end" size="12" /></td>
+            <input type="text" name="filter_date_end" value="<?php echo $filter_date_end; ?>" id="date-end" size="12" />
+          </td>
           <td>
             <p><?php echo $entry_group; ?></p>
             <select name="filter_group">
               <?php foreach ($groups as $groups) { ?>
-              <?php if ($groups['value'] == $filter_group) { ?>
-              <option value="<?php echo $groups['value']; ?>" selected="selected"><?php echo $groups['text']; ?></option>
-              <?php } else { ?>
-              <option value="<?php echo $groups['value']; ?>"><?php echo $groups['text']; ?></option>
-              <?php } ?>
+                <?php if ($groups['value'] == $filter_group) { ?>
+                  <option value="<?php echo $groups['value']; ?>" selected="selected"><?php echo $groups['text']; ?></option>
+                <?php } else { ?>
+                  <option value="<?php echo $groups['value']; ?>"><?php echo $groups['text']; ?></option>
+                <?php } ?>
               <?php } ?>
             </select>
           </td>
@@ -35,11 +42,11 @@
             <select name="filter_order_status_id">
               <option value="0"><?php echo $text_all_status; ?></option>
               <?php foreach ($order_statuses as $order_status) { ?>
-              <?php if ($order_status['order_status_id'] == $filter_order_status_id) { ?>
-              <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-              <?php } else { ?>
-              <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
-              <?php } ?>
+                <?php if ($order_status['order_status_id'] == $filter_order_status_id) { ?>
+                  <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
+                <?php } else { ?>
+                  <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                <?php } ?>
               <?php } ?>
             </select>
           </td>
@@ -48,105 +55,87 @@
             <input type="text" name="filter_category_path" id="filter_category_path" value="<?php echo $filter_category_path; ?>" placeholder="Автодополнение" size="60" />
             <input type="number" step="1" name="filter_category_id" id="filter_category_id" value="<?php echo $filter_category_id; ?>" size="9" />
           </td>
-          <td style="text-align: right;"><a onclick="filter();" class="button"><?php echo $button_filter; ?></a></td>
+          <td>
+            <p>Разбивка по конечным</p>
+            <select name="filter_divide_by_categories">
+              <?php if ($filter_divide_by_categories) { ?>
+                <option value="1" selected="selected">Разбить по конечным</option>
+                <option value="0">Не разбивать</option>
+              <?php } else { ?>
+                 <option value="1">Разбить по конечным</option>
+                <option value="0"  selected="selected">Не разбивать</option>
+              <?php } ?>
+            </select>
+          </td>
         </tr>
       </table>
-      <table class="list">
-        <thead>
-          <tr>
-            <td class="left"><?php echo $column_date_start; ?></td>
-            <td class="left"><?php echo $column_date_end; ?></td>
-            <td class="center">Заказов</td>
+      <div id="report-results">  
+        <table class="list">
+          <thead>
+            <tr>
+              <td class="left"><?php echo $column_date_start; ?></td>
+              <td class="left"><?php echo $column_date_end; ?></td>
+              <td class="center">Заказов</td>
 
-            <?php if ($this->config->get('config_enable_amazon_specific_modes')){ ?>
+              <?php if ($this->config->get('config_enable_amazon_specific_modes')){ ?>
                 <?php foreach (\hobotix\RainforestAmazon::amazonOffersType as $type) { ?>
-                    <td class="center" style="width:50px;"><?php echo $type; ?></td>
-                 <?php } ?>
+                  <td class="center" style="width:50px;"><?php echo $type; ?></td>
+                <?php } ?>
+              <?php } ?>
+
+              <td class="center">Товаров</td>
+
+              <?php if ($this->config->get('config_show_profitability_in_order_list')){ ?>
+               <td class="right">Мин. рентабельность</td>
+               <td class="right">Ср. рентабельность</td>
+               <td class="right">Макс рентабельность</td>
+             <?php } ?>
+
+             <td class="right">Ср. чек, <?php echo $this->config->get('config_currency');?></td>
+             <td class="right">Ср. чек, <?php echo $this->config->get('config_regional_currency');?></td>
+             <td class="right"><?php echo $column_total; ?>, <?php echo $this->config->get('config_currency');?></td>
+             <td class="right"><?php echo $column_total; ?>, <?php echo $this->config->get('config_regional_currency');?></td>
+           </tr>
+         </thead>
+         <tbody>
+          <?php if (!empty($orders)) { ?>
+            <?php foreach ($orders as $order) { ?>
+              <?php include(dirname(__FILE__) . '/sale_order_orders.tpl'); ?>
             <?php } ?>
+          <?php } ?>          
 
-            <td class="center">Товаров</td>
+          <?php if (!empty($categories)) { ?>
+            <?php foreach ($categories as $category) { ?>
+              <tr>
+                <td style="border-top:2px solid black;" colspan="<?php if ($this->config->get('config_show_profitability_in_order_list')) { ?>16<?php } else { ?>11<?php } ?>">
+                  <b style="font-size:16px; color:<?php if ($category['orders']) { ?>#51A62D<?php } else { ?>#e16a5d<?php } ?>"><?php echo $category['category']; ?></b>
+                </td>
+              </tr>
 
-            <?php if ($this->config->get('config_show_profitability_in_order_list')){ ?>
-                 <td class="right">Мин. рентабельность</td>
-                 <td class="right">Ср. рентабельность</td>
-                 <td class="right">Макс рентабельность</td>
+              <?php foreach ($category['orders'] as $order) { ?>
+                <?php include(dirname(__FILE__) . '/sale_order_orders.tpl'); ?>
+              <?php } ?>
             <?php } ?>
-
-            <td class="right">Ср. чек, <?php echo $this->config->get('config_currency');?></td>
-            <td class="right">Ср. чек, <?php echo $this->config->get('config_regional_currency');?></td>
-            <td class="right"><?php echo $column_total; ?>, <?php echo $this->config->get('config_currency');?></td>
-            <td class="right"><?php echo $column_total; ?>, <?php echo $this->config->get('config_regional_currency');?></td>
-          </tr>
-        </thead>
-        <tbody>
-          <?php if ($orders) { ?>
-          <?php foreach ($orders as $order) { ?>
-          <tr>
-            <td class="left">
-              <b><?php echo $order['date_start']; ?></b>
-            </td>
-            <td class="left">
-              <b><?php echo $order['date_end']; ?></b>
-            </td>
-
-            <td class="center">
-              <span style="display:inline-block;padding:2px 3px; font-size:14px; background:#CF4A61; color:#FFF; white-space:nowrap;"><?php echo $order['orders']; ?></span>
-            </td>
-
-            <?php if ($this->config->get('config_enable_amazon_specific_modes')){ ?>
-                <?php foreach (\hobotix\RainforestAmazon::amazonOffersType as $type) { ?>
-                  <td class="center">
-                    <span style="display:inline-block;padding:2px 3px; font-size:14px; background:#e16a5d; color:#FFF; white-space:nowrap;"><?php echo $order['amazon_offers_types'][$type]; ?>%</span>
-                  </td>
-                 <?php } ?>
-            <?php } ?>
-
-            <td class="center">
-              <span style="display:inline-block;padding:2px 3px; font-size:14px; background:#FF7815; color:#FFF; white-space:nowrap;"><?php echo $order['products']; ?></span>
-            </td>
-
-            <?php if ($this->config->get('config_show_profitability_in_order_list')){ ?>
-               <td class="right">
-                <span style="display:inline-block;padding:2px 3px; font-size:14px; background:#000; color:#FFF; white-space:nowrap;"><?php echo $order['min_profitability']; ?> %</span>
-              </td>
-
-              <td class="right">
-                <span style="display:inline-block;padding:2px 3px; font-size:14px; background:#000; color:#FFF; white-space:nowrap;"><?php echo $order['avg_profitability']; ?> %</span>
-              </td>
-
-              <td class="right">
-                <span style="display:inline-block;padding:2px 3px; font-size:14px; background:#000; color:#FFF; white-space:nowrap;"><?php echo $order['max_profitability']; ?> %</span>
-              </td>
-            <?php } ?>
-
-            <td class="right">
-              <span style="display:inline-block;padding:2px 3px; font-size:14px; background:#7F00FF; color:#FFF; white-space:nowrap;"><?php echo $order['avg_total']; ?></span>
-            </td>
-
-            <td class="right">
-              <span style="display:inline-block;padding:2px 3px; font-size:14px; background:#7F00FF; color:#FFF; white-space:nowrap;"><?php echo $order['avg_total_national']; ?></span>
-            </td>
-
-            <td class="right">
-              <span style="display:inline-block;padding:2px 3px; font-size:14px; background:#51A62D; color:#FFF; white-space:nowrap;"><?php echo $order['total']; ?></span>
-            </td>
-
-            <td class="right">
-              <span style="display:inline-block;padding:2px 3px; font-size:14px; background:#51A62D; color:#FFF; white-space:nowrap;"><?php echo $order['total_national']; ?></span>
-            </td>
-          </tr>
-          <?php } ?>
-          <?php } else { ?>
-          <tr>
-            <td class="center" colspan="6"><?php echo $text_no_results; ?></td>
-          </tr>
           <?php } ?>
         </tbody>
       </table>
-      <div class="pagination"><?php echo $pagination; ?></div>
+    </div>
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  function loadxls(){
+       $.ajax({
+          url:        'index.php?route=report/sale_order/xls&token=<?php echo $token; ?>',
+          dataType:   'html',
+          type:       'POST',
+          data:{
+            html : $('#report-results').html()
+          }
+       });
+  }
+</script>
 
 <script type="text/javascript">
     $('input[name=\'filter_category_path\']').autocomplete({
@@ -182,7 +171,7 @@
     });
 </script> 
 
-<script type="text/javascript"><!--
+<script type="text/javascript">
 function filter() {
 	url = 'index.php?route=report/sale_order&token=<?php echo $token; ?>';
 	
@@ -203,6 +192,12 @@ function filter() {
   if (filter_category_id) {
     url += '&filter_category_id=' + encodeURIComponent(filter_category_id);
   }
+
+  var filter_divide_by_categories = $('select[name=\'filter_divide_by_categories\']').attr('value');
+  
+  if (filter_divide_by_categories) {
+    url += '&filter_divide_by_categories=' + encodeURIComponent(filter_divide_by_categories);
+  }
 		
 	var filter_group = $('select[name=\'filter_group\']').attr('value');
 	
@@ -218,12 +213,12 @@ function filter() {
 
 	location = url;
 }
-//--></script> 
-<script type="text/javascript"><!--
+</script> 
+<script type="text/javascript">
 $(document).ready(function() {
 	$('#date-start').datepicker({dateFormat: 'yy-mm-dd'});
 	
 	$('#date-end').datepicker({dateFormat: 'yy-mm-dd'});
 });
-//--></script> 
+</script> 
 <?php echo $footer; ?>

@@ -1,7 +1,14 @@
 <?php
 class ControllerReportSaleOrder extends Controller { 
-	public function index() {  
+
+	public function xlsx(){
+		$this->index(true);
+	}
+
+	public function index($xlsx = false) {  
 		$this->language->load('report/sale_order');
+		$this->load->model('catalog/category');		
+		$this->load->model('report/sale');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -32,7 +39,13 @@ class ControllerReportSaleOrder extends Controller {
 		if (isset($this->request->get['filter_category_id'])) {
 			$filter_category_id = $this->request->get['filter_category_id'];
 		} else {
-			$filter_category_id 	= null;
+			$filter_category_id = null;
+		}
+
+		if (isset($this->request->get['filter_divide_by_categories'])) {
+			$filter_divide_by_categories = $this->request->get['filter_divide_by_categories'];
+		} else {
+			$filter_divide_by_categories = null;
 		}
 
 		if (isset($this->request->get['page'])) {
@@ -63,6 +76,10 @@ class ControllerReportSaleOrder extends Controller {
 			$url .= '&filter_category_id=' . $this->request->get['filter_category_id'];
 		}
 
+		if (isset($this->request->get['filter_divide_by_categories'])) {
+			$url .= '&filter_divide_by_categories=' . $this->request->get['filter_divide_by_categories'];
+		}
+
 		if (isset($this->request->get['page'])) {
 			$url .= '&page=' . $this->request->get['page'];
 		}
@@ -81,46 +98,87 @@ class ControllerReportSaleOrder extends Controller {
 			'separator' => ' :: '
 		);
 
-		$this->load->model('report/sale');
+		if (empty($filter_divide_by_categories)){
+			$this->data['orders'] = [];
+			$data = [
+				'filter_date_start'	     	=> $filter_date_start, 
+				'filter_date_end'	     	=> $filter_date_end, 
+				'filter_group'           	=> $filter_group,
+				'filter_order_status_id' 	=> $filter_order_status_id,
+				'filter_category_id' 		=> $filter_category_id,
+			];
 
-		$this->data['orders'] = array();
+			$results 		= $this->model_report_sale->getOrders($data);
 
-		$data = array(
-			'filter_date_start'	     	=> $filter_date_start, 
-			'filter_date_end'	     	=> $filter_date_end, 
-			'filter_group'           	=> $filter_group,
-			'filter_order_status_id' 	=> $filter_order_status_id,
-			'filter_category_id' 		=> $filter_category_id,
-			'start'                  	=> ($page - 1) * $this->config->get('config_admin_limit'),
-			'limit'                  	=> $this->config->get('config_admin_limit')
-		);
+			foreach ($results as $result) {
+				$amazon_offers_types = [];
+				if ($this->config->get('config_enable_amazon_specific_modes')){
+					foreach (\hobotix\RainforestAmazon::amazonOffersType as $field){
+						$amazon_offers_types[$field] = round((float)$result['pct_' . $field], 1);
+					}
+				}
 
-		$order_total 	= $this->model_report_sale->getTotalOrders($data);
-		$results 		= $this->model_report_sale->getOrders($data);
+				$this->data['orders'][] = [
+					'date_start' 			=> date($this->language->get('date_format_short'), strtotime($result['date_start'])),
+					'date_end'   			=> date($this->language->get('date_format_short'), strtotime($result['date_end'])),
+					'orders'     			=> $result['orders'],
+					'products'   			=> $result['products'],
+					'avg_profitability'		=> round($result['avg_profitability'], 2),
+					'min_profitability'		=> round($result['min_profitability'], 2),
+					'max_profitability'		=> round($result['max_profitability'], 2),
+					'amazon_offers_types' 	=> $amazon_offers_types,
+					'avg_total'				=> $this->currency->format($result['avg_total'], $this->config->get('config_currency')),
+					'avg_total_national'	=> $this->currency->format($result['avg_total'], $this->config->get('config_regional_currency')),
+					'total'      			=> $this->currency->format($result['total'], $this->config->get('config_currency')),
+					'total_national'      	=> $this->currency->format($result['total'], $this->config->get('config_regional_currency'))
+				];
+			}
+		} else {
+			$this->data['categories'] = [];
 
-		foreach ($results as $result) {
+			$categories = $this->model_report_sale->getFinalSubcategories($filter_category_id);
 
-			$amazon_offers_types = [];
-			if ($this->config->get('config_enable_amazon_specific_modes')){
-				foreach (\hobotix\RainforestAmazon::amazonOffersType as $field){
-					$amazon_offers_types[$field] = round((float)$result['pct_' . $field], 1);
+			foreach($categories as $category){
+				$category_info = $this->model_catalog_category->getCategory($category['category_id']);
+				$this->data['categories'][$category['category_id']] = [
+					'orders' 	=> [],
+					'category' 	=> ($category_info['path'] ? $category_info['path'] . ' &gt; ' : '') . $category_info['name']
+				];
+
+				$data = [
+					'filter_date_start'	     	=> $filter_date_start, 
+					'filter_date_end'	     	=> $filter_date_end, 
+					'filter_group'           	=> $filter_group,
+					'filter_order_status_id' 	=> $filter_order_status_id,
+					'filter_category_id' 		=> $category['category_id'],
+				];
+
+				$results 		= $this->model_report_sale->getOrders($data);
+
+				foreach ($results as $result) {
+					$amazon_offers_types = [];
+					if ($this->config->get('config_enable_amazon_specific_modes')){
+						foreach (\hobotix\RainforestAmazon::amazonOffersType as $field){
+							$amazon_offers_types[$field] = round((float)$result['pct_' . $field], 1);
+						}
+					}
+
+					$this->data['categories'][$category['category_id']]['orders'][] = [
+						'date_start' 			=> date($this->language->get('date_format_short'), strtotime($result['date_start'])),
+						'date_end'   			=> date($this->language->get('date_format_short'), strtotime($result['date_end'])),
+						'orders'     			=> $result['orders'],
+						'products'   			=> $result['products'],
+						'avg_profitability'		=> round($result['avg_profitability'], 2),
+						'min_profitability'		=> round($result['min_profitability'], 2),
+						'max_profitability'		=> round($result['max_profitability'], 2),
+						'amazon_offers_types' 	=> $amazon_offers_types,
+						'avg_total'				=> $this->currency->format($result['avg_total'], $this->config->get('config_currency')),
+						'avg_total_national'	=> $this->currency->format($result['avg_total'], $this->config->get('config_regional_currency')),
+						'total'      			=> $this->currency->format($result['total'], $this->config->get('config_currency')),
+						'total_national'      	=> $this->currency->format($result['total'], $this->config->get('config_regional_currency'))
+					];
 				}
 			}
-
-			$this->data['orders'][] = [
-				'date_start' 			=> date($this->language->get('date_format_short'), strtotime($result['date_start'])),
-				'date_end'   			=> date($this->language->get('date_format_short'), strtotime($result['date_end'])),
-				'orders'     			=> $result['orders'],
-				'products'   			=> $result['products'],
-				'avg_profitability'		=> round($result['avg_profitability'], 2),
-				'min_profitability'		=> round($result['min_profitability'], 2),
-				'max_profitability'		=> round($result['max_profitability'], 2),
-				'amazon_offers_types' 	=> $amazon_offers_types,
-				'avg_total'				=> $this->currency->format($result['avg_total'], $this->config->get('config_currency')),
-				'avg_total_national'	=> $this->currency->format($result['avg_total'], $this->config->get('config_regional_currency')),
-				'total'      			=> $this->currency->format($result['total'], $this->config->get('config_currency')),
-				'total_national'      	=> $this->currency->format($result['total'], $this->config->get('config_regional_currency'))
-			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -193,35 +251,39 @@ class ControllerReportSaleOrder extends Controller {
 			$url .= '&filter_category_id=' . $this->request->get['filter_category_id'];
 		}
 
-		$pagination 		= new Pagination();
-		$pagination->total 	= $order_total;
-		$pagination->page 	= $page;
-		$pagination->limit 	= $this->config->get('config_admin_limit');
-		$pagination->text 	= $this->language->get('text_pagination');
-		$pagination->url 	= $this->url->link('report/sale_order', 'token=' . $this->session->data['token'] . $url . '&page={page}');
+		if (isset($this->request->get['filter_divide_by_categories'])) {
+			$url .= '&filter_divide_by_categories=' . $this->request->get['filter_divide_by_categories'];
+		}	
 
-		$this->data['pagination'] = $pagination->render();		
+		$this->data['download_xlsx'] = $this->url->link('report/sale_order/xlsx', 'token=' . $this->session->data['token'] . $url);
 
-		$this->data['filter_date_start'] 		= $filter_date_start;
-		$this->data['filter_date_end'] 			= $filter_date_end;		
-		$this->data['filter_group'] 			= $filter_group;
-		$this->data['filter_order_status_id'] 	= $filter_order_status_id;
-		$this->data['filter_category_id'] 		= $filter_category_id;
+		$this->data['filter_date_start'] 			= $filter_date_start;
+		$this->data['filter_date_end'] 				= $filter_date_end;		
+		$this->data['filter_group'] 				= $filter_group;
+		$this->data['filter_order_status_id'] 		= $filter_order_status_id;
+		$this->data['filter_category_id'] 			= $filter_category_id;
+		$this->data['filter_divide_by_categories'] 	= $filter_divide_by_categories;
 
 		$this->data['filter_category_path'] = '';
 		if (!empty($filter_category_id)){
-			$this->load->model('catalog/category');
-
 			$category_info = $this->model_catalog_category->getCategory($filter_category_id);
 			$this->data['filter_category_path'] = ($category_info['path'] ? $category_info['path'] . ' &gt; ' : '') . $category_info['name'];
 		}
 
-		$this->template = 'report/sale_order.tpl';
-		$this->children = array(
-			'common/header',
-			'common/footer'
-		);
+		if ($xlsx){
+			$this->template = 'report/sale_order_xlsx.tpl';
+			$out = $this->render();
 
-		$this->response->setOutput($this->render());
+			$this->response->setXLSX($out, 'file.xlsx');
+
+		} else {
+			$this->template = 'report/sale_order.tpl';
+			$this->children = [
+				'common/header',
+				'common/footer'
+			];
+
+			$this->response->setOutput($this->render());
+		}		
 	}
 }

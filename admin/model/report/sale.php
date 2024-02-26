@@ -1,7 +1,7 @@
 <?php
 class ModelReportSale extends Model {
 
-	public function getOrders($data = array()) {
+	public function getOrders($data = []) {
 		$sql = "SELECT MIN(tmp.date_added) AS date_start, 
 		MAX(tmp.date_added) AS date_end,
 		AVG(IF(tmp.profitability != 0, tmp.profitability, NULL)) AS avg_profitability,
@@ -78,24 +78,12 @@ class ModelReportSale extends Model {
 		
 		$sql .= " ORDER BY tmp.date_added DESC";
 		
-		if (isset($data['start']) || isset($data['limit'])) {
-			if ($data['start'] < 0) {
-				$data['start'] = 0;
-			}			
-
-			if ($data['limit'] < 1) {
-				$data['limit'] = 20;
-			}	
-			
-			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
-		}	
-		
 		$query = $this->db->query($sql);
 		
 		return $query->rows;
 	}	
 	
-	public function getTotalOrders($data = array()) {
+	public function getTotalOrders($data = []) {
 		if (!empty($data['filter_group'])) {
 			$group = $data['filter_group'];
 		} else {
@@ -151,7 +139,7 @@ class ModelReportSale extends Model {
 		return $query->row['total'];	
 	}
 	
-	public function getTaxes($data = array()) {
+	public function getTaxes($data = []) {
 		$sql = "SELECT MIN(o.date_added) AS date_start, MAX(o.date_added) AS date_end, ot.title, SUM(ot.value) AS total, COUNT(o.order_id) AS `orders` FROM `order_total` ot LEFT JOIN `order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'tax'"; 
 
 		if (!empty($data['filter_order_status_id'])) {
@@ -205,9 +193,28 @@ class ModelReportSale extends Model {
 		$query = $this->db->query($sql);
 		
 		return $query->rows;
+	}
+
+	public function getFinalSubcategories($parent_id = null){
+
+		if ($parent_id){			
+			$sql = " WITH RECURSIVE cte AS ( SELECT category_id, parent_id, 1 AS level FROM category "; 
+			$sql .= " WHERE parent_id = '" . (int)$parent_id . "' "; 
+			$sql .= " UNION ALL SELECT c.category_id, c.parent_id, p.level + 1 AS level FROM category c INNER JOIN cte p ON c.parent_id = p.category_id ) ";
+			$sql .= " SELECT cte.category_id, cd.name FROM cte LEFT JOIN category_description cd ON (cte.category_id = cd.category_id AND cd.language_id = 2) ";
+			$sql .= " WHERE cte.category_id NOT IN (SELECT parent_id FROM category)";
+		} else {
+			$sql = " SELECT c.category_id, cd.name FROM category c LEFT JOIN category_description cd ON (c.category_id = cd.category_id AND cd.language_id = 2) ";
+			$sql .= " WHERE c.category_id NOT IN (SELECT parent_id FROM category)";
+		}
+
+
+		$query = $this->db->query($sql);
+
+		return $query->rows;
 	}	
 	
-	public function getTotalTaxes($data = array()) {
+	public function getTotalTaxes($data = []) {
 		$sql = "SELECT COUNT(*) AS total FROM (SELECT COUNT(*) AS total FROM `order_total` ot LEFT JOIN `order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'tax'";
 		
 		if (!empty($data['filter_order_status_id'])) {
@@ -253,7 +260,7 @@ class ModelReportSale extends Model {
 		return $query->row['total'];	
 	}	
 	
-	public function getShipping($data = array()) {
+	public function getShipping($data = []) {
 		$sql = "SELECT MIN(o.date_added) AS date_start, MAX(o.date_added) AS date_end, ot.title, SUM(ot.value) AS total, COUNT(o.order_id) AS `orders` FROM `order_total` ot LEFT JOIN `order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'shipping'"; 
 
 		if (!empty($data['filter_order_status_id'])) {
@@ -309,7 +316,7 @@ class ModelReportSale extends Model {
 		return $query->rows;
 	}	
 	
-	public function getTotalShipping($data = array()) {
+	public function getTotalShipping($data = []) {
 		$sql = "SELECT COUNT(*) AS total FROM (SELECT COUNT(*) AS total FROM `order_total` ot LEFT JOIN `order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'shipping'";
 		
 		if (!empty($data['filter_order_status_id'])) {

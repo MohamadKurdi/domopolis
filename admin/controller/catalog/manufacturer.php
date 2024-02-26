@@ -11,6 +11,27 @@ class ControllerCatalogManufacturer extends Controller {
 		
 		$this->getList();
 	}
+
+	public function recalculate() {
+		$this->db->query("UPDATE manufacturer SET products_total 			= (SELECT count(product_id) AS total FROM product WHERE manufacturer_id = manufacturer.manufacturer_id)");
+		$this->db->query("UPDATE manufacturer SET products_total_enabled 	= (SELECT count(product_id) AS total FROM product WHERE status = 1 AND manufacturer_id = manufacturer.manufacturer_id)");
+
+		$url = '';
+		
+		if (isset($this->request->get['sort'])) {
+			$url .= '&sort=' . $this->request->get['sort'];
+		}
+		
+		if (isset($this->request->get['order'])) {
+			$url .= '&order=' . $this->request->get['order'];
+		}
+		
+		if (isset($this->request->get['page'])) {
+			$url .= '&page=' . $this->request->get['page'];
+		}
+		
+		$this->redirect($this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+	}
 	
 	public function insert() {
 		$this->language->load('catalog/manufacturer');
@@ -161,7 +182,8 @@ class ControllerCatalogManufacturer extends Controller {
 		);
 		
 		$this->data['insert'] = $this->url->link('catalog/manufacturer/insert', 'token=' . $this->session->data['token'] . $url);
-		$this->data['delete'] = $this->url->link('catalog/manufacturer/delete', 'token=' . $this->session->data['token'] . $url);	
+		$this->data['delete'] = $this->url->link('catalog/manufacturer/delete', 'token=' . $this->session->data['token'] . $url);
+		$this->data['recalculate'] = $this->url->link('catalog/manufacturer/recalculate', 'token=' . $this->session->data['token'] . $url);	
 		
 		$this->data['manufacturers'] = [];
 		
@@ -180,8 +202,8 @@ class ControllerCatalogManufacturer extends Controller {
 		$this->load->model('setting/store');
 		
 		
-		$this->data['stores'] = $this->model_setting_store->getStores();
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['stores'] 		= $this->model_setting_store->getStores();
+		$this->data['languages'] 	= $this->model_localisation_language->getLanguages();
 		
 		foreach ($results as $result) {
 			$action = [];
@@ -202,7 +224,10 @@ class ControllerCatalogManufacturer extends Controller {
 				'descriptions'	  => $this->model_catalog_manufacturer->getManufacturerDescriptions($result['manufacturer_id']),
 				'seo_urls'	  	  => $this->model_catalog_manufacturer->getKeyWords($result['manufacturer_id']),
 				'stores'		  => $this->model_catalog_manufacturer->getManufacturerStores($result['manufacturer_id']),
-				'total_products'  => $this->model_catalog_manufacturer->getTotalProductsByManufacturer($result['manufacturer_id']),
+				'products_total_rt'			=> $this->model_catalog_manufacturer->getTotalProductsByManufacturer($result['manufacturer_id']),
+				'products_total_enabled_rt'	=> $this->model_catalog_manufacturer->getTotalProductsEnabledByManufacturer($result['manufacturer_id']),
+				'products_total'   			=> $result['products_total'],
+				'products_total_enabled'   	=> $result['products_total_enabled'],
 				'name'            => $result['name'],
 				'new'             => $result['new'],
 				'image'			  => $image,
@@ -216,13 +241,11 @@ class ControllerCatalogManufacturer extends Controller {
 			);
 		}	
 		
-		$this->data['heading_title'] = $this->language->get('heading_title');
-		
-		$this->data['text_no_results'] = $this->language->get('text_no_results');
-		
-		$this->data['column_name'] = $this->language->get('column_name');
-		$this->data['column_sort_order'] = $this->language->get('column_sort_order');
-		$this->data['column_action'] = $this->language->get('column_action');		
+		$this->data['heading_title'] 		= $this->language->get('heading_title');		
+		$this->data['text_no_results'] 		= $this->language->get('text_no_results');		
+		$this->data['column_name'] 			= $this->language->get('column_name');
+		$this->data['column_sort_order'] 	= $this->language->get('column_sort_order');
+		$this->data['column_action'] 		= $this->language->get('column_action');		
 		
 		$this->data['button_insert'] = $this->language->get('button_insert');
 		$this->data['button_delete'] = $this->language->get('button_delete');
@@ -253,8 +276,10 @@ class ControllerCatalogManufacturer extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 		
-		$this->data['sort_name'] = $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . '&sort=name' . $url);
-		$this->data['sort_sort_order'] = $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . '&sort=sort_order' . $url);
+		$this->data['sort_name'] 					= $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . '&sort=name' . $url);
+		$this->data['sort_products_total'] 			= $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . '&sort=products_total' . $url);
+		$this->data['sort_products_total_enabled'] 	= $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . '&sort=products_total_enabled' . $url);
+		$this->data['sort_sort_order'] 				= $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . '&sort=sort_order' . $url);
 		
 		$url = '';
 		
@@ -275,8 +300,8 @@ class ControllerCatalogManufacturer extends Controller {
 		
 		$this->data['pagination'] = $pagination->render();
 		
-		$this->data['sort'] = $sort;
-		$this->data['order'] = $order;
+		$this->data['sort'] 	= $sort;
+		$this->data['order'] 	= $order;
 		
 		$this->template = 'catalog/manufacturer_list.tpl';
 		$this->children = array(
