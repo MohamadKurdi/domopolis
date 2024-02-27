@@ -1,4 +1,4 @@
-#!/usr/bin/env php7.4
+#!/usr/bin/env php8.1
 
 <?php
 define('VERSION', '1.5.6.4');
