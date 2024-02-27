@@ -25,7 +25,7 @@
             });
          }
 
-           google.accounts.id.initialize({
+        google.accounts.id.initialize({
             client_id:      '<?php echo $this->config->get('social_auth_google_app_id'); ?>',
             context:        "signin",
             auto_select:    "true",
@@ -36,7 +36,6 @@
            google.accounts.id.prompt();
        };
        google_auth_script.src = 'https://accounts.google.com/gsi/client';
-
        document.head.appendChild(google_auth_script);
    </script>
 <?php } ?>

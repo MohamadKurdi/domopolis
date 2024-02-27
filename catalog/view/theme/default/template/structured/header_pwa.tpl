@@ -20,13 +20,13 @@
 	
 	/* проверяем, ведроид ли это, чтоб не показывать на айфонах линк на гугл плей*/
 	function isIphone(){		
-		var ua = navigator.userAgent.toLowerCase();
-		return (ua.indexOf("iphone") > -1 || ua.indexOf("ipad") > -1);				
+		var user_agent = navigator.userAgent.toLowerCase();
+		return ((user_agent.indexOf("iphone") > -1) || (user_agent.indexOf("ipad") > -1));				
 	}
 	
 	/* Узнаем ширину экрана пользователя */
 	function getUserWindowWidth(){
-		return window.innerWidth || document.body.clientWidth;
+		return (window.innerWidth || document.body.clientWidth);
 	}
 	
 	/* проверяем, маленький ли экранчик */
