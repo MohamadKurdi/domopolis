@@ -126,6 +126,10 @@ if (!class_exists('DB')){
 		}
 
 		public function escape($value) {
+			if (is_null($value) || empty($value) || !$value){
+				return false;
+			}
+
 			return $this->connection->escape($value);
 		}
 

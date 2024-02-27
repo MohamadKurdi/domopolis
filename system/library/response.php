@@ -161,21 +161,19 @@ class Response {
    * @return Response object for chaining
    */
   public function setXLSX($html, $filename) {
-    $this->addHeader('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    $this->addHeader('Content-Disposition: attachment;filename=' . $filename);
-    $this->addHeader('Cache-Control: max-age=0');
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment;filename=' . $filename);
+    header('Cache-Control: max-age=0');
 
     $phpSpreadsheetObject = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-    $phpSheetObject       = $phpSpreadsheetObject->getActiveSheet();
+    $phpReaderObject      = new \PhpOffice\PhpSpreadsheet\Reader\Html();
+    
+    $phpSpreadsheet       = $phpReaderObject->loadFromString($html);
 
-    $phpSheetObject->fromHTML($html);
+    $phpSpreadsheetWriterObject = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($phpSpreadsheet); 
 
-    $phpSpreadsheetWriterObject = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet); 
-
-    $xlsx = '';
-    $phpSpreadsheetWriterObject->save('php://output', $xlsx, true);
-
-    $this->output = $xlsx;
+    $tmpFile = DIR_TEMP . '/' . md5($filename) . '.xlsx';
+    $phpSpreadsheetWriterObject->save('php://output');
     
     return $this;
   }

@@ -273,7 +273,7 @@ class Mail {
 	private function send_sendmail(){
 		ini_set('sendmail_from', $this->from);
 
-		if ($this->parameter) {
+		if ($this->config->get('config_mail_parameter')) {
 			mail($this->to, '=?UTF-8?B?' . base64_encode($this->subject) . '?=', $this->message, $this->header, $this->config->get('config_mail_parameter'));
 		} else {
 			mail($this->to, '=?UTF-8?B?' . base64_encode($this->subject) . '?=',  $this->message, $this->header);
@@ -625,15 +625,14 @@ class Mail {
 				}
 			}
 
-			$result = $mgClient->messages()->send($domain, array(
+			$result = $mgClient->messages()->send($domain, [
 				'from'    => $this->sender .'<' . $this->from . '>',			
 				'to'      => $this->to,
 				'subject' => $this->subject,
 				'text'    => $this->text,
-				'html'    => $this->html
-			), array(
+				'html'    => $this->html,
 				'attachment' => $attachments
-			));
+			]);
 
 			if ($result->getMessage() == "Queued. Thank you."){		
 				return $result->getId();

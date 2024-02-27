@@ -1,6 +1,5 @@
 <?php
-if( !class_exists('Composer\\Autoload\\ClassLoader') )
-{
+if( !class_exists('Composer\\Autoload\\ClassLoader') ){
     require_once(DIR_SYSTEM . '../vendor/autoload.php');
 }
 

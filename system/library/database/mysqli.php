@@ -68,6 +68,10 @@
 		}
 		
 		public function escape($value) {	
+			if (is_null($value) || empty($value) || !$value){
+				return false;
+			}
+			
 			return $this->link->real_escape_string($value);
 		}
 		

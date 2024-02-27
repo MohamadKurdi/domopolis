@@ -71,7 +71,7 @@ final class Cache {
 		return $this->adaptor->delete($key);
 	}
 	
-	public function flush() {
+	public function flush($key = null) {
 		return $this->adaptor->flush($key);
 	}	
 }

@@ -49,7 +49,7 @@ class CacheRedis{
 	public function delete($key) {		
 	}
 
-	public function flush() {
+	public function flush($key = null) {
 		$this->redis->select(REDIS_DATABASE);
 		return $this->redis->flushDb();
 	}
