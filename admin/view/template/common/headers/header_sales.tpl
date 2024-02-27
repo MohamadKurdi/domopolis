@@ -203,8 +203,6 @@
 									<li><a class="home_icon_style" href="<?php echo $mreport_minusscan ?>"><i class="fa fa-exclamation"></i><span>Проверка счетов</span></a></li>																		
 									<li><a class="home_icon_style parent"><i class="fa fa-database"></i><span><?php echo $text_sale; ?></span></a>
 										<ul>											
-											<li><a href="<?php echo $report_adv_sale_order ?>">Универсальные отчеты</a></li>
-											<li><a href="<?php echo $report_adv_product_purchased; ?>">Универсальный отчет по товарам</a></li> 
 											<li><a href="<?php echo $report_sale_order; ?>"><?php echo $text_report_sale_order; ?></a></li>
 											<li><a href="<?php echo $report_sale_tax; ?>"><?php echo $text_report_sale_tax; ?></a></li>
 											<li><a href="<?php echo $report_sale_shipping; ?>"><?php echo $text_report_sale_shipping; ?></a></li>
@@ -243,33 +241,10 @@
 								</ul>
 							</li>													
 						</ul>
-						<!--<ul class="right">
-							<li id="store"><a href="<?php echo $store; ?>" target="_blank" class="top"><?php echo $text_front; ?></a>
-							<ul>
-							<?php foreach ($stores as $stores) { ?>
-								<li><a href="<?php echo $stores['href']; ?>" target="_blank"><?php echo $stores['name']; ?></a></li>
-							<?php } ?>
-							</ul>
-							</li>
-							
-							<li><a class="top" href="<?php echo $logout; ?>"><b><i class="fa fa-external-link icon_down"></i></b></a></li>
-						</ul>-->
 						<div style="clear: both;"></div>
 					</div>
 				<?php } ?>
 			</div>
-
-
-	<?php if ($this->config->get('config_country_id') == 176) { ?>
-		<?php if ($this->user->getUserGroup() == 27) { ?>
-			<div style="margin-top:20px; margin-bottom:20px; background-color:red; color:white; text-align:center; font-size:32px;">
-				Українські замовлення не обробляються у цьому магазині з 14:00 07.05.2023!<br />
-				Останнє замовлення, оформлене у цій адмінці: 315925<br />
-				<small>Нова адмінка Кітчен-Профі Україна: <a style="color:white;" href="https://kitchen-profi.com.ua/admin/?xkey=754">https://kitchen-profi.com.ua/admin/?xkey=754</a></small><br />
-				Слава Україні!
-			</div>
-		<?php } ?>
-	<?php } ?>
 
 			<div id="alert_history_preview"></div>
 			<script>

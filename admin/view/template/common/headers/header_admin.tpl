@@ -131,6 +131,7 @@
 										<li><a href="<?php echo $addasin_amazonv2; ?>"><i class="fa fa-amazon"></i> <span>Просмотр Amazon v2</span></a></li>
 										<li><a href="<?php echo $addasin; ?>"><i class="fa fa-amazon"></i> <span>Очередь добавления ASIN</span></a></li>
 										<li><a href="<?php echo $product_deletedasin; ?>"><i class="fa fa-amazon"></i> <span>Исключенные ASIN</span></a></li>
+										<li><a href="<?php echo $product_excludedasin; ?>"><i class="fa fa-amazon"></i> <span>Исключенные слова</span></a></li>
 										<li><a href="<?php echo $addasin_report; ?>"><i class="fa fa-file-text-o"></i> <span>Отчет по добавлениям</span></a></li>
 									</ul>
 								</li>
@@ -159,7 +160,6 @@
 								<li><a class="home_icon_style" href="<?php echo $shortnames; ?>"><i class="fa fa-edit"></i><span>Экспортные названия</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $shortnames2; ?>"><i class="fa fa-edit"></i><span>Названия из заказов <sup style="color:red">(NEW)</sup></span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $batch_editor_link; ?>"><i class="fa fa-pencil-square-o"></i><span>Batch Editor v.023</span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $batch_editor_link2; ?>"><i class="fa fa-pencil-square-o"></i><span>Batch Editor v.047</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $csvpricelink; ?>"><i class="fa fa-cubes"></i><span>CSV IMPORT/EXPORT</span></a></li>		
 
 							</ul>
@@ -380,8 +380,6 @@
 										<li><a href="<?php echo $report_sale_shipping; ?>"><?php echo $text_report_sale_shipping; ?></a></li>
 										<li><a href="<?php echo $report_sale_return; ?>"><?php echo $text_report_sale_return; ?></a></li>
 										<li><a href="<?php echo $report_sale_coupon; ?>"><?php echo $text_report_sale_coupon; ?></a></li>
-										<li><a href="<?php echo $report_adv_sale_order ?>">Универсальный отчет <span style="color:red"><i class="fa fa-question"></i></span></a></li>
-										<li><a href="<?php echo $report_adv_product_purchased; ?>">Универсальный отчет по товарам  <span style="color:red"><i class="fa fa-question"></i></span></a></li>
 									</ul>
 								</li>
 								<li><a class="parent home_icon_style"><i class="fa fa-users"></i><span><?php echo $text_customer; ?></span></a>
