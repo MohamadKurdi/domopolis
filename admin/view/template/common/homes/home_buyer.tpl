@@ -138,45 +138,8 @@
 			<div style="clear:both;"></div>
 		</td>
 		<td style="width:60%;vertical-align: top;">
-			<div class="latest">
-				<div class="dashboard-heading"><?php echo $text_latest_10_orders; ?></div>
-				<div class="dashboard-content">
-					<table class="list">
-						<thead>
-							<tr>
-								<td class="right"><?php echo $column_order; ?></td>
-								<td class="left"><?php echo $column_customer; ?></td>
-								<td class="left"><?php echo $column_status; ?></td>
-								<td class="left"><?php echo $column_date_added; ?></td>
-								<td class="right"><?php echo $column_total; ?></td>
-								<td class="right"><?php echo $column_action; ?></td>
-							</tr>
-						</thead>
-						<tbody>
-							<?php if ($orders) { ?>
-								<?php foreach ($orders as $order) { ?>
-									<tr>
-										<td class="left"><?php echo $order['order_id']; ?></td>
-										<td class="left"><?php echo $order['customer']; ?></td>
-										<td class="left"><span class="status_color" style="background: #<?php echo isset($order['status_bg_color']) ? $order['status_bg_color'] : ''; ?>; color: #<?php echo isset($order['status_txt_color']) ? $order['status_txt_color'] : ''; ?>;">	<? if ($order['status_fa_icon']) { ?>
-											<i class="fa <? echo $order['status_fa_icon']; ?>" aria-hidden="true"></i>&nbsp;
-										<? } ?><?php echo $order['status']; ?></span></td>
-										<td class="left"><?php echo $order['date_added']; ?></td>
-										<td class="right"><?php echo $order['total']; ?></td>
-										<td class="right"><?php foreach ($order['action'] as $action) { ?>
-											<a class="button" href="<?php echo $action['href']; ?>"><i class="fa fa-folder-open-o"></i></a>
-										<?php } ?></td>
-									</tr>
-								<?php } ?>
-								<?php } else { ?>
-								<tr>
-									<td class="center" colspan="6"><?php echo $text_no_results; ?></td>
-								</tr>
-							<?php } ?>
-						</tbody>
-					</table>
-				</div>
-			</div>	
+			<div style="clear:both; height:10px;"></div>
+			<div class="latest delayed-load" data-route='common/home/getLastTwentyOrders'></div>
 		</td>
 	</tr>
 </table>																														

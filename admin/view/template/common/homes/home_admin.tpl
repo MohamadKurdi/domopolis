@@ -11,7 +11,7 @@
 		.tile-block{width:100%; float: left; margin-left:0px;}
 	}
 
-	.tile-body {overflow: hidden; line-height: 14px; min-height: 30px;}
+	.tile-body {overflow: hidden; line-height: 14px; min-height: 50px;}
 
 	.tile.good > .tile-heading, .tile.good > .tile-footer{background-color: #00ad07; }
 	.tile.good > .tile-body{background-color: #00ad07;opacity: 0.8;}
@@ -75,11 +75,11 @@
 				</div>
 
 				<?php if ($this->config->get('config_openai_enable')) { ?>
-					<div class="tile-block narrow">
+					<div class="tile-block">
 						<div class="tile info-loader unknown" data-path="common/panel/getOpenAIInfo" data-update-interval="300000">
 							<div class="tile-heading">🤖 OpenAI API</div>
 							<div class="tile-body">
-								<span class="tile-result"></span>
+								<span class="tile-result small"></span>
 							</div>
 							<div class="tile-footer">
 								всякие умные штуки

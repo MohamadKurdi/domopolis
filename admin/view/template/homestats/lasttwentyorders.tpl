@@ -67,7 +67,7 @@
 								</div>																						
 							<? } ?>
 							
-							<? if ($order['customersegments']) { ?>
+							<? if (!empty($order['customersegments'])) { ?>
 								<div style="clear:both;"></div>																						
 								<? foreach ($order['customersegments'] as $segment) { ?>
 									<? if (strpos($segment['name'], 'Источник') !== false) { ?>
