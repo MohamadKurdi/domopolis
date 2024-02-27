@@ -134,7 +134,7 @@ class ModelSaleSupplier extends Model {
 			'limit' 				=> 5
 		];
 
-		return $this->model_catalog_category->getCategories($data);
+		return $this->model_catalog_category->guessCategories($data);
 	}
 
 	public function getSupplierCategories($supplier_id) {

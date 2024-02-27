@@ -1090,12 +1090,12 @@ class ControllerSaleSupplier extends Controller {
 				}
 
 				$guessed_data = [];
-				$guessed =  $this->model_sale_supplier->tryToGuessCategory($supplier_category['supplier_category']);
+				$guessed_categories =  $this->model_sale_supplier->tryToGuessCategory($supplier_category['supplier_category']);
 
-				foreach ($guessed as $guesse){
+				foreach ($guessed_categories as $guessed_category){
 					$guessed_data[] = [
-						'category_id' => $guesse['category_id'], 
-						'name'        => strip_tags(html_entity_decode($guesse['name'], ENT_QUOTES, 'UTF-8'))
+						'category_id' => $guessed_category['category_id'], 
+						'name'        => (!empty($guessed_category['path']))?strip_tags(html_entity_decode($guessed_category['path'], ENT_QUOTES, 'UTF-8')):strip_tags(html_entity_decode($guessed_category['name'], ENT_QUOTES, 'UTF-8'))
 					];
 				}
 

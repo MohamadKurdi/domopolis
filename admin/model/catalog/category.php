@@ -722,6 +722,43 @@ class ModelCatalogCategory extends Model {
 		
 		return $keywords;
 	}
+
+	public function guessCategories($data = []){
+		$categories = [];
+
+		$sql = "SELECT c.category_id AS category_id
+		FROM category c
+		LEFT JOIN category_description cd ON (c.category_id = cd.category_id) 
+		WHERE 1 ";
+
+		if (!empty($data['filter_name_extended'])) {
+			$sql .= " AND (LOWER(cd.name) LIKE '%" . $this->db->escape(mb_strtolower($data['filter_name_extended'])) . "%')";
+		}
+
+		$sql .= " GROUP BY c.category_id ORDER BY name";
+		
+		if (isset($data['start']) || isset($data['limit'])) {
+			if ($data['start'] < 0) {
+				$data['start'] = 0;
+			}				
+			
+			if ($data['limit'] < 1) {
+				$data['limit'] = 20;
+			}	
+			
+			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+		}		
+		
+		$query = $this->db->query($sql);
+		
+		if ($query->num_rows){
+			foreach ($query->rows as $row){
+				$categories[$row['category_id']] = $this->getCategory($row['category_id']);
+			}			
+		}
+
+		return $categories;
+	}
 	
 	public function getCategories($data = []) {
 		$sql = "SELECT cp.category_id AS category_id, 
