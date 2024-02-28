@@ -5,7 +5,6 @@ class ModelKpInfo1C extends Model {
 	private function SoapConnectTo1C($wsdl = true){		
 		ini_set("soap.wsdl_cache_enabled", "0" ); 
 		ini_set('default_socket_timeout', '1480');
-		libxml_disable_entity_loader(false);
 		
 		$context = stream_context_create([
 			'ssl' => [
