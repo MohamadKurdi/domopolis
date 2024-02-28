@@ -12,24 +12,8 @@
 		<div class="success"><?php echo $success; ?></div>
 	<?php } ?>
 	<div class="box">
-		<div class="heading order_head">
+		<div class="heading order_head" style="height:100px;">
 			<h1><img src="view/image/category.png" alt="" /> <?php echo $heading_title; ?></h1>
-
-
-			<div style="float:left; padding-left:30px;">
-				<?php if ($this->config->get('config_rainforest_show_only_filled_products_in_catalog')) { ?>
-					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> На фронте включен режим "не отображать незагруженные товары. Подсчет товаров в категориях ведется с учётом этого - в нём не участвуют неполностью загруженные с Amazon товары</small>
-				<?php } ?>
-
-				<?php if ($this->session->data['config_rainforest_variant_edition_mode']) { ?>
-					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Включен режим работы с вариантами. Подсчёт товаров в категориях ведется с учётом свёртывания вариантов (если товаров 10 и у каждого 30 вариантов - то в результате будет 10)</small>
-				<?php } else { ?>				
-					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Выключен режим работы с вариантами. Подсчёт товаров в категориях ведется без учёта свёртывания вариантов (если товаров 10 и у каждого 30 вариантов - то в результате здесь будет 300, но на фронте - 10)</small>
-				<?php } ?>
-			</div>
-
-
-
 			<div class="buttons">
 				<a href="<?php echo $simpleview; ?>" class="button">
 					<?php if ($simpleview_enabled) { ?>
@@ -63,6 +47,21 @@
 				<a href="<?php echo $insert; ?>" class="button"><?php echo $button_insert; ?></a>
 				<a onclick="$('#form').submit();" class="button"><?php echo $button_delete; ?></a>
 			</div>
+			<div class="clr"></div>
+
+
+			<div>
+				<?php if ($this->config->get('config_rainforest_show_only_filled_products_in_catalog')) { ?>
+					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> На фронте включен режим "не отображать незагруженные товары. Подсчет товаров в категориях ведется с учётом этого - в нём не участвуют неполностью загруженные с Amazon товары</small>
+				<?php } ?>
+
+				<?php if ($this->session->data['config_rainforest_variant_edition_mode']) { ?>
+					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Включен режим работы с вариантами. Подсчёт товаров в категориях ведется с учётом свёртывания вариантов (если товаров 10 и у каждого 30 вариантов - то в результате будет 10)</small>
+				<?php } else { ?>				
+					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Выключен режим работы с вариантами. Подсчёт товаров в категориях ведется без учёта свёртывания вариантов (если товаров 10 и у каждого 30 вариантов - то в результате здесь будет 300, но на фронте - 10)</small>
+				<?php } ?>
+			</div>
+
 		</div>
 		<div class="content">
 			<form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">

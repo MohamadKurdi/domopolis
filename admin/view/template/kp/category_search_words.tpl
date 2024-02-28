@@ -7,7 +7,7 @@
 				<td class="center" style="width:120px;">
 					<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Вид запроса</span>
 				</td>
-				<td class="center">
+				<td class="center" style="max-width:400px;">
 					<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Слово или ссылка</span>
 				</td>
 				<td class="center" style="min-width:150px;">
@@ -66,12 +66,14 @@
 							<?php echo \hobotix\RainforestAmazon::searchPageTypes[$search_word['category_word_type']]['name']; ?>							
 						</b>
 					</td>
-					<td class="center">
+					<td class="center"  style="max-width:400px;" >
+						<div style="overflow-x:scroll; min-height:60px; text-align:left;">
 						<?php if (!empty($search_word['category_search_word'])) { ?>
-							<b><?php echo $search_word['category_search_word']; ?></b>
+							<small><?php echo $search_word['category_search_word']; ?></small>
 						<?php } elseif (!empty($search_word['category_word_category'])) { ?>
 							<small><?php echo $search_word['category_word_category']; ?></small>
 						<?php } ?>
+						</div>
 					</td>
 					<td class="center">
 						<?php echo $search_word['category_search_exact_words']; ?>
