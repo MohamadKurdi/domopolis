@@ -23,7 +23,25 @@ final class OpenAIAdaptor
 		}
 	}
 
-	private function parseCompletionResponse($response, $endpoint = 'completion'){
+	public function checkIfItIsPossibleToMakeRequest(){
+		$response = $this->OpenAI->chat([
+			'model' 			=> $this->config->get('config_openai_category_alternatenames_model'),
+			'messages' 			=> [
+				[
+					"role" 		=> "user",
+					"content" 	=> 'hi!'						
+				]], 
+				'temperature' 		=> (float)$this->config->get('config_openai_category_alternatenames_temperature'),
+				'max_tokens' 		=> (int)$this->config->get('config_openai_category_alternatenames_maxtokens'),
+				'top_p' 			=> (float)$this->config->get('config_openai_category_alternatenames_top_p'),
+				'frequency_penalty' => (float)$this->config->get('config_openai_category_alternatenames_freq_penalty'),
+				'presence_penalty' 	=> (float)$this->config->get('config_openai_category_alternatenames_presence_penalty'),
+			]);
+
+		return $this->parseCompletionResponse($response, 'completion', true);
+	}
+
+	private function parseCompletionResponse($response = null, $endpoint = 'completion', $check = false){
 		if ($json = json_decode($response, true)){
 			if (empty($json['error'])){
 				
@@ -39,7 +57,13 @@ final class OpenAIAdaptor
 
 			} else {
 				echoLine('[OpenAIAdaptor::parseCompletionError] ' . $json['error']['message'], 'e');
-				$this->log->debug($response);
+
+				if ($check){
+					return [
+						'error' 	=> true,
+						'message' 	=> $json['error']['message']
+					];
+				}
 				return false;
 			}
 		}

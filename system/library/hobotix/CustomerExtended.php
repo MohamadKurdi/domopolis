@@ -759,7 +759,7 @@
 			//Сумма всех минусов
 			$query = $this->db->ncquery("SELECT SUM(points) as total FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "' AND points < 0");
 
-			if ($query->num_rows){
+			if ($query->num_rows && !empty($query->row['total'])){
 				$total = $query->row['total'];
 			} else {
 				$total = 0;
@@ -770,9 +770,9 @@
 			
 			$points_history = $this->getAllPositiveRewards($customer_id);
 
-			$pointsINT = abs($total);
-			$pointsSUMCURRENT = 0;
-			$pointsSUMPREV = 0;
+			$pointsINT 			= abs($total);
+			$pointsSUMCURRENT 	= 0;
+			$pointsSUMPREV 		= 0;
 			
 			foreach ($points_history as $history){
 				if ($history['points'] <> 0){
