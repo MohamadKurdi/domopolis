@@ -1917,11 +1917,11 @@ class ControllerApiInfo1C extends Controller
         $this->updateStockXML($result, $update, $updateStockGroups);
     }
 
-    public function getOrderCurrentStatusJSON($orders)
+    public function getOrdersCurrentStatusJSON($order_ids)
     {
         $this->load->model('sale/order');
 
-        foreach ($orders as $order_id) {
+        foreach ($order_ids as $order_id) {
             $order_info = $this->db->query("SELECT o.order_id, os.name, os.order_status_id FROM `order` o LEFT JOIN order_status os ON (o.order_status_id = os.order_status_id AND os.language_id = 2) WHERE o.order_id = '" . (int)$order_id . "' LIMIT 1");
             if (!$order_info->num_rows) {
                 $responce[$order_id] = array(

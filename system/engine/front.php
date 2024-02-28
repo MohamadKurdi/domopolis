@@ -58,7 +58,7 @@ final class Front {
 			$controller = new $class($this->registry);
 
 			if (is_callable(array($controller, $action->getMethod()))) {				
-				$action = call_user_func_array(array($controller, $action->getMethod()), $action->getArgs());
+				$action = call_user_func_array([$controller, $action->getMethod()], $action->getArgs());
 			} else {
 				$action = $this->error;
 

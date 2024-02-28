@@ -38,7 +38,7 @@
 	"api/info1c/getCategoriesTreeXML":					"feed/exchange1c/getCategoriesTree",
 	"api/info1c/getFullWaitlistJSON":					"api/info1c/getFullWaitlist",
 	"api/info1c/getOrderSalesByDeliveryNumXML":			"api/info1c/getOrderSales",
-	"api/info1c/getOrdersCurrentStatusJSON":			"api/info1c/getOrderCurrentStatusJSON",
+	"api/info1c/getOrdersCurrentStatusJSON":			"api/info1c/getOrdersCurrentStatusJSON",
 	"api/info1c/exportOrdersFromToXML":					"feed/exchange1c/initiateOrdersFromDateToDateXML",
 	"api/info1c/getOrdersInCourierServiceJSON":			"api/info1c/getOrdersInCourierServiceJSON",
 	"api/info1c/addOrderTTNHistory":					"api/info1c/addTTNHistory",
