@@ -1,6 +1,8 @@
 <?php
-if( !class_exists('Composer\\Autoload\\ClassLoader') ){
-    require_once(DIR_SYSTEM . '../vendor/autoload.php');
+if (version_compare(PHP_VERSION, '8.1.0')){
+	if( !class_exists('Composer\\Autoload\\ClassLoader') ){
+    	require_once(DIR_SYSTEM . '../vendor/autoload.php');
+	}
 }
 
 if (ini_get('magic_quotes_gpc')) {
