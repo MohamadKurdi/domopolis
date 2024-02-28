@@ -24,12 +24,7 @@ if (isset($_HEADERS['X-Hello']) && $_HEADERS['X-Hello'] == 'world'){
 	define('DEV_ENVIRONMENT', 	true);
 	define('DEBUGSQL', 			true);
 } else {
-	if (thisIsAjax()){
-		header('X-DEBUG-REASON: thisIsAjax');
-		define('IS_DEBUG', 			false);
-		define('DEV_ENVIRONMENT', 	false);
-
-	} elseif (is_cli()) {
+	if (is_cli()) {
 		header('X-DEBUG-REASON: is_cli');
 		define('IS_DEBUG', 			true);
 		define('DEV_ENVIRONMENT', 	false);
@@ -37,7 +32,12 @@ if (isset($_HEADERS['X-Hello']) && $_HEADERS['X-Hello'] == 'world'){
 		header('X-DEBUG-REASON: ipsConfig');
 		define('IS_DEBUG', 			true);
 		define('DEV_ENVIRONMENT', 	false);
+	} elseif (thisIsAjax()){
+		header('X-DEBUG-REASON-FALSE: thisIsAjax');
+		define('IS_DEBUG', 			false);
+		define('DEV_ENVIRONMENT', 	false);
 	} else {
+		header('X-DEBUG-REASON-FALSE: All passed');
 		define('IS_DEBUG', 			false);
 		define('DEV_ENVIRONMENT', 	false);		
 	}
