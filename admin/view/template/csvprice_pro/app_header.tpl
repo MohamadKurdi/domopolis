@@ -1,4 +1,4 @@
-<?php if(isset($mdemo_title)) {?>
+<?php if(isset($mdemo_title)) { ?>
 <div class="g-row">
 	<?php echo $mdemo_title;?>
 </div>

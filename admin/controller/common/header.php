@@ -381,10 +381,14 @@ class ControllerCommonHeader extends Controller
             $this->data['categoryocshop'] = $this->url->link('catalog/categoryocshop', 'token=' . $this->session->data['token']);
             $this->data['geoip_link'] = $this->url->link('module/geoip', 'token=' . $this->session->data['token']);
 
-            $this->data['csvpricelink'] = $this->url->link('module/csvprice_pro', 'token=' . $this->session->data['token']);
+            $this->data['csvpricelink']                 = $this->url->link('module/csvprice_pro', 'token=' . $this->session->data['token']);
+            $this->data['csvprice_pro_products']        = $this->url->link('csvprice_pro/app_product', 'token=' . $this->session->data['token']);                        
+            $this->data['csvprice_pro_categories']      = $this->url->link('csvprice_pro/app_category', 'token=' . $this->session->data['token']);                                    
+            $this->data['csvprice_pro_manufacturers']   = $this->url->link('csvprice_pro/app_manufacturer', 'token=' . $this->session->data['token']);                                                
+            $this->data['csvprice_pro_customers']       = $this->url->link('csvprice_pro/app_customer', 'token=' . $this->session->data['token']);                        
+            $this->data['csvprice_pro_orders']          = $this->url->link('csvprice_pro/app_order', 'token=' . $this->session->data['token']);
 
-            $this->data['translator'] = $this->url->link('module/textandheadings', 'token=' . $this->session->data['token']);
-
+            $this->data['translator']         = $this->url->link('module/textandheadings', 'token=' . $this->session->data['token']);
             $this->data['order_bottom_forms'] = $this->url->link('localisation/order_bottom_forms', 'token=' . $this->session->data['token']);
 
             $this->data['seogen'] = $this->url->link('module/seogen', 'token=' . $this->session->data['token']);
