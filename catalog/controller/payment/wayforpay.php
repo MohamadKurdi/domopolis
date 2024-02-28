@@ -249,8 +249,7 @@ class ControllerPaymentWayforpay extends Controller
     public function success($data = []){
         $this->load->model('account/transaction');
         $this->load->model('account/order');
-        $this->load->model('checkout/order');
-        $this->load->model('payment/shoputils_psb');                            
+        $this->load->model('checkout/order');                         
 
         if (!isset($this->session->data['order_id'])) {
             $this->session->data['order_id'] = $this->order['order_id'];
@@ -287,7 +286,7 @@ class ControllerPaymentWayforpay extends Controller
         $html .=    '<br />Фактически было запрошено: ' . $actual_amount .' '. $this->config->get('config_regional_currency');
         $html .=    '<br />Фактически было получено: ' . $data['amount'] . ' UAH';
         $html .=    '<br />Время: '.date("d:m:Y H:i:s");
-        $html .=    '<br />Новый статус: ' . $this->model_payment_shoputils_psb->getOrderStatusById($this->config->get('wayforpay_order_status_id'), $this->order['language_id']);
+        $html .=    '<br />Новый статус: ' . $this->model_checkout_order->getOrderStatusById($this->config->get('wayforpay_order_status_id'), $this->order['language_id']);
 
         $xlog = new Log('wayforpay_mails.txt');
         $xlog->write($title . ' - '. $html);

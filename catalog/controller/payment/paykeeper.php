@@ -448,8 +448,7 @@ class ControllerPaymentPayKeeper extends Controller {
 	}
 	
 	protected function sendMail($subject, $content, $order_status_id, $type = 'admin', $log_result = '') {
-		$this->load->model('payment/shoputils_psb');
-		
+		$this->load->model('payment/shoputils_psb');		
 		$order_info = $this->model_payment_shoputils_psb->getOrder($this->order['order_id']);
 		
 		$input = array(

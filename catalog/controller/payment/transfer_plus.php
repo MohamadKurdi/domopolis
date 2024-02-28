@@ -3,12 +3,12 @@ class ControllerPaymentTransferPlus extends Controller {
     private $type = 'payment';
    	private $name = 'transfer_plus';
 
-	protected function index() {
+	protected function index() {        
         $this->data = array_merge($this->data, $this->load->language('payment/transfer_plus'));
 
         $currentPayment = $this->getCurrentPayment();
 
-        if (isset($currentPayment['info'])) {
+        if (!empty($currentPayment['info']) && !empty($currentPayment['info'][$this->config->get('config_language_id')])) {
 		    $this->data['info'] = html_entity_decode($currentPayment['info'][$this->config->get('config_language_id')], ENT_QUOTES, 'UTF-8');
         } else {
             $this->data['info'] = '';
@@ -22,7 +22,6 @@ class ControllerPaymentTransferPlus extends Controller {
 		$this->render(); 
 	}
 
-
 	public function confirm() {
         $this->language->load('payment/transfer_plus');
 		
@@ -30,7 +29,7 @@ class ControllerPaymentTransferPlus extends Controller {
 
         $currentPayment = $this->getCurrentPayment();
 
-        if (isset($currentPayment['info'])) {
+        if (!empty($currentPayment['info']) && !empty($currentPayment['info'][$this->config->get('config_language_id')])) {
             $comment = html_entity_decode($currentPayment['info'][$this->config->get('config_language_id')], ENT_QUOTES, 'UTF-8');
         } else {
             $comment = '';
@@ -43,9 +42,8 @@ class ControllerPaymentTransferPlus extends Controller {
         }
 	}
 
-
     private function getCurrentPayment() {
-        if (isset($this->session->data['payment_method']['code'])) {
+        if (!empty($this->session->data['payment_method']['code'])) {
             $current_payment_method = $this->session->data['payment_method']['code'];
 
             $arr_payment_info = explode('.', $current_payment_method);

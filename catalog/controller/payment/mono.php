@@ -546,7 +546,6 @@ class ControllerPaymentMono extends Controller
         $this->load->model('account/transaction');
         $this->load->model('account/order');
         $this->load->model('checkout/order');
-        $this->load->model('payment/shoputils_psb');
         $this->load->model('payment/mono');
         $this->language->load('payment/mono');
 

@@ -122,9 +122,7 @@ class ControllerPaymentLiqpay extends Controller
 			public function success($data = array()){
 				$this->load->model('account/transaction');
 				$this->load->model('account/order');
-				$this->load->model('checkout/order');
-				$this->load->model('payment/shoputils_psb');
-				$this->load->model('payment/paykeeper');
+				$this->load->model('checkout/order');								
 				
 				if (!isset($this->session->data['order_id'])) {
 					$this->session->data['order_id'] = $this->order['order_id'];
@@ -163,7 +161,7 @@ class ControllerPaymentLiqpay extends Controller
 				'<br />Фактически было запрошено: ' . $actual_amount .' '. $this->config->get('config_regional_currency') .
 				'<br />Фактически было получено: ' . $data['amount'] . ' RUB'.
 				'<br />Время: '.date("d:m:Y H:i:s") . 
-				'<br />Новый статус: ' . $this->model_payment_shoputils_psb->getOrderStatusById($this->config->get('liqpay_order_status_id'), $this->order['language_id']);
+				'<br />Новый статус: ' . $this->model_checkout_order->getOrderStatusById($this->config->get('liqpay_order_status_id'), $this->order['language_id']);
 
 				$xlog = new Log('liqpay_mails.txt');
 				$xlog->write($title . ' - '. $html);
