@@ -211,6 +211,8 @@ class ModelCheckoutOrder extends Model {
 		} elseif (is_array($data['do_not_call'])){
 			if (!empty($data['do_not_call'][0])){
 				$data['do_not_call'] = 1;
+			} else {
+				$data['do_not_call'] = 0;
 			}
 		}	
 
@@ -306,16 +308,22 @@ class ModelCheckoutOrder extends Model {
 				$customer_id = (int)$this->session->data['customer_id'];
 			}
 
-			if (trim($data['email'])){
+			if ($data['email'] && trim($data['email'])){
 				$data['email'] = str_replace($this->config->get('simple_empty_email'), '', $data['email']);		
 			}
 
-			if (trim($data['telephone']) && !$customer_id){
-				$customer_id = $this->model_account_customer->getCustomerByPhone($data['telephone']);
+			if ($data['telephone'] && trim($data['telephone']) && !$customer_id){
+				$customer_info = $this->model_account_customer->getCustomerByPhone($data['telephone']);
+				if ($customer_info){
+					$customer_id = $customer_info['customer_id'];
+				}	
 			}
 
-			if (trim($data['email']) && !$customer_id){
-				$customer_id = $this->model_account_customer->getCustomerIDByEmail($data['email']);
+			if ($data['email'] && trim($data['email']) && !$customer_id){
+				$customer_info = $this->model_account_customer->getCustomerByEmail($data['email']);
+				if ($customer_info){
+					$customer_id = $customer_info['customer_id'];
+				}
 			}
 
 			if (!$customer_id){
@@ -901,16 +909,25 @@ class ModelCheckoutOrder extends Model {
 			$data['email'] = str_replace($this->config->get('simple_empty_email'), '', $data['email']);		
 		}
 
-		if (trim($data['telephone']) && !$customer_id){
-			$customer_id = $this->model_account_customer->getCustomerByEmail($data['telephone'])['customer_id'];
+		if ($data['telephone'] && trim($data['telephone']) && !$customer_id){
+			$customer_info = $this->model_account_customer->getCustomerByEmail($data['telephone']);
+			if ($customer_info){
+				$customer_id = $customer_info['customer_id'];
+			}
 		}
 
-		if (trim($data['telephone']) && !$customer_id){
-			$customer_id = $this->model_account_customer->getCustomerByPhone($data['telephone'])['customer_id'];
+		if ($data['telephone'] && trim($data['telephone']) && !$customer_id){
+			$customer_info = $this->model_account_customer->getCustomerByPhone($data['telephone']);
+			if ($customer_info){
+				$customer_id = $customer_info['customer_id'];
+			}
 		}
 
-		if (trim($data['email']) && !$customer_id){
-			$customer_id = $this->model_account_customer->getCustomerByEmail($data['email'])['customer_id'];
+		if ($data['email'] && trim($data['email']) && !$customer_id){
+			$customer_info = $this->model_account_customer->getCustomerByEmail($data['email']);
+			if ($customer_info){
+				$customer_id = $customer_info['customer_id'];
+			}
 		}		
 
 		$sql = "SELECT * FROM `order` WHERE (customer_id = '" . (int)$data['customer_id'] . "'";
@@ -1824,5 +1841,13 @@ class ModelCheckoutOrder extends Model {
 
 				$query = $this->db->ncquery("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");			
 				return $query->rows;
+			}
+
+			public function getOrderStatusById($order_status_id, $language_id = false) {
+				if (!$language_id) {
+					$language_id = (int)$this->config->get('config_language_id');
+				}
+				$query = $this->db->non_cached_query("SELECT * FROM order_status WHERE order_status_id = '" . (int)$order_status_id . "' AND language_id = '" . $language_id . "'");
+				return $query->num_rows ? $query->row['name'] : '';
 			}
 }																										

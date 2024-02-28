@@ -251,6 +251,10 @@
 			$query = $this->db->non_cached_query("SELECT * FROM customer WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower(trim($email))) . "'");			
 			return $query->row;
 		}
+
+		public function getCustomerByPhone($telephone){						
+			return $this->customer->getCustomerByTelephone($telephone);			
+		}
 		
 		public function getCustomerIDByEmail($email) {
 			if (!trim($email)){
@@ -300,15 +304,6 @@
 			$query = $this->db->non_cached_query("SELECT customer_id FROM `order` WHERE order_id = '" . (int)$order_id . "'");
 			
 			return $query->row['customer_id'];
-		}
-		
-		public function getCustomerByPhone($telephone){
-			$customer = $this->customer->getCustomerByTelephone($telephone);
-			if ($customer){
-				return (int)$customer['customer_id'];
-			}
-			
-			return false;			
 		}
 		
 		public function getCustomerByToken($token) {
