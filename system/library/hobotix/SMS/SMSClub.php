@@ -12,7 +12,9 @@ class SMSClub {
 		$this->config 	= $registry->get('config');
 		$this->db 		= $registry->get('db');
 
-		$this->smsClub = new \SmsSender\SmsSender($this->config->get('config_smsgate_api_key'));	
+		if (class_exists('SmsSender\SmsSender')){
+			$this->smsClub = new \SmsSender\SmsSender($this->config->get('config_smsgate_api_key'));	
+		}
 	}
 
 	public function check($answer){
