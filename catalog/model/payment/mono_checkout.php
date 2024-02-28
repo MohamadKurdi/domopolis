@@ -110,7 +110,10 @@ class ModelPaymentMonoCheckout extends Model
             }
 
             if (trim($json['mainClientInfo']['phoneNumber']) && !$customer_id){
-                $customer_id = $this->model_account_customer->getCustomerByPhone($json['mainClientInfo']['phoneNumber']);
+                $customer_info = $this->model_account_customer->getCustomerByPhone($json['mainClientInfo']['phoneNumber']);
+                if ($customer_info){
+                    $customer_id = $customer_info['customer_id'];
+                }
             }
 
             if (trim($json['mainClientInfo']['email']) && !$customer_id){

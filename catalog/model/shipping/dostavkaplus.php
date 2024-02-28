@@ -510,27 +510,28 @@
 					foreach ($quote_data as $key => $value) $sort_by[$key] = $value['sort_order'];
 					array_multisort($sort_by, SORT_ASC, $quote_data);
 					
-					//print_r($quote_data);
-					
 					foreach ($quote_data as $q_data) {
 						$error = $q_data['error'];
 						break;
 					}
 				}
 				
+				if (!empty($this->config->get($this->name.'_name'))){
+					$title = html_entity_decode($this->config->get($this->name.'_name'), ENT_QUOTES, 'UTF-8');
+				} else {
+					$title = '';
+				}
 				
 				if ((isset($quote_data) and count($quote_data) > 0) or $error != '') {
 					$method_data = array(
 					'code'       => $this->name,
-					'title'      => html_entity_decode($this->config->get($this->name.'_name'), ENT_QUOTES, 'UTF-8'),
+					'title'      => $title,
 					'quote'      => $quote_data,
 					'error'      => $error,
 					'sort_order' => $error ? ($this->config->get($this->name.'_sort_order') + 100) : $this->config->get($this->name.'_sort_order'),
 					);
 				}
 			}
-			
-			//print_r($method_data);
 			
 			return $method_data;
 		}
