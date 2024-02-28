@@ -86,9 +86,6 @@
 			
 			<table class="list">
 				<tr>
-					<td width="20%" class="center" style="padding:10px 5px;">
-						<a style="border:2px solid #7F00FF; color:#7F00FF" class="button" onclick="window.open('index.php?route=report/export_xls/createOrderNowWhere&token=<? echo $token; ?>&date='+$('#order_to_deliveries_date').val());">Товары Германия</a>
-					</td>
 					<td width="30%" class="center" style="padding:10px 5px; color:#7F00FF">
 						<select name="filter_order_store_id_to_cheque" id="filter_order_store_id_to_cheque" style="width:250px;font-size:16px; padding:6px 10px;" >
 							<option value="*"></option>				
@@ -102,29 +99,11 @@
 						</select>
 						<a style="border:2px solid #7F00FF; color:#7F00FF" onclick="$('#form').attr('action', '<?php echo $invoice; ?>'); $('#form').attr('target', '_blank'); $('#form').submit();" class="button"><?php echo $button_invoice; ?></a>
 					</td>	
-					<td width="60%" class="center" style="padding:10px 5px;">
+					<td width="30%" class="center" style="padding:10px 5px;">
 						<input type="text" style="font-size:16px; width:100px; padding:6px 10px; text-align:center;" class="date" id="order_to_deliveries_date_to_cheque" />&nbsp;
 						<a style="border:2px solid #7F00FF; color:#7F00FF" class="button" onclick="window.open('index.php?route=catalog/parties/getOnDateCheques&token=<? echo $token; ?>&date='+$('#order_to_deliveries_date_to_cheque').val()+'&store_id='+$('#filter_order_store_id_to_cheque').attr('value'))">Все чеки на доставку</a> 
 					</td>									
 				</tr>
-				
-				<?php if ($this->config->get('config_country_id') == 176) { ?>	
-					<tr>
-						<td width="25%" class="center" style="padding:10px 5px;">
-							<input type="text" style="font-size:16px; width:100px; padding:6px 10px; text-align:center;" class="date" id="order_to_deliveries_date" />&nbsp;
-
-							<a style="border:2px solid #7F00FF; color:#7F00FF" class="button" onclick="window.open('index.php?route=report/export_xls/createOrderDeliveryMoscow&token=<? echo $token; ?>&date='+$('#order_to_deliveries_date').val());">Заявка Москва</a>
-
-							<a style="border:2px solid #7F00FF; color:#7F00FF" class="button" onclick="window.open('index.php?route=report/export_xls/createOrderDeliveryMoscow&shipping_country_id=20&token=<? echo $token; ?>&date='+$('#order_to_deliveries_date').val());">Заявка Беларусь</a>
-
-						</td>
-						<td width="25%" class="center" style="padding:10px 5px;">
-
-							<a style="border:2px solid #7F00FF; color:#7F00FF" href="<?php echo HTTPS_CATALOG . 'yamarket-partner-api/acts/receptiontransferact'?>" target="_blank" class="button"><i class="fa fa-hacker-news"></i> Маркет АКТ Приема-передачи</a>
-
-						</td>
-					</tr>
-				<?php } ?>
 			</table>
 		</div>
 		<div style="clear:both;"></div>
@@ -575,7 +554,7 @@
 									<a href="<?php echo $sort_date_modified; ?>"><i class="fa fa-edit"></i></a>
 								<?php } ?>				
 							</td>            
-							<td class="right"><?php echo $column_action; ?></td>
+							<td class="right"></td>
 						</tr>
 					</thead>
 					<tbody>
@@ -1262,9 +1241,9 @@
 										<? } ?>
 										<div style="white-space: nowrap; margin-top:4px;"><b><i class="fa fa-edit"></i></b><?php echo $order['date_modified']; ?></div>
 									</td>
-									<td class="right" style="text-align: center;color: #<?php echo $order['status_txt_color']; ?>;" aria-label="Действие">
-										<a class="button view-history" data-order-id="<? echo $order['order_id']; ?>" style="margin-bottom:2px;padding:4px 4px;"><i class="fa fa-history"></i></a>
-										<a class="button view-cheques" data-order-id="<? echo $order['order_id']; ?>" style="margin-bottom:2px;padding:4px 7px;"><i class="fa fa-usd"></i></a><br/>
+									<td class="right" style="width:60px; text-align: center;color: #<?php echo $order['status_txt_color']; ?>;" aria-label="Действие">
+										<a class="button view-history" data-order-id="<? echo $order['order_id']; ?>" style="margin-bottom:2px;padding:4px 4px;"><i class="fa fa-history"></i></a><br />
+										<a class="button view-cheques" data-order-id="<? echo $order['order_id']; ?>" style="margin-bottom:2px;padding:4px 7px;"><i class="fa fa-usd"></i></a><br />
 										<?php foreach ($order['action'] as $action) { ?>
 											<a class="button" <? if (isset($action['target'])) { ?>target="<? echo $action['target']; ?>"<? } ?> href="<?php echo $action['href']; ?>" style="margin-bottom:2px;padding:4px 4px;"><?php echo $action['text']; ?></a>
 										<?php } ?>

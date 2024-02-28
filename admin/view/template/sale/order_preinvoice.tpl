@@ -346,7 +346,7 @@
 			</table>
 		<?php } ?>
 		
-		<?php if ($order['qr_link']) { ?>
+		<?php if (!empty($order['qr_link'])) { ?>
 			<table style="border:0px;margin-top:3mm;" border="0px">
 				<tr>				
 					<td style="padding-left:4mm; text-align:left; vertical-align: middle; border:0px;" border="0px" valign="middle">
@@ -363,7 +363,7 @@
 			</table>
 		<?php } ?>
 		
-		<? if ($order['prim']) { ?>
+		<? if (!empty($order['prim'])) { ?>
 			<table style="width:100%;" id="table_cheque_comment">
 				<tr>
 					<td style="width:1px; padding-top:3mm;"><b>Примечание:</b></td>

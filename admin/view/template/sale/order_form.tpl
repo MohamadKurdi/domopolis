@@ -80,14 +80,6 @@
 					<span style="color:#6A6A6A;" class="print-cheque" data-order_invoice_id="<?php echo $last_invoice['order_invoice_id']; ?>"><i class="fa fa fa-print"></i> ЧК</span>
 				</h1>
 				<?php } ?>
-				
-				<h1 class="ktooltip_hover" title="Коммерческое предложение" style="margin-left:10px; font-size:20px; padding:3px 5px; border-radius:5px; border:2px solid #6A6A6A;">
-					<a href="<?php echo $xls1_download; ?>" style="color:#6A6A6A; text-decoration:none;"><i class="fa fa-file-excel-o"></i> КП</a>
-				</h1>
-				
-				<h1 class="ktooltip_hover" title="Спецификация" style="margin-left:10px; font-size:20px; padding:3px 5px; border-radius:5px; border:2px solid #6A6A6A;">
-					<a href="<?php echo $xls2_download; ?>" style="color:#6A6A6A; text-decoration:none;"><i class="fa fa-file-excel-o"></i> СП</a>
-				</h1>
 
 				<h1 class="ktooltip_hover" title="Предпросмотр письма" style="margin-left:10px; font-size:20px; padding:3px 5px; border-radius:5px; border:2px solid #6A6A6A;">
 					<a onclick="$('#mailpreview').load('<? echo $url_mailpreview; ?>').dialog({width:800, modal:true,resizable:true,position:{my: 'center', at:'center top', of: window}, closeOnEscape: true});" style="color:#6A6A6A; text-decoration:none;"><i class="fa fa-eye"></i> К</a>
