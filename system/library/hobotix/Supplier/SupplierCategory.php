@@ -34,6 +34,13 @@ class SupplierCategory extends SupplierFrameworkClass {
 		}
 	}
 
+	public function unsetCategories(){
+		$this->categories 					= [];
+		$this->categories_full 				= [];
+		$this->categories_extended 			= [];
+		$this->categories_extended_full 	= [];
+	}
+
 	public function getCategories($supplier_id = null){
 		if (!$supplier_id){
 			$supplier_id = $this->supplier_id;

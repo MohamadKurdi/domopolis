@@ -127,10 +127,9 @@ class ControllerSaleSupplier extends Controller {
 		echoLine('[ControllerSaleSupplier::cron] Got ' . count($suppliers) . ' suppliers', 's');
 
 		foreach ($suppliers as $supplier){
-
 			if ($supplier_id){
 				if ($supplier['supplier_id'] <> $supplier_id){
-					echoLine('[ControllerSaleSupplier::cron] Exact supplier id provided, skipping others', 'w');
+					echoLine('[ControllerSaleSupplier::cron] Exact supplier id provided, skipping ' . $supplier['supplier_id'], 'w');
 					continue;
 				}
 			}
@@ -150,6 +149,8 @@ class ControllerSaleSupplier extends Controller {
 			}
 
 			$this->supplierAdaptor->postAction();
+			$this->supplierAdaptor->SupplierCategory->unsetCategories();
+			$this->supplierAdaptor->SupplierAttribute->unsetAttributes();
 		}
 
 	}

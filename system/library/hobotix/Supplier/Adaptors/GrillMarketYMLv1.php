@@ -152,14 +152,12 @@ class GrillMarketYMLv1 extends SuppliersGeneralClass {
 								'category'  			=> $offer['categoryId'],
 								'attributes'            => $product_attributes,
 								'raw' 					=> json_encode($offer)
-							];
+							];													
 						}
 					}
 				}
 			}
 		}
-
-		var_dump($products);die();
 
 		return $products;
 	}

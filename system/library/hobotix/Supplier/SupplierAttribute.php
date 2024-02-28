@@ -20,6 +20,10 @@ class SupplierAttribute extends SupplierFrameworkClass {
 		}
 	}
 
+	public function unsetAttributes(){
+		$this->attributes = [];
+	}
+
 	public function getAttributes($supplier_id = null){
 		if (!$supplier_id){
 			$supplier_id = $this->supplier_id;

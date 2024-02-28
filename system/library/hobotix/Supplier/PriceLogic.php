@@ -93,7 +93,8 @@ class PriceLogic extends SupplierFrameworkClass {
 			$this->enableProduct($product_id);					
 		} else {
 			echoLine('[PriceLogic::setProductIsOnStock] Product is in warehouse, setting status config_stock_status_id', 's');
-			$this->db->query("UPDATE product SET quantity = '" . (int)$product['quantity'] . "' WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("UPDATE product SET quantity = '" . (int)$product['quantity'] . "' WHERE product_id = '" . (int)$product_id . "'");			
+			$this->db->query("UPDATE product SET quantity = (SELECT SUM(quantity) as sum FROM supplier_products WHERE product_id = product.product_id) WHERE product_id = '" . (int)$product_id . "'");
 
 			$stock_status_id = (int)$this->config->get('config_stock_status_id');
 		}

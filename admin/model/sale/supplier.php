@@ -166,7 +166,7 @@ class ModelSaleSupplier extends Model {
 			'limit' 		=> 5
 		];
 
-		$attributes = $this->model_catalog_attribute->getAttributes($data);
+		$attributes = $this->model_catalog_attribute->guessAttributes($data);
 
 		if (!$attributes){
 			$regex = '/^(.*?)(?:\s*\([^)]+\))?$/';
@@ -174,9 +174,8 @@ class ModelSaleSupplier extends Model {
 
 			if ($result) {
 				$data['filter_name'] = $matches[1];
-  				$attributes = $this->model_catalog_attribute->getAttributes($data);
+  				$attributes = $this->model_catalog_attribute->guessAttributes($data);
 			}
-
 		}
 
 		return $attributes;

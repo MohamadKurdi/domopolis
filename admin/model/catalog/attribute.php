@@ -80,7 +80,7 @@ class ModelCatalogAttribute extends Model {
 
         $this->db->query("DELETE FROM attribute_value_image WHERE attribute_id = '" . (int)$attribute_id . "'");
 
-        $insertArray = array();
+        $insertArray = [];
         foreach ($images as $attributeNameValue => $image) {
             if ($image) {
                 $insertArray[$attributeNameValue]['image'] = $image;
@@ -93,8 +93,8 @@ class ModelCatalogAttribute extends Model {
         }
 
         foreach ($insertArray as $valueName => $item) {
-            $keys = array();
-            $values = array();
+            $keys = [];
+            $values = [];
             foreach ($item as $itemKey => $itemValue) {
                 $keys[] = "`".$itemKey."`";
                 $values[] = "'".$itemValue."'";
@@ -112,7 +112,7 @@ class ModelCatalogAttribute extends Model {
 
 
         $query = $this->db->query("SELECT * FROM attribute_value_image WHERE attribute_id = '" . (int)$attribute_id . "'");
-        $imagesArray = array();
+        $imagesArray = [];
         foreach ($query->rows as $image) {
             if ($image['image']) {
                 $imagesArray[$image['attribute_value']] = $image['image'];
@@ -128,7 +128,7 @@ class ModelCatalogAttribute extends Model {
     	}
 
         $query = $this->db->query("SELECT * FROM attribute_value_image WHERE attribute_id = '" . (int)$attribute_id . "'");
-        $informationArray = array();
+        $informationArray = [];
         foreach ($query->rows as $i) {
             $informationArray[$i['attribute_value']] = $i['information_id'];
         }
@@ -136,7 +136,39 @@ class ModelCatalogAttribute extends Model {
         return $informationArray;
     }
 
-	public function getAttributes($data = array()) {
+    public function guessAttributes($data = []) {
+    	$attributes = [];
+
+    	$sql = "SELECT * FROM attribute a LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE 1";
+
+		if (!empty($data['filter_name'])) {
+			$sql .= " AND ad.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+		}
+
+		$sql .= " GROUP BY a.attribute_id";
+
+		if (isset($data['start']) || isset($data['limit'])) {
+			if ($data['start'] < 0) {
+				$data['start'] = 0;
+			}				
+
+			if ($data['limit'] < 1) {
+				$data['limit'] = 20;
+			}	
+
+			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+		}	
+
+		$query = $this->db->query($sql);
+
+		foreach ($query->rows as $row){
+			$attributes[$row['attribute_id']] = $this->getAttribute($row['attribute_id']);
+		}
+		
+		return $attributes;
+    }
+
+	public function getAttributes($data = []) {
 		$sql = "SELECT *, (SELECT agd.name FROM attribute_group_description agd WHERE agd.attribute_group_id = a.attribute_group_id AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS attribute_group FROM attribute a LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE ad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_name'])) {
@@ -184,7 +216,7 @@ class ModelCatalogAttribute extends Model {
 	}
 
 	public function getAttributeDescriptions($attribute_id) {
-		$attribute_data = array();
+		$attribute_data = [];
 
 		$query = $this->db->query("SELECT * FROM attribute_description WHERE attribute_id = '" . (int)$attribute_id . "'");
 
@@ -195,7 +227,7 @@ class ModelCatalogAttribute extends Model {
 		return $attribute_data;
 	}
 
-	public function getAttributesByAttributeGroupId($data = array()) {
+	public function getAttributesByAttributeGroupId($data = []) {
 		$sql = "SELECT *, (SELECT agd.name FROM attribute_group_description agd WHERE agd.attribute_group_id = a.attribute_group_id AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS attribute_group FROM attribute a LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE ad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_name'])) {
