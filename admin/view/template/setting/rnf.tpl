@@ -590,7 +590,20 @@
 							</td>
 							<td>
 								<span class="help">
-									<i class="fa fa-info-circle"></i> Подробные логи для запросов товаров<sup style="color:red">DEV</sup>
+									<i class="fa fa-info-circle"></i> Подробные логи для запросов товаров (SimpleProductParser, simple multiCURL)
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td  class="right">
+								Add v2 Debug
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_debug_products_v2_file" type="checkbox" class="checkbox" name="config_rainforest_debug_products_v2_file" <? if ($config_rainforest_debug_products_v2_file){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_debug_products_v2_file"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если включено, то результат запроса подменяется результатом из файла system/temp/rainforest.addasinv2.json
 								</span>
 							</td>
 						</tr>
@@ -607,10 +620,38 @@
 								</span>
 							</td>
 						</tr>
+						
+						<tr>
+							<td  class="right">
+								CURL Connect Timeout
+							</td>
+							<td style="width:50px;" class="center">
+								<input type="number" name="config_rainforest_debug_curl_connect_timeout" value="<?php echo $config_rainforest_debug_curl_connect_timeout; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Таймаут запросов к Rainforest API, сек (SimpleProductParser, simple multiCURL)
+								</span>
+							</td>
+						</tr>
 
 						<tr>
 							<td  class="right">
-								Request Timeout
+								CURL Request Timeout
+							</td>
+							<td style="width:50px;" class="center">
+								<input type="number" name="config_rainforest_debug_curl_request_timeout" value="<?php echo $config_rainforest_debug_curl_request_timeout; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Таймаут запросов к Rainforest API, сек (SimpleProductParser, simple multiCURL)
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td  class="right">
+								Guzzle Request Timeout
 							</td>
 							<td style="width:50px;" class="center">
 								<input type="number" name="config_rainforest_debug_request_timeout" value="<?php echo $config_rainforest_debug_request_timeout; ?>" size="50" style="width:50px;" />

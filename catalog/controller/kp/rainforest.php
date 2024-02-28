@@ -394,7 +394,7 @@ class ControllerKPRainForest extends Controller {
 					$this->rainforestAmazon->offersParser->addOffersForASIN($asin, $offers);
 					$this->rainforestAmazon->offersParser->clearProductsAmazonQueue($asin);
 				} catch (\Exception $e){
-					echoLine('[ControllerKPRainForest::parseofferscron] Caught Exception, exiting.' . $e->getMessage());
+					echoLine('[ControllerKPRainForest::parseofferscron] Caught Exception, exiting. ' . $e->getMessage(), 'e');
 					return;
 				}
 			}
