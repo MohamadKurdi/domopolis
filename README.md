@@ -5,7 +5,7 @@ This engine is highly remastered OpenCart v1.5.6.4 with a lot of integrations an
 Requirements
 ------------
 
-*   PHP >= 7.4.0
+*   PHP >= 8.1.0, lower versions support is now impossible due to usage of composer libs with 8.1+ requrements
 *   Ioncube Loader, if you want to use encoded modules
 *   Licenses for encoded modules, it you want to use them
 
