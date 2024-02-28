@@ -25,7 +25,7 @@ function checkSingleXMLItemByField($item, $field){
 }
 
 function checkCDATA($item){
-	if (!empty($item['@cdata'])){
+	if (isset($item['@cdata'])){
 		return $item['@cdata'];
 	}
 

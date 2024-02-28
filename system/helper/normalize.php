@@ -275,15 +275,23 @@ function atrim_array($array) {
 	return $result;
 }
 
-function atrim($var){	
-	$string = preg_replace('/(\x{200e}|\x{200f})/u', '', $var);
-	$string = str_replace(['"', '“', '„'], "'", $var);
-	$string = trim($var);
+function atrim($string){	
+	if (!$string){
+		return '';
+	}
 
-	return $var;
+	$string = preg_replace('/(\x{200e}|\x{200f})/u', '', $string);
+	$string = str_replace(['"', '“', '„'], "'", $string);
+	$string = trim($string);
+
+	return $string;
 }
 
-function clean_string( $string ) {
+function clean_string($string) {
+	if (!$string){
+		return '';
+	}
+
 	$string = preg_replace( "/[^a-zA-ZА-Яа-я0-9\s]/", '', $string );
 	$string = trim($string);
 

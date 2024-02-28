@@ -95,7 +95,6 @@ class GrillMarketYMLv1 extends SuppliersGeneralClass {
 				if (!empty($this->content['yml_catalog']['shop']['offers'])){
 					if (!empty($this->content['yml_catalog']['shop']['offers']['offer'])){
 						foreach ($this->content['yml_catalog']['shop']['offers']['offer'] as $offer){
-
 							$name = [];
 							if (!empty($offer['name'])){
 								$name['ru'] = checkCDATA($offer['name']);

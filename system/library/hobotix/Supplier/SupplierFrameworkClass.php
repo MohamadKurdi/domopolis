@@ -89,8 +89,10 @@ class SupplierFrameworkClass {
 			if ($language_code == $language_code_from){
 				if (!empty($data[$real_language_code_from])){
 					$translated = atrim($data[$real_language_code_from]);
-				} else {
+				} elseif (!empty($data[0])) {
 					$translated = atrim($data[0]);
+				} else {
+					$translated = '';
 				}				
 			} else {
 				if (!empty($data[$real_language_code_to]) && $language['front']){
