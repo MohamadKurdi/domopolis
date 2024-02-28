@@ -139,7 +139,6 @@
 					$option = array_filter($this->request->post['option']);
 					
 					foreach ($option as $key => $value){
-						//Надо понять, товар ли это
 						if ($this_is_a_product = $this->model_catalog_product->getIfOptionIsProduct($key, $value)){
 							$this->cart->add($this_is_a_product['product_id'], $quantity, array(), false, false);
 							

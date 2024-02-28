@@ -3,7 +3,8 @@
 class ControllerAPIGoogle extends Controller {	
 
 	public function widget(){
-		$this->data['logged'] = $this->customer->isLogged();
+		$this->data['logged'] 				= $this->customer->isLogged();
+		$this->data['google_auth_nonce'] 	= md5($this->session->getID() . 'google_auth_nonce' . $this->config->get('config_encryption'));
 		$this->template = 'blocks/google_sso_widget.tpl';
 		$this->response->setOutput($this->render());
 	}

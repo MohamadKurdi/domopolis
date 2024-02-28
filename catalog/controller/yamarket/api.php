@@ -267,8 +267,7 @@
 			
 			$this->load->library('hobotix/YandexMarketExtender');	
 			
-			$hobotixYamClient = new \Yandex\Marketplace\Partner\Clients\HobotixYamClient($this->config->get('config_yam_yandexOauthID'), $this->config->get('config_yam_yandexAccessToken'));	
-			
+			$hobotixYamClient 	= new \Yandex\Marketplace\Partner\Clients\HobotixYamClient($this->config->get('config_yam_yandexOauthID'), $this->config->get('config_yam_yandexAccessToken'));				
 			$hiddenOffersClient = new \Yandex\Marketplace\Partner\Clients\HiddenOffersClient($this->config->get('config_yam_yandexOauthID'), $this->config->get('config_yam_yandexAccessToken'));
 			
 			$this->db->query("UPDATE product SET yam_hidden = 0");
