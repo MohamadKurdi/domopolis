@@ -288,10 +288,8 @@
 		}
 		
 		public function loadChartStats(){
-			$this->data['token'] = $this->session->data['token'];
-			
-			$this->template = 'homestats/homecharts.tpl';
-			
+			$this->data['token'] = $this->session->data['token'];			
+			$this->template = 'homestats/homecharts.tpl';			
 			$this->response->setOutput($this->render());			
 		}		
 		
@@ -798,8 +796,7 @@
 				$range = 'month';
 			}
 			
-			switch ($range) {
-				
+			switch ($range) {				
 				case 'week_orders':
 				$date_start = strtotime('-' . date('w') . ' days'); 
 				
@@ -821,18 +818,13 @@
 					}
 					
 					setlocale(LC_TIME, "ru_RU.UTF8");
-					$data['xaxis'][] = array($i, strftime("%a", strtotime($date)));
+					$data['xaxis'][] = array($i, date('D', strtotime($date)));
 				}
 				
 				break;
-				
-				
 			} 
 			
 			$this->response->setOutput(json_encode($data));
-			
-			
-			
 		}
 		
 		public function loyalitychart(){
@@ -855,8 +847,7 @@
 				$range = 'weekloyality';
 			}
 			
-			switch ($range) {
-				
+			switch ($range) {				
 				case 'weekloyality':
 				$date_start = strtotime('-' . date('w') . ' days'); 
 				
@@ -882,9 +873,8 @@
 					}
 					
 					setlocale(LC_TIME, "ru_RU.UTF8");
-					$data['xaxis'][] = array($i, strftime("%a", strtotime($date)));
-				}
-				
+					$data['xaxis'][] = array($i, date('D', strtotime($date)));
+				}				
 			} 
 			
 			$this->response->setOutput(json_encode($data));
@@ -985,7 +975,7 @@
 					}
 					
 					setlocale(LC_TIME, "ru_RU.UTF8");
-					$data['xaxis'][] = array($i, strftime("%a", strtotime($date)));
+					$data['xaxis'][] = array($i, date('D', strtotime($date)));
 				}
 				
 				break;

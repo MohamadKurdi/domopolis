@@ -48,7 +48,7 @@
 <![endif]--> 
 <script type="text/javascript" src="view/javascript/jquery/flot2/jquery.flot.js"></script> 
 <script type="text/javascript" src="view/javascript/jquery/flot2/jquery.flot.resize.min.js"></script>
-<script type="text/javascript"><!--
+<script type="text/javascript">
 	function getSalesChart(range, div, url) {
 		if (div == 'report_week_cancel'){
 			var color = '#f91c02';
@@ -124,4 +124,4 @@
 		getSalesChart('week_orders', 'report_week', 'index.php?route=common/home/chart&token=<?php echo $token; ?>&range=');
 		getSalesChart('week_orders', 'report_week_cancel', 'index.php?route=common/home/cancelchart&token=<?php echo $token; ?>&range=');
 	})
-//--></script> 																	
+</script> 																	
