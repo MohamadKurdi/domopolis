@@ -508,9 +508,7 @@
 		
 		public function info() { 
 			$this->language->load('account/transaction');
-			$this->language->load('account/order');
-
-			$this->load->model('payment/shoputils_psb');
+			$this->language->load('account/order');			
 			$this->load->model('payment/paykeeper');
 			$this->load->model('payment/pp_express');
 			$this->load->model('payment/liqpay');			

@@ -125,12 +125,12 @@
 			
 			$this->data['button_continue'] = $this->language->get('button_continue');
 			
-			$this->data['action'] = $this->url->link('account/support');
-			$this->data['store'] = $this->config->get('config_name');
-			$this->data['address'] = nl2br($this->config->get('config_address'));
-			$this->data['telephone'] = $this->config->get('config_telephone');
-			$this->data['telephone2'] = $this->config->get('config_telephone2');
-			$this->data['telephone3'] = $this->config->get('config_telephone3');
+			$this->data['action'] 		= $this->url->link('account/support');
+			$this->data['store'] 		= $this->config->get('config_name');			
+			$this->data['address'] 		= !empty($this->config->get('config_address'))?nl2br($this->config->get('config_address')):'';
+			$this->data['telephone'] 	= $this->config->get('config_telephone');
+			$this->data['telephone2'] 	= $this->config->get('config_telephone2');
+			$this->data['telephone3'] 	= $this->config->get('config_telephone3');
 			
 			$this->data['contact_email'] = $this->config->get('config_display_email');
 			
