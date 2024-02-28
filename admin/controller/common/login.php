@@ -21,9 +21,6 @@
 				}
 			}
 			
-			$this->data['isMobile'] = $this->mobileDetect->isMobile();
-			$this->data['isAndroid'] = $this->mobileDetect->isAndroid();
-			
 			if ($this->config->get('config_ldap_auth_enable')){							
 				$connection = @fsockopen($this->config->get('config_ldap_host'), 3268, $error, $error_msg, 3);
 

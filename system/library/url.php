@@ -152,7 +152,7 @@ class Url {
     private function linkCached($route, $args, $language_id = false) {                
         $route = $this->rewriteSimpleCheckout($route);
 
-        if (!empty($this->cache)){
+        if (empty($this->cache)){
             return $this->linkUnCached($route, $args, $language_id = false);
         }
 

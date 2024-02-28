@@ -119,7 +119,11 @@ class RainforestAmazon
 		$this->db 				= $registry->get('db');
 		$this->log 				= $registry->get('log');
 
-		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/RainforestLogger.php');
+		if (version_compare(PHP_VERSION, '8.1.0', '>')){
+			require_once(DIR_SYSTEM . 'library/hobotix/Amazon/RainforestLogger.php');
+		} else {
+			require_once(DIR_SYSTEM . 'library/hobotix/Amazon/RainforestLogger7.4.php');
+		}
 		$rainforestLogger = new Amazon\RainforestLogger($registry);
 
 		if ($this->config->get('config_rainforest_enable_api') && $this->config->get('config_rainforest_api_key')){
@@ -143,7 +147,9 @@ class RainforestAmazon
 				$config['http_timeout'] = (int)$this->config->get('config_rainforest_debug_request_timeout');
 			}
 
-			$this->rfClient = new \CaponicaAmazonRainforest\Client\RainforestClient($config, $rainforestLogger);
+			if (class_exists('CaponicaAmazonRainforest\Client\RainforestClient')){
+				$this->rfClient = new \CaponicaAmazonRainforest\Client\RainforestClient($config, $rainforestLogger);
+			}			
 		} else {
 			$this->rfClient = null;
 		}		
@@ -172,8 +178,10 @@ class RainforestAmazon
 		$this->simpleProductParser 	= new Amazon\SimpleProductParser($registry, $this->rfClient);	
 
 		if ($this->config->get('config_telegram_bot_enable_alerts') && $this->config->get('config_telegram_bot_token') && $this->config->get('config_rainforest_tg_alert_group_id')){
-			$this->telegramBot 		= new \Longman\TelegramBot\Telegram($this->config->get('config_telegram_bot_token'), $this->config->get('config_telegram_bot_name'));
-			$this->tgAlertChatID 	= $this->config->get('config_rainforest_tg_alert_group_id');
+			if (class_exists('Longman\TelegramBot\Telegram')){
+				$this->telegramBot 		= new \Longman\TelegramBot\Telegram($this->config->get('config_telegram_bot_token'), $this->config->get('config_telegram_bot_name'));
+				$this->tgAlertChatID 	= $this->config->get('config_rainforest_tg_alert_group_id');
+			}
 		}
 	}
 

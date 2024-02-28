@@ -11,8 +11,10 @@ class Notificore {
 		$this->registry = $registry;
 		$this->config 	= $registry->get('config');
 		$this->db 		= $registry->get('db');
-
-		$this->Notificore = new \Notificore\Notificore($this->config->get('config_smsgate_api_key'), $this->config->get('config_sms_from'));		
+		
+		if (class_exists('Notificore\Notificore')){
+			$this->Notificore = new \Notificore\Notificore($this->config->get('config_smsgate_api_key'), $this->config->get('config_sms_from'));
+		}		
 	}
 
 	private function request($endpoint, $data){

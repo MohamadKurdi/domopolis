@@ -30,10 +30,12 @@ final class PageCache{
 		$this->loadSettings();
 
 		if ($loadLibraries){
-			if (version_compare(PHP_VERSION, '8.1.0')){
+			if (version_compare(PHP_VERSION, '8.1.0', '>')){
 				if( !class_exists('Composer\\Autoload\\ClassLoader') ){
 					require_once(DIR_SYSTEM . '../vendor/autoload.php');
 				}
+			}  else {
+				header('X-AUTOLOAD-SKIP', PHP_VERSION);
 			}
 
 			require_once(DIR_SYSTEM . 'library/hobotix/MinifyAdaptor.php');

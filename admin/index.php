@@ -42,8 +42,6 @@ if ($httpHOST != parse_url(HTTPS_CATALOG, PHP_URL_HOST)){
 	die('sorry');
 }
 
-require_once(DIR_SYSTEM . '../vendor/autoload.php');
-
 require_once(DIR_SYSTEM . 'startup.php');	
 require_once(DIR_SYSTEM . 'library/currency.php');
 require_once(DIR_SYSTEM . 'library/user.php');
@@ -71,7 +69,9 @@ require_once(DIR_SYSTEM . 'library/hobotix/TranslateAdaptor.php');
 require_once(DIR_SYSTEM . 'library/hobotix/CheckBoxUA.php');		
 require_once(DIR_SYSTEM . 'library/hobotix/Fiscalisation.php');
 require_once(DIR_SYSTEM . 'library/hobotix/SupplierAdaptor.php');
-require_once(DIR_SYSTEM . 'library/hobotix/QRCodeExtender.php');
+if (class_exists('chillerlan\QRCode\Output\QRGdImage')){
+	require_once(DIR_SYSTEM . 'library/hobotix/QRCodeExtender.php');
+}
 require_once(DIR_SYSTEM . 'library/hobotix/CouponRandom.php');
 require_once(DIR_SYSTEM . 'library/hobotix/CatLoader.php');
 
@@ -194,7 +194,6 @@ $registry->set('customer_group_id', $registry->get('config')->get('config_custom
 
 $registry->set('url',  				new Url(HTTPS_SERVER, $registry));
 $registry->set('session', 			new Session()); 
-$registry->set('mobileDetect', 		new \Detection\MobileDetect);
 $registry->set('document', 			new Document());
 $registry->set('templateLib',		new Template());
 $registry->set('currency', 			new Currency($registry));
