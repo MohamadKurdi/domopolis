@@ -40,6 +40,10 @@ class PriceLogic
 		$this->cache 	= $registry->get('cache');
 		$this->log 		= $registry->get('log');
 
+		if ($this->config->get('config_rainforest_debug_mysql_pricelogic')){
+			echoLine('[PriceLogic::__construct] PriceLogic mysql debug is on!', 'd');
+		}
+
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/PriceUpdaterQueue.php');
 		$this->priceUpdaterQueue = new PriceUpdaterQueue($registry);
 

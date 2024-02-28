@@ -4,30 +4,36 @@ namespace hobotix\Amazon;
 
 class productModelGet extends hoboModel{
 
-	private $asinsArray = [];
+	private $asinsArray 	= [];
 	//private $testAsin = 'B07MJG8JPY';
-	private $testAsin = false;
+	private $testAsin 		= false;
 
 	public function getExcludedTexts($category_id){
-		$excluded_texts = [];
-		$query = $this->db->ncquery("SELECT `text`, `category_id` FROM excluded_asins WHERE category_id = '" . (int)$category_id . "'");
+		$excluded_texts = $this->cache->get('amazon.rainforest.excluded_texts.' . $category_id);
+		
+		if (!$excluded_texts){
+			$query = $this->db->ncquery("SELECT `text`, `category_id` FROM excluded_asins WHERE (category_id = '" . (int)$category_id . "' OR category_id = 0)");
 
-		if ($query->num_rows){			
-			foreach($query->rows as $row){				
-				$excluded_texts[] = $row['text'];
+			$excluded_texts = [];
+			if ($query->num_rows){			
+				foreach($query->rows as $row){
+					$excluded_texts[] = $row['text'];
+				}
 			}
+
+			$this->cache->set('amazon.rainforest.excluded_texts.' . $category_id, $excluded_texts);
 		}
+		
 	
 		return $excluded_texts;
 	}
 
 	public function updateExludedTextUsage($text, $category_id = 0){
-		$this->db->ncquery("UPDATE excluded_asins SET times = times+1 WHERE `text` = '" . $this->db->escape($text) . "' AND category_id = '" . (int)$category_id . "'");
+		$this->db->ncquery("UPDATE excluded_asins SET `times` = (`times` + 1) WHERE `text` = '" . $this->db->escape($text) . "' AND (category_id = '" . (int)$category_id . "' OR category_id = 0)");
 	}
 
 	public function checkIfManufacturerIsExcluded($name, $category_id = 0){
-		$query = $this->db->ncquery("SELECT `text`, `category_id` FROM excluded_asins WHERE LOWER(text) = '" . $this->db->escape(mb_strtolower($name)) . "' AND category_id = '" . (int)$category_id . "'");	
-
+		$query = $this->db->ncquery("SELECT `text`, `category_id` FROM excluded_asins WHERE LOWER(text) = '" . $this->db->escape(mb_strtolower($name)) . "' AND (category_id = '" . (int)$category_id . "' OR category_id = 0)");	
 		if ($query->num_rows){
 			echoLine('[checkIfManufacturerIsExcluded] FOUND exclusion: ' . $name . ' in list!', 'w');
 			$this->updateExludedTextUsage($name, 0);
@@ -38,13 +44,16 @@ class productModelGet extends hoboModel{
 		return false;
 	}
 
-	public function checkIfNameIsExcluded($name, $category_id = 0){
-		$excluded_texts = $this->getExcludedTexts(0);
+	public function checkIfNameIsExcluded($name, $category_id = 0, &$validation_reason = null){
+		$validation_reason 	= false;
+		$excluded_texts 	= $this->getExcludedTexts(0);
 
 		if (!empty($excluded_texts)){
 			foreach ($excluded_texts as $excluded_text){
-				if (strpos($name, ' ' . $excluded_text . ' ') !== false){
+				$excluded_text = trim($excluded_text);
+				if (mb_stripos(mb_strtolower($name), mb_strtolower(' ' . $excluded_text . ' ')) !== false || mb_stripos(mb_strtolower($name), mb_strtolower($excluded_text . ' ')) !== false){
 					echoLine('[checkIfNameIsExcluded] FOUND exclusion: ' . $excluded_text . ' in name ' . $name, 'w');
+					$validation_reason = 'Найдено запрещенное слово ' . $excluded_text;
 					$this->updateExludedTextUsage($excluded_text, 0);
 					return true;
 				}
@@ -56,8 +65,9 @@ class productModelGet extends hoboModel{
 
 			if (!empty($excluded_texts)){
 				foreach ($excluded_texts as $excluded_text){
-					if (strpos($name, ' ' . $excluded_text . ' ') !== false){
+					if (mb_stripos(mb_strtolower($name), mb_strtolower(' ' . $excluded_text . ' ')) !== false || mb_stripos(mb_strtolower($name), mb_strtolower($excluded_text . ' ')) !== false){
 						echoLine('[checkIfNameIsExcluded] FOUND exclusion: ' . $excluded_text . ' in name ' . $name, 'w');
+						$validation_reason = 'Найдено запрещенное слово ' . $excluded_text;
 						$this->updateExludedTextUsage($excluded_text, $category_id);
 						return true;
 					}

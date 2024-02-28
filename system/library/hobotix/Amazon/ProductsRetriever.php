@@ -1440,7 +1440,7 @@ class ProductsRetriever extends RainforestRetriever
 		}
 
 		$low_price_to_add = (float)$this->config->get('config_rainforest_skip_low_price_products');
-		if (!empty((float)$data['explicit_min_price_to_add'])){
+		if (!empty($data['explicit_min_price_to_add']) && (float)$data['explicit_min_price_to_add']){
 			$low_price_to_add = (float)$data['explicit_min_price_to_add'];
 		}
 
@@ -1454,7 +1454,7 @@ class ProductsRetriever extends RainforestRetriever
 		}	
 
 		$high_price_to_add = (float)$this->config->get('config_rainforest_skip_high_price_products');
-		if (!empty((float)$data['explicit_max_price_to_add'])){
+		if (!empty($data['explicit_max_price_to_add']) && (float)$data['explicit_min_price_to_add']){
 			$high_price_to_add = (float)$data['explicit_max_price_to_add'];
 		}
 

@@ -4,14 +4,18 @@ namespace hobotix\Amazon;
 
 use Psr\Log\AbstractLogger;
 
-class RainforestLogger extends AbstractLogger
-{
+class RainforestLogger extends AbstractLogger {
 
 	public function __construct($registry){
 		$this->registry			= $registry;
 		$this->config 			= $registry->get('config');
 		$this->db 				= $registry->get('db');
 		$this->log 				= $registry->get('log');
+
+        if ($this->config->get('config_rainforest_debug_library')){
+            echoLine('[RainforestLogger::__construct] Library debug is on!', 'd');
+        }   
+    
 	}
 
     /**
@@ -23,8 +27,7 @@ class RainforestLogger extends AbstractLogger
      *
      * @return void
      */
-    public function log($level, $message, array $context = array())
-    {
+    public function log($level, \Stringable|string $message, array $context = []): void  {
     	if ($level == \Psr\Log\LogLevel::ERROR){
         	echoLine('[RainforestLogger] Error: ' . $message, 'e');
 

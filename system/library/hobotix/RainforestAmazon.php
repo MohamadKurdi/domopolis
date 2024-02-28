@@ -130,10 +130,16 @@ class RainforestAmazon
 			];
 
 			if ($this->config->get('config_rainforest_debug_library')){
+				echoLine('[RainforestAmazon::__construct] Library debug is on!', 'd');
 				$config['debug_file_path'] = DIR_LOGS . 'rainforest_debug_log.txt';
 			}
 
+			if ($this->config->get('config_rainforest_debug_http_library')){
+				echoLine('[RainforestAmazon::__construct] Library http requests debug is on!', 'd');
+			}
+
 			if ($this->config->get('config_rainforest_debug_request_timeout')){
+				echoLine('[RainforestAmazon::__construct] Native library timeout is: ' . (int)$this->config->get('config_rainforest_debug_request_timeout'), 'd');
 				$config['http_timeout'] = (int)$this->config->get('config_rainforest_debug_request_timeout');
 			}
 

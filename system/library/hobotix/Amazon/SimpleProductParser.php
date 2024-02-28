@@ -6,14 +6,16 @@
 	
 	namespace hobotix\Amazon;
 	
-	class SimpleProductParser
-	{
+	class SimpleProductParser {
 		
 		private $db;	
 		private $config;
 		private $registry;
 		
 		private $rfClient;
+
+		private $requestTimeOut = 100;
+		private $connectTimeOut = 10;
 		
 		public function __construct($registry, $rfClient){
 			
@@ -22,13 +24,21 @@
 			$this->db 		= $registry->get('db');
 			$this->log 		= $registry->get('log');
 			$this->rfClient = $rfClient;
-			
+
+			if ($this->config->get('config_rainforest_debug_curl_request_timeout')){
+				echoLine('[SimpleProductParser::__construct] Request timeout from settings: ' . $this->config->get('config_rainforest_debug_curl_request_timeout'), 'd');
+				$this->requestTimeOut = (int)$this->config->get('config_rainforest_debug_curl_request_timeout');
+			}	
+
+			if ($this->config->get('config_rainforest_debug_curl_connect_timeout')){
+				echoLine('[SimpleProductParser::__construct] Connect timeout from settings: ' . $this->config->get('config_rainforest_debug_curl_connect_timeout'), 'd');
+				$this->connectTimeOut = (int)$this->config->get('config_rainforest_debug_curl_connect_timeout');
+			}		
 		}
 		
 		const CLASS_NAME = 'hobotix\\Amazon\\SimpleProductParser';
 		
-		private function createRequest($params = []){
-			
+		private function createRequest($params = []){			
 			$data = [
 			'api_key' 			=> $this->config->get('config_rainforest_api_key'),
 			'amazon_domain' 	=> $this->config->get('config_rainforest_api_domain_1'),
@@ -36,17 +46,22 @@
 			'type' 				=> 'product',
 			];
 			
-			$data = array_merge($data, $params);
-			$queryString =  http_build_query($data);
-			
+			$data 			= array_merge($data, $params);
+			$queryString 	=  http_build_query($data);			
 			
 			$ch = curl_init('https://api.rainforestapi.com/request?' . $queryString);
 			
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); 
-			curl_setopt($ch, CURLOPT_TIMEOUT, 100);
-			curl_setopt($ch, CURLOPT_VERBOSE, false);	
+			
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->connectTimeOut); 
+			curl_setopt($ch, CURLOPT_TIMEOUT, $this->requestTimeOut);
+
+			if ($this->config->get('config_rainforest_debug_products')){
+				curl_setopt($ch, CURLOPT_VERBOSE, true);
+			} else {
+				curl_setopt($ch, CURLOPT_VERBOSE, false);	
+			}
 			
 			return $ch;			
 		}	
