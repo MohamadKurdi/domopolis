@@ -232,28 +232,33 @@
 				}	
 				
 				if ($result['preorder']){
-					$totals2 = [];
+					$totals2 		= [];
 					$total_discount = false;
 				}
+
+				$decoded_referrer = parse_url($this->model_module_referrer->simple_decode( $result['first_referrer']), PHP_URL_HOST);
+				$first_referrer = $decoded_referrer?trim(str_replace('www.', '', $decoded_referrer)):'Direct Hit';
+				$decoded_referrer = parse_url($this->model_module_referrer->simple_decode( $result['last_referrer']), PHP_URL_HOST);
+				$last_referrer = $decoded_referrer?trim(str_replace('www.', '', $decoded_referrer)):'Direct Hit';
 				
-				$this->data['orders'][] = array(
-				'order_id'   		=> $result['order_id'],
-				'customer'   		=> $result['customer'],
-				'email'      		=> $result['email'],
-				'email_bad'			=> !$this->emailBlackList->check($result['email']),
-				'status'     		=> $result['status'],
-				'pwa'     			=> $result['pwa'],
-				'monocheckout'     	=> $result['monocheckout'],
-				'preorder'     		=> $result['preorder'],
+				$this->data['orders'][] = [
+				'order_id'   				=> $result['order_id'],
+				'customer'   				=> $result['customer'],
+				'email'      				=> $result['email'],
+				'email_bad'					=> !$this->emailBlackList->check($result['email']),
+				'status'     				=> $result['status'],
+				'pwa'     					=> $result['pwa'],
+				'monocheckout'     			=> $result['monocheckout'],
+				'preorder'     				=> $result['preorder'],
 				'ukrcredits_order_status'      => !empty($result['ukrcredits_order_status'])?$result['ukrcredits_order_status']:false,
 				'ukrcredits_order_substatus'   => !empty($result['ukrcredits_order_status'])?$result['ukrcredits_order_substatus']:false,
-				'yam'     			=> $result['yam'],				
-				'yam_express'     	=> $result['yam_express'],
-				'yam_comission'		=> ($result['yam'])?$this->currency->format(-1 * ($sub_total/100*12), $result['currency_code'], '1'):false,
-				'reward'     		=> $this->currency->formatBonus($result['reward'], true),
-				'reward_used'   	=> $result['reward_used']?$this->currency->formatNegativeBonus($result['reward_used'], true):false,
-				'status_id' 		=> $result['order_status_id'],
-				'costprice'			=> $this->currency->format($result['costprice'], $this->config->get('config_currency'), 1),
+				'yam'     					=> $result['yam'],				
+				'yam_express'     			=> $result['yam_express'],
+				'yam_comission'				=> ($result['yam'])?$this->currency->format(-1 * ($sub_total/100*12), $result['currency_code'], '1'):false,
+				'reward'     				=> $this->currency->formatBonus($result['reward'], true),
+				'reward_used'   			=> $result['reward_used']?$this->currency->formatNegativeBonus($result['reward_used'], true):false,
+				'status_id' 				=> $result['order_status_id'],
+				'costprice'					=> $this->currency->format($result['costprice'], $this->config->get('config_currency'), 1),
 				'costprice_national'	  	=> $this->currency->format($this->currency->convert($result['costprice'], $this->config->get('config_currency'), $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', $result['store_id'])), $this->config->get('config_regional_currency'), 1),
 				'profitability'			  	=> $result['profitability'],
 				'amazon_offers_type'		=> $result['amazon_offers_type'],
@@ -266,19 +271,17 @@
 				'customer_segments' 		=> $this->model_sale_customer->getCustomerSegments($result['customer_id']),	
 				'total_customer_orders' 	=> $total_orders,
 				'total_customer_orders_txt' => morphos\Russian\NounPluralization::pluralize($total_orders, 'заказ'),
-				'first_referrer'   			=> $result['first_referrer']?str_replace('www.', '', parse_url($this->model_module_referrer->decode( $result['first_referrer'] ),  PHP_URL_HOST)):'Прямой',
-				'last_referrer'   			=> $result['last_referrer']?str_replace('www.', '',parse_url($this->model_module_referrer->decode( $result['last_referrer'] ),  PHP_URL_HOST)):'Прямой',
+				'first_referrer'   			=> $first_referrer,
+				'last_referrer'   			=> $last_referrer,
 				'status_txt_color' 			=> isset($result['status_txt_color']) ? $result['status_txt_color'] : '',
 				'status_bg_color' 			=> isset($result['status_bg_color']) ? $result['status_bg_color'] : '',
 				'status_fa_icon' 			=> isset($result['status_fa_icon']) ? $result['status_fa_icon'] : '',
 				'date_added' 				=> date('d.m', strtotime($result['date_added'])),
 				'total'      				=> $total,
 				'action'     				=> $action
-				);
+				];
 			}
-			
-			
-			
+								
 			$this->template = 'homestats/lasttwentyorders.tpl';
 			
 			$this->response->setOutput($this->render());

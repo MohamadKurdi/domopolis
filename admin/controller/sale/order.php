@@ -1322,12 +1322,7 @@
 			$countries = $this->model_localisation_country->getCountriesStructuredByID();
 			foreach ($results as $result) {
 				$action = [];
-				
-				$action[] = array(
-				'text' => '<i class="fa fa-file-excel-o"></i>',
-				'href' => $this->url->link('report/export_xls/createProductsInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL')
-				);
-				
+
 				if (strtotime($result['date_added']) > strtotime('-' . (int)$this->config->get('config_order_edit') . ' day')) {
 					$action[] = array(
 					'text' => '<i class="fa fa-edit"></i>',
@@ -1477,11 +1472,12 @@
 				
 				$courier_color = false;
 				
-				if (strpos($result['courier_status'], 'отказ') !== false){
+				if ($result['courier_status'] && mb_stripos($result['courier_status'], 'отказ') !== false){
 					$courier_color = 'red';
 				}
 				
-				$_fr = $result['first_referrer']?trim(str_replace('www.', '', parse_url($this->model_module_referrer->simple_decode( $result['first_referrer'] ),  PHP_URL_HOST))):'Прямой';
+				$decoded_referrer = parse_url($this->model_module_referrer->simple_decode( $result['first_referrer']), PHP_URL_HOST);
+				$first_referrer = $decoded_referrer?trim(str_replace('www.', '', $decoded_referrer)):'Direct Hit';
 				
 				$use_custom_dadata = $this->model_setting_setting->getKeySettingValue('config', 'config_dadata', (int)$result['store_id']);
 				$addressOk = true;				
@@ -1537,6 +1533,10 @@
 					$total_discount = false;
 				}
 		
+				$decoded_referrer = parse_url($this->model_module_referrer->simple_decode( $result['first_referrer']), PHP_URL_HOST);
+				$first_referrer = $decoded_referrer?trim(str_replace('www.', '', $decoded_referrer)):'Direct Hit';
+				$decoded_referrer = parse_url($this->model_module_referrer->simple_decode( $result['last_referrer']), PHP_URL_HOST);
+				$last_referrer = $decoded_referrer?trim(str_replace('www.', '', $decoded_referrer)):'Direct Hit';
 				
 				$this->data['orders'][] = array(
 				'order_id'      			=> $result['order_id'],
@@ -1569,10 +1569,10 @@
 				'is_mudak'					=> $this->model_sale_customer->getIsMudak($result['customer_id']),
 				'is_opt'        			=> $this->model_sale_customer->getIsOpt($result['customer_id']),
 				//'customer_segments' 		=> $this->model_sale_customer->getCustomerSegments($result['customer_id']),
-				'first_referrer'   			=> $result['first_referrer']?str_replace('www.', '', parse_url($this->model_module_referrer->simple_decode( $result['first_referrer'] ),  PHP_URL_HOST)):'Прямой',
-				'last_referrer'   			=> $result['last_referrer']?str_replace('www.', '',parse_url($this->model_module_referrer->simple_decode( $result['last_referrer'] ),  PHP_URL_HOST)):'Прямой',
+				'first_referrer'   			=> $first_referrer,
+				'last_referrer'   			=> $last_referrer,
 				'affiliate' 				=> $this->model_sale_affiliate->getAffiliate($result['affiliate_id']),
-				'is_marketplace'            => in_array($_fr, $this->model_sale_order->getMarketplaces()),
+				'is_marketplace'            => in_array($first_referrer, $this->model_sale_order->getMarketplaces()),
 				'telephone'      			=> $result['telephone'],
 				'fax'     			 		=> $result['fax'],
 				'faxname'     			 	=> $result['faxname'],
@@ -1656,7 +1656,7 @@
 				'fiscal_code'      			=> $result['fiscal_code'],
 				'receipt_id'      			=> $result['receipt_id'], 
 				'is_sent_dps'      			=> $result['is_sent_dps'], 
-				'sent_dps_at'      			=> date('d.m.Y', strtotime($result['sent_dps_at'])), 
+				'sent_dps_at'      			=> $result['sent_dps_at']?date('d.m.Y', strtotime($result['sent_dps_at'])):'', 
 				'receipt_links'				=> $this->Fiscalisation->getReceiptLinks($result['receipt_id']),
 				'newversion'				=> ($result['template'] == 'kp'),
 				'reward'     				=> $this->currency->formatBonus($result['reward'], true),
@@ -2363,13 +2363,8 @@
 				$this->data['last_invoice']['realname'] = '';
 			}
 			
-            $this->data['templates_action'] = $this->url->link('module/emailtemplate/fetch_template', 'output=comment&token='.$this->session->data['token']);
-			
-			$this->data['pdf_download'] = $this->url->link('module/emailtemplate/preview_invoice', 'token='.$this->session->data['token'].'&order_id='.$order_id);
-			
-			$this->data['xls1_download'] = $this->url->link('report/export_xls/createProductsInvoiceWithImage', 'token=' . $this->session->data['token'] . '&order_id=' . $order_id);
-			$this->data['xls2_download'] = $this->url->link('report/export_xls/createProductsInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $order_id);
-			//EMAILTEMPLATE
+            $this->data['templates_action'] = $this->url->link('module/emailtemplate/fetch_template', 'output=comment&token='.$this->session->data['token']);			
+			$this->data['pdf_download'] 	= $this->url->link('module/emailtemplate/preview_invoice', 'token='.$this->session->data['token'].'&order_id='.$order_id);			
 			
 			if (isset($this->error['warning'])) {
 				$this->data['error_warning'] = $this->error['warning'];
@@ -2635,8 +2630,9 @@
 				$this->data['tip_total_txt'] 	=  $this->currency->format($order_info['total_national'], $order_info['currency_code'], 1);
 				} else {
 				$this->data['total'] 			= $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value']);
-				$this->data['tip_total'] 		= round($this->data['total']);
-				$this->data['tip_total_txt'] 	=  $this->currency->format(round($this->data['total']), $order_info['currency_code'], 1);
+				$this->data['total_numeric']    = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
+				$this->data['tip_total'] 		= round($this->data['total_numeric']);
+				$this->data['tip_total_txt'] 	= $this->currency->format(round($this->data['total_numeric']), $order_info['currency_code'], 1);
 			}
 
 			$this->data['total_num'] 		= $order_info['total'];	
@@ -3018,14 +3014,14 @@
 				$this->session->data['error_error'] = 'В заказе есть ошибки! '.implode('<br />', $errors);
 			}
 			
-			$_fr = $order_info['first_referrer']?trim(str_replace('www.', '', parse_url($this->model_module_referrer->simple_decode( $order_info['first_referrer'] ),  PHP_URL_HOST))):'Прямой';
-			if (in_array($_fr, $this->model_sale_order->getMarketplaces()) || $order_info['yam']){		
-				
+			$decoded_referrer = parse_url($this->model_module_referrer->simple_decode( $order_info['first_referrer']), PHP_URL_HOST);
+			$first_referrer = $decoded_referrer?trim(str_replace('www.', '', $decoded_referrer)):'Direct Hit';
+			if (in_array($first_referrer, $this->model_sale_order->getMarketplaces()) || $order_info['yam']){						
 				if ($order_info['yam']){
-					$_fr = 'Яндекс.Маркет';
+					$first_referrer = 'Яндекс.Маркет';
 				}
 				
-				$this->data['warning_marketplace'] = '<span style="font-size:20px;font-weight:700;">ВНИМАНИЕ! Этот заказ оформлен на маркетплейсе ('.$_fr.'). и должен быть выполнен в любом случае! При каком-либо отклонении от корректного выполнения заказа виновный понесет персональную финансовую ответственность.</span>';		
+				$this->data['warning_marketplace'] = '<span style="font-size:20px;font-weight:700;">ВНИМАНИЕ! Этот заказ оформлен на маркетплейсе ('. $first_referrer .'). и должен быть выполнен в любом случае! При каком-либо отклонении от корректного выполнения заказа виновный понесет персональную финансовую ответственность.</span>';		
 				} else {
 				$this->data['warning_marketplace'] = false;
 			}
@@ -6991,15 +6987,15 @@
 				$store_info = $this->model_setting_setting->getSetting('config', $order_info['store_id']);
 				
 				if ($store_info) {
-					$store_address = $store_info['config_address'];
-					$store_email = $store_info['config_email'];
-					$store_telephone = $store_info['config_telephone'];
-					$store_telephone2 = $store_info['config_telephone2'];
+					$store_address 		= $store_info['config_address'];
+					$store_email 		= $store_info['config_email'];
+					$store_telephone 	= $store_info['config_telephone'];
+					$store_telephone2 	= $store_info['config_telephone2'];
 					} else {
-					$store_address = $this->config->get('config_address');
-					$store_email = $this->config->get('config_email');
-					$store_telephone = $this->config->get('config_telephone');
-					$store_telephone2 = $this->config->get('config_telephone2');					
+					$store_address 		= $this->config->get('config_address');
+					$store_email 		= $this->config->get('config_email');
+					$store_telephone 	= $this->config->get('config_telephone');
+					$store_telephone2 	= $this->config->get('config_telephone2');					
 				}
 				
 				if ($order_info['invoice_no']) {

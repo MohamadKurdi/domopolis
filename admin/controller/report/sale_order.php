@@ -274,7 +274,7 @@ class ControllerReportSaleOrder extends Controller {
 			$this->template = 'report/sale_order_xlsx.tpl';
 			$out = $this->render();
 
-			$this->response->setXLSX($out, 'file.xlsx');
+			$this->response->setXLSX($out, $this->config->get('config_owner') . '_report_sale_order_'. date('Y-m-d-H-i-s') .'.xlsx');
 
 		} else {
 			$this->template = 'report/sale_order.tpl';

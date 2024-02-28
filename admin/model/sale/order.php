@@ -1818,7 +1818,6 @@
 					$this->customer->updateRewardInTableByOrder($data['customer_id'], $order_id, $this->customer->getTotalRewardByOrder($data['customer_id'], $order_id));
 				}
 				
-				//UPDATING PRICEWD
 				$total_pricewd_national = 0;
 				$total_total_pricewd_national = 0;
 				
@@ -1854,24 +1853,22 @@
 						$data['order_product'][$last_not_zero_product_idx]['totalwd_national'] += 1;						
 						} else {
 						$data['order_product'][$last_not_zero_product_idx]['totalwd_national'] -= 1;
-					}
-					
+					}					
 				}
 				
 				unset($order_product);
 				foreach ($data['order_product'] as $order_product) {													
 					$this->db->query("UPDATE order_product SET
-					pricewd_national = '" . (float)$order_product['pricewd_national'] . "',						
-					totalwd_national = '" . (float)$order_product['totalwd_national'] . "',
-					totals_json = '" . $this->db->escape(json_encode($totals_json[$order_product['order_product_id']])) . "'
-					WHERE order_product_id = '" . (int)$order_product['order_product_id'] . "'");										
+					pricewd_national 		= '" . (float)$order_product['pricewd_national'] . "',						
+					totalwd_national 		= '" . (float)$order_product['totalwd_national'] . "',
+					totals_json 			= '" . $this->db->escape(json_encode($totals_json[$order_product['order_product_id']])) . "'
+					WHERE order_product_id 	= '" . (int)$order_product['order_product_id'] . "'");										
 				}
 				
 				$prepayment = 0;
 				$prepayment_national = 0;
 				
 				foreach ($data['order_total'] as $order_total) {
-					//основной тотал
 					if ($order_total['code']  ==  'total'){
 						
 						$order_total['value_national'] = $total_national;
@@ -1879,14 +1876,14 @@
 						$order_total['text'] = $this->currency->format($total_national, $data['currency_code'], '1');							
 						
 						$this->db->query("INSERT INTO order_total SET 
-						order_total_id = '" . (int)$order_total['order_total_id'] . "', 
-						order_id = '" . (int)$order_id . "', 
-						code = '" . $this->db->escape($order_total['code']) . "', 
-						title = '" . $this->db->escape($order_total['title']) . "', 
-						text = '" . $this->db->escape($order_total['text']) . "', 
-						`value` = '" . (float)$order_total['value'] . "',
-						`value_national` = '" . (float)$order_total['value_national'] . "',
-						sort_order = '" . (int)$order_total['sort_order'] . "'");					
+						order_total_id 		= '" . (int)$order_total['order_total_id'] . "', 
+						order_id 			= '" . (int)$order_id . "', 
+						code 				= '" . $this->db->escape($order_total['code']) . "', 
+						title 				= '" . $this->db->escape($order_total['title']) . "', 
+						text 				= '" . $this->db->escape($order_total['text']) . "', 
+						`value` 			= '" . (float)$order_total['value'] . "',
+						`value_national` 	= '" . (float)$order_total['value_national'] . "',
+						sort_order 			= '" . (int)$order_total['sort_order'] . "'");					
 					}
 					
 					if ($order_total['code']  ==  'transfer_plus_prepayment'){
@@ -1900,14 +1897,14 @@
 						}				
 						
 						$this->db->query("INSERT INTO order_total SET 
-						order_total_id = '" . (int)$order_total['order_total_id'] . "', 
-						order_id = '" . (int)$order_id . "', 
-						code = '" . $this->db->escape($order_total['code']) . "', 
-						title = '" . $this->db->escape($order_total['title']) . "', 
-						text = '" . $this->db->escape($order_total['text']) . "', 
-						`value` = '" . (float)$order_total['value'] . "',
-						`value_national` = '" . (float)$order_total['value_national'] . "',
-						sort_order = '" . (int)$order_total['sort_order'] . "'");
+						order_total_id 		= '" . (int)$order_total['order_total_id'] . "', 
+						order_id 			= '" . (int)$order_id . "', 
+						code 				= '" . $this->db->escape($order_total['code']) . "', 
+						title 				= '" . $this->db->escape($order_total['title']) . "', 
+						text 				= '" . $this->db->escape($order_total['text']) . "', 
+						`value` 			= '" . (float)$order_total['value'] . "',
+						`value_national` 	= '" . (float)$order_total['value_national'] . "',
+						sort_order 			= '" . (int)$order_total['sort_order'] . "'");
 						
 						$prepayment = $order_total['value'];
 						$prepayment_national = $order_total['value_national'];
@@ -1916,10 +1913,8 @@
 				}	
 			}
 			
-			
-			// Affiliate
-			$affiliate_id = 0;
-			$commission = 0;
+			$affiliate_id 	= 0;
+			$commission 	= 0;
 			
 			if (!empty($this->request->post['affiliate_id'])) {
 				$this->load->model('sale/affiliate');
@@ -1933,24 +1928,21 @@
 			}
 			
 			$this->db->query("UPDATE `order` SET 
-			total = '" . (float)$total . "',
-			total_national = '" . (float)$total_national . "',
-			prepayment = '" . (float)$prepayment . "',
+			total 				= '" . (float)$total . "',
+			total_national 		= '" . (float)$total_national . "',
+			prepayment 			= '" . (float)$prepayment . "',
 			prepayment_national = '" . (float)$prepayment_national . "',
-			affiliate_id = '" . (int)$affiliate_id . "', 
-			commission = '" . (float)$commission . "'
-			WHERE order_id = '" . (int)$order_id . "'");
+			affiliate_id 		= '" . (int)$affiliate_id . "', 
+			commission 			= '" . (float)$commission . "'
+			WHERE order_id 		= '" . (int)$order_id . "'");
 			
-			//Обнуление цифр в случае если товаров в заказе нет
-			if (count($order_product) == 0 && $sub_total == 0){
+			if (!empty($data['order_product']) && count($data['order_product']) == 0 && $sub_total == 0){
 				$this->db->query("UPDATE order_total SET value = 0, value_national = 0, text = '" . $this->currency->format(0, $data['currency_code'], '1') . "' WHERE order_id = '" . (int)$order_id . "' AND code <> 'shipping'");
 				$this->db->query("UPDATE `order` SET total = '" . (float)$total . "', total_national = '" . (float)$total_national . "' WHERE order_id = '" . (int)$order_id . "'");
 			}
 			
-			//count resaving of order
 			$this->db->query("UPDATE `order` SET changed = changed+1 WHERE order_id = '" . (int)$order_id . "'");
 			
-			//manager
 			if ($this->user->isLogged() && $this->user->getOwnOrders()){
 				$manager_query = $this->db->query("SELECT manager_id FROM `order` WHERE order_id = '" . (int)$order_id . "' AND manager_id > 0");
 				if (!($manager_query->rows)){						

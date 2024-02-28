@@ -201,9 +201,11 @@ class ControllerKPAmazon extends Controller {
 			$requests[$categoryWord['category_search_word_id']] = $request;
 		}
 
-		$results = $this->rainforestAmazon->categoryRetriever->doMultiRequest($requests);
-
-	//	$results = json_decode(file_get_contents(DIR_SYSTEM . '/temp/rainforest.json'), true);
+		if (!$this->config->get('config_rainforest_debug_products_v2_file')){
+			$results = $this->rainforestAmazon->categoryRetriever->doMultiRequest($requests);	
+		} else {					
+			$results = json_decode(file_get_contents(DIR_SYSTEM . '/temp/rainforest.addasinv2.json'), true);
+		}
 
 		$this->data['results'] = [];
 		foreach ($results as $category_word_id => $result){
@@ -257,9 +259,10 @@ class ControllerKPAmazon extends Controller {
 					continue;
 				}
 
-				if ($this->rainforestAmazon->productsRetriever->model_product_get->checkIfNameIsExcluded($product['title'], $categoryWord['category_id'])){		
-					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteASINFromQueue($product['asin']);				
-					$products_bad['checkIfNameIsExcluded'][] = $product;
+				if ($this->rainforestAmazon->productsRetriever->model_product_get->checkIfNameIsExcluded($product['title'], $categoryWord['category_id'], $validation_reason)){		
+					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteASINFromQueue($product['asin']);	
+					$product['validation_name_reason'] 			= $validation_reason;			
+					$products_bad['checkIfNameIsExcluded'][] 	= $product;
 					continue;
 				}
 

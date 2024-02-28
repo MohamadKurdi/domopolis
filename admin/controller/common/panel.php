@@ -36,20 +36,19 @@ class ControllerCommonPanel extends Controller {
 		if ($this->config->get('config_openai_enable')){
 			try{
 				
-				$result = json_decode($this->openaiAdaptor->OpenAI->listModels(), true);
+				$result = $this->openaiAdaptor->checkIfItIsPossibleToMakeRequest();
 
-				if (!empty($result['data'])){
-					$body = count($result['data']) . ' mdl';
-					$class= 'good';
-				} else {
-					$body  = serialize($result);
+				if (is_array($result) && !empty($result['error'])){
+					$body  = $result['message'];
 					$class = 'bad';
-
+				} else {					
+					$body 	=  $result;
+					$class 	= 'good';
 				}
 
 			} catch (\Exception $e) {
-				$body = $e->getMessage();
-				$class = 'bad';
+				$body 	= $e->getMessage();
+				$class 	= 'bad';
 			}
 		}  else {
 

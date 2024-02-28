@@ -2,8 +2,7 @@
 class ControllerCommonHeader extends Controller
 {
 
-    protected function index()
-    {
+    protected function index()   {
         $this->load->model('report/product');
         $this->load->model('sale/callback');
         $this->load->model('setting/store');
@@ -269,34 +268,34 @@ class ControllerCommonHeader extends Controller
             if ($this->config->get('admin_quick_edit_status') && $this->config->get('aqe_catalog_products_status') && isset($this->session->data['token'])) {
                 $this->data['product'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token']);
             }
-            $this->data['product_deletedasin'] = $this->url->link('report/product_deletedasin', 'token=' . $this->session->data['token']);
-            $this->data['product_parser'] = $this->url->link('catalog/product_parser', 'token=' . $this->session->data['token']);
-            $this->data['profile'] = $this->url->link('catalog/profile', 'token=' . $this->session->data['token']);
-            $this->data['report_sale_order'] = $this->url->link('report/sale_order', 'token=' . $this->session->data['token']);
-            $this->data['report_sale_tax'] = $this->url->link('report/sale_tax', 'token=' . $this->session->data['token']);
-            $this->data['report_sale_shipping'] = $this->url->link('report/sale_shipping', 'token=' . $this->session->data['token']);
-            $this->data['report_sale_return'] = $this->url->link('report/sale_return', 'token=' . $this->session->data['token']);
-            $this->data['report_sale_coupon'] = $this->url->link('report/sale_coupon', 'token=' . $this->session->data['token']);
-            $this->data['report_product_viewed'] = $this->url->link('report/product_viewed', 'token=' . $this->session->data['token']);
-            $this->data['report_buyanalyze'] = $this->url->link('report/buyanalyze', 'token=' . $this->session->data['token']);
-            $this->data['report_product_purchased'] = $this->url->link('report/product_purchased', 'token=' . $this->session->data['token']);
-            $this->data['report_customer_online'] = $this->url->link('report/customer_online', 'token=' . $this->session->data['token']);
-            $this->data['report_customer_order'] = $this->url->link('report/customer_order', 'token=' . $this->session->data['token']);
-            $this->data['report_customer_reward'] = $this->url->link('report/customer_reward', 'token=' . $this->session->data['token']);
-            $this->data['report_customer_credit'] = $this->url->link('report/customer_credit', 'token=' . $this->session->data['token']);
-            $this->data['report_affiliate_commission'] = $this->url->link('report/affiliate_commission', 'token=' . $this->session->data['token']);
-            $this->data['review'] = $this->url->link('catalog/review', 'token=' . $this->session->data['token']);
+            $this->data['product_deletedasin']          = $this->url->link('report/product_deletedasin', 'token=' . $this->session->data['token']);
+            $this->data['product_excludedasin']         = $this->url->link('report/product_excludedasin', 'token=' . $this->session->data['token']); 
+            $this->data['product_parser']               = $this->url->link('catalog/product_parser', 'token=' . $this->session->data['token']);
+            $this->data['profile']                      = $this->url->link('catalog/profile', 'token=' . $this->session->data['token']);
+            $this->data['report_sale_order']            = $this->url->link('report/sale_order', 'token=' . $this->session->data['token']);
+            $this->data['report_sale_tax']              = $this->url->link('report/sale_tax', 'token=' . $this->session->data['token']);
+            $this->data['report_sale_shipping']         = $this->url->link('report/sale_shipping', 'token=' . $this->session->data['token']);
+            $this->data['report_sale_return']           = $this->url->link('report/sale_return', 'token=' . $this->session->data['token']);
+            $this->data['report_sale_coupon']           = $this->url->link('report/sale_coupon', 'token=' . $this->session->data['token']);
+            $this->data['report_product_viewed']        = $this->url->link('report/product_viewed', 'token=' . $this->session->data['token']);
+            $this->data['report_buyanalyze']            = $this->url->link('report/buyanalyze', 'token=' . $this->session->data['token']);
+            $this->data['report_product_purchased']     = $this->url->link('report/product_purchased', 'token=' . $this->session->data['token']);
+            $this->data['report_customer_online']       = $this->url->link('report/customer_online', 'token=' . $this->session->data['token']);
+            $this->data['report_customer_order']        = $this->url->link('report/customer_order', 'token=' . $this->session->data['token']);
+            $this->data['report_customer_reward']       = $this->url->link('report/customer_reward', 'token=' . $this->session->data['token']);
+            $this->data['report_customer_credit']       = $this->url->link('report/customer_credit', 'token=' . $this->session->data['token']);
+            $this->data['report_affiliate_commission']  = $this->url->link('report/affiliate_commission', 'token=' . $this->session->data['token']);
+            $this->data['review']                       = $this->url->link('catalog/review', 'token=' . $this->session->data['token']);
+            $this->data['shop_rating']                  = $this->url->link('catalog/shop_rating', 'token=' . $this->session->data['token']);
 
-            $this->data['shop_rating'] = $this->url->link('catalog/shop_rating', 'token=' . $this->session->data['token']);
-
-            $this->data['subscribe'] = $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token']);
-            $this->data['return'] = $this->url->link('sale/return', 'token=' . $this->session->data['token']);
-            $this->data['return_action'] = $this->url->link('localisation/return_action', 'token=' . $this->session->data['token']);
-            $this->data['return_reason'] = $this->url->link('localisation/return_reason', 'token=' . $this->session->data['token']);
-            $this->data['return_status'] = $this->url->link('localisation/return_status', 'token=' . $this->session->data['token']);
-            $this->data['shipping'] = $this->url->link('extension/shipping', 'token=' . $this->session->data['token']);
-            $this->data['setting'] = $this->url->link('setting/store', 'token=' . $this->session->data['token']);
-            $this->data['rnf'] = $this->url->link('setting/rnf', 'token=' . $this->session->data['token']);
+            $this->data['subscribe']        = $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token']);
+            $this->data['return']           = $this->url->link('sale/return', 'token=' . $this->session->data['token']);
+            $this->data['return_action']    = $this->url->link('localisation/return_action', 'token=' . $this->session->data['token']);
+            $this->data['return_reason']    = $this->url->link('localisation/return_reason', 'token=' . $this->session->data['token']);
+            $this->data['return_status']    = $this->url->link('localisation/return_status', 'token=' . $this->session->data['token']);
+            $this->data['shipping']         = $this->url->link('extension/shipping', 'token=' . $this->session->data['token']);
+            $this->data['setting']          = $this->url->link('setting/store', 'token=' . $this->session->data['token']);
+            $this->data['rnf']              = $this->url->link('setting/rnf', 'token=' . $this->session->data['token']);
 
             $this->data['store'] = HTTPS_CATALOG;
             $this->data['stock_status']     = $this->url->link('localisation/stock_status', 'token=' . $this->session->data['token']);
