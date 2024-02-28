@@ -1,7 +1,7 @@
 <?php
 	class ControllerCatalogYandex extends Controller {
-		private $controllerYaMarketApi;
-		private $modelCatalogProduct;
+		private $controllerYaMarketApi 	= null;
+		private $modelCatalogProduct 	= null;
 		
 		
 		public function index() {
@@ -12,7 +12,7 @@
 			
 			$this->document->setTitle('Yandex Market'); 
 			
-			loadAndRenameCatalogModels('controller/yamarket/api.php', '', '');
+			loadAndRenameCatalogModels('controller/yamarket/api.php', 'ControllerYaMarketApi', 'ControllerYaMarketApi');
 			$this->controllerYaMarketApi = new ControllerYaMarketApi($this->registry);
 					
 			loadAndRenameCatalogModels('model/catalog/product.php', 'ModelCatalogProduct', 'ModelCatalogProductCatalog');

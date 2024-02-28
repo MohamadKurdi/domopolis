@@ -2,16 +2,23 @@
 	class ModelModuleReferrer extends Model {
 		
 		public function simple_decode($url){
+			if (!$url){
+				return '';
+			}
+
 			$decoded_url = urldecode($url );
 			$pure_url = htmlspecialchars_decode($decoded_url);
 			$pure_url = str_replace("&amp;","&",$pure_url);
-			
-			
+						
 			return $pure_url;
 		}
 		
 		public function decode($url){
-			$decoded_url = urldecode($url );
+			if (!$url){
+				return '';
+			}
+
+			$decoded_url = urldecode($url);
 			$pure_url = htmlspecialchars_decode($decoded_url);
 			$pure_url = str_replace("&amp;","&",$pure_url);
 			
@@ -112,54 +119,6 @@
 		public function getRecordsCount() {
 			$query = $this->db->query("SELECT COUNT(*) AS total FROM `referrer_patterns`;");
 			return $query->row['total'];
-		}
-		
-		// Install/Uninstall
-		public function install() {
-			
-			$this->db->query("CREATE TABLE IF NOT EXISTS `referrer_patterns` ( `pattern_id` int(11) NOT NULL AUTO_INCREMENT, `name` varchar(128) NOT NULL, `url_mask` varchar(256) NOT NULL, `url_param` varchar(256) NOT NULL, PRIMARY KEY (`pattern_id`) );");
-			
-			$query = $this->db->query("SHOW COLUMNS FROM `order` WHERE `Field` = 'first_referrer'");
-			if(count($query->rows) == 0 ) {
-				$this->db->query("ALTER TABLE `order` ADD `first_referrer` text;");
-			}
-			$query = $this->db->query("SHOW COLUMNS FROM `order` WHERE `Field` = 'last_referrer'");
-			if(count($query->rows) == 0 ) {
-				$this->db->query("ALTER TABLE `order` ADD `last_referrer` text;");
-			}
-			
-			$sql = array();
-			
-			$sql[] = "INSERT INTO `referrer_patterns` (name, url_mask, url_param) VALUES ('Картинки.Mail', 'go.mail.ru', 'q');";
-			$sql[] = "INSERT INTO `referrer_patterns` (name, url_mask, url_param) VALUES ('Google', 'google.','q');";
-			$sql[] = "INSERT INTO `referrer_patterns` (name, url_mask, url_param) VALUES ('Google', 'google.','as_q');";
-			$sql[] = "INSERT INTO `referrer_patterns` (name, url_mask, url_param) VALUES ('Яндекс.Картинки', 'images.yandex.', 'text');";
-			$sql[] = "INSERT INTO `referrer_patterns` (name, url_mask, url_param) VALUES ('Яндекс.Mobile', 'm.yandex.', 'query');";
-			$sql[] = "INSERT INTO `referrer_patterns` (name, url_mask, url_param) VALUES ('Яндекс Маркет', 'market.yandex.', 'text');";
-			$sql[] = "INSERT INTO `referrer_patterns` (name, url_mask, url_param) VALUES ('Яндекс', 'hghltd.yandex.', 'text');";
-			$sql[] = "INSERT INTO `referrer_patterns` (name, url_mask, url_param) VALUES ('Яндекс', 'yandex.', 'text');";
-			
-			foreach ($sql as $_sql) {
-				$this->db->query($_sql);
-			}
-			
-			$this->cache->delete('referrer_patterns');
-			return TRUE;
-		}
-		
-		public function uninstall() {
-			$query = $this->db->query("SHOW COLUMNS FROM `order` WHERE `Field` = 'first_referrer'");
-			if(count($query->rows) == 1 ) {
-				$this->db->query("ALTER TABLE `order` DROP COLUMN `first_referrer`;");
-			}
-			$query = $this->db->query("SHOW COLUMNS FROM `order` WHERE `Field` = 'last_referrer'");
-			if(count($query->rows) == 1 ) {
-				$this->db->query("ALTER TABLE `order` DROP COLUMN `last_referrer`;");
-			}
-			$this->db->query("DROP TABLE IF EXISTS `referrer_patterns`");
-			
-			$this->cache->delete('referrer_patterns');
-			return TRUE;
-		}
+		}		
 		
 	}
