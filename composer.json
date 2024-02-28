@@ -41,9 +41,6 @@
 		"jaybizzle/crawler-detect": "dev-master",
 		"elasticsearch/elasticsearch": "^7.0",
         "mailgun/mailgun-php": "^4.1",
-        "yandex-market/yandex-market-php-partner": "^2.4",
-        "yandex-market/yandex-market-php-oauth": "^1.0",
-        "yandex-market/marketplace-php-partner": "^3.2",
         "clegginabox/pdf-merger": "dev-master",
         "ems-api/php-client": "^1.0",
         "daveearley/daves-email-validation-tool": "^1.2",
@@ -104,6 +101,14 @@
         "monolog/monolog": "^3.5",
         "psr/http-message": "^2.0",
         "google/apiclient-services": "^0.337.0"            
+    },
+    "autoload": {
+        "psr-0": {            
+            "Yandex\\Common": "system/library/legacy/yandex-market/yandex-market-php-common/src/",
+            "Yandex\\Marketplace": "system/library/legacy/yandex-market/marketplace-php-partner/src/",           
+            "Yandex\\OAuth": "system/library/legacy/yandex-market/yandex-market-php-oauth/src/",
+            "Yandex\\Market": "system/library/legacy/yandex-market/yandex-market-php-partner/src/"
+        } 
     },
     "config": {
         "platform-check": false,
