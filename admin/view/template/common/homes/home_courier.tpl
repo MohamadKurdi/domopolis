@@ -278,71 +278,8 @@
 			</div>
 			<div style="clear:both;"></div>						
 			
-			<div class="latest">
-				<div class="dashboard-heading"><?php echo $text_latest_10_orders; ?></div>
-				<div class="dashboard-content">
-					<table class="list">
-						<thead>
-							<tr>
-								<td class="right"><?php echo $column_order; ?></td>
-								<td class="left"><?php echo $column_customer; ?></td>
-								<td class="left"><?php echo $column_status; ?></td>
-								<td class="left"><?php echo $column_date_added; ?></td>
-								<td class="right"><?php echo $column_total; ?></td>
-								<td class="right"><?php echo $column_action; ?></td>
-							</tr>
-						</thead>
-						<tbody>
-							<?php if ($orders) { ?>
-								<?php foreach ($orders as $order) { ?>
-									<tr>
-										<td class="right" style="text-align: left;"><?php echo $order['order_id']; ?></td>
-										<td class="left" style="text-align: left;">
-											<b><?php echo $order['customer']; ?></b>
-											
-											<? if ($order['customer_segments']) { ?>
-												<div style="clear:both;"></div>
-												<? foreach ($order['customer_segments'] as $_segment) { ?>
-													<? if (strpos($_segment['name'], 'Источник') !== false) { ?>
-														<span style="display:inline-block; padding:2px 3px; font-size:9px; margin:3px; background:#<? if ($_segment['bg_color']) { ?><? echo $_segment['bg_color'] ?><? } else { ?>e6e9f3<? } ?>; color:#<? if ($_segment['txt_color']) { ?><? echo $_segment['txt_color'] ?><? } else { ?>696969<? } ?>">
-															<? if ($_segment['fa_icon']) { ?>
-																<i class="fa <? echo $_segment['fa_icon']; ?>" aria-hidden="true"></i>&nbsp;
-															<? } ?><?php echo $_segment['name']; ?>
-															<? if ($_segment['is_new']) { ?>
-																<sup style="color:#ef5e67; font-size:10px;">Новый</sup>
-															<? } ?>&nbsp;
-														</span>
-													<? } ?>
-												<? } ?>
-											<? } ?>
-											
-											<? if ($order['first_referrer']) { ?>
-												<div style="clear:both;"></div>
-												<span style="display:inline-block; padding:2px 3px; font-size:9px; margin:3px; background:#e6e9f3; color:#696969" >
-													<i class="fa fa-mouse-pointer" aria-hidden="true"></i> <? echo $order['first_referrer']; ?>
-												</span>
-											<? } ?>
-											
-										</td>
-										<td class="left" style="text-align: left;"><span class="status_color" style="background: #<?php echo isset($order['status_bg_color']) ? $order['status_bg_color'] : ''; ?>; color: #<?php echo isset($order['status_txt_color']) ? $order['status_txt_color'] : ''; ?>;">	<? if ($order['status_fa_icon']) { ?>
-											<i class="fa <? echo $order['status_fa_icon']; ?>" aria-hidden="true"></i>&nbsp;
-										<? } ?><?php echo $order['status']; ?></span></td>
-										<td class="left" style="text-align: left;"><?php echo $order['date_added']; ?></td>
-										<td class="right" style="text-align: center;"><?php echo $order['total']; ?></td>
-										<td class="right" style="text-align: center;"><?php foreach ($order['action'] as $action) { ?>
-											<a class="button" href="<?php echo $action['href']; ?>"><i class="fa fa-folder-open-o"></i></a>
-										<?php } ?></td>
-									</tr>
-								<?php } ?>
-								<?php } else { ?>
-								<tr>
-									<td class="center" colspan="6"><?php echo $text_no_results; ?></td>
-								</tr>
-							<?php } ?>
-						</tbody>
-					</table>
-				</div>
-			</div>	
+			<div style="clear:both; height:10px;"></div>
+				<div class="latest delayed-load" data-route='common/home/getLastTwentyOrders'></div>	
 		</td>
 	</tr>
 </table>	
@@ -414,7 +351,6 @@
 	}
 	
 	$(document).ready(function(){
-		//getSalesChart($('#range').val());
 		getSalesChart('week_orders', 'report_week', 'index.php?route=common/home/chart&token=<?php echo $token; ?>&range=');
 		getSalesChart('week_orders', 'report_week_cancel', 'index.php?route=common/home/cancelchart&token=<?php echo $token; ?>&range=');
 	})

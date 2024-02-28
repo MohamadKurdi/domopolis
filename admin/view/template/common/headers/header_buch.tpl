@@ -82,18 +82,6 @@
 							<li><a class="top" href="<?php echo $logout; ?>"><b><i class="fa fa-external-link icon_menu"></i></b></a></li>
 							
 						</ul>
-						
-						<!--<ul class="right">
-							<li id="store"><a href="<?php echo $store; ?>" target="_blank" class="top"><?php echo $text_front; ?></a>
-							<ul>
-							<?php foreach ($stores as $stores) { ?>
-								<li><a href="<?php echo $stores['href']; ?>" target="_blank"><?php echo $stores['name']; ?></a></li>
-							<?php } ?>
-							</ul>
-							</li>
-							
-							<li><a class="top" href="<?php echo $logout; ?>"><b><i class="fa fa-external-link icon_down"></i></b></a></li>
-						</ul>-->
 						<div style="clear: both;"></div>
 					</div>
 				<?php } ?>
