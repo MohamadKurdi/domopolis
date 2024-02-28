@@ -30,12 +30,9 @@ final class PageCache{
 		$this->loadSettings();
 
 		if ($loadLibraries){
-			require_once(DIR_SITE . 'vendor/jaybizzle/crawler-detect/src/CrawlerDetect.php');
-			require_once(DIR_SITE . 'vendor/jaybizzle/crawler-detect/src/Fixtures/AbstractProvider.php');
-			require_once(DIR_SITE . 'vendor/jaybizzle/crawler-detect/src/Fixtures/Crawlers.php');
-			require_once(DIR_SITE . 'vendor/jaybizzle/crawler-detect/src/Fixtures/Headers.php');
-			require_once(DIR_SITE . 'vendor/jaybizzle/crawler-detect/src/Fixtures/Exclusions.php');
-			require_once(DIR_SITE . 'vendor/mobiledetect/mobiledetectlib/src/MobileDetect.php');
+			if( !class_exists('Composer\\Autoload\\ClassLoader') ){
+    			require_once(DIR_SYSTEM . '../vendor/autoload.php');
+			}
 
 			require_once(DIR_SYSTEM . 'library/hobotix/MinifyAdaptor.php');
 
