@@ -1,4 +1,4 @@
-<?php if ($home_cart_products) { ?>
+<?php if (!empty($home_cart_products)) { ?>
 		<style type="text/css">
 			#home-cart .container-cart{
 				display: -webkit-box;

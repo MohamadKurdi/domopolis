@@ -34,7 +34,7 @@
 		<?php } ?>	
 	<?php } ?>	
 	
-	<?php if (isset($modules['reward']) && $customer_can_use_points && $points > 0) { ?>	
+	<?php if (isset($modules['reward']) && !empty($customer_can_use_points) && $points > 0) { ?>	
 		<?php if($isLogged) { ?>
 			
 			<?php } else { ?>

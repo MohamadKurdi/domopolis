@@ -82,7 +82,7 @@
         "google/apiclient": "^2.15",
         "google/auth": "^1.37",
         "vzaichikov/bsg-php": "dev-master",
-        "deeplcom/deepl-php": "^1.4",
+        "deeplcom/deepl-php": "^1.7",
         "jbroadway/urlify": "^1.2",
         "league/csv": "^9.0",
         "google/recaptcha": "^1.3",

@@ -250,6 +250,8 @@ function formatLongNumber($number, $format = true){
 		return $number;
 	}
 
+	$number = (float)$number;
+
 	if ($number > 1000000000000) {
 		return round($number / 1000000000000, 1) . 'T';
 	} elseif ($number > 1000000000) {

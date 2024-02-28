@@ -937,7 +937,11 @@
 			$orderProcessingFromMarketClient = new \Yandex\Marketplace\Partner\Clients\OrderProcessingBeruClient();
 			$order = $orderProcessingFromMarketClient->acceptOrder($this->getRequestBody(false));
 			
-			$order_id = $this->createOrder($order, $yam_campaign_id);					
+			$order_id = $this->createOrder($order, $yam_campaign_id);			
+
+			if (is_array($order_id)){
+				$order_id = (string)$order_id['order_id'];
+			}
 			
 			$json['order'] = [
 				'accepted' 	=> true,
