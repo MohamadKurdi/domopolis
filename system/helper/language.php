@@ -208,7 +208,7 @@ function getUkrainianPluralWord($number, $titles, $show_number = false) {
 
 	$cases = [ 2, 0, 1, 1, 1, 2 ];
 
-	$intnum = abs( (int) strip_tags( $number ) );
+	$intnum = $number?abs( (int) strip_tags( $number ) ):0;
 
 	$title_index = ( $intnum % 100 > 4 && $intnum % 100 < 20 )
 	? 2

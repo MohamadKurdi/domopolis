@@ -1,20 +1,24 @@
 <?php
 
-function removeEOLS($s){			
-	$s = str_replace(PHP_EOL, ' ', $s);			
-	$s = trim(preg_replace('/\s+/', ' ', $s));
+function removeEOLS($string){			
+	$string = str_replace(PHP_EOL, ' ', $string);			
+	$string = trim(preg_replace('/\s+/', ' ', $string));
 
 	return $s;
 }
 
-function removeLeftGT($s){
-	$s = trim($s);
-
-	if (mb_substr($s, 0, 4) == '&gt;'){
-		$s = mb_substr($s, 4);
+function removeLeftGT($string){
+	if (!$string){
+		return $string;
 	}
 
-	return trim($s);
+	$string = trim($string);
+
+	if (mb_substr($string, 0, 4) == '&gt;'){
+		$string = mb_substr($string, 4);
+	}
+
+	return trim($string);
 }	
 
 function reparseEOLSToSpace($st){

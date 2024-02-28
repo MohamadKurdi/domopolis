@@ -162,13 +162,16 @@
 			}
 			
 			$string .= number_format(round($value, (int)$decimal_place), (int)$decimal_place, $decimal_point, $thousand_point);
+
+			if (!$format){
+				return (float)$string;
+			}
 			
 			if (!$real_code) {				
 				if (($symbol_right) && ($format)) {
 					$string .= ' ' . $symbol_right;
 				}				
-			} else {
-				
+			} else {				
 				if (($this->code) && ($format)) {
 					$string .= $this->code;
 				}				
