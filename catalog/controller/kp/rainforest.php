@@ -356,7 +356,6 @@ class ControllerKPRainForest extends Controller {
 	}
 
 	public function parsenoofferscron(){
-
 		if (!$this->config->get('config_rainforest_enable_nooffers_parser')){
 			echoLine('[ControllerKPRainForest::parsenoofferscron] CRON IS DISABLED IN ADMIN', 'e');
 			return;
@@ -390,12 +389,14 @@ class ControllerKPRainForest extends Controller {
 			$results = $this->rainforestAmazon->getProductsOffersASYNC($slice);
 
 			if ($results){
-				try {
-					$this->rainforestAmazon->offersParser->addOffersForASIN($asin, $offers);
-					$this->rainforestAmazon->offersParser->clearProductsAmazonQueue($asin);
-				} catch (\Exception $e){
-					echoLine('[ControllerKPRainForest::parseofferscron] Caught Exception, exiting. ' . $e->getMessage(), 'e');
-					return;
+				foreach ($results as $asin => $offers){			
+					try {
+						$this->rainforestAmazon->offersParser->addOffersForASIN($asin, $offers);
+						$this->rainforestAmazon->offersParser->clearProductsAmazonQueue($asin);
+					} catch (\Exception $e){
+						echoLine('[ControllerKPRainForest::parseofferscron] Caught Exception, exiting.' . $e->getMessage());
+						return;
+					}
 				}
 			}
 
@@ -458,7 +459,6 @@ class ControllerKPRainForest extends Controller {
 						return;
 					}
 				}
-
 			}
 
 			echoLine('[ControllerKPRainForest::parseofferscron] Time for iteration: ' . $i . ' from ' . $iterations .': ' . $timer->getTime() . ' s.', 'i');

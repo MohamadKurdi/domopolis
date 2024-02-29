@@ -92,8 +92,10 @@
 				echoLine('[SimpleProductParser::parseResponse] --------------------- DUMPING RESPONSE ---------------------', 'w');
 				print_r($response);
 				echoLine('[SimpleProductParser::parseResponse] --------------------- END DUMPING RESPONSE ---------------------', 'w');
-				echoLine('[SimpleProductParser::parseResponse] Could not parse response, no success marker in it!', 'e');			
-				throw new \Exception('[SimpleProductParser::parseResponse] Could not parse response, no success marker in it!');				
+				echoLine('[SimpleProductParser::parseResponse] Could not parse response, no success marker in it!', 'e');
+
+				return false;			
+			//	throw new \Exception('[SimpleProductParser::parseResponse] Could not parse response, no success marker in it!');				
 			} elseif (isset($response['request_info']['success']) && $response['request_info']['success'] == false){				
 				echoLine('[SimpleProductParser::parseResponse] Success marker is false in response, returning false!', 'e');
 				echoLine('[SimpleProductParser::parseResponse] Success marker is false in response, message is:' . $response['request_info']['message'], 'e');

@@ -47,7 +47,7 @@ class RainforestAmazon
 	*/
 	public const offerParserLimit 		= 2000;
 	public const noOfferParserLimit 	= 10000;
-	public const offerRequestLimits 	= 20;
+	public const offerRequestLimits 	= 10;
 
 	/*
 		fullProductParserLimit = Сколько отбирать товаров для получения полной информации за один запуск

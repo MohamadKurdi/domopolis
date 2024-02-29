@@ -226,7 +226,7 @@
 			$sql .= " WHERE 1";
 			
 			if (isset($data['filter_asin'])){
-				$sql .= " AND asin LIKE ('%" . $this->db->escape($data['filter_asin']) . "%')";
+				$sql .= " AND adq.asin LIKE ('%" . $this->db->escape($data['filter_asin']) . "%')";
 			}
 
 			if (!empty($data['filter_date_from'])){
