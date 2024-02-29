@@ -34,6 +34,10 @@ class Url {
     }
 
     public function link($route, $args = '', $connection = 'SSL', $language_id = false) {
+        if (!$route || $route == 'common/home'){
+            return $this->config->get('config_ssl');
+        }
+
         return $this->linkCached($route, $args, $language_id);
     }
 

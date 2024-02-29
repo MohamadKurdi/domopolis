@@ -422,7 +422,8 @@
 						}					
 					} elseif (isset($this->request->get['faq_category_id'])) {
 					$this->request->get['route'] = 'information/faq_system';					
-					} elseif(isset($this->cache_data['queries'][$route_])) {					
+					} elseif(isset($this->cache_data['queries'][$route_])) {	
+					header('X-REDIRECT: SeoProLib::index');				
 					header($this->request->server['SERVER_PROTOCOL'] . ' 301 Moved Permanently');				
 					$this->response->redirect($this->cache_data['queries'][$route_]);
 					} else {
@@ -1006,18 +1007,13 @@
 			if (is_array($this->request->get) && isset($this->request->get['page']) && (int)$this->request->get['page'] == 1){
 				unset($this->request->get['page']);			
 			}
-			
-			if (IS_HTTPS) {
-				$config_ssl = substr($this->config->get('config_ssl'), 0, strpos_offset('/', $this->config->get('config_ssl'), 3) + 1);																
-				$url = str_replace('&amp;', '&', $config_ssl . ltrim($this->request->server['REQUEST_URI'], '/'));
-				$seo = str_replace('&amp;', '&', $this->url->link($this->request->get['route'], $this->getQueryString(array('route')), 'SSL'));
-				} else {
-				$config_url = substr($this->config->get('config_url'), 0, strpos_offset('/', $this->config->get('config_url'), 3) + 1);
-				$url = str_replace('&amp;', '&', $config_url . ltrim($this->request->server['REQUEST_URI'], '/'));
-				$seo = str_replace('&amp;', '&', $this->url->link($this->request->get['route'], $this->getQueryString(array('route')), 'NONSSL'));
-			}
-			
-			if ((php_sapi_name()!=="cli") && (rawurldecode($url) != rawurldecode($seo)) && strpos($url,'mfp=')===false && (strpos($url, '/search')===false)) {	 
+
+			$config_ssl = substr($this->config->get('config_ssl'), 0, strpos_offset('/', $this->config->get('config_ssl'), 3) + 1);																
+			$url 		= str_replace('&amp;', '&', $config_ssl . ltrim($this->request->server['REQUEST_URI'], '/'));
+			$seo 		= str_replace('&amp;', '&', $this->url->link($this->request->get['route'], $this->getQueryString(array('route')), 'SSL'));
+					
+			if ((php_sapi_name()!=="cli") && (rawurldecode($url) != rawurldecode($seo)) && strpos($url,'mfp=') === false && (strpos($url, '/search') === false)) {
+				header('X-REDIRECT: SeoProLib::validate');		 
 				header($this->request->server['SERVER_PROTOCOL'] . ' 301 Moved Permanently');
 				$this->response->redirect($seo, 301);
 			}

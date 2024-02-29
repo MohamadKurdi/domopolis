@@ -157,9 +157,8 @@
 			$registry->get('config')->set($setting['key'], $setting['value']?unserialize($setting['value']):false);
 		}
 	}
-	
-	
-	if (!$store_id) {
+		
+	if ($store_id == 0 || !$store_id) {
 		$registry->get('config')->set('config_url', 				HTTPS_SERVER);
 		$registry->get('config')->set('config_ssl', 				HTTPS_SERVER);			
 		$registry->get('config')->set('config_img_url', 			HTTPS_IMG_SERVER);
