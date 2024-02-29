@@ -516,6 +516,12 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_ssl'] = $this->config->get('config_ssl');
         }
+
+          if (isset($this->request->post['config_local_dev_mode'])) {
+            $this->data['config_local_dev_mode'] = $this->request->post['config_local_dev_mode'];
+        } else {
+            $this->data['config_local_dev_mode'] = $this->config->get('config_local_dev_mode');
+        }
         
         if (isset($this->request->post['config_owner'])) {
             $this->data['config_owner'] = $this->request->post['config_owner'];
@@ -551,13 +557,11 @@ class ControllerSettingSetting extends Controller
         }
 
         foreach ($this->data['languages'] as $city_language){
-
             if (isset($this->request->post['config_default_city_' . $city_language['code']])) {
                 $this->data['config_default_city_' . $city_language['code']] = $this->request->post['config_default_city_' . $city_language['code']];
             } else {
                 $this->data['config_default_city_' . $city_language['code']] = $this->config->get('config_default_city_' . $city_language['code']);
             }
-
         }
         
         if (isset($this->request->post['config_email'])) {
