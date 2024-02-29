@@ -34,6 +34,10 @@ class Url {
     }
 
     public function link($route, $args = '', $connection = 'SSL', $language_id = false) {
+        if (defined('IS_ADMIN') && IS_ADMIN){
+            return $this->linkUnCached($route, $args, $language_id);
+        }
+
         if (!$route || $route == 'common/home'){
             return $this->config->get('config_ssl');
         }

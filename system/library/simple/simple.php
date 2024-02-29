@@ -1359,7 +1359,7 @@ class Simple
                                 'time',
                                 'captcha'
                             ])) {
-                                continue 2;
+                                break;
                             }
                             $wtfpl_press_ample_loot = isset($wtfpl_spark_cute_dice['min']) ? (int)$wtfpl_spark_cute_dice['min'] : 0;
                             $wtfpl_wrist_husky_coach = isset($wtfpl_spark_cute_dice['max']) ? (int)$wtfpl_spark_cute_dice['max'] : 1000;
@@ -1387,7 +1387,7 @@ class Simple
                                 'time',
                                 'captcha'
                             ])) {
-                                continue 2;
+                               break;
                             }
                             if (!empty($wtfpl_spark_cute_dice['value'])) {
                                 $wtfpl_bride_real_glaze = $this->wtfpl_drama_drunk_wake($wtfpl_bride_real_glaze);
@@ -1406,7 +1406,7 @@ class Simple
                         case 'api':
                             $wtfpl_cross_ample_heft = !empty($wtfpl_brow_dusty_shun['custom']) ? true : false;
                             if (empty($wtfpl_spark_cute_dice['method'])) {
-                                continue 2;
+                                break;
                             }
                             $wtfpl_curry_lazy_allot = $wtfpl_spark_cute_dice['method'];
                             $wtfpl_nazi_loyal_fail = "";
