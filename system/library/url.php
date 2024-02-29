@@ -30,19 +30,39 @@ class Url {
     }
 
     public function frontlink($route, $args = '', $connection = 'SSL', $language_id = false) {
-        return str_replace('/admin', '', $this->linkCached($route, $args, $language_id));
+        return str_replace('/admin', '', $this->link($route, $args, $language_id));
     }
 
     public function link($route, $args = '', $connection = 'SSL', $language_id = false) {
+        $route = $this->rewriteSimpleCheckout($route);
+
+        if (empty($this->url)) {
+            $url = 'https://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/.\\') . '/index.php?route=' . $route;
+        } else {
+            $url = ($this->url . 'index.php?route=' . $route);
+        }
+
+        if ($args) {
+            if (is_array($args)) {
+                $url .= '&amp;' . http_build_query($args);
+            } else {
+                $url .= str_replace('&', '&amp;', '&' . ltrim($args, '&'));
+            }
+        }
+
+        foreach ($this->rewrite as $rewrite) {  
+            if ($language_id && method_exists($rewrite, 'rewriteLanguage')){            
+                $url = $rewrite->rewriteLanguage($url, $language_id);
+            } else {
+                $url = $rewrite->rewrite($url);
+            }
+        }
+
         if (defined('IS_ADMIN') && IS_ADMIN){
-            return $this->linkUnCached($route, $args, $language_id);
+            $url = str_replace('&amp;', '&', $url);
         }
 
-        if (!$route || $route == 'common/home'){
-            return $this->config->get('config_ssl');
-        }
-
-        return $this->linkCached($route, $args, $language_id);
+        return $url;        
     }
 
     public function checkIfGenerate($param){        
@@ -123,53 +143,5 @@ class Url {
         }
 
         return $route;
-    }
-
-    private function linkUnCached($route, $args, $language_id = false){
-        $route = $this->rewriteSimpleCheckout($route);
-
-        if (empty($this->url)) {
-            $url = 'https://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/.\\') . '/index.php?route=' . $route;
-        } else {
-            $url = ($this->url . 'index.php?route=' . $route);
-        }
-
-        if ($args) {
-            if (is_array($args)) {
-                $url .= '&amp;' . http_build_query($args);
-            } else {
-                $url .= str_replace('&', '&amp;', '&' . ltrim($args, '&'));
-            }
-        }
-
-        foreach ($this->rewrite as $rewrite) {  
-            if ($language_id && method_exists($rewrite, 'rewriteLanguage')){            
-                $url = $rewrite->rewriteLanguage($url, $language_id);
-            } else {
-                $url = $rewrite->rewrite($url);
-            }
-        }
-
-        if (defined('IS_ADMIN') && IS_ADMIN){
-            $url = str_replace('&amp;', '&', $url);
-        }
-
-        return $url;
-    }
-
-    private function linkCached($route, $args, $language_id = false) {                
-        $route = $this->rewriteSimpleCheckout($route);
-
-        if (empty($this->cache)){
-            return $this->linkUnCached($route, $args, $language_id = false);
-        }
-
-        if (!$url = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$route], [$args, $language_id]))){
-            $url = $this->linkUnCached($route, $args, $language_id = false);
-
-            $this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$route], [$args, $language_id]), $url);
-        }
-
-        return $url;
     }
 }
