@@ -3,15 +3,13 @@
 namespace hobotix;
 
 
-class RainforestAmazon
-{
+class RainforestAmazon{
 
 	private $db 	= null;	
 	private $config = null;			
 	private $log 	= null;	
 	
-	private $rfRequests = [];
-	public $zipCodes 	= [];
+	private $rfRequests = [];	
 
 	private $rfClient 			= null;	
 	public $offersParser 		= null;
@@ -28,6 +26,11 @@ class RainforestAmazon
 
 	public const amazonSellerQualities 			= ['TE', 'T', 'E'];
 	public const amazonSellerQualitiesSorted 	= ['TE' => 3, 'T' => 2, 'E' => 1];
+
+	/*
+		zipcodeCount = максимальное количество zipcode (если в тарифе меньше - не страшно, будет пропущено)
+	*/
+	public const zipcodeCount 	= 5;
 
 	/*
 		categoryParserLimit  - сколько отбирать категорий за один запуск
@@ -149,16 +152,12 @@ class RainforestAmazon
 
 			if (class_exists('CaponicaAmazonRainforest\Client\RainforestClient')){
 				$this->rfClient = new \CaponicaAmazonRainforest\Client\RainforestClient($config, $rainforestLogger);
-			}			
+			}
+
+			$this->rfClient->addExternalRegistry($registry);
 		} else {
 			$this->rfClient = null;
 		}		
-
-		for ($i = 1; $i <= 5; $i++){
-			if ($this->config->get('config_rainforest_api_zipcode_' . $i)){
-				$this->zipCodes[] = $this->config->get('config_rainforest_api_zipcode_' . $i);
-			}
-		}
 
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/OffersParser.php');		
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/RainforestRetriever.php');
@@ -168,6 +167,7 @@ class RainforestAmazon
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/CategoryRetriever.php');
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/ProductsRetriever.php');
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/SimpleProductParser.php');
+		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/ZipcodesManager.php');
 
 		$this->offersParser 		= new Amazon\OffersParser($registry);
 		$this->infoUpdater 			= new Amazon\InfoUpdater($registry);		
@@ -175,7 +175,8 @@ class RainforestAmazon
 		$this->categoryParser 		= new Amazon\CategoryParser($registry, $this->rfClient);		
 		$this->categoryRetriever 	= new Amazon\CategoryRetriever($registry);		
 		$this->productsRetriever 	= new Amazon\ProductsRetriever($registry);		
-		$this->simpleProductParser 	= new Amazon\SimpleProductParser($registry, $this->rfClient);	
+		$this->simpleProductParser 	= new Amazon\SimpleProductParser($registry, $this->rfClient);
+		$this->zipcodesManager 		= new Amazon\ZipcodesManager($registry);	
 
 		if ($this->config->get('config_telegram_bot_enable_alerts') && $this->config->get('config_telegram_bot_token') && $this->config->get('config_rainforest_tg_alert_group_id')){
 			if (class_exists('Longman\TelegramBot\Telegram')){
@@ -204,13 +205,6 @@ class RainforestAmazon
 		return $asin;
 	}
 
-	public function getRandomZipCode(){
-		$zipCode = $this->zipCodes[array_rand($this->zipCodes)];
-		echoLine('[RainforestAmazon] Using zipCode: ' . $zipCode, 'i');
-
-		return $zipCode;
-	}
-
 	public function createLinkToAmazonSearchPage($asin){			
 		return 'https://' . $this->config->get('config_rainforest_api_domain_1') . '/s?k=' . $asin;						
 	}
@@ -226,44 +220,7 @@ class RainforestAmazon
 		} catch (\Longman\TelegramBot\Exception\TelegramException $e) {
 			echoLine($e->getMessage(), 'e');
 		}
-	}
-
-	public function checkZipCodes(){
-		$queryString = http_build_query([
-			'api_key' => $this->config->get('config_rainforest_api_key'),
-			'domain'  => $this->config->get('config_rainforest_api_domain_1')
-		]);
-
-		$error 		= false;	
-		$warning 	= false;
-
-		$ch = curl_init(sprintf('%s?%s', 'https://api.rainforestapi.com/zipcodes', $queryString));
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-		$answer 	= curl_exec($ch);
-		$httpcode 	= curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		curl_close($ch);
-
-		if ($httpcode != 200){
-			$error = 'CODE_NOT_200_MAYBE_PAYMENT_FAIL';
-			$answer .= ' HTTPCODE: ' . $httpcode;
-			$answer = trim($answer);
-		}
-
-		if (!$error && !json_decode($answer)){
-			$error = 'JSON_DECODE';
-			$answer .= '<br />HTTPCODE: ' . $httpcode;
-		}
-
-		if ($answer_decoded = json_decode($answer, true)){
-			$answer = $answer_decoded;
-		}
-
-		return $answer;
-	}
+	}	
 
 	public function checkIfPossibleToMakeRequest($return = false, $debug = false){
 		$queryString = http_build_query([
@@ -450,16 +407,14 @@ class RainforestAmazon
 	}
 
 	public function getProductByASIN($asins){
-
 		$this->checkIfPossibleToMakeRequest();
 
 		$rfRequests = [];
 
 		foreach ($asins as $asin){
-			$rfRequests[] = new \CaponicaAmazonRainforest\Request\ProductRequest($this->config->get('config_rainforest_api_domain_1'), $asin, ['customer_zipcode' => $this->getRandomZipCode()]);
+			$rfRequests[] = new \CaponicaAmazonRainforest\Request\ProductRequest($this->config->get('config_rainforest_api_domain_1'), $asin, ['customer_zipcode' => $this->zipcodesManager->getRandomZipCode(count($asins))]);
 		}
-		$apiEntities = $this->rfClient->retrieveProducts($rfRequests);
-
+		$apiEntities = $this->rfClient->retrieveProducts($rfRequests);		
 
 		if (!$apiEntities){									
 			echoLine('[RainforestAmazon::getProductByASIN] ASIN not found ' . $row['asin'], 'e');			
@@ -471,42 +426,45 @@ class RainforestAmazon
 	}
 
 	public function getProductsOffersASYNC($products){
-
 		$this->checkIfPossibleToMakeRequest();
 
 		$rfRequests = [];
-
-		$options = ['customer_zipcode' => $this->getRandomZipCode()];
-
+		
+		$options = [];
 		if ($this->config->get('config_rainforest_amazon_filters_1')){
 			foreach ($this->config->get('config_rainforest_amazon_filters_1') as $amazon_filter_1){		
 				$options[$amazon_filter_1] = true;
 			}
-		}
+		}		
 
 		foreach ($products as $asin){
-			$rfRequests[] = new \CaponicaAmazonRainforest\Request\OfferRequest($this->config->get('config_rainforest_api_domain_1'), $asin, $options);
+			$options['customer_zipcode'] = $this->zipcodesManager->getRandomZipCode();
+			$rfRequests[] 	= new \CaponicaAmazonRainforest\Request\OfferRequest($this->config->get('config_rainforest_api_domain_1'), $asin, $options);
 		}
 
 		$apiEntities = $this->rfClient->retrieveOffers($rfRequests);	
 		
-		$results = [];
-		$retrievedProducts = [];
-		unset($rfOfferList);					
+		$results 			= [];
+		$retrievedProducts 	= [];
+		unset($rfOfferList);			
 
 		foreach ($apiEntities as $key => $rfOfferList){	
 			$rfAsin = self::getAsinFromRequest($key, $rfOfferList);
 			$retrievedProducts[] = $rfAsin;
 
 			if ($rfOfferList->getOfferCount()){
-				$this->offersParser->setLastOffersDate($rfAsin)->setProductOffers($rfAsin);
-				echoLine('[RainforestAmazon::getProductsOffersASYNC] ' . $rfAsin . ': ' . $rfOfferList->getOfferCount() . ' offers', 's');					
+				echoLine('[RainforestAmazon::getProductsOffersASYNC] ' . $rfAsin . ': ' . $rfOfferList->getOfferCount() . ' offers', 's');	
+				$this->offersParser->setLastOffersDate($rfAsin)->setProductOffers($rfAsin);				
+			} else {
+				echoLine('[RainforestAmazon::getProductsOffersASYNC] ' . $rfAsin . ': zero offers, exactly', 'w');
+				$this->offersParser->setLastOffersDate($rfAsin)->setProductNoOffers($rfAsin);
+				unset($apiEntities[$key]);
 			}
 		}
 
 		foreach (array_diff($products, $retrievedProducts) as $notRetrievedASIN){
-			echoLine('[RainforestAmazon::getProductsOffersASYNC] No offers for ' . $notRetrievedASIN);				
-			$this->offersParser->setLastOffersDate($notRetrievedASIN)->setProductNoOffers($notRetrievedASIN);
+			echoLine('[RainforestAmazon::getProductsOffersASYNC] Could not get offers for cause of maybe timeout, skipping and delaying +2 day' . $notRetrievedASIN, 'e');	
+			$this->offersParser->delayOffersDateToNext($notRetrievedASIN);			
 		}
 
 		foreach ($apiEntities as $key => $rfOfferList){
@@ -521,7 +479,9 @@ class RainforestAmazon
 			if ($rfOfferList->hasMorePages() && count($results[$rfAsin]) == 10){
 				echoLine('[RainforestAmazon::getProductsOffersASYNC] Page 2 ' . $rfOfferList->hasMorePages());
 
-				$options['page'] = $rfOfferList->getCurrentPage() + 1;
+				$options['page'] 				= $rfOfferList->getCurrentPage() + 1;
+				$options['customer_zipcode'] 	= $this->zipcodesManager->getRandomZipCode();
+
 				$rfRequests = [new \CaponicaAmazonRainforest\Request\OfferRequest($this->config->get('config_rainforest_api_domain_1'), $asin, $options)];
 				$apiEntitiesPage = $this->rfClient->retrieveOffers($rfRequests);
 
@@ -532,8 +492,9 @@ class RainforestAmazon
 				}
 
 				while(!empty($rfOfferListPage) && is_object($rfOfferListPage) && $rfOfferListPage->hasMorePages()){
+					$options['page'] 				= $rfOfferListPage->getCurrentPage() + 1;
+					$options['customer_zipcode'] 	= $this->zipcodesManager->getRandomZipCode();
 
-					$options['page'] = $rfOfferListPage->getCurrentPage() + 1;
 					$rfRequests = [new \CaponicaAmazonRainforest\Request\OfferRequest($this->config->get('config_rainforest_api_domain_1'), $asin, $options)];
 					$apiEntitiesPage = $this->rfClient->retrieveOffers($rfRequests);
 
@@ -550,7 +511,6 @@ class RainforestAmazon
 	}
 
 	public function getProductOffers($product, $validateASIN = true){
-
 		$this->checkIfPossibleToMakeRequest();
 
 		$rfRequests = []; 
@@ -560,8 +520,7 @@ class RainforestAmazon
 		}
 
 		if (!empty($product['asin'])){
-
-			$options = ['customer_zipcode' => $this->getRandomZipCode()];
+			$options = ['customer_zipcode' => $this->zipcodesManager->getRandomZipCode()];
 
 			if ($this->config->get('config_rainforest_amazon_filters_1')){
 				foreach ($this->config->get('config_rainforest_amazon_filters_1') as $amazon_filter_1){		
@@ -570,16 +529,14 @@ class RainforestAmazon
 			}
 
 			$rfRequests[] = new \CaponicaAmazonRainforest\Request\OfferRequest($this->config->get('config_rainforest_api_domain_1'), $product['asin'], $options);
-
 		} else {
 			return false;
 		}
 
-		$apiEntitiesTMP = $this->rfClient->retrieveOffers($rfRequests);						
+		$apiEntitiesTMP = $this->rfClient->retrieveOffers($rfRequests);			
 
 		$apiOffers = [];
 		foreach ($apiEntitiesTMP as $key => $rfOfferList) {
-
 			foreach ($rfOfferList->getOffers() as $apiOffer){								
 				$apiOffers[] = $apiOffer;
 			}		
@@ -596,7 +553,6 @@ class RainforestAmazon
 				}
 
 				while(!empty($rfOfferListPage) && is_object($rfOfferListPage) && $rfOfferListPage->hasMorePages()){
-
 					$options['page'] = $rfOfferListPage->getCurrentPage() + 1;
 					$rfRequests = [new \CaponicaAmazonRainforest\Request\OfferRequest($this->config->get('config_rainforest_api_domain_1'), $product['asin'], $options)];
 					$apiEntitiesPage = $this->rfClient->retrieveOffers($rfRequests);
@@ -609,9 +565,63 @@ class RainforestAmazon
 				}	
 			}								
 		}
+
 		return $apiOffers;
 	}
 
-	public function getOffers($data){}
+	//Need for more universality
+	public function parseException($exception){
+		return $this->checkResponseForZipcode('', $exception);
+	}
 
-}												
+	public function checkResponseForZipcode($response, $request = null){
+		if (!$request){
+			return true;
+		}
+
+		$current_zipcode = false;
+		if ($request instanceof \CurlHandle) {
+			$request_info = curl_getinfo($request);
+
+			if (!empty($request_info) && !empty($request_info['url'])){
+				$current_zipcode = extract_get_param($request_info['url'], 'customer_zipcode');
+				echoLine('[RainforestAmazon::checkResponseForZipcode] Found zipcode in cUrl request ' . $current_zipcode, 'w');
+			}
+		} elseif ($request instanceof \GuzzleHttp\Exception\GuzzleException || $request instanceof \GuzzleHttp\Exception\ConnectException || $request instanceof \Exception) {
+			preg_match('/for (.*)/', $request->getMessage(), $matches);
+
+			if (!empty($matches[1])){
+				$current_zipcode = extract_get_param($matches[1], 'customer_zipcode');
+				echoLine('[RainforestAmazon::checkResponseForZipcode] Found zipcode in \Exception request ' . $current_zipcode, 'w');				
+			}
+
+		} else {
+			echoLine('[RainforestAmazon::checkResponseForZipcode] Request is not CurlHandle object, nor exception caught, passing', 'w');
+		}		
+
+		if (!$current_zipcode){
+			return true;
+		}
+
+		if (empty($response) || !isset($response['request_info']) || !isset($response['request_info']['success'])){
+			$this->zipcodesManager->updateZipCodeErrorCount($current_zipcode);
+		}
+	}
+
+	//Refactored to zipcodesManager, left for compatibility
+	public function getRandomZipCode($requests = 1){
+		return $this->zipcodesManager->getRandomZipCode($requests);
+	}
+
+	//Refactored to zipcodesManager, left for compatibility
+	public function checkZipCodes(){
+		return $this->zipcodesManager->checkZipCodes();
+	}
+}	
+
+
+class HobotixGuzzleRainforestException extends \Exception {
+	public function __construct($message, $code = 0) {
+		parent::__construct($message, $code);
+	}
+}											

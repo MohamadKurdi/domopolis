@@ -136,13 +136,11 @@
 		}
 
 		public function getCategoriesFromAmazonAsync($categories){
-
 			$multi = curl_multi_init();
 			$channels 	= [];
 			$results 	= [];
 			
 			foreach ($categories as $category){
-
 				$options = [
 					'type' 			=> \hobotix\RainforestAmazon::rainforestTypeMapping[$this->config->get('config_rainforest_category_model')],
 					'category_id' 	=> $category['amazon_category_id'],
@@ -166,7 +164,7 @@
 			curl_multi_close($multi);
 			
 			foreach ($channels as $category_id => $channel) {
-				$results[$category_id] = $this->parseResponse(curl_multi_getcontent($channel));				
+				$results[$category_id] = $this->parseResponse(curl_multi_getcontent($channel), $channel);				
 			}
 			
 			

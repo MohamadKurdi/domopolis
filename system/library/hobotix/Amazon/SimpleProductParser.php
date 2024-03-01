@@ -7,6 +7,8 @@
 	namespace hobotix\Amazon;
 	
 	class SimpleProductParser {
+
+		const CLASS_NAME = 'hobotix\\Amazon\\SimpleProductParser';
 		
 		private $db;	
 		private $config;
@@ -16,9 +18,10 @@
 
 		private $requestTimeOut = 100;
 		private $connectTimeOut = 10;
+
+		public const DELAY_ANSWER_TIMEOUT_MARKER = 500;
 		
 		public function __construct($registry, $rfClient){
-			
 			$this->registry = $registry;
 			$this->config 	= $registry->get('config');			
 			$this->db 		= $registry->get('db');
@@ -36,13 +39,11 @@
 			}		
 		}
 		
-		const CLASS_NAME = 'hobotix\\Amazon\\SimpleProductParser';
-		
-		private function createRequest($params = []){			
+		private function createRequest($params = []){
 			$data = [
 			'api_key' 			=> $this->config->get('config_rainforest_api_key'),
 			'amazon_domain' 	=> $this->config->get('config_rainforest_api_domain_1'),
-			'customer_zipcode' 	=> $this->registry->get('rainforestAmazon')->getRandomZipCode(),
+			'customer_zipcode' 	=> $this->registry->get('rainforestAmazon')->zipcodesManager->getRandomZipCode(),
 			'type' 				=> 'product',
 			];
 			
@@ -85,22 +86,23 @@
 			return $array;
 		}	
 		
-		private function parseResponse($response){
+		private function parseResponse($response, $request = null){
 			$response = json_decode($response, true);	
-			
-			if (!isset($response['request_info']) || !isset($response['request_info']['success'])){
+
+			$this->registry->get('rainforestAmazon')->checkResponseForZipcode($response, $request);
+
+			if (empty($response)){
+				echoLine('[SimpleProductParser::parseResponse] Totally empty response, means timeout, or something like that, returning marker to delay', 'e');
+				return self::DELAY_ANSWER_TIMEOUT_MARKER;
+			} elseif (!isset($response['request_info']) || !isset($response['request_info']['success'])){
 				echoLine('[SimpleProductParser::parseResponse] --------------------- DUMPING RESPONSE ---------------------', 'w');
 				print_r($response);
 				echoLine('[SimpleProductParser::parseResponse] --------------------- END DUMPING RESPONSE ---------------------', 'w');
 				echoLine('[SimpleProductParser::parseResponse] Could not parse response, no success marker in it!', 'e');
-
-				return false;			
-			//	throw new \Exception('[SimpleProductParser::parseResponse] Could not parse response, no success marker in it!');				
+				return false;							
 			} elseif (isset($response['request_info']['success']) && $response['request_info']['success'] == false){				
 				echoLine('[SimpleProductParser::parseResponse] Success marker is false in response, returning false!', 'e');
 				echoLine('[SimpleProductParser::parseResponse] Success marker is false in response, message is:' . $response['request_info']['message'], 'e');
-				//throw new \Exception('[SimpleProductParser::parseResponse] Success marker is false in response, returning false!');
-
 				return false;
 			}
 
@@ -140,7 +142,6 @@
 		}
 		
 		public function getProductByGTIN($gtins){
-		
 			$multi = curl_multi_init();
 			$channels 	= [];
 			$results 	= [];
@@ -162,22 +163,20 @@
 			curl_multi_close($multi);
 			
 			foreach ($channels as $product_id => $channel) {
-				$results[$product_id] = $this->parseResponse(curl_multi_getcontent($channel));				
+				$results[$product_id] = $this->parseResponse(curl_multi_getcontent($channel), $channel);				
 			}
-			
-			
+						
 			return $results;			
 		}
 		
 		public function getProductByASINS($asins){
-			
 			$multi = curl_multi_init();
 			$channels 	= [];
 			$results 	= [];
 			
 			foreach ($asins as $asin){								
-				$channels[$asin['product_id']] = $this->createRequest(['asin' => $asin['asin']]);	
-				$results[$asin['product_id']] = [];
+				$channels[$asin['product_id']] 	= $this->createRequest(['asin' => $asin['asin']]);	
+				$results[$asin['product_id']] 	= [];
 				curl_multi_add_handle($multi, $channels[$asin['product_id']]);									
 			}			
 			
@@ -192,7 +191,7 @@
 			curl_multi_close($multi);
 			
 			foreach ($channels as $product_id => $channel) {
-				$results[$product_id] = $this->parseResponse(curl_multi_getcontent($channel));				
+				$results[$product_id] = $this->parseResponse(curl_multi_getcontent($channel), $channel);				
 			}
 			
 			

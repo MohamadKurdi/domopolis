@@ -10,17 +10,18 @@
 		public $config 		= null;
 		public $endpoint 	= null;
 		public $registry 	= null;
-
+		
+		public $translateAdaptor 		= null;
 		public $model_catalog_category 	= null;
 		public $model_catalog_product 	= null;
 		public $model_product_add 		= null;
-
-		public $translateAdaptor 		= null;
 		
 		public $jsonResult = null;
 
-		public function __construct($registry){
-			
+		private $requestTimeOut = 100;
+		private $connectTimeOut = 10;
+
+		public function __construct($registry){			
 			$this->registry 		= $registry;
 			$this->config 			= $registry->get('config');
 			$this->db 				= $registry->get('db');
@@ -28,6 +29,20 @@
 
 			if ($this->config->get('config_rainforest_enable_translation')){
 				$this->translateAdaptor = $registry->get('translateAdaptor');
+			}	
+
+			if ($this->config->get('config_rainforest_debug_curl_request_timeout')){
+				if (get_class($this) == 'RainforestRetriever'){
+					echoLine('[RainforestRetriever::__construct] Request timeout from settings: ' . $this->config->get('config_rainforest_debug_curl_request_timeout'), 'd');
+				}
+				$this->requestTimeOut = (int)$this->config->get('config_rainforest_debug_curl_request_timeout');
+			}	
+
+			if ($this->config->get('config_rainforest_debug_curl_connect_timeout')){
+				if (get_class($this) == 'RainforestRetriever'){
+					echoLine('[RainforestRetriever::__construct] Connect timeout from settings: ' . $this->config->get('config_rainforest_debug_curl_connect_timeout'), 'd');
+				}
+				$this->connectTimeOut = (int)$this->config->get('config_rainforest_debug_curl_connect_timeout');
 			}	
 
 			require_once(DIR_SYSTEM . 'library/hobotix/Amazon/models/hoboModel.php');	
@@ -38,7 +53,6 @@
 			$this->model_product_edit 		= new productModelEdit($registry);
 			$this->model_product_get 		= new productModelGet($registry);
 			$this->model_product_cached_get = new productModelCachedGet($registry);
-			
 		}
 
 		const CLASS_NAME = 'hobotix\\Amazon\\RainforestRetriever';
@@ -56,27 +70,22 @@
 		}
 
 		public function getTotalPages(){
-
 			if (!empty($this->jsonResult['pagination'])){
 				return $this->jsonResult['pagination']['total_pages'];				
 			}
 
 			return false;
-
 		}
 
 		public function getCurrentPages(){
-
 			if (!empty($this->jsonResult['pagination'])){
 				return $this->jsonResult['pagination']['current_page'];				
 			}
 
 			return false;
-
 		}
 
 		public function getNextPage(){
-
 			if (!empty($this->jsonResult['pagination'])){
 
 				if ($this->jsonResult['pagination']['current_page'] < $this->jsonResult['pagination']['total_pages']){
@@ -88,7 +97,6 @@
 		}
 
 		public function getImage($amazonImage, $secondAttempt = false){
-
 			if (!trim($amazonImage)){
 				return '';
 			}
@@ -102,7 +110,7 @@
 			if (!file_exists($fullLocalImagePath)){
 
 				try{
-					$httpClient = new \GuzzleHttp\Client();
+					$httpClient = new \GuzzleHttp\Client(['timeout' => 30]);
 					$httpResponse = $httpClient->request('GET', $amazonImage, ['stream' => true]);	
 
 					if (!is_dir($localImagePath)){
@@ -135,9 +143,11 @@
 			return $localImageDir . $localImageName;
 		}	
 
-		public function parseResponse($response){
+		public function parseResponse($response, $request = null){
 			$raw 		= $response;		
 			$response 	= json_decode($response, true);	
+
+			$this->registry->get('rainforestAmazon')->checkResponseForZipcode($response, $request);
 			
 			if (!isset($response['request_info']['success'])){
 				throw new \Exception((string)$raw);
@@ -154,27 +164,32 @@
 		}
 
 		public function doRequest($params = []){
-		
 			$data = [
 			'api_key' 			=> $this->config->get('config_rainforest_api_key'),
 			'amazon_domain' 	=> $this->config->get('config_rainforest_api_domain_1'),
-			'customer_zipcode' 	=> $this->registry->get('rainforestAmazon')->getRandomZipCode()
+			'customer_zipcode' 	=> $this->registry->get('rainforestAmazon')->zipcodesManager->getRandomZipCode()
 			];
 			
 			$data = array_merge($data, $params);
 			$queryString =  http_build_query($data);
 				
-			$ch = curl_init('https://api.rainforestapi.com/request?' . $queryString);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); 
-			curl_setopt($ch, CURLOPT_TIMEOUT, 100);
-			curl_setopt($ch, CURLOPT_VERBOSE, false);
+			$channel = curl_init('https://api.rainforestapi.com/request?' . $queryString);
+			curl_setopt($channel, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($channel, CURLOPT_FOLLOWLOCATION, true);
 			
-			$response = curl_exec($ch);		
-			curl_close($ch);
+			curl_setopt($channel, CURLOPT_CONNECTTIMEOUT, $this->connectTimeOut); 
+			curl_setopt($channel, CURLOPT_TIMEOUT, $this->requestTimeOut);
+			
+			if ($this->config->get('config_rainforest_debug_products')){
+				curl_setopt($channel, CURLOPT_VERBOSE, true);
+			} else {
+				curl_setopt($channel, CURLOPT_VERBOSE, false);	
+			}
+			
+			$response = curl_exec($channel);		
+			curl_close($channel);
 
-			if ($this->parseResponse($response)){
+			if ($this->parseResponse($response, $channel)){
 				$this->setJsonResult(json_decode($response, true));
 			}
 					
@@ -203,18 +218,17 @@
 			curl_multi_close($multi);
 
 			foreach ($channels as $request_id => $channel) {
-				$results[$request_id] = $this->parseResponse(curl_multi_getcontent($channel));				
+				$results[$request_id] = $this->parseResponse(curl_multi_getcontent($channel), $channel);				
 			}			
 
 			return $results;	
 		}
 
-
-		public function createRequest($params = []){			
+		public function createRequest($params = []){
 			$data = [
 			'api_key' 			=> $this->config->get('config_rainforest_api_key'),
 			'amazon_domain' 	=> $this->config->get('config_rainforest_api_domain_1'),
-			'customer_zipcode' 	=> $this->registry->get('rainforestAmazon')->getRandomZipCode()
+			'customer_zipcode' 	=> $this->registry->get('rainforestAmazon')->zipcodesManager->getRandomZipCode()
 			];
 			
 			$data = array_merge($data, $params);
@@ -230,16 +244,21 @@
 
 			$queryString =  http_build_query($data);
 						
-			$ch = curl_init('https://api.rainforestapi.com/request?' . $queryString);
+			$channel = curl_init('https://api.rainforestapi.com/request?' . $queryString);
 			
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); 
-			curl_setopt($ch, CURLOPT_TIMEOUT, 100);
-			curl_setopt($ch, CURLOPT_VERBOSE, false);	
-			
-			return $ch;			
-		}				
+			curl_setopt($channel, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($channel, CURLOPT_FOLLOWLOCATION, true);
 
+			curl_setopt($channel, CURLOPT_CONNECTTIMEOUT, $this->connectTimeOut); 
+			curl_setopt($channel, CURLOPT_TIMEOUT, $this->requestTimeOut);
+			
+			if ($this->config->get('config_rainforest_debug_products')){
+				curl_setopt($channel, CURLOPT_VERBOSE, true);
+			} else {
+				curl_setopt($channel, CURLOPT_VERBOSE, false);	
+			}	
+			
+			return $channel;			
+		}				
 	}
 		

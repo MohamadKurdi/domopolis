@@ -401,6 +401,12 @@ class OffersParser
 		return $this;
 	}	
 
+	public function delayOffersDateToNext($asin){
+		$this->db->query("UPDATE product SET amzn_last_offers = DATE_ADD(amzn_last_offers, INTERVAL 2 DAY) WHERE asin LIKE '" . $this->db->escape($asin) . "'");		
+
+		return $this;
+	}	
+
 	//Обработка не обязательно новых, которые рнф видит как новые
 	public static function checkIfOfferReallyIsNew($rfOffer){
 		if (stripos($rfOffer->getConditionTitle(), 'wie neu') !== false){
