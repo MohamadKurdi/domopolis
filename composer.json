@@ -17,10 +17,6 @@
         },
         {
             "type": "vcs",
-            "url": "https://github.com/vzaichikov/amazonrainforest"
-        },
-        {
-            "type": "vcs",
             "url": "https://github.com/vzaichikov/bsg-php"
         },
         {
