@@ -100,10 +100,20 @@
 				$this->data['debug'] 	= $result['debug'];
 			}
 
-			$result = $this->rainforestAmazon->checkZipCodes();
+			$zipcodes = $this->rainforestAmazon->zipcodesManager->checkZipCodes();			
+			$this->data['active_zipcodes'] 	= $this->rainforestAmazon->zipcodesManager->getUsedZipCodes();
 
-			$this->data['zipcodes'] = $result;
-			$this->data['active_zipcodes'] = $this->rainforestAmazon->zipCodes;
+			$this->data['zipcodes'] = [];
+
+			foreach ($zipcodes['zipcodes'] as $domain => $zipcodes){
+				foreach ($zipcodes as $zipcode){
+					$this->data['zipcodes'][$domain][] = [
+						'zipcode' 	=> $zipcode['zipcode'],
+						'status' 	=> $zipcode['status'],
+						'info' 		=> $this->rainforestAmazon->zipcodesManager->getZipCodeInfo($zipcode['zipcode'])
+					];
+				}
+			}
 
 			$this->template = 'homestats/rnf.tpl';			
 			$this->response->setOutput($this->render());

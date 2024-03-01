@@ -959,6 +959,10 @@ class ControllerDPRainForest extends Controller {
 				$results = $this->rainforestAmazon->simpleProductParser->getProductByASINS($asinsSlice);
 
 				foreach ($results as $asin => $rfProduct){
+					if ($rfProduct == \hobotix\Amazon\SimpleProductParser::DELAY_ANSWER_TIMEOUT_MARKER){
+						echoLine('[ControllerDPRainForest::addasinsqueuecron] Recieved delay marker, doing nothing!', 'e');
+						continue;
+					}
 
 					if (!empty($asinsToCategories[$asin])){
 						$category_id = $asinsToCategories[$asin];
@@ -1003,7 +1007,6 @@ class ControllerDPRainForest extends Controller {
 						}
 
 						$asinsToOffers[] = $asin;
-
 					} else {
 						echoLine('[ControllerDPRainForest::addasinsqueuecron] ASIN Product can not be added, some error happened!', 'e');
 						$this->rainforestAmazon->productsRetriever->model_product_edit->setProductIDInQueue($asin, -1);							
@@ -1040,7 +1043,6 @@ class ControllerDPRainForest extends Controller {
 	Основной крон, добавляющий товары согласно выбранной логики
 	*/
 	public function addnewproductscron(){	
-
 		if (!$this->config->get('config_rainforest_enable_new_parser')){
 			echoLine('[ControllerDPRainForest::addnewproductscron] CRON IS DISABLED IN ADMIN', 'e');
 			return;
@@ -2068,5 +2070,69 @@ class ControllerDPRainForest extends Controller {
 				}
 			}	
 		}		
+	}
+
+	public function fillzipcodes(){
+		$this->rainforestAmazon->zipcodesManager->fillZipCodes();
+	}
+
+	/*
+	Мониторинг зипкодов на количество ошибок, и замена в случае чего
+	*/
+	public function checkzipcodes($exit = false){
+		if (!$this->config->get('config_rainforest_enable_checkzipcodes_parser')){
+			echoLine('[ControllerDPRainForest::checkzipcodes] CRON IS DISABLED IN ADMIN', 'e');
+			return;
+		}
+
+		$this->rainforestAmazon->zipcodesManager->checkDB();
+		
+		$this->load->model('setting/setting');
+
+		$zipcodes = $this->rainforestAmazon->zipcodesManager->checkZipCodes();
+
+		if ($zipcodes && !empty($zipcodes['zipcodes']) & !empty($zipcodes['zipcodes'][$this->config->get('config_rainforest_api_domain_1')])){			
+			foreach ($zipcodes['zipcodes'][$this->config->get('config_rainforest_api_domain_1')] as $i => $zipcode){
+				$config_key = 'config_rainforest_api_zipcode_' . ($i + 1);
+				echoLine('[ControllerDPRainForest::checkzipcodes] Working with config key ' . $config_key);
+
+				if ($zipcode['status'] == 'available'){
+					echoLine('[ControllerDPRainForest::checkzipcodes] Zipcode ' . $zipcode['zipcode'] . ' is available, editing setting', 's');
+					$this->model_setting_setting->editSettingValue('config', $config_key, $zipcode['zipcode']);
+					$this->rainforestAmazon->zipcodesManager->updateZipCodeDateAdded($zipcode['zipcode']);
+				} else {
+					echoLine('[ControllerDPRainForest::checkzipcodes] Zipcode ' . $zipcode['zipcode'] . ' is not active, but ' . $zipcode['status'] . ', emptying setting', 'w');
+					$this->model_setting_setting->editSettingValue('config', $config_key, '');
+
+					//cheking date of zipcode adding
+					$zipcode_info = $this->rainforestAmazon->zipcodesManager->getZipCodeInfo($zipcode['zipcode']);
+					if (!empty($zipcode_info['added'])){
+						$days_diff = days_diff(date('Y-m-d', strtotime($zipcode_info['added'])));
+
+						if ($days_diff > \hobotix\Amazon\ZipcodesManager::longPreparingThreshold){
+							echoLine('[ControllerDPRainForest::checkzipcodes] Zipcode ' . $zipcode['zipcode'] . ' is in bad status for ' . $days_diff . ', changing it!', 'w');
+							/* TO IMPLEMENT, NEED SOME REAL FOR TESTING */
+						}
+					}
+				}
+			}
+		} else {
+			echoLine('[ControllerDPRainForest::checkzipcodes] Bad answer got, exiting!', 'e');
+			throw new \Exception('No zipcodes got from Rainforest API');
+		}
+
+		$badZipcodes = $this->rainforestAmazon->zipcodesManager->getBadZipCodes();
+		foreach ($badZipcodes as $badZipCode){
+			echoLine('[ControllerDPRainForest::checkzipcodes] Found bad zipcode, removing it ' . $badZipCode, 'e');
+			$this->rainforestAmazon->zipcodesManager->zipCodeRequest($badZipCode, 'delete');
+			$this->rainforestAmazon->zipcodesManager->updateZipCodeDateDropped($badZipCode);
+
+			$newZipCode = $this->rainforestAmazon->zipcodesManager->getRandomZipCodeFromDatabase();
+			$this->rainforestAmazon->zipcodesManager->zipCodeRequest($newZipCode, 'add');
+		}
+
+		if ($badZipcodes && !$exit){
+			$this->checkzipcodes(true);
+		}
 	}
 }

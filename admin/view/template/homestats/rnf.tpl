@@ -6,7 +6,7 @@
 
 <div class="dashboard-heading"><i class="fa fa-amazon"></i> Rainforest API</div>
 <div class="dashboard-content" style="min-height: 360px;">
-	<div style="margin-bottom: 10px;">
+	<div style="width:39%; float:left;">
 		<?php if ($success) { ?>
 			<span style="color:#00ad07; font-size:18px; font-weight: 700;"><i class="fa fa-info-circle"></i> Rainforest API говорит что всё ок
 				<br />
@@ -70,8 +70,9 @@
 	</div>
 
 	<?php if (!empty($answer) && is_array($answer)) { ?>
-		<div style="width:30%; float:left;  margin-right:5px;">
-			<table class="list big1">
+		<div style="width:30%; float:right;  margin-right:5px;">
+			<table class="list big">
+				<thead>
 				<tr>
 					<td style="color:#66c7a3">
 						<b>Тариф</b>
@@ -80,6 +81,7 @@
 						<b><?php echo $answer['account_info']['plan']; ?></b>
 					</td>
 				</tr>
+			</thead>
 				<tr>
 					<td style="color:#3276c2">
 						Лимит
@@ -155,7 +157,7 @@
 			</table>
 		</div>
 
-		<div style="width:30%; float:right;">
+		<div style="width:30%; float:left;">
 			<table class="list small">
 				<thead>
 					<tr>
@@ -180,8 +182,8 @@
 			</table>
 		</div>
 
-
-		<div style="width:30%; float:right; margin-right:5px;">
+		<div class="clr"></div>
+		<div style="width:100%;">
 			<table class="list big1">
 				<thead>
 					<tr>
@@ -192,14 +194,29 @@
 							<b>ZipCode</b>
 						</td>
 						<td class="center">
-							<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+							<b>Zone</b>
+						</td>
+						<td class="center">
+							Enabled
 						</td>
 						<td class="center">
 							<b>Status</b>
 						</td>
+						<td class="center">
+							<b>Used since</b>
+						</td>
+						<td class="center">
+							<b>Last Request</b>
+						</td>
+						<td class="center">
+							<b>Requests</b>
+						</td>
+						<td class="center">
+							<b>Errors</b>
+						</td>
 					</tr>
 				</thead>
-				<?php foreach ($zipcodes['zipcodes'] as $domain => $list) { ?>
+				<?php foreach ($zipcodes as $domain => $list) { ?>
 					<? if ($list) { ?>	
 						<? foreach ($list as $zipcode) { ?>				
 							<tr>
@@ -208,6 +225,9 @@
 								</td>
 								<td class="center">
 									<?php echo $zipcode['zipcode']; ?>
+								</td>
+								<td class="center" style="font-size:10px">
+									<i class="fa fa-map-marker"></i> <b><?php echo $zipcode['info']['zipcode_area']; ?></b> (<?php echo $zipcode['info']['zipcode_area2']; ?>)
 								</td>
 								<td class="center">
 									<?php if (in_array($zipcode['zipcode'], $active_zipcodes)) { ?>
@@ -218,6 +238,27 @@
 								</td>
 								<td class="center" style="color: <?php if ($zipcode['status'] == 'available') { ?>#00AD07<? } else { ?>#CF4A61<?php } ?>">
 									<?php echo $zipcode['status']; ?>
+								</td>
+								<td class="center" style="font-size:10px">
+									<?php if (!empty($zipcode['info']['added'])) { ?>
+										<?php echo date('Y-m-d', strtotime($zipcode['info']['added'])); ?><br />
+									<?php } else { ?>
+										<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+									<?php } ?>
+								</td>
+								<td class="center" style="font-size:10px">
+									<?php if (!empty($zipcode['info']['last_used'])) { ?>
+										<?php echo date('Y-m-d', strtotime($zipcode['info']['last_used'])); ?><br />
+										<?php echo date('H:i:s', strtotime($zipcode['info']['last_used'])); ?><br />
+									<?php } else { ?>
+										<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+									<?php } ?>
+								</td>
+								<td class="center" style="color:#4ea24e">
+									<?php echo $zipcode['info']['request_count']; ?>
+								</td>
+								<td class="center" style="color:#cf4a61">
+									<?php echo $zipcode['info']['error_count']; ?>
 								</td>
 							</tr>
 						<?php } ?>
