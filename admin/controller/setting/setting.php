@@ -4202,36 +4202,14 @@ class ControllerSettingSetting extends Controller
             $this->data['config_rainforest_amazon_filters_1'] = $this->config->get('config_rainforest_amazon_filters_1');
         }
         
-        if (isset($this->request->post['config_rainforest_api_zipcode_1'])) {
-            $this->data['config_rainforest_api_zipcode_1'] = $this->request->post['config_rainforest_api_zipcode_1'];
-        } else {
-            $this->data['config_rainforest_api_zipcode_1'] = $this->config->get('config_rainforest_api_zipcode_1');
+        for ($i=1; $i <= \hobotix\RainforestAmazon::zipcodeCount; $i++){
+            if (isset($this->request->post['config_rainforest_api_zipcode_' . $i])) {
+                $this->data['config_rainforest_api_zipcode_' . $i] = $this->request->post['config_rainforest_api_zipcode_' . $i];
+            } else {
+                $this->data['config_rainforest_api_zipcode_' . $i] = $this->config->get('config_rainforest_api_zipcode_' . $i);
+            }        
         }
-
-        if (isset($this->request->post['config_rainforest_api_zipcode_2'])) {
-            $this->data['config_rainforest_api_zipcode_2'] = $this->request->post['config_rainforest_api_zipcode_2'];
-        } else {
-            $this->data['config_rainforest_api_zipcode_2'] = $this->config->get('config_rainforest_api_zipcode_2');
-        }
-
-        if (isset($this->request->post['config_rainforest_api_zipcode_3'])) {
-            $this->data['config_rainforest_api_zipcode_3'] = $this->request->post['config_rainforest_api_zipcode_3'];
-        } else {
-            $this->data['config_rainforest_api_zipcode_3'] = $this->config->get('config_rainforest_api_zipcode_3');
-        }
-
-        if (isset($this->request->post['config_rainforest_api_zipcode_4'])) {
-            $this->data['config_rainforest_api_zipcode_4'] = $this->request->post['config_rainforest_api_zipcode_4'];
-        } else {
-            $this->data['config_rainforest_api_zipcode_4'] = $this->config->get('config_rainforest_api_zipcode_4');
-        }
-
-        if (isset($this->request->post['config_rainforest_api_zipcode_5'])) {
-            $this->data['config_rainforest_api_zipcode_5'] = $this->request->post['config_rainforest_api_zipcode_5'];
-        } else {
-            $this->data['config_rainforest_api_zipcode_5'] = $this->config->get('config_rainforest_api_zipcode_5');
-        }
-
+        
         if (isset($this->request->post['config_helpcrunch_enable'])) {
             $this->data['config_helpcrunch_enable'] = $this->request->post['config_helpcrunch_enable'];
         } else {

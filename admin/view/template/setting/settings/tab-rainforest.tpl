@@ -432,7 +432,7 @@
 					<script>
 						function getZipRNFcodes(){
 							var zipCodeFields = [];
-							for (var i = 1; i <= 5; i++) {
+							for (var i = 1; i <= <?php echo \hobotix\RainforestAmazon::zipcodeCount; ?>; i++) {
 								var field = $('input[name=config_rainforest_api_zipcode_' + i + ']');
 								zipCodeFields.push(field);
 							}
@@ -464,38 +464,19 @@
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Домен rfAPI - 1</span></p>
 					<select name="config_rainforest_api_domain_1">
 						<?php foreach ($amazon_domains as $amazon_domain) { ?>
-							<option value="<?php echo $amazon_domain?>" <?php if ($config_rainforest_api_domain_1 == $amazon_domain) { ?>selected="selected"<?php }?>><?php echo $amazon_domain?></option>
-
+							<option value="<?php echo $amazon_domain; ?>" <?php if ($config_rainforest_api_domain_1 == $amazon_domain) { ?>selected="selected"<?php }?>><?php echo $amazon_domain?></option>
 						<?php } ?>
 					</select>
 				</div>
 			</td>									
 			
-			<td style="width:20%">				
+			<td style="width:20%">
+				<?php for ($i=1; $i <= \hobotix\RainforestAmazon::zipcodeCount; $i++) { ?>
 				<div>
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ZipCode rfAPI - 1</span></p>
-					<input type="text" name="config_rainforest_api_zipcode_1" value="<?php echo $config_rainforest_api_zipcode_1; ?>" size="50" style="width:100px;" />
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ZipCode rfAPI - <?php echo $i; ?></span></p>
+					<input type="text" name="config_rainforest_api_zipcode_<?php echo $i; ?>" value="<?php echo ${'config_rainforest_api_zipcode_' . $i}; ?>" size="50" style="width:100px;" />
 				</div>
-
-				<div>
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ZipCode rfAPI - 2</span></p>
-					<input type="text" name="config_rainforest_api_zipcode_2" value="<?php echo $config_rainforest_api_zipcode_2; ?>" size="50" style="width:100px;" />
-				</div>
-
-				<div>
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ZipCode rfAPI - 3</span></p>
-					<input type="text" name="config_rainforest_api_zipcode_3" value="<?php echo $config_rainforest_api_zipcode_3; ?>" size="50" style="width:100px;" />
-				</div>
-
-				<div>
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ZipCode rfAPI - 4</span></p>
-					<input type="text" name="config_rainforest_api_zipcode_4" value="<?php echo $config_rainforest_api_zipcode_4; ?>" size="50" style="width:100px;" />
-				</div>
-
-				<div>
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ZipCode rfAPI - 5</span></p>
-					<input type="text" name="config_rainforest_api_zipcode_5" value="<?php echo $config_rainforest_api_zipcode_5; ?>" size="50" style="width:100px;" />
-				</div>
+				<?php } ?>				
 			</td>
 			
 			<td style="width:20%">

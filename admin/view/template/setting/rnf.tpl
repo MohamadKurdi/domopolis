@@ -460,6 +460,33 @@
 
 							<tr>
 								<td style="white-space: nowrap;color:#7F00FF;">
+									<i class="fa fa-refresh"></i> <b>Монитор качества ZipCode</b>
+								</td>
+								<td style="width:220px;" class="center">
+									<input id="config_rainforest_enable_checkzipcodes_parser" type="checkbox" class="checkbox" name="config_rainforest_enable_checkzipcodes_parser" <? if ($config_rainforest_enable_checkzipcodes_parser){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_checkzipcodes_parser"></label>
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Автоматически проверяет зипкоды, используемые апи, и заменяет в случае накопления большого количества ошибок
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td class="right">
+									<i class="fa fa-cogs"></i> Количество плохих запросов
+								</td>
+								<td>
+									<input type="number" name="config_rainforest_checkzipcodes_bad_request_limit" value="<?php echo $config_rainforest_checkzipcodes_bad_request_limit; ?>" size="50" style="width:50px;" />
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> При достижении лимита зипкод будет заменен на другой из базы
+									</span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="white-space: nowrap;color:#7F00FF;">
 									<i class="fa fa-refresh"></i> <b>Валидатор EAN/GTIN</b>
 								</td>
 								<td style="width:40px;" class="center">
@@ -590,7 +617,7 @@
 							</td>
 							<td>
 								<span class="help">
-									<i class="fa fa-info-circle"></i> Подробные логи для запросов товаров (SimpleProductParser, simple multiCURL)
+									<i class="fa fa-info-circle"></i> Подробные логи для запросов товаров (SimpleProductParser, RainforestRetriever multiCURL)
 								</span>
 							</td>
 						</tr>
@@ -630,7 +657,7 @@
 							</td>
 							<td>
 								<span class="help">
-									<i class="fa fa-info-circle"></i> Таймаут запросов к Rainforest API, сек (SimpleProductParser, simple multiCURL)
+									<i class="fa fa-info-circle"></i> Таймаут запросов к Rainforest API, сек (SimpleProductParser, RainforestRetriever, multiCURL)
 								</span>
 							</td>
 						</tr>
@@ -644,7 +671,7 @@
 							</td>
 							<td>
 								<span class="help">
-									<i class="fa fa-info-circle"></i> Таймаут запросов к Rainforest API, сек (SimpleProductParser, simple multiCURL)
+									<i class="fa fa-info-circle"></i> Таймаут запросов к Rainforest API, сек (SimpleProductParser, RainforestRetriever, multiCURL)
 								</span>
 							</td>
 						</tr>
@@ -658,7 +685,7 @@
 							</td>
 							<td>
 								<span class="help">
-									<i class="fa fa-info-circle"></i> Таймаут запросов к Rainforest API, сек (только нативные запросы библиотеки)
+									<i class="fa fa-info-circle"></i> Таймаут запросов к Rainforest API, сек (только нативные запросы библиотеки, Guzzle adaptor)
 								</span>
 							</td>
 						</tr>
@@ -672,7 +699,7 @@
 							</td>
 							<td>
 								<span class="help">
-									<i class="fa fa-info-circle"></i> Выводить в консоль выполняемые запросы
+									<i class="fa fa-info-circle"></i> Выводить в консоль выполняемые запросы установки цен и наличия
 								</span>
 							</td>
 						</tr>
