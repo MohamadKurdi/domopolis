@@ -52,12 +52,12 @@ function formatDateInterval($mysqlDate){
 	$date 	= new DateTime($mysqlDate);
 	$now 	= new DateTime(); 
 
-	$interval = $now->diff($date);
-	$days = $interval->days;
-	$years = floor($days / 365);
-	$days -= $years * 365;
-	$months = floor($days / 30); 
-	$days -= $months * 30;
+	$interval 	= $now->diff($date);
+	$days 		= $interval->days;
+	$years 		= floor($days / 365);
+	$days 		-= $years * 365;
+	$months 	= floor($days / 30); 
+	$days 		-= $months * 30;
 
 	$result = '';
 	if ($years){

@@ -139,8 +139,10 @@
 			
 			$products = $this->model_checkout_order->getOrderProducts($order_id);
 			
-			if ($order){
-				
+			if ($order){			
+				$message 	= 'Что-то пришло в API, но возможно произошла ошибка добавления заказа, сообщите об этом кому-нибудь';
+				$attach 	= [];
+
 				if ($type == 'created'){
 					if ($order['yam_fake']){
 						
