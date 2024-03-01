@@ -1,0 +1,31 @@
+{
+  "name": "vzaichikov/amazonrainforest",
+  "type": "library",
+  "license": "MIT",
+  "description": "Simplified access the Amazon Rainforest API",
+  "keywords": ["amazon", "rainforest api", "amazon api"],
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "Christian Morgan, Caponica (Author)",
+      "homepage": "https://github.com/caponica"
+    },
+    {
+      "name": "Victor Zaichikov (Updates for own needs)",
+      "homepage": "https://github.com/vzaichikov"
+    }
+  ],
+
+  "require": {
+    "php": ">=8.1",
+    "psr/log": "^1.0 || ^2.0 || ^3.0",
+    "ext-json": "*",
+    "guzzlehttp/guzzle" : "^6.2 || ^7.4"
+  },
+
+  "autoload": {
+    "psr-0": {
+      "CaponicaAmazonRainforest\\": "src/"
+    }
+  }
+}

@@ -69,7 +69,6 @@
         "longman/telegram-bot": "^0.82.0",
         "kwn/number-to-words": "^2.6",
         "vzaichikov/epochta": "dev-master",
-        "vzaichikov/amazonrainforest": "dev-main",
         "php-http/guzzle7-adapter": "^1.0",
         "antistress-store/cdek-sdk-v2": "^1.1",
         "guzzlehttp/uri-template": "^1.0",
@@ -107,7 +106,8 @@
             "Yandex\\Common": "system/library/legacy/yandex-market/yandex-market-php-common/src/",
             "Yandex\\Marketplace": "system/library/legacy/yandex-market/marketplace-php-partner/src/",           
             "Yandex\\OAuth": "system/library/legacy/yandex-market/yandex-market-php-oauth/src/",
-            "Yandex\\Market": "system/library/legacy/yandex-market/yandex-market-php-partner/src/"
+            "Yandex\\Market": "system/library/legacy/yandex-market/yandex-market-php-partner/src/",
+            "CaponicaAmazonRainforest\\": "system/library/legacy/amazonrainforest/src/"
         } 
     },
     "config": {
