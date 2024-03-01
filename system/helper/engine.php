@@ -42,6 +42,21 @@ function addQueryArgs(array $args, string $url){
 	}
 }
 
+function extract_get_param(string $url, string $param){
+	$url_components = parse_url($url);
+	if(!isset($url_components['query'])) {
+		return false;
+	}
+
+	parse_str($url_components['query'], $params);
+
+	if(isset($params[$param])) {
+		return $params[$param]; 
+	} else {
+		return false;
+	}
+}
+
 function reparseCartProductsByStock($products){
 	$results = array(
 		'in_stock' 		=> [],
