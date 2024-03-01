@@ -2082,18 +2082,18 @@ class ControllerApiInfo1C extends Controller
     {
     }
 
-    public function transactionSyncSet($transactionData)
+    public function transactionSyncSet($transaction_data)
     {
             $this->load->model('sale/customer');
             $this->load->model('sale/order');
 
             $fields = ['customer_id','description','amount_national','currency_code','order_id','legalperson_id','guid'];
 
-        if (empty($transactionData['customer_transaction_id']) && empty($transactionData['guid'])) {
+        if (empty($transaction_data['customer_transaction_id']) && empty($transaction_data['guid'])) {
             $result = [
                 'status'    => 'error',
                 'message'   => 'Both customer_transaction_id and guid are empty. What the fuck?',
-                'data_sent' => $transactionData
+                'data_sent' => $transaction_data
             ];
 
             $this->response->setOutput(json_encode($result));
@@ -2101,11 +2101,11 @@ class ControllerApiInfo1C extends Controller
         }
             
         foreach ($fields as $field) {
-            if (!isset($transactionData[$field])) {
+            if (!isset($transaction_data[$field])) {
                 $result = [
                     'status'    => 'error',
                     'message'   => 'Field ' . $field . ' is empty. Need all fields: ' . implode(',', $fields),
-                    'data_sent' => $transactionData
+                    'data_sent' => $transaction_data
                 ];
 
                 $this->response->setOutput(json_encode($result));
@@ -2114,22 +2114,22 @@ class ControllerApiInfo1C extends Controller
         }
 
             $transaction = false;
-        if (!empty($transactionData['customer_transaction_id'])) {
-            $transaction = $this->model_sale_customer->getTransactionByID($transactionData['customer_transaction_id']);
-        } elseif (!empty($transactionData['guid'])) {
-            $transaction = $this->model_sale_customer->getTransactionByGUID($transactionData['guid']);
+        if (!empty($transaction_data['customer_transaction_id'])) {
+            $transaction = $this->model_sale_customer->getTransactionByID($transaction_data['customer_transaction_id']);
+        } elseif (!empty($transaction_data['guid'])) {
+            $transaction = $this->model_sale_customer->getTransactionByGUID($transaction_data['guid']);
         }
 
-        if (!empty($transactionData['date_added'])) {
-            $date_added = date('Y-m-d H:i:s', strtotime($transactionData['date_added']));
+        if (!empty($transaction_data['date_added'])) {
+            $date_added = date('Y-m-d H:i:s', strtotime($transaction_data['date_added']));
         } elseif ($transaction) {
             $date_added = $transaction['date_added'];
         } else {
             $date_added = date('Y-m-d H:i:s');
         }
 
-        if (!empty($transactionData['added_from'])) {
-            $added_from = $transactionData['added_from'];
+        if (!empty($transaction_data['added_from'])) {
+            $added_from = $transaction_data['added_from'];
         } elseif ($transaction) {
             $added_from = $transaction['added_from'];
         } else {
@@ -2137,26 +2137,26 @@ class ControllerApiInfo1C extends Controller
         }
 
             $data = array(
-                'customer_id'       => $transactionData['customer_id'],
-                'description'       => $transactionData['description'],
-                'amount_national'   => $transactionData['amount_national'],
-                'currency_code'     => $transactionData['currency_code'],
-                'order_id'          => $transactionData['order_id'],
+                'customer_id'       => $transaction_data['customer_id'],
+                'description'       => $transaction_data['description'],
+                'amount_national'   => $transaction_data['amount_national'],
+                'currency_code'     => $transaction_data['currency_code'],
+                'order_id'          => $transaction_data['order_id'],
                 'date_added'        => $date_added,
                 'added_from'        => $added_from,
-                'legalperson_id'    => $transactionData['legalperson_id'],
-                'guid'              => $transactionData['guid']
+                'legalperson_id'    => $transaction_data['legalperson_id'],
+                'guid'              => $transaction_data['guid']
             );
 
-            if ($transactionData['order_id']) {
-                $order_info = $this->model_sale_order->getOrder($transactionData['order_id']);
+            if ($transaction_data['order_id']) {
+                $order_info = $this->model_sale_order->getOrder($transaction_data['order_id']);
                 if ($order_info['currency_value']) {
-                    $data['amount'] = $this->currency->reconvert((float)$transactionData['amount_national'], $order_info['currency_value']);
+                    $data['amount'] = $this->currency->reconvert((float)$transaction_data['amount_national'], $order_info['currency_value']);
                 } else {
-                    $data['amount'] = $this->currency->convert((float)$transactionData['amount_national'], $transactionData['currency_code'], 'EUR');
+                    $data['amount'] = $this->currency->convert((float)$transaction_data['amount_national'], $transaction_data['currency_code'], 'EUR');
                 }
             } else {
-                $data['amount'] = $this->currency->convert((float)$transactionData['amount_national'], $transactionData['currency_code'], 'EUR');
+                $data['amount'] = $this->currency->convert((float)$transaction_data['amount_national'], $transaction_data['currency_code'], 'EUR');
             }
             
             if ($transaction) {
@@ -2167,27 +2167,27 @@ class ControllerApiInfo1C extends Controller
                 $result = ['status' => 'success', 'message' => 'Transaction not found and added'];
             }
 
-            $result['data_sent']        = $transactionData;
+            $result['data_sent']        = $transaction_data;
             $result['transaction_data'] = $this->model_sale_customer->getTransactionByID($customer_transaction_id);
 
             $this->response->setOutput(json_encode($result));
     }
 
-    public function transactionSyncGet($transactionData)
+    public function transactionSyncGet($transaction_data)
     {
             $this->load->model('sale/customer');
             $this->load->model('sale/order');
             $transactions = [];
 
-        if (!empty($transactionData['order_id'])) {
-            $order = $this->model_sale_order->getOrder($transactionData['order_id']);
+        if (!empty($transaction_data['order_id'])) {
+            $order = $this->model_sale_order->getOrder($transaction_data['order_id']);
             if (!$order) {
                 die('order does not exist, check please');
             }
 
             $customer_transactions = $this->model_sale_customer->getTransactions($order['customer_id'], 0, 10000, $order['order_id']);
-        } elseif ($transactionData['customer_id']) {
-            $customer = $this->model_sale_customer->getCustomer($transactionData['customer_id']);
+        } elseif ($transaction_data['customer_id']) {
+            $customer = $this->model_sale_customer->getCustomer($transaction_data['customer_id']);
             if (!$customer) {
                 die('customer does not exist, check please');
             }

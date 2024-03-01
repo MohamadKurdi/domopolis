@@ -412,7 +412,7 @@
 			
 			if ($this->_templateData['isLogged'] = $this->customer->isLogged()){									
 				$points = $this->_templateData['total_points_customer_has'] = $this->customer->getRewardPoints();
-				$this->_templateData['can_not_use_reward_at_all'] = false;
+				$this->_templateData['can_not_use_reward_at_all'] 			= false;
 				
 				if ($this->config->get('config_language') == 'uk'){
 					$this->_templateData['points_pluralized'] = getUkrainianPluralWord($this->_templateData['total_points_customer_has'], $this->language->get('text_bonus_pluralized'));			

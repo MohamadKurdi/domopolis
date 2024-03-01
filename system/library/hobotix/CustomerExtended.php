@@ -1005,7 +1005,11 @@
 			
 			$query = $this->db->ncquery("SELECT SUM(points) AS total FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "'");
 			
-			return $query->row['total'];
+			if ($query->num_rows && $query->row['total']){
+				return $query->row['total'];	
+			} else {
+				return 0;
+			}
 		}
 		
 		//Получить все позитивные начисления
@@ -1038,7 +1042,11 @@
 			
 			$query = $this->db->ncquery("SELECT SUM(points) AS total FROM customer_reward WHERE customer_id = '" . (int)$this->customer_id . "'");
 			
-			return $query->row['total'];	
+			if ($query->num_rows && $query->row['total']){
+				return $query->row['total'];	
+			} else {
+				return 0;
+			}
 		}
 		
 		public function validateIfProductWasPurchased($product_id, $customer_id = false){

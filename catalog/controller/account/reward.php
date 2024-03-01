@@ -131,8 +131,8 @@
 				'order_id' 	  	=> $result['order_id'],
 				'order_href' 	=> $result['order_id']?$this->url->link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'):false,
 				'date_added'  	=> date('d.m.Y', strtotime($result['date_added'])),
-				'points_paid' 	=> $result['points_paid']?$this->currency->formatBonus($result['points_paid']):false,				
-				'date_activate'  	=> date('d.m.Y', strtotime($result['date_activate'])),
+				'points_paid' 	=> !empty($result['points_paid'])?$this->currency->formatBonus($result['points_paid']):false,				
+				'date_activate' => date('d.m.Y', strtotime($result['date_activate'])),
 				);
 			}
 						
