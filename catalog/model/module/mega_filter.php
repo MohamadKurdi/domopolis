@@ -160,7 +160,7 @@ class MegaFilterCore {
 		
 		$this->_mfilterUrl	= isset( $this->_ctrl->request->get['mfp'] ) ? $this->_ctrl->request->get['mfp'] : '';
 		
-		if( ! empty( $this->_settings['in_stock_default_selected'] ) ) {
+		if( !empty( $this->_settings['in_stock_default_selected'] ) ) {
 			if( false === mb_strpos( $this->_mfilterUrl, 'stock_status', 0, 'utf-8' ) ) {
 				$this->_mfilterUrl .= $this->_mfilterUrl ? ',' : '';
 				$this->_mfilterUrl .= 'stock_status[' . $this->inStockStatus() . ']';
@@ -177,14 +177,14 @@ class MegaFilterCore {
 	public static function _getData( & $ctrl ) {
 		$data = [];
 		
-		if( ! empty( $ctrl->request->get['category_id'] ) ) {
+		if( !empty( $ctrl->request->get['category_id'] ) ) {
 			$data['filter_category_id'] = (int) $ctrl->request->get['category_id'];
-		} else if( ! empty( $ctrl->request->get['path'] ) ) {
+		} else if( !empty( $ctrl->request->get['path'] ) ) {
 			$parts = explode( '_', (string) $ctrl->request->get['path'] );
 			$data['filter_category_id'] = (int) array_pop( $parts );
 		}
 		
-		if( ! empty( $ctrl->request->get['sub_category'] ) ) {
+		if( !empty( $ctrl->request->get['sub_category'] ) ) {
 			$data['filter_sub_category'] = $ctrl->request->get['sub_category'];
 		} else if( ! in_array( self::_route( $ctrl ), array( 'common/home' ) ) ) {
 			if( self::_showProductsFromSubcategories( $ctrl ) ) {
@@ -192,56 +192,56 @@ class MegaFilterCore {
 			}
 		}
 		
-		if( ! empty( $ctrl->request->get['filter'] ) ) {
+		if( !empty( $ctrl->request->get['filter'] ) ) {
 			$data['filter_filter'] = $ctrl->request->get['filter'];
 		}
 		
-		if( ! empty( $ctrl->request->get['filter_ocfilter'] ) ) {
+		if( !empty( $ctrl->request->get['filter_ocfilter'] ) ) {
 			$data['filter_ocfilter'] = $ctrl->request->get['filter_ocfilter'];
 		}
 		
-		if( ! empty( $ctrl->request->get['description'] ) ) {
+		if( !empty( $ctrl->request->get['description'] ) ) {
 			$data['filter_description'] = $ctrl->request->get['description'];
 		}
 
-		if( ! empty( $ctrl->request->get['intersection_id'] ) ) {
+		if( !empty( $ctrl->request->get['intersection_id'] ) ) {
 			$data['filter_category_id_intersect'] = $ctrl->request->get['intersection_id'];
 			$data['filter_sub_category_intersect'] = true;
 		}
 
-		if( ! empty( $ctrl->request->get['filter_current_in_stock'] ) ) {
+		if( !empty( $ctrl->request->get['filter_current_in_stock'] ) ) {
 			$data['filter_current_in_stock'] = $ctrl->request->get['filter_current_in_stock'];
 		}
 
-		if( ! empty( $ctrl->request->get['filterinstock'] ) ) {
+		if( !empty( $ctrl->request->get['filterinstock'] ) ) {
 			$data['filterinstock'] = $ctrl->request->get['filterinstock'];
 		}
 
-		if( ! empty( $ctrl->request->get['filter_in_stock'] ) ) {
+		if( !empty( $ctrl->request->get['filter_in_stock'] ) ) {
 			$data['filter_in_stock'] = $ctrl->request->get['filter_in_stock'];
 		}
 
-		if( ! empty( $ctrl->request->get['filter_not_bad'] ) ) {
+		if( !empty( $ctrl->request->get['filter_not_bad'] ) ) {
 			$data['filter_not_bad'] = $ctrl->request->get['filter_not_bad'];
 		}
 
-		if( ! empty( $ctrl->request->get['new'] ) ) {
+		if( !empty( $ctrl->request->get['new'] ) ) {
 			$data['new'] = $ctrl->request->get['new'];
 		}
 		
-		if( ! empty( $ctrl->request->get['filter_tag'] ) ) {
+		if( !empty( $ctrl->request->get['filter_tag'] ) ) {
 			$data['filter_tag'] = $ctrl->request->get['filter_tag'];
-		} else if( ! empty( $ctrl->request->get['tag'] ) ) {
+		} else if( !empty( $ctrl->request->get['tag'] ) ) {
 			$data['filter_tag'] = $ctrl->request->get['tag'];
-		} else if( ! empty( $ctrl->request->get['search'] ) ) {
+		} else if( !empty( $ctrl->request->get['search'] ) ) {
 			$data['filter_tag'] = $ctrl->request->get['search'];
 		}
 		
-		if( ! empty( $ctrl->request->get['manufacturer_id'] ) ) {
+		if( !empty( $ctrl->request->get['manufacturer_id'] ) ) {
 			$data['filter_manufacturer_id'] = (int) $ctrl->request->get['manufacturer_id'];
 		}
 
-		if( ! empty( $ctrl->request->get['actions_id'] ) ) {
+		if( !empty( $ctrl->request->get['actions_id'] ) ) {
 			$ctrl->load->model('catalog/actions');
 			$action_info = $ctrl->model_catalog_actions->getActions($ctrl->request->get['actions_id']);
 
@@ -252,7 +252,7 @@ class MegaFilterCore {
 			}
 		}
 		
-		if( ! empty( $ctrl->request->get['search'] ) ) {
+		if( !empty( $ctrl->request->get['search'] ) ) {
 			$data['filter_name'] = (string) $ctrl->request->get['search'];
 		}
 		
@@ -266,7 +266,7 @@ class MegaFilterCore {
 			return false;
 		}
 		
-		if( ! empty( $settings['level_products_from_subcategories'] ) ) {
+		if( !empty( $settings['level_products_from_subcategories'] ) ) {
 			$level = (int) $settings['level_products_from_subcategories'];
 			$path = explode( '_', empty( $ctrl->request->get['path'] ) ? '' : $ctrl->request->get['path'] );
 			
@@ -310,7 +310,7 @@ class MegaFilterCore {
 		if( $this->_mfilterUrl ) {
 			preg_match_all( '/([a-z0-9\-_]+)\[([^]]*)\]/', $this->_mfilterUrl, $matches );
 			
-			if( ! empty( $matches[0] ) ) {
+			if( !empty( $matches[0] ) ) {
 				foreach( $matches[0] as $k => $match ) {
 					if( empty( $matches[1][$k] ) )						
 						continue;
@@ -318,7 +318,7 @@ class MegaFilterCore {
 					$key	= $matches[1][$k];
 					
 					if( empty( $matches[2][$k] ) ) {
-						if( $key == 'stock_status' && ! empty( $this->_settings['in_stock_default_selected'] ) ) {
+						if( $key == 'stock_status' && !empty( $this->_settings['in_stock_default_selected'] ) ) {
 							$this->_parseParams[$key] = [];
 						}
 						
@@ -472,11 +472,11 @@ class MegaFilterCore {
 	private function _baseColumns() {
 		$columns = func_get_args();
 		
-		if( ! empty( $this->_conditions['out']['mf_price'] ) ) {
+		if( !empty( $this->_conditions['out']['mf_price'] ) ) {
 			$columns['mf_price'] = $this->_mfPriceCol();
 		}
 		
-		if( ! empty( $this->_conditions['out']['mf_rating'] ) ) {
+		if( !empty( $this->_conditions['out']['mf_rating'] ) ) {
 			$columns['mf_rating'] = $this->_ratingCol();
 		}
 		
@@ -535,7 +535,7 @@ class MegaFilterCore {
 		$limitReg	= '/LIMIT\s+[0-9]+(\s*,\s*[0-9]+)?$/i';
 		
 		if( preg_match( $limitReg, $sql, $matches ) ) {
-			if( ! empty( $matches[0] ) ) {
+			if( !empty( $matches[0] ) ) {
 				$limit 	= $matches[0];
 				$sql	= preg_replace( $limitReg, '', $sql );
 			}
@@ -595,7 +595,7 @@ class MegaFilterCore {
 			}			
 		}
 		
-		if( ! empty( $this->_data['filter_category_id'] ) && strpos( $sql, 'category_path' ) === false && strpos( $sql, 'product_to_category' ) === false ) {
+		if( !empty( $this->_data['filter_category_id'] ) && strpos( $sql, 'category_path' ) === false && strpos( $sql, 'product_to_category' ) === false ) {
 			$skip = [];
 			
 			if( strpos( $sql, 'product_to_store' ) !== false ) {
@@ -676,12 +676,12 @@ class MegaFilterCore {
 			$sql		= [];
 			$quantity	= '';			
 		
-			if( ! empty( $this->_settings['in_stock_default_selected'] ) || ( ! empty( $this->_parseParams['stock_status'] ) && in_array( $this->inStockStatus(), $this->_parseParams['stock_status'] ) ) ) {
+			if( !empty( $this->_settings['in_stock_default_selected'] ) || ( !empty( $this->_parseParams['stock_status'] ) && in_array( $this->inStockStatus(), $this->_parseParams['stock_status'] ) ) ) {
 				$quantity .= ' AND `quantity` > 0';
 			}
 			
 			foreach( $options as $opt ) {
-				if( ! empty( $this->_settings['type_of_condition'] ) && $this->_settings['type_of_condition'] == 'and' ) {
+				if( !empty( $this->_settings['type_of_condition'] ) && $this->_settings['type_of_condition'] == 'and' ) {
 					$opt	= implode( ',', $opt );
 					$opt	= explode( ',', $opt );
 					
@@ -764,7 +764,7 @@ class MegaFilterCore {
 			$sql		= [];
 			
 			foreach( $filters as $opt ) {
-				if( ! empty( $this->_settings['type_of_condition'] ) && $this->_settings['type_of_condition'] == 'and' ) {
+				if( !empty( $this->_settings['type_of_condition'] ) && $this->_settings['type_of_condition'] == 'and' ) {
 					$opt	= implode( ',', $opt );
 					$opt	= explode( ',', $opt );
 					
@@ -807,7 +807,7 @@ class MegaFilterCore {
 		
 		foreach( $attribs as $attr ) {
 			foreach( $attr as $att ) {
-				if( ! empty( $this->_settings['attribute_separator'] ) && $this->_settings['attribute_separator'] == ',' ) {
+				if( !empty( $this->_settings['attribute_separator'] ) && $this->_settings['attribute_separator'] == ',' ) {
 					$tmp[] = sprintf( "FIND_IN_SET( REPLACE(REPLACE(REPLACE(%s, ' ', ''), '\r', ''), '\n', ''), REPLACE(REPLACE(REPLACE(`%s`, ' ', ''), '\r', ''), '\n', '') )", $att, $field );
 				} else if( ! is_array( $att ) ) {
 					$tmp[] = sprintf( "REPLACE(REPLACE(REPLACE(`%s`, ' ', ''), '\r', ''), '\n', '') LIKE REPLACE(REPLACE(REPLACE(%s, ' ', ''), '\r', ''), '\n', '')", $field, $att );
@@ -862,7 +862,7 @@ class MegaFilterCore {
 						`language_id` = " . (int) $this->_ctrl->config->get( 'config_language_id' ) . " AND
 						`attribute_id` = " . (int) $attrib_id . " 
 				)", implode( 
-						! empty( $this->_settings['type_of_condition'] ) && $this->_settings['type_of_condition'] == 'and' ? ' AND ' : ' OR ', 
+						!empty( $this->_settings['type_of_condition'] ) && $this->_settings['type_of_condition'] == 'and' ? ' AND ' : ' OR ', 
 						$this->_convertAttribs( $attr ) 
 					) 
 				);
@@ -930,12 +930,12 @@ class MegaFilterCore {
 		$country_id	= $p_country_id = $s_country_id = (int) $this->_ctrl->config->get('config_country_id');
 		$zone_id = $p_zone_id = $s_zone_id = (int) $this->_ctrl->config->get('config_zone_id');
 		
-		if( ! empty( $this->_ctrl->session->data['payment_country_id'] ) && ! empty( $this->_ctrl->session->data['payment_zone_id'] ) ) {
+		if( !empty( $this->_ctrl->session->data['payment_country_id'] ) && !empty( $this->_ctrl->session->data['payment_zone_id'] ) ) {
 			$p_country_id = (int) $this->_ctrl->session->data['payment_country_id'];
 			$p_zone_id = (int) $this->_ctrl->session->data['payment_zone_id'];
 		}
 		
-		if( ! empty( $this->_ctrl->session->data['shipping_country_id'] ) && ! empty( $this->_ctrl->session->data['shipping_zone_id'] ) ) {
+		if( !empty( $this->_ctrl->session->data['shipping_country_id'] ) && !empty( $this->_ctrl->session->data['shipping_zone_id'] ) ) {
 			$s_country_id = (int) $this->_ctrl->session->data['shipping_country_id'];
 			$s_zone_id = (int) $this->_ctrl->session->data['shipping_zone_id'];
 		}
@@ -1037,7 +1037,7 @@ class MegaFilterCore {
 			array_unshift($conditions, "((p.added_from_amazon = 0) OR (p.added_from_amazon = 1 AND p.filled_from_amazon = 1))");			
 		}
 		
-		if( ! empty( $this->_data['filter_category_id'] ) ) {
+		if( !empty( $this->_data['filter_category_id'] ) ) {
 			$__current_category = $this->_ctrl->db->query("SELECT deletenotinstock FROM category WHERE category_id = '" . $this->_data['filter_category_id'] . "'");
 			
 			if (!empty($__current_category->row['deletenotinstock'])) {
@@ -1045,12 +1045,12 @@ class MegaFilterCore {
 			}		
 		}
 
-		if( ! empty( $this->_data['filter_actions_id'] ) ) {
+		if( !empty( $this->_data['filter_actions_id'] ) ) {
 			$conditions[] = "p.product_id IN (SELECT product_id FROM actions_to_product a2p WHERE actions_id = '" . (int)$this->_data['filter_actions_id'] . "')";			
 		}
 
-		if( ! empty( $this->_data['filter_product_additional_offer'] ) ) {
-			$conditions[] = "p.product_id IN (SELECT product_id FROM product_additional_offer pao WHERE ao_group LIKE '" . $this->db->escape($this->_data['filter_product_additional_offer']) . "')";			
+		if( !empty( $this->_data['filter_product_additional_offer'] ) ) {
+			$conditions[] = "p.product_id IN (SELECT product_id FROM product_additional_offer pao WHERE ao_group LIKE '" . $this->_ctrl->db->escape($this->_data['filter_product_additional_offer']) . "')";			
 		}
 
 		if (!empty($this->_data['filter_category_id']) && $this->_ctrl->config->get('config_special_category_id') && (int)$this->_data['filter_category_id'] == (int)$this->_ctrl->config->get('config_special_category_id')) {
@@ -1092,28 +1092,28 @@ class MegaFilterCore {
 			$conditions[] = "p.new = 1 AND (DATE(p.new_date_to) > '". date('Y-m-d') . "' OR DATE(p.date_added) > '" . date('Y-m-d', strtotime('-45 day')) . "')";
 		}
 		
-		if( ! empty( $this->_data['filter_manufacturer_id'] ) ) {
+		if( !empty( $this->_data['filter_manufacturer_id'] ) ) {
 			$conditions[] = '`p`.`manufacturer_id` = ' . (int) $this->_data['filter_manufacturer_id'];
 		}
 	
-		if( ! empty( $this->_data['filter_category_id'] ) ) {
-			if( ! empty( $this->_data['filter_sub_category'] ) || $this->_categories ) {
+		if( !empty( $this->_data['filter_category_id'] ) ) {
+			if( !empty( $this->_data['filter_sub_category'] ) || $this->_categories ) {
 				$conditions['cat_id'] = "`cp`.`path_id` = '" . (int) $this->_data['filter_category_id'] . "'";
 			} else {
 				$conditions['cat_id'] = "`p2c`.`category_id` = '" . (int) $this->_data['filter_category_id'] . "'";
 			}
 			
-			if( self::hasFilters() && ! empty( $this->_data['filter_filter'] ) && ! empty( $this->_data['filter_category_id'] ) ) {
+			if( self::hasFilters() && !empty( $this->_data['filter_filter'] ) && !empty( $this->_data['filter_category_id'] ) ) {
 				$filters = explode( ',', $this->_data['filter_filter'] );
 				
 				$conditions[] = '`pf`.`filter_id` IN(' . implode( ',', $this->_parseArrayToInt( $filters ) ) . ')';
 			}
 		}
 		
-		if( ! empty( $this->_data['filter_name'] ) || ! empty( $this->_data['filter_tag'] ) ) {
+		if( !empty( $this->_data['filter_name'] ) || !empty( $this->_data['filter_tag'] ) ) {
 			$sql = [];
 			
-			if( ! empty( $this->_data['filter_name'] ) ) {
+			if( !empty( $this->_data['filter_name'] ) ) {
 				$implode	= [];
 				$words		= explode( ' ', trim( preg_replace( '/\s\s+/', ' ', $this->_data['filter_name'] ) ) );
 				
@@ -1125,16 +1125,16 @@ class MegaFilterCore {
 					$sql[] = '(' . implode( ' AND ', $implode ) . ')';
 				}
 				
-				if( ! empty( $this->_data['filter_description'] ) ) {
+				if( !empty( $this->_data['filter_description'] ) ) {
 					$sql[] = "`pd`.`description` LIKE '%" . $this->_ctrl->db->escape( $this->_data['filter_name'] ) . "%'";
 				}
 			}
 			
-			if( ! empty( $this->_data['filter_tag'] ) ) {
+			if( !empty( $this->_data['filter_tag'] ) ) {
 				$sql[] = "`pd`.`tag` LIKE '%" . $this->_ctrl->db->escape( $this->_data['filter_tag'] ) . "%'";
 			}
 			
-			if( ! empty( $this->_data['filter_name'] ) ) {
+			if( !empty( $this->_data['filter_name'] ) ) {
 				$tmp = array( '`p`.`model`', '`p`.`sku`', '`p`.`upc`', '`p`.`ean`', '`p`.`jan`', '`p`.`isbn`', '`p`.`mpn`' );
 				
 				foreach( $tmp as $tm ) {
@@ -1166,7 +1166,7 @@ class MegaFilterCore {
 			";
 		}
 		
-		if( ( ! empty( $this->_data['filter_name'] ) || ! empty( $this->_data['filter_tag'] ) ) && ! in_array( 'pd', $skip ) ) {
+		if( ( !empty( $this->_data['filter_name'] ) || !empty( $this->_data['filter_tag'] ) ) && ! in_array( 'pd', $skip ) ) {
 			$sql .= "
 				INNER JOIN
 					`product_description` AS `pd`
@@ -1175,16 +1175,16 @@ class MegaFilterCore {
 			";
 		}
 		
-		if( ! empty( $this->_data['filter_category_id'] ) || $this->_categories ) {
+		if( !empty( $this->_data['filter_category_id'] ) || $this->_categories ) {
 			if( ! in_array( 'p2c', $skip ) ) {
 				$sql .= $this->_joinProductToCategory( 'p2c' );
 			}
 			
-			if( ( ! empty( $this->_data['filter_sub_category'] ) || $this->_categories ) && ! in_array( 'cp', $skip ) ) {
+			if( ( !empty( $this->_data['filter_sub_category'] ) || $this->_categories ) && ! in_array( 'cp', $skip ) ) {
 				$sql .= $this->_joinCategoryPath( 'cp', 'p2c' );
 			}
 		
-			if( ! empty( $this->_data['filter_filter'] ) && ! in_array( 'pf', $skip ) ) {
+			if( !empty( $this->_data['filter_filter'] ) && ! in_array( 'pf', $skip ) ) {
 				$sql .= "
 					INNER JOIN
 						`product_filter` AS `pf`
@@ -1684,7 +1684,7 @@ class MegaFilterCore {
 		$query = $this->_ctrl->db->query( $sql );
 		
 		foreach( $query->rows as $row ) {
-			if( ! empty( $this->_settings['attribute_separator'] ) ) {
+			if( !empty( $this->_settings['attribute_separator'] ) ) {
 				$texts = array_map( 'trim', explode( $this->_settings['attribute_separator'], $row['text'] ) );
 				
 				foreach( $texts as $txt ) {
@@ -1800,7 +1800,7 @@ class MegaFilterCore {
 			$conditions[] = '`special` IS NOT NULL';
 		}
 		
-		if( ! empty( $this->_settings['in_stock_default_selected'] ) || ( ! empty( $this->_parseParams['stock_status'] ) && in_array( $this->inStockStatus(), $this->_parseParams['stock_status'] ) ) ) {
+		if( !empty( $this->_settings['in_stock_default_selected'] ) || ( !empty( $this->_parseParams['stock_status'] ) && in_array( $this->inStockStatus(), $this->_parseParams['stock_status'] ) ) ) {
 			$conditionsIn[] = '`pov`.`quantity` > 0';
 		}
 
@@ -2201,7 +2201,7 @@ class ModelModuleMegaFilter extends Model {
 			$conditions[] = '(' . $core->_specialCol( '' ) . ') IS NOT NULL';
 		}
 		
-		if( ! empty( $data['filter_name'] ) || ! empty( $data['filter_category_id'] ) || ! empty( $data['filter_manufacturer_id'] ) || ! empty( $conditions['search'] ) ) {
+		if( !empty( $data['filter_name'] ) || !empty( $data['filter_category_id'] ) || !empty( $data['filter_manufacturer_id'] ) || !empty( $conditions['search'] ) ) {
 			$join .= ' ' . $core->_baseJoin();
 		}
 		
@@ -2277,7 +2277,7 @@ class ModelModuleMegaFilter extends Model {
 		
 		$filter_ids		= [];
 		
-		if( ! empty( $config['based_on_category'] ) ) {
+		if( !empty( $config['based_on_category'] ) ) {
 			$category_id	= isset( $this->request->get['path'] ) ? explode( '_', (string) $this->request->get['path'] ) : array();
 			$category_id	= end( $category_id );
 
@@ -2305,7 +2305,7 @@ class ModelModuleMegaFilter extends Model {
 			$conditions[] = '(' . $core->_specialCol( '' ) . ') IS NOT NULL';
 		}
 		
-		if( ! $this->stockStatusIsEnabled( $idx ) && ! empty( $core->_settings['in_stock_default_selected'] ) ) {
+		if( ! $this->stockStatusIsEnabled( $idx ) && !empty( $core->_settings['in_stock_default_selected'] ) ) {
 			$conditions[] = sprintf( '( `p`.`quantity` > 0 OR `p`.`stock_status_id` = %s )', $core->inStockStatus() );
 		}
 		
@@ -2332,7 +2332,7 @@ class ModelModuleMegaFilter extends Model {
 				);
 			}
 			
-			if( ! empty( $item['sort_order_values'] ) )
+			if( !empty( $item['sort_order_values'] ) )
 				$sort['f_'.$filter['filter_group_id']] = $item['sort_order_values'];
 			
 			$filters['f_'.$filter['filter_group_id']]['options'][$filter['filter_id']] = array(
@@ -2407,7 +2407,7 @@ class ModelModuleMegaFilter extends Model {
 			$conditions[] = '(' . $core->_specialCol( '' ) . ') IS NOT NULL';
 		}
 		
-		if( ! $this->stockStatusIsEnabled( $idx ) && ! empty( $core->_settings['in_stock_default_selected'] ) ) {
+		if( ! $this->stockStatusIsEnabled( $idx ) && !empty( $core->_settings['in_stock_default_selected'] ) ) {
 			$conditions[] = '`pov`.`quantity` > 0';
 			$conditions[] = sprintf( '( `p`.`quantity` > 0 OR `p`.`stock_status_id` = %s )', $core->inStockStatus() );
 		}
@@ -2435,7 +2435,7 @@ class ModelModuleMegaFilter extends Model {
 				);
 			}
 			
-			if( ! empty( $item['sort_order_values'] ) )
+			if( !empty( $item['sort_order_values'] ) )
 				$sort['o_'.$option['option_id']] = $item['sort_order_values'];
 			
 			$value = array(
@@ -2533,7 +2533,7 @@ class ModelModuleMegaFilter extends Model {
 			$conditions[] = '(' . $core->_specialCol( '' ) . ') IS NOT NULL';
 		}
 		
-		if( ! $this->stockStatusIsEnabled( $idx ) && ! empty( $core->_settings['in_stock_default_selected'] ) ) {
+		if( ! $this->stockStatusIsEnabled( $idx ) && !empty( $core->_settings['in_stock_default_selected'] ) ) {
 			$conditions[] = sprintf( '( `p`.`quantity` > 0 OR `p`.`stock_status_id` = %s )', $core->inStockStatus() );
 		}
 
@@ -2567,7 +2567,7 @@ class ModelModuleMegaFilter extends Model {
 				);
 			}
 			
-			if( ! empty( $settings['attribute_separator'] ) ) {
+			if( !empty( $settings['attribute_separator'] ) ) {
 				$attribute['txt'] = array_map( 'trim', explode( $settings['attribute_separator'], $attribute['txt'] ) );
 			} else {
 				$attribute['txt'] = array( $attribute['txt'] );
@@ -2597,13 +2597,13 @@ class ModelModuleMegaFilter extends Model {
 				$attributes['a_'.$attribute['attribute_id']]['options'][$k] = $value;
 			}
 			
-			if( ! empty( $item['sort_order_values'] ) )
+			if( !empty( $item['sort_order_values'] ) )
 				$sort['a_'.$attribute['attribute_id']] = $item['sort_order_values'];
 		}
 		
-		if( ! empty( $settings['attribute_separator'] ) ) {
+		if( !empty( $settings['attribute_separator'] ) ) {
 			foreach( $attributes as $attribute_id => $attribute ) {
-				if( ! empty( $attribute['options'] ) ) {
+				if( !empty( $attribute['options'] ) ) {
 					$this->_sortOptions( $attribute['options'], empty( $sort[$attribute_id] ) ? '' : $sort[$attribute_id], true, $attribute_id );
 				}
 				
@@ -2668,10 +2668,10 @@ class ModelModuleMegaFilter extends Model {
 					$root_category_id	= empty( $category['root_category_id'] ) ? NULL : $category['root_category_id'];
 					$start_id			= 0;
 					
-					if( ! empty( $category['root_category_type'] ) ) {
+					if( !empty( $category['root_category_type'] ) ) {
 						switch( $category['root_category_type'] ) {
 							case 'by_url' : {
-								if( ! empty( $this->request->get['path'] ) ) {
+								if( !empty( $this->request->get['path'] ) ) {
 									$path = explode( '_', $this->request->get['path'] );
 									$start_id = count( $path ) - 1;
 									$root_category_id = end( $path );
@@ -2687,7 +2687,7 @@ class ModelModuleMegaFilter extends Model {
 						}
 					}
 					
-					if( ! empty( $category['levels'] ) ) {						
+					if( !empty( $category['levels'] ) ) {						
 						$levels = $category['levels'];
 							
 						foreach( $category['levels'] as $level ) {
@@ -2723,7 +2723,7 @@ class ModelModuleMegaFilter extends Model {
 									
 									//if( isset( $values[$level_id-1] ) ) {
 										if( $level_id && ! isset( $row['levels'][$level_id-1]['options'][$value] ) ) {
-											if( ! empty( $category['auto_levels'] ) ) {
+											if( !empty( $category['auto_levels'] ) ) {
 												break;
 											} else {
 												$level['options'] = [];
@@ -2844,7 +2844,7 @@ class ModelModuleMegaFilter extends Model {
 		/**
 		 * Dodaj podstawowe atrybuty
 		 */
-		if( ! empty( $base_attribs ) ) {
+		if( !empty( $base_attribs ) ) {
 			$this->load->model('tool/image');
 			
 			foreach( $base_attribs as $type => $attribute ) {

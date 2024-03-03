@@ -249,7 +249,11 @@ class PriceLogic
 			$total = round($this->currency->real_convert($total, $order_query->row['currency_code'], $this->config->get('config_currency')), 2);
 
 			$diff = $total - $costprice;
-			$profitability = round(($diff / $total), 3) * 100;
+			if ((float)$total > 0){
+				$profitability = 0;
+			} else {
+				$profitability = round(($diff / $total), 3) * 100;
+			}			
 
 			echoLine('[PriceLogic::countOrderProfitablility] Order ' . $order_id . ' has costprice ' . $costprice . ' EUR, and total '. $total . ' EUR', 'i');	
 			echoLine('[PriceLogic::countOrderProfitablility] Order ' . $order_id . ' has profitability ' . $profitability . '%', 'w');
