@@ -1955,7 +1955,7 @@
 							'ПоставщикКоличество'	=> ($product_supplier['quantity']),
 							'ПоставщикЦена'		    => $product_supplier['price'],
 							'ПоставщикВалюта'       => $product_supplier['currency'],
-							'ПоставщикRawData'      => $product_supplier['raw'],
+							//'ПоставщикRawData'      => $product_supplier['raw'],
 							);
 														
 							$product_suppliers_counter++;
