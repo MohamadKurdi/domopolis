@@ -396,7 +396,7 @@ if (strpos($currentConfigFile, 'admin') === false) {
 }
 
 $inputData = array_merge($registry->get('request')->post, $registry->get('request')->get);
-$inputData = array_map("atrim_array", $inputData);
+$inputData = atrim_array($inputData);
 
 $requiredParams = false;
 if (!empty($apisConfig['params']) && !empty($apisConfig['params'][0])) {
