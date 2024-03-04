@@ -250,9 +250,9 @@ class PriceLogic
 
 			$diff = $total - $costprice;
 			if ((float)$total > 0){
-				$profitability = 0;
-			} else {
 				$profitability = round(($diff / $total), 3) * 100;
+			} else {
+				$profitability = 0;
 			}			
 
 			echoLine('[PriceLogic::countOrderProfitablility] Order ' . $order_id . ' has costprice ' . $costprice . ' EUR, and total '. $total . ' EUR', 'i');	
