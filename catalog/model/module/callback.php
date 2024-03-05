@@ -1,7 +1,7 @@
 <?php
 	class ModelModuleCallback extends Model {	
 		
-		public function addWaitList($data) {						
+		public function addWaitList($data) {
 			$this->load->model('account/customer');
 			$this->load->model('catalog/product');
 			
@@ -64,11 +64,13 @@
 			tax 				= '0',
 			reward 				= '0',
 			waitlist 			= '1',
-			supplier_has 		= '0'");
-			
+			supplier_has 		= '0'");			
 		}
 		
 		public function addCallback($data) {
+			$this->load->model('account/customer');
+			$this->load->model('catalog/product');
+			
 			$customer_id = 0;
 
 			if ($this->customer->isLogged()){
