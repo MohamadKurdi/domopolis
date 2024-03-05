@@ -409,6 +409,10 @@ class ModelCheckoutOrder extends Model {
 				$product['from_stock'] = false;
 			}
 
+			if (empty($product['quantity'])){
+				$product['quantity'] = 1;
+			}
+
 			$this->db->ncquery("INSERT INTO order_product SET 
 				order_id 		= '" . (int)$order_id . "', 
 				product_id 		= '" . (int)$product['product_id'] . "', 

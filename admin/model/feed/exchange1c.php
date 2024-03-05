@@ -1592,6 +1592,10 @@
 						$manufacturer 				= $this->model_catalog_manufacturer->getManufacturer($real_product['manufacturer_id']);						
 						$is_set 					= $this->model_catalog_product->getThisProductIsSet($product['product_id']);
 						
+						if (empty($product['quantity'])){
+							$product['quantity'] = 1;
+						}
+
 						if (!$manufacturer || !isset($manufacturer['name'])){
 							$manufacturer['name'] = 'Неизвестно';
 						}
