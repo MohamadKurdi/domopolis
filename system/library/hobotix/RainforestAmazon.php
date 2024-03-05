@@ -332,8 +332,8 @@ class RainforestAmazon{
 			$products = $this->processAmazonRainforestPageRequestProductResults($response);
 
 			$pagination = [
-				'total_results' => count($products),
-				'total_pages' 	=> 1,
+				'total_results' => !empty($products)?count($products):0,
+				'total_pages' 	=> !empty($products)?1:0,
 			];
 		}
 

@@ -219,6 +219,10 @@ class PriceLogic
 	}
 
 	public function countOrderProfitablility($order_id){
+		if (!$this->config->get('config_amazon_profitability_in_stocks')){
+			echoLine('[PriceLogic::countOrderProfitablility] Setting is off, skipping', 'w');
+		}
+
 		$order_query	= $this->db->ncquery("SELECT total_national, currency_code FROM `order` WHERE order_id = '" . (int)$order_id . "'");
 		$products_query = $this->db->ncquery("SELECT op.*, p.costprice FROM order_product op LEFT JOIN product p ON (p.product_id = op.product_id) WHERE op.order_id = '" . (int)$order_id . "'");
 		$totals_query 	= $this->db->ncquery("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "'");
