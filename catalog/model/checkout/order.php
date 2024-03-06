@@ -309,7 +309,9 @@ class ModelCheckoutOrder extends Model {
 			}
 
 			if ($data['email'] && trim($data['email'])){
-				$data['email'] = str_replace($this->config->get('simple_empty_email'), '', $data['email']);		
+				if ($this->config->get('simple_empty_email')){
+					$data['email'] = str_replace($this->config->get('simple_empty_email'), '', $data['email']);		
+				}				
 			}
 
 			if ($data['telephone'] && trim($data['telephone']) && !$customer_id){
@@ -909,8 +911,9 @@ class ModelCheckoutOrder extends Model {
 		}
 
 		if (trim($data['email']) && !$customer_id){
-			$data['email'] = str_replace('order@kitchen-profi.de', '', $data['email']);
-			$data['email'] = str_replace($this->config->get('simple_empty_email'), '', $data['email']);		
+			if ($this->config->get('simple_empty_email')){
+				$data['email'] = str_replace($this->config->get('simple_empty_email'), '', $data['email']);	
+			}				
 		}
 
 		if ($data['telephone'] && trim($data['telephone']) && !$customer_id){

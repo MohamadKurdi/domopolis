@@ -79,6 +79,7 @@ if (!class_exists('DB')){
 				} catch (Exception $e){	
 
 					if (PHP_SAPI  === 'cli' || IS_DEBUG){
+						echo('[DB ERROR] in query: ' . $sql);
 						echo('[DB ERROR] ' . $e->getMessage() . PHP_EOL);
 					}
 

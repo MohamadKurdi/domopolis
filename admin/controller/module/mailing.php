@@ -96,9 +96,8 @@ class ControllerModuleMailing extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
-	public function update() {
-		// Нужно получить данные
-		$id = $_GET['id'];
+	public function update() {		
+		$id = $this->request->get('id');
 		$this->data['name'] = '';
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
@@ -110,9 +109,7 @@ class ControllerModuleMailing extends Controller {
 				ON DUPLICATE KEY UPDATE email_campaign_name = '".$this->db->escape($name)."'");
 		}
 
-
-
-		$r = $this->db->query('SELECT * FROM `customer_email_campaigns_names` WHERE `email_campaign_mailwizz_id` = "'.$id.'"');
+		$r = $this->db->query('SELECT * FROM `customer_email_campaigns_names` WHERE `email_campaign_mailwizz_id` = "' . (int)$id . '"');
 		if ($r) {
 			$row = $r->row;
 			if ($row) {
@@ -121,7 +118,7 @@ class ControllerModuleMailing extends Controller {
 		}
 
 		// Получаем данные рассылки
-		$m = $this->db->query('SELECT * FROM `customer_email_campaigns` WHERE `campaign_id` = "'.$id.'"');
+		$m = $this->db->query('SELECT * FROM `customer_email_campaigns` WHERE `campaign_id` = "'. (int)$id . '"');
 		$tabsArray = array();
 		$tabsCountArray = array();
 
@@ -164,4 +161,3 @@ class ControllerModuleMailing extends Controller {
 		$this->response->setOutput($this->render());
 	}
 }
-?>

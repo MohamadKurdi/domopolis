@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']       = '<font color="green"><b>Раздел Акции</b></font>';
+$_['heading_title']       = 'Раздел Акции';
 $_['heading_title_noraml']       = 'Раздел Акции';
 
 // Text
@@ -25,4 +25,3 @@ $_['entry_sort_order']    = 'Порядок сортировки:';
 
 // Error
 $_['error_permission']    = 'У Вас нет прав для управления этим модулем!';
-?>
