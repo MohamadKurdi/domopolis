@@ -17,7 +17,7 @@
 /admin/offline.html
 /admin/view/template/sale/bottom_texts/*
 /admin/view/template/sale/actiontemplates/*
-/admin/view/images/print/
+/admin/view/images/print/*
 /admin/view/template.*/
 
 #Основные конфиги
