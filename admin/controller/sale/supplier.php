@@ -1084,7 +1084,11 @@ class ControllerSaleSupplier extends Controller {
 			foreach ($supplier_categories as $supplier_category){
 				if ($supplier_category['category_id']){
 					$category = $this->model_catalog_category->getCategory($supplier_category['category_id']);
-					$path     = ($category['path'] ? $category['path'] . ' &gt; ' : '') . $category['name'];			
+					if (!empty($category)){
+						$path     = ($category['path'] ? $category['path'] . ' &gt; ' : '') . $category['name'];	
+					} else {
+						$path 		= false;
+					}						
 				} else {
 					$category 	= false;
 					$path 		= false;					

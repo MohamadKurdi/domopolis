@@ -40,8 +40,7 @@
     </div>
     <div class="box">
         <div class="heading order_head">
-            <h1><?php echo $heading_title; ?></h1>
-            <div id="rnf-status" style="float: right; line-height: 26px; padding-top: 5px; margin-left:20px;" class="delayed-load short-delayed-load" data-route='setting/rnf/getRainForestStats' data-reload="5000"></div>          
+            <h1><?php echo $heading_title; ?></h1>                
         </div>
         <div style="border:1px dashed grey; padding:10px; margin-bottom:10px;">    
             <table style="width: 100%;">

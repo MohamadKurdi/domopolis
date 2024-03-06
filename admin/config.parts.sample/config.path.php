@@ -15,8 +15,8 @@ define('DIR_CACHE', DIR_SYSTEM . 'cache/');
 define('DIR_PIDS', DIR_SYSTEM . 'pids/');
 
 define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
-define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/');
-define('DIR_TEMPLATEINCLUDE', DIR_APPLICATION . 'view/template/');
+define('DIR_TEMPLATE', 			DIR_APPLICATION . 'view/template/default/');
+define('DIR_TEMPLATEINCLUDE', 	DIR_APPLICATION . 'view/template/default/');
 define('DIR_DOWNLOAD', DIR_APPLICATION . '../download/');
 
 define('DIR_IMAGE', DIR_APPLICATION . '../image/');
