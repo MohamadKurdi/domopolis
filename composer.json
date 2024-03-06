@@ -95,8 +95,7 @@
         "php-http/message": "^1.16",
         "monolog/monolog": "^3.5",
         "psr/http-message": "^2.0",
-        "google/apiclient-services": "^0.337.0",
-        "php-http/message-factory": "^1.1"            
+        "google/apiclient-services": "^0.337.0"            
     },
     "autoload": {
         "psr-0": {            
