@@ -316,9 +316,11 @@ class ControllerModuleBatchEditor extends Controller {
 		
 		$language_id = (int) $this->config->get('config_language_id');
 		
-		$tables = array ();
+		$tables = [];
 		
-		$sql_fields = $sql_tables = $sorts = FALSE;
+		$sql_fields = false;
+		$sql_tables = false;
+		$sorts = [];
 		
 		foreach ($this->data['setting']['fields'] as $name=>$field) {
 			if (in_array ($name, $this->data['filter_fields'])) {
@@ -1081,4 +1083,3 @@ class ControllerModuleBatchEditor extends Controller {
 		return $status;
 	}
 }
-?>
