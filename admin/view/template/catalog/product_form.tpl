@@ -10,7 +10,7 @@
 	input[type="text"]{width:70%;}
 	.blue_heading{text-align:center; padding:8px 0;cursor:pointer; background: #40a0dd;color: #FFF;font-size: 14px;font-weight: 400;margin-bottom:5px;}
 </style>
-<? require_once(DIR_TEMPLATEINCLUDE . 'structured/translate.js.tpl'); ?>
+<? require_once(dirname(__FILE__) . '/../structured/translate.js.tpl'); ?>
 <div id="content">
 	<div class="breadcrumb">
 		<?php foreach ($breadcrumbs as $breadcrumb) { ?>

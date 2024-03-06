@@ -1,5 +1,5 @@
 <?php echo $header; ?>
-<? require_once(DIR_TEMPLATEINCLUDE . 'structured/translate.js.tpl'); ?>
+<? require_once(dirname(__FILE__) . '/../structured/translate.js.tpl'); ?>
 <script type="text/javascript" src="view/javascript/jquery/ui/jquery-ui-timepicker-addon.js"></script> 
 <div id="content">
 	<div class="breadcrumb">
