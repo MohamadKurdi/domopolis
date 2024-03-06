@@ -46,7 +46,10 @@ class CacheRedis{
 		return $this->redis->rPop($list);
 	}	
 
-	public function delete($key) {		
+	public function delete($key) {
+		if ($this->exists($key)){
+			$this->redis->del($key);	
+		}
 	}
 
 	public function flush($key = null) {

@@ -26,7 +26,7 @@ if (!class_exists('DB')){
 			if (file_exists($file)) {
 				require_once($file);
 
-				$class = 'DB' . $this->driver;
+				$class = '\hobotix\Database\DB' . $this->driver;
 
 				$this->connection = new $class($this->hostname, $this->username, $this->password, $this->database);
 			} else {
