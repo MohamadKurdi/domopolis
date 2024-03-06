@@ -58,6 +58,7 @@ class UserExtended {
 		$this->username 				= $userData['username'];
 		$this->fullname 				= $userData['firstname'].' '.$userData['lastname'];
 		$this->isSuperUser 				= $userData['is_av'];
+		$this->adminExtendedStats 		= $userData['extended_stats'];
 		$this->unlockOrders 			= $userData['unlock_orders'];
 		$this->doTransactions 			= $userData['do_transactions'];
 		$this->isManager 				= in_array($userData['user_group_id'], $this->manager_groups);
