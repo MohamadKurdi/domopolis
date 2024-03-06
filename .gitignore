@@ -18,10 +18,9 @@
 /admin/browserconfig.xml
 /admin/favicon.ico
 /admin/offline.html
-/admin/view/template/*/sale/bottom_texts/*
-/admin/view/template/*/sale/actiontemplates/*
-/admin/view/template/*/
-!/admin/view/template/default/
+/admin/view/template/overload/*
+/admin/view/template/default/sale/bottom_texts/*
+/admin/view/template/default/sale/actiontemplates/*
 /admin/view/batch_editor/setting/*
 
 #Основные конфиги
