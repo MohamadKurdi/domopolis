@@ -30,25 +30,27 @@ class ControllerSettingSetting extends Controller
                 }
             }
 
-            if ($this->config->get('config_amazon_product_stats_enable')) {
-                $this->data['totalProducts'] = formatLongNumber($this->model_catalog_product->getTotalProducts());
-                $this->data['product_ext'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token']);
+            if ($this->user->getAdminExtendedStats()) {
+                if ($this->config->get('config_amazon_product_stats_enable')) {
+                    $this->data['totalProducts'] = formatLongNumber($this->model_catalog_product->getTotalProducts());
+                    $this->data['product_ext'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token']);
 
-                if ($this->config->get('config_rainforest_default_technical_category_id')) {
-                    $this->data['totalProductsInTechnicalCategory'] = formatLongNumber($this->model_catalog_product->getTotalProducts(['filter_category_id' => $this->config->get('config_rainforest_default_technical_category_id')]));
+                    if ($this->config->get('config_rainforest_default_technical_category_id')) {
+                        $this->data['totalProductsInTechnicalCategory'] = formatLongNumber($this->model_catalog_product->getTotalProducts(['filter_category_id' => $this->config->get('config_rainforest_default_technical_category_id')]));
+                    }
                 }
             }
 
-
-            if ($this->config->get('config_enable_amazon_specific_modes')) {
-                foreach ($this->admin_modes as $mode => $mode_config) {
-                    $this->data[$mode] = isset($this->session->data[$mode])?$this->session->data[$mode]:0;
-                    $this->data['set_' . $mode] = $this->url->link('setting/setting/setworkmode', 'token=' . $this->session->data['token'] . '&mode=' . $mode);
+            if ($this->user->getAdminExtendedStats()) {
+                if ($this->config->get('config_enable_amazon_specific_modes')) {
+                    foreach ($this->admin_modes as $mode => $mode_config) {
+                        $this->data[$mode] = isset($this->session->data[$mode])?$this->session->data[$mode]:0;
+                        $this->data['set_' . $mode] = $this->url->link('setting/setting/setworkmode', 'token=' . $this->session->data['token'] . '&mode=' . $mode);
+                    }
                 }
             }
 
             $this->data['admin_modes'] = $this->admin_modes;
-
             
             if (!$this->config->get('config_enable_highload_admin_mode') || $this->user->getUserGroup() == 1){
                 $this->data['clearMemCache'] = $this->url->link('setting/setting/clearMemCache', 'token=' . $this->session->data['token']);                    
@@ -64,7 +66,6 @@ class ControllerSettingSetting extends Controller
             }
 
             $this->data['panelLink'] = $this->url->link('common/panel', 'token=' . $this->session->data['token']);
-       //     $this->data['serverResponceTime'] = $this->PageCache->getServerResponceTime();
             $this->data['redisMem']             = $this->PageCache->getRedisInfo();
             $this->data['pageCacheInfo']        = $this->PageCache->getPageCacheInfo();
             $this->data['refeedsCount']         = $this->PageCache->getReFeedsCount();

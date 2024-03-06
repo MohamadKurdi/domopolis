@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>">
-	<?php require_once(dirname(__FILE__).'/../header_head.tpl'); ?>
+	<?php require_once(dirname(__FILE__).'/header_head.tpl'); ?>
 
 	<body>
 		<div id="container">
@@ -307,65 +307,7 @@
 								<li><a class="home_icon_style" href="<?php echo $affiliate_mod_link; ?>"><i class="fa fa-cog"></i><span>Настройки трекинга</span></a></li>
 							</ul>
 						</li>
-						
-						<li id="system"><a class="top"><i class="fa fa-cogs icon_menu"></i><?php echo $text_system; ?></a>
-							<ul>
-								<li><a class="home_icon_style"  href="<?php echo $panel; ?>"><i class="fa fa-server"></i><span>Панель</span></a></li>
-								<li><a class="home_icon_style"  href="<?php echo $rnf; ?>"><i class="fa fa-amazon"></i><span>Настройки RNF API</span></a></li>
-								<li><a class="parent home_icon_style"><i class="fa fa-globe"></i><span><?php echo $text_localisation; ?></span></a>
-									<ul>
-										<li><a href="<?php echo $language; ?>"><?php echo $text_language; ?></a></li>
-										<li><a href="<?php echo $currency; ?>"><?php echo $text_currency; ?></a></li>
-										<li><a href="<?php echo $stock_status; ?>"><?php echo $text_stock_status; ?></a></li>
 
-										<?php if ($this->config->get('config_product_quality_groups_enable')) { ?>
-										<li><a href="<?php echo $product_groups; ?>">Группы качества товаров</a></li>
-										<?php } ?>
-
-										<li><a href="<?php echo $order_status; ?>"><?php echo $text_order_status; ?></a></li>
-										<li><a href="<?php echo $return_status; ?>"><?php echo $text_return_status; ?></a></li>
-										<li><a href="<?php echo $return_action; ?>"><?php echo $text_return_action; ?></a></li>
-										<li><a href="<?php echo $return_reason; ?>"><?php echo $text_return_reason; ?></a></li>
-										<li><a href="<?php echo $country; ?>"><?php echo $text_country; ?></a></li>
-										<li><a href="<?php echo $legalperson; ?>">Кассы и счета</a></li>
-										<li><a href="<?php echo $zone; ?>"><?php echo $text_zone; ?></a></li>
-										<li><a href="<?php echo $geo_zone; ?>"><?php echo $text_geo_zone; ?></a></li>
-										<li><a class="parent"><?php echo $text_tax; ?></a>
-											<ul>
-												<li><a href="<?php echo $tax_class; ?>"><?php echo $text_tax_class; ?></a></li>
-												<li><a href="<?php echo $tax_rate; ?>"><?php echo $text_tax_rate; ?></a></li>
-											</ul>
-										</li>
-										<li><a href="<?php echo $length_class; ?>"><?php echo $text_length_class; ?></a></li>
-										<li><a href="<?php echo $weight_class; ?>"><?php echo $text_weight_class; ?></a></li>
-										
-										<li><a href="<?php echo $order_bottom_forms; ?>">Шаблоны подтверждения</a></li>
-									</ul>									
-								</li>
-								<li><a class="parent home_icon_style"><i class="fa fa-file-image-o"></i><span><?php echo $text_design; ?></span></a>
-									<ul>
-										<li><a href="<?php echo $layout; ?>">Схемы / макеты</a></li>
-										<li><a href="<?php echo $custom_template_link; ?>">Индивидуальное переназначение шаблонов</a></li>
-										<li><a href="<?php echo $banner; ?>">Баннера и слайды</a></li>					
-										<li><a href="<?php echo $banner_module; ?>">Конструктор баннеров (модуль)</a></li>					
-										<li><a href="<?php echo $slideshow_module; ?>">Простое слайдшоу (модуль)</a></li>
-									</ul>
-								</li>
-								<li><a class="parent home_icon_style"><i class="fa fa-users"></i><span><?php echo $text_users; ?></span></a>
-									<ul>
-										<li><a href="<?php echo $user; ?>"><?php echo $text_user; ?></a></li>
-										<li><a href="<?php echo $user_group; ?>"><?php echo $text_user_group; ?></a></li>
-									</ul>
-								</li>							
-								<li><a class="home_icon_style"  href="<?php echo $courier_face2; ?>" target="_blank"><i class="fa fa-bus" ></i><span>Интерфейс курьера</span></a></li>								
-								<li><a class="home_icon_style"  href="<?php echo $simple_module; ?>" target="_blank"><i class="fa fa-server"></i><span>Чекаут</span></a></li>
-								<li><a class="home_icon_style"  href="<?php echo $simple_module_abandoned; ?>"><i class="fa fa-server"></i><span>Брошенные корзины</span></a></li>																
-								<li><a class="home_icon_style" href="<?php echo $setting; ?>"><i class="fa fa-cog"></i><span><?php echo $text_setting; ?></span></a></li>
-								<li><a class="home_icon_style" href="<? echo $adminlog_url; ?>"><i class="fa fa-user"></i><span>Журнал доступа</span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $error_log; ?>"><i class="fa fa-bars"></i><span>Журналы системы</span></a></li>								
-								<li><a class="home_icon_style" href="<?php echo $translator; ?>"><i class="fa fa-language"></i><span>Перевод языковых файлов</span></a></li>															
-							</ul>
-						</li>							   
 						<li id="reports"><a class="top"><i class="fa fa-area-chart icon_menu"></i><?php echo $text_reports; ?></a>
 							<ul>		
 								<li><a class="home_icon_style" href="<?php echo $report_product_viewed; ?>"><i class="fa fa-eye"></i><span>Отчет просмотров</span></a></li>
@@ -399,17 +341,74 @@
 								</li>
 							</ul>
 						</li>
+						
+						<li id="system"><a class="top"><i class="fa fa-cogs icon_menu"></i><?php echo $text_system; ?></a>
+							<ul>
+								<li><a class="home_icon_style" href="<?php echo $setting; ?>"><i class="fa fa-cog"></i><span><?php echo $text_setting; ?></span></a></li>
+								<li><a class="home_icon_style"  href="<?php echo $panel; ?>"><i class="fa fa-server"></i><span>Мониторинг</span></a></li>
+								<li><a class="home_icon_style"  href="<?php echo $cronmon; ?>"><i class="fa fa-server"></i><span>Cronmon</span></a></li>
+								<li><a class="home_icon_style"  href="<?php echo $rnf; ?>"><i class="fa fa-amazon"></i><span>Настройки RNF API</span></a></li>
+
+								<li><a class="parent home_icon_style"><i class="fa fa-globe"></i><span><?php echo $text_localisation; ?></span></a>
+									<ul>
+										<li><a href="<?php echo $language; ?>"><?php echo $text_language; ?></a></li>
+										<li><a href="<?php echo $currency; ?>"><?php echo $text_currency; ?></a></li>
+										<li><a href="<?php echo $stock_status; ?>"><?php echo $text_stock_status; ?></a></li>
+
+										<?php if ($this->config->get('config_product_quality_groups_enable')) { ?>
+											<li><a href="<?php echo $product_groups; ?>">Группы качества товаров</a></li>
+										<?php } ?>
+
+										<li><a href="<?php echo $order_status; ?>"><?php echo $text_order_status; ?></a></li>
+										<li><a href="<?php echo $return_status; ?>"><?php echo $text_return_status; ?></a></li>
+										<li><a href="<?php echo $return_action; ?>"><?php echo $text_return_action; ?></a></li>
+										<li><a href="<?php echo $return_reason; ?>"><?php echo $text_return_reason; ?></a></li>
+										<li><a href="<?php echo $country; ?>"><?php echo $text_country; ?></a></li>
+										<li><a href="<?php echo $legalperson; ?>">Кассы и счета</a></li>
+										<li><a href="<?php echo $zone; ?>"><?php echo $text_zone; ?></a></li>
+										<li><a href="<?php echo $geo_zone; ?>"><?php echo $text_geo_zone; ?></a></li>
+										<li><a class="parent"><?php echo $text_tax; ?></a>
+											<ul>
+												<li><a href="<?php echo $tax_class; ?>"><?php echo $text_tax_class; ?></a></li>
+												<li><a href="<?php echo $tax_rate; ?>"><?php echo $text_tax_rate; ?></a></li>
+											</ul>
+										</li>
+										<li><a href="<?php echo $length_class; ?>"><?php echo $text_length_class; ?></a></li>
+										<li><a href="<?php echo $weight_class; ?>"><?php echo $text_weight_class; ?></a></li>
+										
+										<li><a href="<?php echo $order_bottom_forms; ?>">Шаблоны подтверждения</a></li>
+									</ul>									
+								</li>
+								<li><a class="parent home_icon_style"><i class="fa fa-file-image-o"></i><span><?php echo $text_design; ?></span></a>
+									<ul>
+										<li><a href="<?php echo $layout; ?>">Схемы / макеты</a></li>
+										<li><a href="<?php echo $custom_template_link; ?>">Индивидуальное переназначение шаблонов</a></li>
+										<li><a href="<?php echo $banner; ?>">Баннера и слайды</a></li>					
+										<li><a href="<?php echo $banner_module; ?>">Конструктор баннеров (модуль)</a></li>					
+										<li><a href="<?php echo $slideshow_module; ?>">Простое слайдшоу (модуль)</a></li>
+									</ul>
+								</li>
+								<li>
+									<a class="parent home_icon_style"><i class="fa fa-users"></i><span><?php echo $text_users; ?></span></a>
+									<ul>
+										<li><a href="<?php echo $user; ?>"><?php echo $text_user; ?></a></li>
+										<li><a href="<?php echo $user_group; ?>"><?php echo $text_user_group; ?></a></li>
+									</ul>
+								</li>							
+								<li><a class="home_icon_style"  href="<?php echo $courier_face2; ?>" target="_blank"><i class="fa fa-bus" ></i><span>Интерфейс курьера</span></a></li>								
+								<li><a class="home_icon_style"  href="<?php echo $simple_module; ?>" target="_blank"><i class="fa fa-server"></i><span>Чекаут</span></a></li>
+								<li><a class="home_icon_style"  href="<?php echo $simple_module_abandoned; ?>"><i class="fa fa-server"></i><span>Брошенные корзины</span></a></li>	
+								<li><a class="home_icon_style" href="<? echo $adminlog_url; ?>"><i class="fa fa-user"></i><span>Журнал доступа</span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $error_log; ?>"><i class="fa fa-bars"></i><span>Журналы системы</span></a></li>								
+								<li><a class="home_icon_style" href="<?php echo $translator; ?>"><i class="fa fa-language"></i><span>Перевод языковых файлов</span></a></li>															
+							</ul>
+						</li>							   
+
 						<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
-						<li id="rnf">
-							<a class="top" href="<?php echo $rnf; ?>"><i class="fa fa-amazon icon_menu"></i>Rainforest</a>
-						</li>
+							<li id="rnf">
+								<a class="top" href="<?php echo $rnf; ?>"><i class="fa fa-amazon icon_menu"></i>Rainforest</a>
+							</li>
 						<?php } ?>
-						<li id="cronmon">
-							<a class="top" href="<?php echo $cronmon; ?>"><i class="fa fa-refresh icon_menu"></i>Cron</a>
-						</li>
-						<li id="panel">
-							<a class="top" href="<?php echo $panel; ?>"><i class="fa fa-bell icon_menu"></i>Монитор</a>
-						</li>
 						<li id="store"><a href="<?php echo $store; ?>" target="_blank" class="top"><i class="fa fa-share icon_menu"></i><?php echo $text_front; ?></a>
 							<ul>
 								<?php foreach ($stores as $stores) { ?>

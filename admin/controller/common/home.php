@@ -632,9 +632,7 @@
 			$this->data['token'] = $this->session->data['token'];
 			
 			$this->load->model('user/user');
-			$this->data['managers'] = $this->model_user_user->getUsersByGroups(array(12, 19), true);
-			
-			// Для _sales
+			$this->data['managers'] = $this->model_user_user->getUsersByGroups(array(12, 19), true);		
 			$this->data['order_url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token']);
 			$this->data['fucked_link_url'] = $this->url->link('sale/order', 'filter_order_status_id=0&token=' . $this->session->data['token']);
 			
@@ -698,6 +696,10 @@
 			
 			
 			$this->template = 'common/home.tpl';
+			if ($template_prefix = $this->user->getTemplatePrefix()) {
+             	$this->template = 'common/homes/home' . $template_prefix . '.tpl';
+        	}
+
 			$this->children = array(
 			'common/header',
 			'common/footer'
@@ -751,14 +753,10 @@
 		public function getNoPaidResult(){
 			$query = $this->db->query("SELECT * FROM `temp` WHERE `key` = 'nopaid_result'");
 			
-			$html = $query->row['value'];
-			
+			$html = $query->row['value'];		
 			$html = preg_replace("!<order>(.*?)</order>!si","<a href='?token=".$this->session->data['token']."&route=sale/order/update&order_id=\\1' target='_blank'>\\1</a>", $html);
-			
 			$html = preg_replace("!<customer>(.*?)</customer>!si","<a href='?token=".$this->session->data['token']."&route=sale/customer/update&customer_id=\\1' target='_blank'>\\1</a>", $html);
-			
 			$html = preg_replace("!<filter>(.*?)</filter>!si","<a href='?token=".$this->session->data['token']."&route=sale/order&filter_order_status_id=0&filter_customer=\\1' target='_blank'>фильтр</a>", $html);
-			
 			
 			echo $html;			
 		}

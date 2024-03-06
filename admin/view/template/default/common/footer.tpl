@@ -6,11 +6,143 @@
 </svg>
 </div>
 <? if ($this->user->isLogged()) { ?>
+
+		<div id="alert_history_preview"></div>
+		<script>
+			$('a#alert_history_preview_click').click(function(){
+				$.ajax({
+					url: 'index.php?route=user/user_alerts&token=<?php echo $token; ?>&ajax=1',
+					dataType: 'html',				
+					success : function(html){
+						$('#alert_history_preview').html(html).dialog({width:800, height:800, modal:true,resizable:true,position:{my: 'center', at:'center center', of: window}, closeOnEscape: true, title: "Мои уведомления"})				
+					}
+				});
+				return false;
+			});	
+		</script>	
+
 	<div id="add_task_dialog"></div>
 	
 	<? if (isset($socnet_auth_code)) { ?>
 		<? echo $socnet_auth_code; ?>
 	<? } ?>
+	<style>
+					.admin_home{width:100%;background: #f3f3f3 url(/admin/view/image/bg_grey.png) repeat;}
+					.admin_home tr td{text-align:center; padding-bottom:30px;}
+					.admin_home tr td i{font-size:72px; color:#3a4247;}
+					.admin_home tr td a{color:#3a4247;}
+					div.admin_button {float:left; text-align:center; border: 1px solid #ededed; margin-right:10px; margin-bottom:10px;}
+					div.admin_button_status {float:left; padding: 20px; text-align:center;margin-right:10px; margin-bottom:10px;border-radius: 2px;width: 115px;height: 115px;}
+					.admin_button i{font-size:56px;opacity: 0.8;padding: 20px;}
+					.admin_button_status i {font-size:56px;opacity: 0.8;}
+					.admin_button i:hover, .admin_button_status i:hover {opacity: 1;}
+					.admin_button a, .admin_button_status a {text-decoration:none; color:#FFF; }
+
+	.tooltip {
+	position: absolute;
+	z-index: 1070;
+	display: block;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-style: normal;
+	font-weight: normal;
+	letter-spacing: normal;
+	line-break: auto;
+	line-height: 1.42857;
+	text-align: left;
+	text-align: start;
+	text-decoration: none;
+	text-shadow: none;
+	text-transform: none;
+	white-space: normal;
+	word-break: normal;
+	word-spacing: normal;
+	word-wrap: normal;
+	font-size: 11px;
+	opacity: 0;
+	filter: alpha(opacity=0); }
+	.tooltip.in {
+    opacity: 0.9;
+    filter: alpha(opacity=90); }
+	.tooltip.top {
+    margin-top: -3px;
+    padding: 5px 0; }
+	.tooltip.right {
+    margin-left: 3px;
+    padding: 0 5px; }
+	.tooltip.bottom {
+    margin-top: 3px;
+    padding: 5px 0; }
+	.tooltip.left {
+    margin-left: -3px;
+    padding: 0 5px; }
+	
+	.tooltip-inner {
+	max-width: 200px;
+	padding: 3px 8px;
+	color: #fff;
+	text-align: center;
+	background-color: #000;
+	border-radius: 3px; }
+	
+	.tooltip-arrow {
+	position: absolute;
+	width: 0;
+	height: 0;
+	border-color: transparent;
+	border-style: solid; }
+	
+	.tooltip.top .tooltip-arrow {
+	bottom: 0;
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px 5px 0;
+	border-top-color: #000; }
+	.tooltip.top-left .tooltip-arrow {
+    bottom: 0;
+    right: 5px;
+    margin-bottom: -5px;
+    border-width: 5px 5px 0;
+    border-top-color: #000; }
+	.tooltip.top-right .tooltip-arrow {
+    bottom: 0;
+    left: 5px;
+    margin-bottom: -5px;
+    border-width: 5px 5px 0;
+    border-top-color: #000; }
+	.tooltip.right .tooltip-arrow {
+    top: 50%;
+    left: 0;
+    margin-top: -5px;
+    border-width: 5px 5px 5px 0;
+    border-right-color: #000; }
+	.tooltip.left .tooltip-arrow {
+    top: 50%;
+    right: 0;
+    margin-top: -5px;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #000; }
+	.tooltip.bottom .tooltip-arrow {
+    top: 0;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 0 5px 5px;
+    border-bottom-color: #000; }
+	.tooltip.bottom-left .tooltip-arrow {
+    top: 0;
+    right: 5px;
+    margin-top: -5px;
+    border-width: 0 5px 5px;
+    border-bottom-color: #000; }
+	.tooltip.bottom-right .tooltip-arrow {
+    top: 0;
+    left: 5px;
+    margin-top: -5px;
+    border-width: 0 5px 5px;
+    border-bottom-color: #000; }
+	.list.big tbody td.sum{font-size:9px !important;}
+	.list.big thead td {font-size: 13px !important;}
+	.list.big tbody td.discount {font-size: 10px !important;}
+</style>
 	<style>
 		.ktooltip_click{cursor:pointer;}
 		#top {

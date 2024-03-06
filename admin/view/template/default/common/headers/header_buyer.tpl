@@ -176,17 +176,4 @@
 						<div style="clear: both;"></div>
 					</div>
 				<?php } ?>
-			</div>
-			<div id="alert_history_preview"></div>
-			<script>
-				$('a#alert_history_preview_click').click(function(){
-					$.ajax({
-						url: 'index.php?route=user/user_alerts&token=<?php echo $token; ?>&ajax=1',
-						dataType: 'html',				
-						success : function(html){
-							$('#alert_history_preview').html(html).dialog({width:800, height:800, modal:true,resizable:true,position:{my: 'center', at:'center center', of: window}, closeOnEscape: true, title: "Мои уведомления"})				
-						}
-					});
-					return false;
-				});	
-			</script>																																				
+			</div>																																			

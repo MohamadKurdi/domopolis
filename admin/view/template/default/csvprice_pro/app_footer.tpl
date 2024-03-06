@@ -3,8 +3,7 @@
         <?php if( isset($note_status) && $note_status ) { ?>
         <div class="g-row" style="margin-top:6px;"><?php echo $text_show_help_note;?></div>
         <?php } ?>
-        <div class="g-row f-copyright">
-                <?php echo $copy; ?>
+        <div class="g-row f-copyright">        
         </div>
 </div>
 <div class="f-help-block f-tooltip" id="prop_desc_win">

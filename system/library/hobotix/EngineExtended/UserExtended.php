@@ -87,19 +87,19 @@ class UserExtended {
 		$this->log 			= new \Log('ldap_authorizations.txt');
 
 		if (isset($this->session->data['user_id'])) {
-			$user_query = $this->db->query("SELECT * FROM user WHERE user_id = '" . (int)$this->session->data['user_id'] . "' AND status = '1'");
+			$user_query = $this->db->ncquery("SELECT * FROM user WHERE user_id = '" . (int)$this->session->data['user_id'] . "' AND status = '1'");
 
 			if ($user_query->num_rows) {
 				$this->setGeneralUserObject($user_query->row);
 
-				$this->db->query("UPDATE user SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE user_id = '" . (int)$this->session->data['user_id'] . "'");
+				$this->db->ncquery("UPDATE user SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE user_id = '" . (int)$this->session->data['user_id'] . "'");
 
-				$user_group_query 		= $this->db->query("SELECT * FROM user_group WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
+				$user_group_query 		= $this->db->ncquery("SELECT * FROM user_group WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
 				$this->user_group_name 	= isset($user_group_query->row['name'])?$user_group_query->row['name']:'';
 				$this->template_prefix 	= isset($user_group_query->row['template_prefix'])?$user_group_query->row['template_prefix']:'';
 				$this->alert_namespace 	= isset($user_group_query->row['alert_namespace'])?$user_group_query->row['alert_namespace']:'';
 
-				$user_group_store_query = $this->db->query("SELECT * FROM user_group_to_store WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
+				$user_group_store_query = $this->db->ncquery("SELECT * FROM user_group_to_store WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
 				if ($user_group_store_query->num_rows){
 					foreach ($user_group_store_query->rows as $result) {
 						$this->stores[] = $result['store_id'];
@@ -161,7 +161,7 @@ class UserExtended {
 					$email 			= isset($entries['0']['mail'])?$entries['0']['mail']['0']:'';
 					$ipbx 			= isset($entries['0']['ipphone'])?$entries['0']['ipphone']['0']:'';
 
-					$exists_query = $this->db->query("SELECT * FROM user WHERE username = '" . $this->db->escape($username) . "'");
+					$exists_query = $this->db->ncquery("SELECT * FROM user WHERE username = '" . $this->db->escape($username) . "'");
 					if ($exists_query->rows){
 
 						$_user_id = (int)$exists_query->row['user_id'];						
@@ -200,7 +200,7 @@ class UserExtended {
 					}										
 
 				} else {
-					$this->db->query("UPDATE user SET status = 0 WHERE username = '" . $username . "'");
+					$this->db->ncquery("UPDATE user SET status = 0 WHERE username = '" . $username . "'");
 					$next_user_id = 0;
 
 					if($this->config->get('adminlog_enable') && $this->config->get('adminlog_hacklog')){
@@ -214,7 +214,7 @@ class UserExtended {
 				}
 
 			} else {
-				$user_check_query = $this->db->query("SELECT * FROM user WHERE username = '" . $this->db->escape($username) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') AND status = '1'");
+				$user_check_query = $this->db->ncquery("SELECT * FROM user WHERE username = '" . $this->db->escape($username) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') AND status = '1'");
 
 				if ($user_check_query->num_rows) {
 					$next_user_id = $user_check_query->row['user_id'];										
@@ -228,26 +228,26 @@ class UserExtended {
 			}
 
 		} else {
-			$user_check_query = $this->db->query("SELECT * FROM user WHERE username = '" . $this->db->escape($username) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') AND status = '1'");
+			$user_check_query = $this->db->ncquery("SELECT * FROM user WHERE username = '" . $this->db->escape($username) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') AND status = '1'");
 
 			if ($user_check_query->num_rows) {					
 				$next_user_id = $user_check_query->row['user_id'];		
 			}
 		}
 
-		$user_query = $this->db->query("SELECT * FROM user WHERE user_id = '" . (int)$next_user_id . "'");
+		$user_query = $this->db->ncquery("SELECT * FROM user WHERE user_id = '" . (int)$next_user_id . "'");
 
 		if ($user_query->num_rows) {
 			$this->session->data['user_id'] = $user_query->row['user_id'];			
 			$this->setGeneralUserObject($user_query->row);
 
-			$user_group_query = $this->db->query("SELECT * FROM user_group WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
+			$user_group_query = $this->db->ncquery("SELECT * FROM user_group WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
 
 			$this->user_group_name 			= $user_group_query->row['name'];
 			$this->template_prefix 			= $user_group_query->row['template_prefix'];
 			$this->alert_namespace 			= $user_group_query->row['alert_namespace'];
 
-			$user_group_store_query = $this->db->query("SELECT * FROM user_group_to_store WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
+			$user_group_store_query = $this->db->ncquery("SELECT * FROM user_group_to_store WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
 
 			if ($user_group_store_query->num_rows){
 				foreach ($user_group_store_query->rows as $result) {
@@ -285,7 +285,7 @@ class UserExtended {
 			$this->addToAdminLog('logout', true);
 		}
 
-		$this->db->query("UPDATE `user` SET `ip` = '' WHERE user_id = '" . (int)$this->user_id . "'");
+		$this->db->ncquery("UPDATE `user` SET `ip` = '' WHERE user_id = '" . (int)$this->user_id . "'");
 
 		$this->user_id 	= '';
 		$this->username = '';
@@ -336,7 +336,7 @@ class UserExtended {
 	}
 
 	private function addToAdminLog($action, $allowed){
-		$this->db->query("INSERT INTO adminlog SET 
+		$this->db->ncquery("INSERT INTO adminlog SET 
 			`user_id` 	= '" . (int)$this->user_id . "', 
 			`user_name` = '" . $this->username . "', 
 			`action` 	= '" . $this->db->escape($action) . "', 
@@ -347,7 +347,7 @@ class UserExtended {
 	}
 
 	private function addUser($data){
-		$this->db->query("INSERT INTO `user` SET 
+		$this->db->ncquery("INSERT INTO `user` SET 
 			username 			= '" . $this->db->escape($data['username']) . "', 
 			salt 				= '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', 
 			password 			= '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', 
@@ -365,7 +365,7 @@ class UserExtended {
 	}
 
 	private function editUser($user_id, $data) {							
-		$this->db->query("UPDATE `user` SET 
+		$this->db->ncquery("UPDATE `user` SET 
 			username 			= '" . $this->db->escape($data['username']) . "',
 			firstname 			= '" . $this->db->escape($data['firstname']) . "', 		
 			lastname 			= '" . $this->db->escape($data['lastname']) . "', 
@@ -375,7 +375,7 @@ class UserExtended {
 			WHERE user_id 		= '" . (int)$user_id . "'");
 
 		if ($data['password']) {
-			$this->db->query("UPDATE `user` SET 
+			$this->db->ncquery("UPDATE `user` SET 
 				`salt` 			= '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', 
 				`password` 		= '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' 
 				WHERE `user_id` = '" . (int)$user_id . "'");
@@ -383,7 +383,7 @@ class UserExtended {
 	}
 
 	private function editPassword($user_id, $password) {
-		$this->db->query("UPDATE `user` SET 
+		$this->db->ncquery("UPDATE `user` SET 
 			`salt` 		= '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', 
 			`password` 	= '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', 
 			`code` 		= '' 
