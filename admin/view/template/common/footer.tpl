@@ -265,9 +265,9 @@
 		});
 	</script>
 	<?php if ($this->config->get('config_enable_malert_in_admin') && $this->user->getAlertNameSpace()) { ?>
-		<audio src='sounds/alert_beep.mp3' class="donotstop" id="beep_alert" style="display:none;" type="audio/mp3" preload="auto"></audio>
-		<audio src='sounds/incoming_call2.mp3' class="donotstop" id="incoming_alert" style="display:none;" type="audio/mp3" preload="auto"></audio>
-		<audio src='sounds/i_alarm.mp3' class="donotstop" id="fuck_alarm" style="display:none;" type="audio/mp3" preload="auto"></audio>
+		<audio src='view/javascript/sounds/alert_beep.mp3' class="donotstop" id="beep_alert" style="display:none;" type="audio/mp3" preload="auto"></audio>
+		<audio src='view/javascript/sounds/incoming_call2.mp3' class="donotstop" id="incoming_alert" style="display:none;" type="audio/mp3" preload="auto"></audio>
+		<audio src='view/javascript/sounds/i_alarm.mp3' class="donotstop" id="fuck_alarm" style="display:none;" type="audio/mp3" preload="auto"></audio>
 		<script type="text/javascript">		
 			function generate_noty(type, text, url, sound) {
 				
