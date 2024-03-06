@@ -4,8 +4,9 @@
 #Админка
 /admin/config*.php
 /admin/config.parts/*
+!/admin/config.sample.php
+!/admin/config.parts.sample/*
 /admin/app/*
-/admin/icons/*
 /admin/icons/*
 /admin/view/image/flags/*
 /admin/view/image/flags.*/*
@@ -19,6 +20,7 @@
 /admin/view/template/sale/actiontemplates/*
 /admin/view/images/print/*
 /admin/view/template.*/
+/admin/view/batch_editor/setting/*
 
 #Основные конфиги
 /config*.php
