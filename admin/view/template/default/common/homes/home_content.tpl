@@ -110,30 +110,6 @@
 									</a>       
 								</div>
 							</div>
-
-							<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
-								<div class="admin_button _green">
-									<div class="content_opacity">
-									</div>
-									<div class="content_position">
-										<a href="<?php echo $addasin; ?>">
-											<i class="fa fa-amazon"></i><br />
-											<span class="home_tabs_style">Ручное добавление с Amazon</span>
-										</a>       
-									</div>
-								</div>
-
-								<div class="admin_button _green">
-									<div  class="content_opacity">
-									</div>
-									<div class="content_position">
-										<a href="<?php echo $product_deletedasin; ?>">
-											<i class="fa fa-amazon"></i><br />
-											<span class="home_tabs_style">Удаленные ASIN</span>
-										</a>       
-									</div>
-								</div>
-							<?php } ?>
 						</td>
 					</tr>
 				</table>
