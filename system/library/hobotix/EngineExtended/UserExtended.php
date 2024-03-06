@@ -1,30 +1,35 @@
 <?php
-class User {
-	private $user_id;
-	private $username;
-	private $fullname;
-	private $is_av;
-	private $unlock_orders;
-	private $do_transactions;
-	private $is_manager;
-	private $is_mainmanager;
-	private $edit_csi;
-	private $bitrix_id;
-	private $own_orders;
-	private $count_worktime;
-	private $count_content;
-	private $user_group_id;
-	private $user_group_name;
-	private $internal_pbx_num;
-	private $internal_auth_pbx_num;
-	private $outbound_pbx_num;
-	private $template_prefix;
-	private $alert_namespace;
-	private $permission = array();
-	private $config;
-	private $log;
-	private $stores = array();
-	private $manager_groups = MANAGER_GROUPS;
+
+namespace  hobotix;
+
+class UserExtended {
+	private $user_id                = null;
+	private $username 		        = null;
+	private $fullname               = null;
+
+	private $isSuperUser            = null;
+	private $adminExtendedStats	    = null;
+	private $unlockOrders          	= null;
+	private $doTransactions        	= null;
+	private $isManager             	= null;
+	private $isMainManager         	= null;
+	private $doEditCsi              = null;
+	private $doOwnOrders            = null;
+	private $doCountWorkTime        = null;
+	private $doCountWorkContent     = null;
+
+	private $bitrix_id              = null;
+	private $user_group_id 			= null;
+	private $user_group_name        = null;
+	private $internal_pbx_num 		= null;
+	private $internal_auth_pbx_num	= null;
+	private $outbound_pbx_num		= null;
+	private $template_prefix		= null;
+	private $alert_namespace		= null;	
+
+	private $stores 				= [];
+	private $permission 			= [];
+	private $manager_groups 		= MANAGER_GROUPS;
 
 	private $exclude_path = [
 		'/admin/index.php?route=api/alerts/getAlert',
@@ -41,10 +46,33 @@ class User {
 		'nolog'
 	];
 
+	private $config 				= null;
+	private $log 					= null;
 	private $ldap_host 		= null;
 	private $ldap_dn 		= null;
 	private $ldap_domain 	= null;
 	private $ldap_group 	= null;	
+
+	private function setGeneralUserObject($userData){
+		$this->user_id 					= $userData['user_id'];
+		$this->username 				= $userData['username'];
+		$this->fullname 				= $userData['firstname'].' '.$userData['lastname'];
+		$this->isSuperUser 				= $userData['is_av'];
+		$this->unlockOrders 			= $userData['unlock_orders'];
+		$this->doTransactions 			= $userData['do_transactions'];
+		$this->isManager 				= in_array($userData['user_group_id'], $this->manager_groups);
+		$this->isMainManager 			= $userData['is_mainmanager'];
+		$this->doOwnOrders 				= $userData['own_orders'];
+		$this->doCountWorkTime 			= $userData['count_worktime'];
+		$this->doCountWorkContent 		= $userData['count_content'];
+		$this->doEditCsi 				= $userData['edit_csi'];
+
+		$this->bitrix_id 				= $userData['bitrix_id'];
+		$this->user_group_id 			= $userData['user_group_id'];
+		$this->internal_pbx_num 		= $userData['internal_pbx_num'];
+		$this->internal_auth_pbx_num 	= $userData['internal_auth_pbx_num'];
+		$this->outbound_pbx_num 		= $userData['outbound_pbx_num'];	
+	}
 
 	public function __construct($registry) {
 		$this->db 		= $registry->get('db');
@@ -56,40 +84,22 @@ class User {
 		$this->ldap_host 	= $this->config->get('config_ldap_host');
 		$this->ldap_domain 	= $this->config->get('config_ldap_domain');
 		$this->ldap_group 	= $this->config->get('config_ldap_group');
-		$this->log 			= new Log('ldap_authorizations.txt');
+		$this->log 			= new \Log('ldap_authorizations.txt');
 
 		if (isset($this->session->data['user_id'])) {
 			$user_query = $this->db->query("SELECT * FROM user WHERE user_id = '" . (int)$this->session->data['user_id'] . "' AND status = '1'");
 
 			if ($user_query->num_rows) {
-				$this->user_id 					= $user_query->row['user_id'];
-				$this->username 				= $user_query->row['username'];
-				$this->fullname 				= $user_query->row['firstname'].' '.$user_query->row['lastname'];
-				$this->is_av 					= $user_query->row['is_av'];
-				$this->unlock_orders 			= $user_query->row['unlock_orders'];
-				$this->do_transactions 			= $user_query->row['do_transactions'];
-				$this->is_mainmanager 			= $user_query->row['is_mainmanager'];
-				$this->own_orders 				= $user_query->row['own_orders'];
-				$this->count_worktime 			= $user_query->row['count_worktime'];
-				$this->count_content 			= $user_query->row['count_content'];
-				$this->edit_csi 				= $user_query->row['edit_csi'];
-				$this->bitrix_id 				= $user_query->row['bitrix_id'];
-				$this->is_manager 				= in_array($user_query->row['user_group_id'], $this->manager_groups);
-				$this->user_group_id 			= $user_query->row['user_group_id'];
-				$this->internal_pbx_num 		= $user_query->row['internal_pbx_num'];
-				$this->internal_auth_pbx_num 	= $user_query->row['internal_auth_pbx_num'];
-				$this->outbound_pbx_num 		= $user_query->row['outbound_pbx_num'];										
+				$this->setGeneralUserObject($user_query->row);
 
 				$this->db->query("UPDATE user SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE user_id = '" . (int)$this->session->data['user_id'] . "'");
 
-				$user_group_query = $this->db->query("SELECT * FROM user_group WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
-
-				$this->user_group_name = isset($user_group_query->row['name'])?$user_group_query->row['name']:'';
-				$this->template_prefix = isset($user_group_query->row['template_prefix'])?$user_group_query->row['template_prefix']:'';
-				$this->alert_namespace = isset($user_group_query->row['alert_namespace'])?$user_group_query->row['alert_namespace']:'';
+				$user_group_query 		= $this->db->query("SELECT * FROM user_group WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
+				$this->user_group_name 	= isset($user_group_query->row['name'])?$user_group_query->row['name']:'';
+				$this->template_prefix 	= isset($user_group_query->row['template_prefix'])?$user_group_query->row['template_prefix']:'';
+				$this->alert_namespace 	= isset($user_group_query->row['alert_namespace'])?$user_group_query->row['alert_namespace']:'';
 
 				$user_group_store_query = $this->db->query("SELECT * FROM user_group_to_store WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
-
 				if ($user_group_store_query->num_rows){
 					foreach ($user_group_store_query->rows as $result) {
 						$this->stores[] = $result['store_id'];
@@ -191,7 +201,6 @@ class User {
 
 				} else {
 					$this->db->query("UPDATE user SET status = 0 WHERE username = '" . $username . "'");
-
 					$next_user_id = 0;
 
 					if($this->config->get('adminlog_enable') && $this->config->get('adminlog_hacklog')){
@@ -205,13 +214,10 @@ class User {
 				}
 
 			} else {
-
 				$user_check_query = $this->db->query("SELECT * FROM user WHERE username = '" . $this->db->escape($username) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') AND status = '1'");
 
 				if ($user_check_query->num_rows) {
-
-					$next_user_id = $user_check_query->row['user_id'];					
-
+					$next_user_id = $user_check_query->row['user_id'];										
 				} else {
 					if($this->config->get('adminlog_enable') && $this->config->get('adminlog_hacklog')){
 						$this->addToAdminLog('login', false);
@@ -232,24 +238,8 @@ class User {
 		$user_query = $this->db->query("SELECT * FROM user WHERE user_id = '" . (int)$next_user_id . "'");
 
 		if ($user_query->num_rows) {
-			$this->session->data['user_id'] = $user_query->row['user_id'];
-			$this->is_manager 				= in_array($user_query->row['user_group_id'], $this->manager_groups);
-			$this->user_id 					= $user_query->row['user_id'];
-			$this->fullname 				= $user_query->row['firstname'].' '.$user_query->row['lastname'];
-			$this->is_av 					= $user_query->row['is_av'];
-			$this->unlock_orders 			= $user_query->row['unlock_orders'];
-			$this->do_transactions 			= $user_query->row['do_transactions'];
-			$this->is_mainmanager 			= $user_query->row['is_mainmanager'];
-			$this->own_orders 				= $user_query->row['own_orders'];
-			$this->count_worktime 			= $user_query->row['count_worktime'];
-			$this->count_content 			= $user_query->row['count_content'];
-			$this->edit_csi 				= $user_query->row['edit_csi'];
-			$this->bitrix_id 				= $user_query->row['bitrix_id'];
-			$this->username 				= $user_query->row['username'];	
-
-			$this->internal_pbx_num 		= $user_query->row['internal_pbx_num'];
-			$this->internal_auth_pbx_num 	= $user_query->row['internal_auth_pbx_num'];
-			$this->outbound_pbx_num 		= $user_query->row['outbound_pbx_num'];
+			$this->session->data['user_id'] = $user_query->row['user_id'];			
+			$this->setGeneralUserObject($user_query->row);
 
 			$user_group_query = $this->db->query("SELECT * FROM user_group WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
 
@@ -280,7 +270,6 @@ class User {
 			return true;
 
 		} else {
-
 			if($this->config->get('adminlog_enable') && $this->config->get('adminlog_hacklog')){
 				$this->addToAdminLog('login', false);
 			}
@@ -315,10 +304,7 @@ class User {
 	}
 
 	public function hasPermission($key, $value) {
-
-		$exclude_path = array(
-			'/admin/index.php?route=api/alerts/getAlert'
-		);
+		$exclude_path = ['/admin/index.php?route=api/alerts/getAlert'];
 
 		if (isset($this->permission[$key])) {
 
@@ -420,16 +406,24 @@ class User {
 		return $this->fullname;
 	}
 
+	public function getIsSuperUser() {
+		return $this->isSuperUser;
+	}
+
+	public function getAdminExtendedStats() {
+		return $this->adminExtendedStats;
+	}
+
 	public function getIsAV() {
-		return $this->is_av;
+		return $this->getIsSuperUser();
 	}
 
 	public function canUnlockOrders() {
-		return $this->unlock_orders;
+		return $this->unlockOrders;
 	}
 
 	public function canDoTransactions() {
-		return $this->do_transactions;
+		return $this->doTransactions;
 	}
 
 	public function getManagerStores() {
@@ -437,19 +431,19 @@ class User {
 	}
 
 	public function getIsMM() {
-		return $this->is_mainmanager;
+		return $this->isMainManager;
 	}
 
 	public function getOwnOrders() {
-		return $this->own_orders;
+		return $this->doOwnOrders;
 	}
 
 	public function getIsManager() {
-		return $this->is_manager;
+		return $this->isManager;
 	}
 
 	public function canEditCSI() {
-		return $this->edit_csi;
+		return $this->doEditCsi;
 	}
 
 	public function getBitrixID() {
@@ -457,11 +451,11 @@ class User {
 	}
 
 	public function getCountWorktime() {
-		return $this->count_worktime;
+		return $this->doCountWorkTime;
 	}
 
 	public function getCountContent() {
-		return $this->count_content;
+		return $this->doCountWorkContent;
 	}
 
 	public function getIPBX() {

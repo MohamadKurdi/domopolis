@@ -204,6 +204,14 @@
 				} else {
 					$this->template = $this->default_template . '/template/' . $this->template;
 				}
+			} else {
+				if (mb_substr($this->template, -4) != '.tpl'){
+					$this->template = $this->template . '.tpl';
+				}
+
+				if (file_exists(DIR_TEMPLATE . '.' . $this->config->get('config_template') . '/' . $this->template)){
+					$this->template =  ('.' . $this->config->get('config_template') . '/' . $this->template);
+				}
 			}							
 
 			if (file_exists(DIR_TEMPLATE . $this->template)) {

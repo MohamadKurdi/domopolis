@@ -346,7 +346,7 @@ $registry->set('tax',               new Tax($registry));
 $registry->set('weight',            new Weight($registry));
 $registry->set('length',            new Length($registry));
 $registry->set('cart',              new Cart($registry));
-$registry->set('user',              new User($registry));
+$registry->set('user',              new hobotix\UserExtended($registry));
 $registry->set('encryption',        new Encryption($registry->get('config')->get('config_encryption')));
 $registry->set('Bitrix24',          new hobotix\Bitrix24($registry));   
 $registry->set('mAlert',            new hobotix\mAlert($registry)); 

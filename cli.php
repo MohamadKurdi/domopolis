@@ -303,48 +303,45 @@ if ($registry->get('config')->get('config_order_default')) {
     $registry->get('config')->set('order_default', $sorts['order_default']);
 }
 
-//Библиотека респонса
 $response = new Response($registry);
 $response->addHeader('Content-Type: text/html; charset=utf-8');
 $response->setCompression($registry->get('config')->get('config_compression'));
 $registry->set('response', $response);
 
-//Остальные библиотеки
-$registry->set('document', new Document());
-$registry->set('affiliate', new Affiliate($registry));
-$registry->set('currency', new Currency($registry));
-$registry->set('smsQueue', new hobotix\SmsQueue($registry));
-$registry->set('phoneValidator', new hobotix\phoneValidator($registry));
-$registry->set('smsAdaptor', new hobotix\SmsAdaptor($registry));
-$registry->set('customer', new hobotix\CustomerExtended($registry));
-$registry->set('tax', new Tax($registry));
-$registry->set('weight', new Weight($registry));
-$registry->set('length', new Length($registry));
-$registry->set('cart', new Cart($registry));
-$registry->set('user', new User($registry));
-$registry->set('encryption', new Encryption($registry->get('config')->get('config_encryption')));
-$registry->set('Bitrix24', new hobotix\Bitrix24($registry));
-$registry->set('mAlert', new hobotix\mAlert($registry));
-$registry->set('shortAlias', new hobotix\shortAlias($registry));
-$registry->set('courierServices', new hobotix\CourierServices($registry));
-$registry->set('openaiAdaptor', new hobotix\OpenAIAdaptor($registry));
-$registry->set('emailBlackList', new hobotix\EmailBlackList($registry));
-$registry->set('mailAdaptor', new hobotix\MailAdaptor($registry));
-$registry->set('elasticSearch', new hobotix\ElasticSearch($registry));
-$registry->set('openaiAdaptor', new hobotix\OpenAIAdaptor($registry));
-$registry->set('translateAdaptor', new hobotix\TranslateAdaptor($registry));
-$registry->set('rainforestAmazon', new hobotix\RainforestAmazon($registry));
-$registry->set('pricevaAdaptor', new hobotix\PricevaAdaptor($registry));
-$registry->set('courierServices', new hobotix\CourierServices($registry));
-$registry->set('checkBoxUA', new hobotix\CheckBoxUA($registry));
-$registry->set('Fiscalisation', new hobotix\Fiscalisation($registry));
-$registry->set('supplierAdaptor', new hobotix\SupplierAdaptor($registry));
-$registry->set('couponRandom', new hobotix\CouponRandom($registry));
-$registry->set('simpleProcess', new hobotix\simpleProcess(['route' => $route, 'config' => $configFile, 'args' => $allArguments], $configFilesPrefix));
+$registry->set('document',          new Document());
+$registry->set('affiliate',         new Affiliate($registry));
+$registry->set('currency',          new Currency($registry));
+$registry->set('smsQueue',          new hobotix\SmsQueue($registry));
+$registry->set('phoneValidator',    new hobotix\phoneValidator($registry));
+$registry->set('smsAdaptor',        new hobotix\SmsAdaptor($registry));
+$registry->set('customer',          new hobotix\CustomerExtended($registry));
+$registry->set('tax',               new Tax($registry));
+$registry->set('weight',            new Weight($registry));
+$registry->set('length',            new Length($registry));
+$registry->set('cart',              new Cart($registry));
+$registry->set('user',              new hobotix\UserExtended($registry));
+$registry->set('encryption',        new Encryption($registry->get('config')->get('config_encryption')));
+$registry->set('Bitrix24',          new hobotix\Bitrix24($registry));
+$registry->set('mAlert',            new hobotix\mAlert($registry));
+$registry->set('shortAlias',        new hobotix\shortAlias($registry));
+$registry->set('courierServices',   new hobotix\CourierServices($registry));
+$registry->set('openaiAdaptor',     new hobotix\OpenAIAdaptor($registry));
+$registry->set('emailBlackList',    new hobotix\EmailBlackList($registry));
+$registry->set('mailAdaptor',       new hobotix\MailAdaptor($registry));
+$registry->set('elasticSearch',     new hobotix\ElasticSearch($registry));
+$registry->set('openaiAdaptor',     new hobotix\OpenAIAdaptor($registry));
+$registry->set('translateAdaptor',  new hobotix\TranslateAdaptor($registry));
+$registry->set('rainforestAmazon',  new hobotix\RainforestAmazon($registry));
+$registry->set('pricevaAdaptor',    new hobotix\PricevaAdaptor($registry));
+$registry->set('courierServices',   new hobotix\CourierServices($registry));
+$registry->set('checkBoxUA',        new hobotix\CheckBoxUA($registry));
+$registry->set('Fiscalisation',     new hobotix\Fiscalisation($registry));
+$registry->set('supplierAdaptor',   new hobotix\SupplierAdaptor($registry));
+$registry->set('couponRandom',      new hobotix\CouponRandom($registry));
+$registry->set('simpleProcess',     new hobotix\simpleProcess(['route' => $route, 'config' => $configFile, 'args' => $allArguments], $configFilesPrefix));
 
 $registry->set('customer_group_id', (int)$registry->get('config')->get('config_customer_group_id'));
 
-//AMAZON_CONFIG FROM JSON. Очень важная настройка, в БД какого-то чёрта иногда сбоит
 $amazonConfig = loadJsonConfig('amazon');
 
 if (!empty($amazonConfig['domain_1'])) {

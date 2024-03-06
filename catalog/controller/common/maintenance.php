@@ -12,10 +12,7 @@ class ControllerCommonMaintenance extends Controller {
 				}			
 			}
 
-			// Show site if logged in as admin
-			$this->load->library('user');
-
-			$this->user = new User($this->registry);
+			$this->user = new \hobotix\UserExtended($this->registry);
 
 			if (($route != 'payment') && !$this->user->isLogged()) {
 				return $this->forward('common/maintenance/info');
@@ -40,11 +37,7 @@ class ControllerCommonMaintenance extends Controller {
 
 		$this->data['message'] = $this->language->get('text_message');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/maintenance.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/common/maintenance.tpl';
-		} else {
-			$this->template = 'default/template/common/maintenance.tpl';
-		}
+		$this->template = 'common/maintenance';
 
 		$this->children = array(
 			'common/footer',
@@ -54,4 +47,3 @@ class ControllerCommonMaintenance extends Controller {
 		$this->response->setOutput($this->render());
 	}
 }
-?>

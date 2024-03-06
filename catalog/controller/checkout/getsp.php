@@ -2,15 +2,13 @@
 	
 	class ControllerCheckoutGetSP extends Controller {
 		public function index() {
-			$this->language->load('checkout/manual');
-			
-			
+			$this->language->load('checkout/manual');				
 		}	
+
 		public function getShippings(){
 			$this->language->load('checkout/manual');
-			$json = array();
-			$this->load->library('user');
-			$this->user = new User($this->registry);
+			$json = [];
+			$this->user = new \hobotix\UserExtended($this->registry);
 			
 			$this->load->model('setting/setting');
 			$this->load->model('localisation/country');
@@ -79,7 +77,7 @@
 				}
 			}
 			
-			$sort_order = array();
+			$sort_order = [];
 			
 			foreach ($json['shipping_method'] as $key => $value) {
 				$sort_order[$key] = $value['sort_order'];
@@ -95,9 +93,8 @@
 		public function getPayments(){
 			$json = [];
 
-			$this->language->load('checkout/manual');
-			$this->load->library('user');		
-			$this->user = new User($this->registry);			
+			$this->language->load('checkout/manual');			
+			$this->user = new \hobotix\UserExtended($this->registry);			
 			
 			$this->load->model('setting/setting');
 			$this->load->model('localisation/country');
@@ -168,7 +165,7 @@
 			'address_format' => $address_format
 			);
 			
-			$json['payment_method'] = array();
+			$json['payment_method'] = [];
 			
 			$results = $this->model_setting_extension->getExtensions('payment');
 			
@@ -195,7 +192,7 @@
 				}
 			}
 			
-			$sort_order = array(); 
+			$sort_order = []; 
 			
 			foreach ($json['payment_method'] as $key => $value) {
 				$sort_order[$key] = $value['sort_order'];

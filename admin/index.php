@@ -44,7 +44,7 @@ if ($httpHOST != parse_url(HTTPS_CATALOG, PHP_URL_HOST)){
 
 require_once(DIR_SYSTEM . 'startup.php');	
 require_once(DIR_SYSTEM . 'library/currency.php');
-require_once(DIR_SYSTEM . 'library/user.php');
+require_once(DIR_SYSTEM . 'library/hobotix/EngineExtended/UserExtended.php');
 require_once(DIR_SYSTEM . 'library/weight.php');
 require_once(DIR_SYSTEM . 'library/length.php');
 require_once(DIR_SYSTEM . 'library/cart.php');
@@ -56,7 +56,7 @@ require_once(DIR_SYSTEM . 'library/hobotix/mAlert.php');
 require_once(DIR_SYSTEM . 'library/hobotix/ShortAlias.php');
 require_once(DIR_SYSTEM . 'library/hobotix/SmsAdaptor.php');
 require_once(DIR_SYSTEM . 'library/hobotix/MailAdaptor.php');
-require_once(DIR_SYSTEM . 'library/hobotix/CustomerExtended.php');
+require_once(DIR_SYSTEM . 'library/hobotix/EngineExtended/CustomerExtended.php');
 require_once(DIR_SYSTEM . 'library/hobotix/SessionDBHandler.php');
 require_once(DIR_SYSTEM . 'library/hobotix/PageCache.php');
 require_once(DIR_SYSTEM . 'library/hobotix/CourierServices.php');
@@ -202,7 +202,7 @@ $registry->set('smsAdaptor', 		new hobotix\SmsAdaptor($registry));
 $registry->set('customer', 			new hobotix\CustomerExtended($registry));			
 $registry->set('weight', 			new Weight($registry));
 $registry->set('length', 			new Length($registry));
-$registry->set('user', 				new User($registry));
+$registry->set('user', 				new hobotix\UserExtended($registry));
 $registry->set('cart', 				new Cart($registry));
 $registry->set('encryption', 		new Encryption($registry->get('config')->get('config_encryption')));
 $registry->set('Bitrix24', 			new hobotix\Bitrix24($registry));

@@ -6,7 +6,8 @@
 			salt 					= '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', 
 			password 				= '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', 
 			firstname 				= '" . $this->db->escape($data['firstname']) . "', 
-			is_av 					= '" . (int)($data['is_av']) . "', 
+			is_av 					= '" . (int)($data['is_av']) . "',
+			extended_stats 			= '" . (int)($data['extended_stats']) . "',  
 			dev_template 			= '" . (int)($data['dev_template']) . "', 
 			unlock_orders 			= '" . (int)($data['unlock_orders']) . "',
 			do_transactions 		= '" . (int)($data['do_transactions']) . "',
@@ -30,6 +31,7 @@
 			username 				= '" . $this->db->escape($data['username']) . "',
 			firstname 				= '" . $this->db->escape($data['firstname']) . "', 
 			is_av 					= '" . (int)($data['is_av']) . "',
+			extended_stats 			= '" . (int)($data['extended_stats']) . "',
 			dev_template 			= '" . (int)($data['dev_template']) . "', 
 			unlock_orders 			= '" . (int)($data['unlock_orders']) . "',
 			do_transactions 		= '" . (int)($data['do_transactions']) . "',
@@ -187,7 +189,7 @@
 			}
 		}
 		
-		public function getUsers($data = array()) {
+		public function getUsers($data = []) {
 			$sql = "SELECT * FROM `user` WHERE 1";
 			
 			if (isset($data['internal_pbx_num']) && ($data['internal_pbx_num'])) {
@@ -284,7 +286,7 @@
 			
 			$query = $this->db->query("SELECT * FROM `user_group` WHERE LENGTH(sip_queue) > 0");
 			
-			$groups = array();
+			$groups = [];
 			foreach ($query->rows as $row){
 				
 				$groups[] = array(
@@ -304,7 +306,7 @@
 			return $query->row['total'];
 		}		
 		
-		public function getUserCalls($user_id, $data = array()){
+		public function getUserCalls($user_id, $data = []){
 			
 			$sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) as customer_name FROM customer_calls cc LEFT JOIN customer c ON cc.customer_id = c.customer_id WHERE cc.manager_id = '". (int)$user_id ."'";
 			
@@ -366,7 +368,7 @@
 			return $result->row['total'];		
 		}
 		
-		public function getTotalUserCalls($user_id, $data = array()){
+		public function getTotalUserCalls($user_id, $data = []){
 			$sql = "SELECT COUNT(*) as total FROM customer_calls cc LEFT JOIN customer c ON cc.customer_id = c.customer_id WHERE cc.manager_id = '". (int)$user_id ."'";
 			
 			if (!empty($data['filter_date_end'])) {

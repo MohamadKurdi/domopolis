@@ -15,194 +15,287 @@
 		</div>
 		<div class="content">
 			<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
-				<table class="form">
-					<tr>
-						<td><span class="required">*</span> <?php echo $entry_username; ?></td>
-						<td><input type="text" name="username" value="<?php echo $username; ?>" />
-							<?php if ($error_username) { ?>
-								<span class="error"><?php echo $error_username; ?></span>
-							<?php } ?></td>
-					</tr>
-					<tr>
-						<td><span class="required">*</span> <?php echo $entry_firstname; ?></td>
-						<td><input type="text" name="firstname" value="<?php echo $firstname; ?>" />
-							<?php if ($error_firstname) { ?>
-								<span class="error"><?php echo $error_firstname; ?></span>
-							<?php } ?></td>
-					</tr>
-					<tr>
-						<td><span class="required">*</span> <?php echo $entry_lastname; ?></td>
-						<td><input type="text" name="lastname" value="<?php echo $lastname; ?>" />
-							<?php if ($error_lastname) { ?>
-								<span class="error"><?php echo $error_lastname; ?></span>
-							<?php } ?></td>
-					</tr>
-					<tr>
-						<td><?php echo $entry_email; ?></td>
-						<td><input type="text" name="email" value="<?php echo $email; ?>" /></td>
-					</tr>
-					<tr>
-                        <td>Гипер-права</td>
-                        <td>
-                            <select name="is_av">
-                                <option <?php if ($is_av): ?>selected="selected"<?php endif?> value="1">
-                                    Да
-								</option>
-                                <option <?php if (!$is_av): ?>selected="selected"<?php endif?> value="0">
-                                    Нет
-								</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-                        <td>Фронт-девелопер</td>
-                        <td>
-                            <select name="dev_template">
-                                <option <?php if ($dev_template): ?>selected="selected"<?php endif?> value="1">
-                                    Да
-								</option>
-                                <option <?php if (!$dev_template): ?>selected="selected"<?php endif?> value="0">
-                                    Нет
-								</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-                        <td>Разблокировка заказов</td>
-                        <td>
-                            <select name="unlock_orders">
-                                <option <?php if ($unlock_orders): ?>selected="selected"<?php endif?> value="1">
-                                    Да
-								</option>
-                                <option <?php if (!$unlock_orders): ?>selected="selected"<?php endif?> value="0">
-                                    Нет
-								</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-                        <td>Финансовые транзакции</td>
-                        <td>
-                            <select name="do_transactions">
-                                <option <?php if ($do_transactions): ?>selected="selected"<?php endif?> value="1">
-                                    Да
-								</option>
-                                <option <?php if (!$do_transactions): ?>selected="selected"<?php endif?> value="0">
-                                    Нет
-								</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-                        <td>Присваивать заказы?</td>
-                        <td>
-                            <select name="own_orders">
-                                <option <?php if ($own_orders): ?>selected="selected"<?php endif?> value="1">
-                                    Да
-								</option>
-                                <option <?php if (!$own_orders): ?>selected="selected"<?php endif?> value="0">
-                                    Нет
-								</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td>Постановка задач</td>
-						<td><select name="ticket">
-							<option value="0" <? if (!$ticket) { ?>selected="selected"<? } ?>>Нет</option>
-							<option value="1" <? if ($ticket) { ?>selected="selected"<? } ?>>Да</option>
-						</select></td>           
-					</tr>
-					<tr>
-						<td>Старший менеджер</td>
-						<td><select name="is_mainmanager">
-							<option value="0" <? if (!$is_mainmanager ) { ?>selected="selected"<? } ?>>Нет</option>
-							<option value="1" <? if ($is_mainmanager ) { ?>selected="selected"<? } ?>>Да</option>
-						</select></td>           
-					</tr>
-					<tr>
-						<td>Руководитель отдела продаж</td>
-						<td><select name="is_headsales">
-							<option value="0" <? if (!$is_headsales ) { ?>selected="selected"<? } ?>>Нет</option>
-							<option value="1" <? if ($is_headsales ) { ?>selected="selected"<? } ?>>Да</option>
-						</select></td>           
-					</tr>
-					<tr>
-						<td>Учет рабочего времени</td>
-						<td><select name="count_worktime">
-							<option value="0" <? if (!$count_worktime ) { ?>selected="selected"<? } ?>>Нет</option>
-							<option value="1" <? if ($count_worktime) { ?>selected="selected"<? } ?>>Да</option>
-						</select></td>           
-					</tr>
-					<tr>
-						<td>Учет работы с контентом</td>
-						<td><select name="count_content">
-							<option value="0" <? if (!$count_content ) { ?>selected="selected"<? } ?>>Нет</option>
-							<option value="1" <? if ($count_content) { ?>selected="selected"<? } ?>>Да</option>
-						</select></td>           
-					</tr>
-					<tr>
-						<td>Редактор CSI</td>
-						<td><select name="edit_csi">
-							<option value="0" <? if (!$edit_csi ) { ?>selected="selected"<? } ?>>Нет</option>
-							<option value="1" <? if ($edit_csi) { ?>selected="selected"<? } ?>>Да</option>
-						</select></td>           
-					</tr>	
-					<tr>
-						<td>Bitrix24 ID</td>
-						<td><input type="text" name="bitrix_id" value="<?php echo $bitrix_id; ?>" /></td>
-					</tr>
-					<tr>
-						<td>Внутренний номер в АТС</td>
-						<td><input type="text" name="internal_pbx_num" value="<?php echo $internal_pbx_num; ?>" /></td>
-					</tr>
-					<tr>
-						<td>Внутренний номер в АТС для авторизации (0000...)</td>
-						<td><input type="text" name="internal_auth_pbx_num" value="<?php echo $internal_auth_pbx_num; ?>" /></td>
-					</tr>
-					<tr>
-						<td>Внешний номер в АТС</td>
-						<td><input type="text" name="outbound_pbx_num" value="<?php echo $outbound_pbx_num; ?>" /></td>
-					</tr>
-					<tr>
-						<td><?php echo $entry_user_group; ?></td>
-						<td><select name="user_group_id">
-							<?php foreach ($user_groups as $user_group) { ?>
-								<?php if ($user_group['user_group_id'] == $user_group_id) { ?>
-									<option value="<?php echo $user_group['user_group_id']; ?>" selected="selected"><?php echo $user_group['name']; ?></option>
-									<?php } else { ?>
-									<option value="<?php echo $user_group['user_group_id']; ?>"><?php echo $user_group['name']; ?></option>
+				<div style="width:50%; float:left;">
+					<h2>Основная информация</h2>
+					<table class="form">
+						<tr>
+							<td style="width:20%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF"><?php echo $entry_username; ?></span></p>
+								<input type="text" name="username" value="<?php echo $username; ?>" />
+
+								<?php if ($error_username) { ?>
+									<span class="error"><?php echo $error_username; ?></span>
 								<?php } ?>
-							<?php } ?>
-						</select></td>
-					</tr>
-					<tr>
-						<td><?php echo $entry_password; ?></td>
-						<td><input type="password" name="password" value="<?php echo $password; ?>"  />
-							<?php if ($error_password) { ?>
-								<span class="error"><?php echo $error_password; ?></span>
-							<?php  } ?></td>
-					</tr>
-					<tr>
-						<td><?php echo $entry_confirm; ?></td>
-						<td><input type="password" name="confirm" value="<?php echo $confirm; ?>" />
-							<?php if ($error_confirm) { ?>
-								<span class="error"><?php echo $error_confirm; ?></span>
-							<?php  } ?></td>
-					</tr>
-					<tr>
-						<td><?php echo $entry_status; ?></td>
-						<td><select name="status">
-							<?php if ($status) { ?>
-								<option value="0"><?php echo $text_disabled; ?></option>
-								<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-								<?php } else { ?>
-								<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-								<option value="1"><?php echo $text_enabled; ?></option>
-							<?php } ?>
-						</select></td>
-					</tr>
-				</table>
+							</td>
+
+							<td style="width:20%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF"><?php echo $entry_firstname; ?></span></p>
+								<input type="text" name="firstname" value="<?php echo $firstname; ?>" />
+
+								<?php if ($error_firstname) { ?>
+									<span class="error"><?php echo $error_firstname; ?></span>
+								<?php } ?>
+							</td>
+
+							<td style="width:20%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF"><?php echo $entry_lastname; ?></span></p>
+								<input type="text" name="lastname" value="<?php echo $lastname; ?>" />
+							</td>
+
+							<td style="width:20%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF"><?php echo $entry_email; ?></span></p>
+								<input type="text" name="email" value="<?php echo $email; ?>" />
+							</td>
+
+							<td style="width:20%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF"><?php echo $entry_user_group; ?></span></p>
+								<select name="user_group_id">
+									<?php foreach ($user_groups as $user_group) { ?>
+										<?php if ($user_group['user_group_id'] == $user_group_id) { ?>
+											<option value="<?php echo $user_group['user_group_id']; ?>" selected="selected"><?php echo $user_group['name']; ?></option>
+										<?php } else { ?>
+											<option value="<?php echo $user_group['user_group_id']; ?>"><?php echo $user_group['name']; ?></option>
+										<?php } ?>
+									<?php } ?>
+								</select>
+							</td>
+						</tr>
+					</table>
+
+					<h2>Пароль, активность</h2>
+					<table class="form">
+						<tr>							
+							<td style="width:33%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_status; ?></span></p>
+								<select name="status">
+									<?php if ($status) { ?>
+										<option value="0"><?php echo $text_disabled; ?></option>
+										<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+									<?php } else { ?>
+										<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+										<option value="1"><?php echo $text_enabled; ?></option>
+									<?php } ?>
+								</select>
+							</td>
+							<td style="width:33%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_password; ?></span></p>
+								<input type="password" name="password" value="<?php echo $password; ?>"  autocomplete='off' />
+								<?php if ($error_password) { ?>
+									<span class="error"><?php echo $error_password; ?></span>
+								<?php  } ?>
+							</td>						
+							<td style="width:33%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_confirm; ?></span></p>
+								<input type="password" name="confirm" value="<?php echo $confirm; ?>"  autocomplete='off' />
+								<?php if ($error_confirm) { ?>
+									<span class="error"><?php echo $error_confirm; ?></span>
+								<?php  } ?>
+							</td>
+						</tr>
+					</table>
+
+					<h2>Дополнительные данные</h2>
+					<table class="form">
+						<tr>
+							<td style="width:25%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Bitrix24 ID</span></p>
+								<input type="text" name="bitrix_id" value="<?php echo $bitrix_id; ?>" />
+								<span class="help">Если настроена интеграция с Bitrix24</span>
+							</td>
+							<td style="width:25%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Внутренний номер в АТС</span></p>
+								<input type="text" name="internal_pbx_num" value="<?php echo $internal_pbx_num; ?>" />
+								<span class="help">Если настроена интеграция с Asterisk</span>
+							</td>
+							<td style="width:25%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Auth Номер в АТС</span></p>
+								<input type="text" name="internal_auth_pbx_num" value="<?php echo $internal_auth_pbx_num; ?>" placeholder="0000..."/>
+								<span class="help">Если настроена интеграция с Asterisk</span>
+							</td>
+							<td style="width:25%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Внешний номер в АТС</span></p>
+								<input type="text" name="outbound_pbx_num" value="<?php echo $outbound_pbx_num; ?>" />
+								<span class="help">Если настроена интеграция с Asterisk</span>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div style="width:45%; float:right; padding-left:10px; margin-left:10px; border-left:1px dashed grey;">
+					<table class="list">
+						<tr>
+							<td colspan="3" class="left" style="color:#cf4a61;">
+								<i class="fa fa-code"></i> <b>Расширенные права</b>
+							</td>
+						</tr>
+						<tr>
+							<td style="white-space: nowrap;color:#cf4a61;">
+								<i class="fa fa-exclamation-circle"></i> <b>Супер-права</b>
+							</td>
+							<td style="width:220px;" class="center">
+								<input id="is_av" type="checkbox" class="checkbox" name="is_av" <? if ($is_av){ ?> checked="checked" <? } ?> value="1" /><label for="is_av"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Добавляет некоторые расширенные права и отображение скрытых разделов
+								</span>
+							</td>
+						</tr>						
+						<tr>
+							<td style="white-space: nowrap;color:#cf4a61;">
+								<i class="fa fa-exclamation-circle"></i> <b>Больше статистики</b>
+							</td>
+							<td style="width:220px;" class="center">
+								<input id="extended_stats" type="checkbox" class="checkbox" name="extended_stats" <? if ($extended_stats){ ?> checked="checked" <? } ?> value="1" /><label for="extended_stats"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Включает отображение большого количества статистики, отчетов, мониторинга, итд
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td style="white-space: nowrap;color:#cf4a61;">
+								<i class="fa fa-exclamation-circle"></i> <b>Фронт-девелопер</b>
+							</td>
+							<td style="width:220px;" class="center">
+								<input id="dev_template" type="checkbox" class="checkbox" name="dev_template" <? if ($dev_template){ ?> checked="checked" <? } ?> value="1" /><label for="dev_template"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если включено и пользователь залогинен в админку - на фронте используется шаблон для разработки
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td style="white-space: nowrap;color:#cf4a61;">
+								<i class="fa fa-exclamation-circle"></i> <b>Разблокировка заказов</b>
+							</td>
+							<td style="width:220px;" class="center">
+								<input id="unlock_orders" type="checkbox" class="checkbox" name="unlock_orders" <? if ($unlock_orders){ ?> checked="checked" <? } ?> value="1" /><label for="unlock_orders"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Пользователю разрешено сбрасывать блокировку заказов после завершения или отмены для корректировки
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3" class="left" style="color:#7F00FF;">
+								<i class="fa fa-eur"></i> <b>Роли в управлении продажами</b>
+							</td>
+						</tr>
+						<tr>
+							<td style="white-space: nowrap;color:#7F00FF;">
+								<i class="fa fa-eur"></i> <b>Финансовые транзакции</b>
+							</td>
+							<td style="width:220px;" class="center">
+								<input id="do_transactions" type="checkbox" class="checkbox" name="do_transactions" <? if ($do_transactions){ ?> checked="checked" <? } ?> value="1" /><label for="do_transactions"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Пользователю разрешено добавление и изменение транзакций вручную
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td style="white-space: nowrap;color:#7F00FF;">
+								<i class="fa fa-eur"></i> <b>Присваивать заказы</b>
+							</td>
+							<td style="width:220px;" class="center">
+								<input id="own_orders" type="checkbox" class="checkbox" name="own_orders" <? if ($own_orders){ ?> checked="checked" <? } ?> value="1" /><label for="own_orders"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Только для менеджеров. Если включено - при первом открытии заказа пользователем заказ будет присвоен ему
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td style="white-space: nowrap;color:#7F00FF;">
+								<i class="fa fa-eur"></i> <b>Старший менеджер</b>
+							</td>
+							<td style="width:220px;" class="center">
+								<input id="is_mainmanager" type="checkbox" class="checkbox" name="is_mainmanager" <? if ($is_mainmanager){ ?> checked="checked" <? } ?> value="1" /><label for="is_mainmanager"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Только для менеджеров. Расширяет права обработки заказов и отображает некоторые отчеты
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td style="white-space: nowrap;color:#7F00FF;">
+								<i class="fa fa-eur"></i> <b>Руководитель отдела продаж</b>
+							</td>
+							<td style="width:220px;" class="center">
+								<input id="is_mainmanager" type="checkbox" class="checkbox" name="is_mainmanager" <? if ($is_mainmanager){ ?> checked="checked" <? } ?> value="1" /><label for="is_mainmanager"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Пользователь имеет другие KPI а также более расширенные права по сравнению с старшим менеджером
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td style="white-space: nowrap;color:#7F00FF;">
+								<i class="fa fa-eur"></i> <b>Редактор CSI</b>
+							</td>
+							<td style="width:220px;" class="center">
+								<input id="edit_csi" type="checkbox" class="checkbox" name="edit_csi" <? if ($edit_csi){ ?> checked="checked" <? } ?> value="1" /><label for="edit_csi"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Пользователь имеет возможность редактировать параметры CSI в заказах
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td colspan="3" class="left" style="color:#FF9900;">
+								<i class="fa fa-clock-o"></i> <b>Контроль рабочего времени и задач</b>
+							</td>
+						</tr>
+						<tr>
+							<td style="white-space: nowrap;color:#FF9900;">
+								<i class="fa fa-clock-o"></i> <b>Постановка задач</b>
+							</td>
+							<td style="width:220px;" class="center">
+								<input id="ticket" type="checkbox" class="checkbox" name="ticket" <? if ($ticket){ ?> checked="checked" <? } ?> value="1" /><label for="ticket"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Включает внутренний таск-менеджер для пользователя
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td style="white-space: nowrap;color:#FF9900;">
+								<i class="fa fa-clock-o"></i> <b>Учет рабочего времени</b>
+							</td>
+							<td style="width:220px;" class="center">
+								<input id="count_worktime" type="checkbox" class="checkbox" name="count_worktime" <? if ($count_worktime){ ?> checked="checked" <? } ?> value="1" /><label for="count_worktime"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Фиксирует входы и выходы
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td style="white-space: nowrap;color:#FF9900;">
+								<i class="fa fa-clock-o"></i> <b>Учет работы с контентом<</b>
+							</td>
+							<td style="width:220px;" class="center">
+								<input id="count_content" type="checkbox" class="checkbox" name="count_content" <? if ($count_content){ ?> checked="checked" <? } ?> value="1" /><label for="count_content"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Фиксирует редактирования, создания и удаления сущностей
+								</span>
+							</td>
+						</tr>
+					</table>
+				</div>
 			</form>
 		</div>
 	</div>

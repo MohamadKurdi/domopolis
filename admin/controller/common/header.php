@@ -502,9 +502,7 @@ class ControllerCommonHeader extends Controller
 
         $this->template = 'common/header.tpl';
         if ($template_prefix = $this->user->getTemplatePrefix()) {
-            if (file_exists(DIR_TEMPLATE . 'common/headers/header' . $template_prefix . '.tpl')) {
-                $this->template = 'common/headers/header' . $template_prefix . '.tpl';
-            }
+             $this->template = 'common/headers/header' . $template_prefix . '.tpl';
         }
 
         $this->render();

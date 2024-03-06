@@ -29,13 +29,6 @@ class ControllerModuleEmailtemplate extends Controller {
     public function record() {
     	if(!empty($this->request->get['id']) && !empty($this->request->get['enc'])){
 
-    		// Skip read for logged in admins
-    		/* $this->load->library('user');
-    		$this->user = new User($this->registry);
-    		if ($this->user->isLogged()) {
-    			exit;
-    		} */
-
     		$this->load->model('module/emailtemplate');
     		$this->model_module_emailtemplate->readTemplateLog($this->request->get['id'], $this->request->get['enc']);
 

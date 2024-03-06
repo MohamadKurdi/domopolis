@@ -403,6 +403,14 @@ class ControllerUserUser extends Controller {
 		} else {
 			$this->data['is_av'] = '';
 		}
+
+		if (isset($this->request->post['extended_stats'])) {
+			$this->data['extended_stats'] = $this->request->post['extended_stats'];
+		} elseif (!empty($user_info)) {
+			$this->data['extended_stats'] = $user_info['extended_stats'];
+		} else {
+			$this->data['extended_stats'] = '';
+		}
 		
 		if (isset($this->request->post['unlock_orders'])) {
 			$this->data['unlock_orders'] = $this->request->post['unlock_orders'];
@@ -604,10 +612,6 @@ class ControllerUserUser extends Controller {
 		
 		if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen($this->request->post['firstname']) > 32)) {
 			$this->error['firstname'] = $this->language->get('error_firstname');
-		}
-		
-		if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen($this->request->post['lastname']) > 32)) {
-			$this->error['lastname'] = $this->language->get('error_lastname');
 		}
 		
 		if ($this->request->post['password'] || (!isset($this->request->get['user_id']))) {

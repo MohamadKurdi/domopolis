@@ -4,9 +4,7 @@ class ControllerModuleStore extends Controller {
 		$status = true;
 		
 		if ($this->config->get('store_admin')) {
-			$this->load->library('user');
-		
-			$this->user = new User($this->registry);
+			$this->user = new \hobotix\UserExtended($this->registry);
 			
 			$status = $this->user->isLogged();
 		}
@@ -50,4 +48,3 @@ class ControllerModuleStore extends Controller {
 		}
 	}
 }
-?>
