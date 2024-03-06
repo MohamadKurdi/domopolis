@@ -853,6 +853,10 @@ class CheckBoxUA {
 
 
     public function parse_date($date_str, $template = "Y-m-d H:i:s"){
+        if (!empty($date_str)){
+            return date($template);
+        }
+
         return date($template, strtotime($date_str) );
     } 
 	

@@ -222,6 +222,7 @@
 				}
 
 				if (empty($real_customer['firstname'])){
+					$real_customer = [];
 					$real_customer['firstname'] = $result['telephone'];
 				}
 				

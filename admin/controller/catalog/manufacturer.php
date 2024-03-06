@@ -235,7 +235,7 @@ class ControllerCatalogManufacturer extends Controller {
 				'hotline_enable'  => $result['hotline_enable'],
 				'show_goods'      => $result['show_goods'],
 				'sort_order'      => $result['sort_order'],
-				'date_added'      => date('Y-m-d', strtotime($result['date_added'])),
+				'date_added'      => (!empty($result['date_added']))?date('Y-m-d', strtotime($result['date_added'])):'',
 				'selected'        => isset($this->request->post['selected']) && in_array($result['manufacturer_id'], $this->request->post['selected']),
 				'action'          => $action
 			);

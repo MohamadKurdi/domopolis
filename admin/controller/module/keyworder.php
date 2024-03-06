@@ -110,6 +110,7 @@ class ControllerModuleKeyworder extends Controller {
 				$keyworder_description[$result['keyworder_id']] = null;
 			}
 
+			$manufacturer_name = '';
 			foreach ($this->data['manufacturers'] as $man) {
 				if ($man['manufacturer_id'] == $result['manufacturer_id']) {
 					$manufacturer_name = $man['name'];
