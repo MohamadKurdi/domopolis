@@ -204,7 +204,7 @@
 				} else {
 					$this->template = $this->default_template . '/template/' . $this->template;
 				}
-			}								
+			}							
 
 			if (file_exists(DIR_TEMPLATE . $this->template)) {
 				extract($this->data);
@@ -226,9 +226,7 @@
 								
 				return $this->output;
 				} else {
-				return '[' . $this->template . '] DOESNT EXIST';
-				trigger_error('Error: Could not load template ' . DIR_TEMPLATE . $this->template . '!');
-				exit();				
+				return '[' . $this->template . '] DOESNT EXIST';			
 			}
 		}
 	}

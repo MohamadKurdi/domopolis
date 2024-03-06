@@ -8,7 +8,7 @@
 						<td  class="right" style="text-align: left; <?php if ($order['yam_express']) { ?>background-color:#cf4a61; color:white;<? } ?>">
 							<?php echo $order['order_id']; ?>
 						</td>
-						<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
+						<?php if ($this->config->get('config_amazon_profitability_in_stocks')) { ?>
 							<td  class="center" style="width:20px;">
 								<?php if ($order['amazon_offers_type']) { ?>
 									<span style="padding:2px 3px; background-color:#e16a5d; display:inline-block; text-decoration:none;font-size:14px; color:#FFF;"><? echo $order['amazon_offers_type']; ?></span>

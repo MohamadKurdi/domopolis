@@ -734,7 +734,7 @@
 					});
 				<?php } ?>
 			//--></script> 
-			<script type="text/javascript" src="view/blog-res/jquery-ui-timepicker-addon.js"></script>
+			<script type="text/javascript" src="view/javascript/blog-res/jquery-ui-timepicker-addon.js"></script>
 			<script type="text/javascript"><!--
 				$(document).ready(function() {
 					if ($.browser.msie && $.browser.version == 6) {
