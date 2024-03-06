@@ -28,7 +28,9 @@
 
 			<div id="tabs" class="htabs">
 				<a href="#tab-cron"><span style="color:#7F00FF;"><i class="fa fa-refresh"></i> Cron</span></a>
-				<a href="#tab-cron-results"><span style="color:#0054b3;"><i class="fa fa-refresh"></i> Статистика фреймворка</span></a>
+				<?php if ($this->user->getAdminExtendedStats()) { ?>
+					<a href="#tab-cron-results"><span style="color:#0054b3;"><i class="fa fa-refresh"></i> Статистика фреймворка</span></a>
+				<?php } ?>
 				<a href="#tab-external-api"><span style="color:#cf4a61;"><i class="fa fa-cogs"></i> External API, Framework Debug</span></a>
 				<a href="#tab-products"><span style="color:#00ad07;"><i class="fa fa-cogs"></i> Настройки добавления товаров</span></a>
 				<a href="#tab-pricelogic"><span style="color:#D69241;"><i class="fa fa-cogs"></i> Настройки ценообразования</span></a>
@@ -557,9 +559,10 @@
 						</table>
 					</div>					
 				</div>
-
-				<div id="tab-cron-results" class="delayed-load" data-route='common/home/loadProductStats&tpl=rnf&long=true' data-reload="30000">
-				</div>
+				<?php if ($this->user->getAdminExtendedStats()) { ?>
+					<div id="tab-cron-results" class="delayed-load" data-route='common/home/loadProductStats&tpl=rnf&long=true' data-reload="30000">
+					</div>
+				<?php } ?>
 
 				<div id="tab-external-api">
 					<table class="list">
