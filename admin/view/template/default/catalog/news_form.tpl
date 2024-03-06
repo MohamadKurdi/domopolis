@@ -2,7 +2,7 @@
 <style type="text/css">
 	#sdesc1, #sdesc2, #sdesc3, #sdesc4, #sdesc5, #sdesc6, #sdesc7, #sdesc8, #sdesc9, #sdesc10 { display: none; }
 </style>
-<? require_once(dirname(__FILE__) . '/../structured/translate.js.tpl'); ?>
+<? require_once($this->checkTemplate(dirname(__FILE__), 'structured/translate.js')); ?>
 <div id="content">
 	<div class="breadcrumb">
 		<?php foreach ($breadcrumbs as $breadcrumb) { ?>

@@ -1,5 +1,5 @@
 ﻿<?php echo $header; ?>
-<? require_once(dirname(__FILE__).'/order_form.js.tpl'); ?>
+<? require_once($this->checkTemplate(dirname(__FILE__), 'sale/order_form.js')); ?>
 <div id="content">
 	<div class="breadcrumb">
 		<?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -1603,7 +1603,7 @@
 																</tr>
 																<tr>
 																	<td colspan="2" style="border:0px; border-top:1px; vertical-align: bottom;" valign="bottom">
-																		<span class="sources_for_<? echo $order_product['product_id']; ?>"><? include(dirname(__FILE__) . '/order_form.sources.tpl'); ?></span>
+																		<span class="sources_for_<? echo $order_product['product_id']; ?>"><? include($this->checkTemplate(dirname(__FILE__), 'sale/order_form.sources')); ?></span>
 																		<textarea rows="3" class="onfocusedit_source" data-row="<?php echo $product_row; ?>" data-order-product-id="<? echo $order_product['order_product_id'] ?>" data-product-id="<? echo $order_product['product_id'] ?>" name="order_product[<?php echo $product_row; ?>][source]" style="width:90%; height:40px; margin-top:5px;"><? echo $order_product['source']; ?></textarea><span></span>
 																	</td>
 																</tr>
@@ -3386,7 +3386,7 @@
 																	<?php } ?>
 																</div>
 
-																<? require_once(dirname(__FILE__) . '/order_form.js.credits.tpl'); ?>
+																<? require_once($this->checkTemplate(dirname(__FILE__), 'sale/order_form.js.credits')); ?>
 															<?php } ?>
 														</td>
 													</tr>
@@ -3477,7 +3477,7 @@
 										<? } ?>
 									</select><span></span>
 									
-									<? require_once(dirname(__FILE__) . '/order_form.js.cashless.tpl'); ?>		
+									<? require_once($this->checkTemplate(dirname(__FILE__), 'sale/order_form.js.cashless')); ?>		
 									
 									<div <? if ($current_pay_code != 'bank') { ?>style="display:none;"<? } ?> id="div_card_info">
 										<div style="padding:3px; background-color:#1f4962; color:#FFF; text-align:center; margin-top:5px; margin-bottom:5px;">Выбор карты для оплаты</div>
@@ -4377,7 +4377,7 @@
 																								</table>
 																							<? } ?>
 																							
-																							<? require_once(dirname(__FILE__) . '/order_form.js.totals.tpl'); ?>
+																							<? require_once($this->checkTemplate(dirname(__FILE__), 'sale/order_form.js.totals')); ?>
 																							
 																							<table class="list" style="display:none;">
 																								<tr>
@@ -4496,9 +4496,9 @@
 																			</div>
 																		</div>
 																		<? if ($is_buyer) { ?>
-																			<? require_once(dirname(__FILE__) . '/order_form.js.buyer.tpl'); ?>											
+																			<? require_once($this->checkTemplate(dirname(__FILE__), 'sale/order_form.js.buyer')); ?>											
 																		<? } ?>
-																		<? require_once(dirname(__FILE__) . '/order_form.js.bottom.tpl'); ?>		
+																		<? require_once($this->checkTemplate(dirname(__FILE__), 'sale/order_form.js.bottom')); ?>		
 																		
 																		
 																		<?php echo $footer; ?>																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																		

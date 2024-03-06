@@ -1,5 +1,5 @@
 <?php echo $header; ?>
-<? require_once(dirname(__FILE__) . '/../structured/translate.js.tpl'); ?>
+<? require_once($this->checkTemplate(dirname(__FILE__), 'structured/translate.js')); ?>
 <script type="text/javascript" src="view/javascript/jquery/ui/jquery-ui-timepicker-addon.js"></script> 
 <div id="content">
 	<div class="breadcrumb">
@@ -40,16 +40,16 @@
 				</div>
 				<div class="th_style"></div>
 				<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
-					<?php require_once(dirname(__FILE__) . '/category_tabs/tab-general.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/category_tabs/tab-products.tpl'); ?>				
-					<?php require_once(dirname(__FILE__) . '/category_tabs/tab-reward.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/category_tabs/tab-taxonomies.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/category_tabs/tab-amazon-sync.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/category_tabs/tab-amazon-auto.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/category_tabs/tab-related-data.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/category_tabs/tab-data.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/category_tabs/tab-design.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/category_tabs/tab-menucontent.tpl'); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , '/catalog/category_tabs/tab-general')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , '/catalog/category_tabs/tab-products')); ?>				
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , '/catalog/category_tabs/tab-reward')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , '/catalog/category_tabs/tab-taxonomies')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , '/catalog/category_tabs/tab-amazon-sync')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , '/catalog/category_tabs/tab-amazon-auto')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , '/catalog/category_tabs/tab-related-data')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , '/catalog/category_tabs/tab-data')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , '/catalog/category_tabs/tab-design')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , '/catalog/category_tabs/tab-menucontent')); ?>
 				</form>
 			</div>
 		</div>

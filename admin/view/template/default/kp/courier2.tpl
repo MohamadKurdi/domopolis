@@ -1,6 +1,6 @@
 <html>
 	<header>
-		<? require_once(dirname(__FILE__).'/../common/pwa.tpl'); ?>
+		<? require_once($this->checkTemplate(dirname(__FILE__), 'common/pwa')); ?>
 		
 		<meta charset="utf-8">
 		<meta name="viewport"

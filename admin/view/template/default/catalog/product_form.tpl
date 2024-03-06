@@ -10,7 +10,7 @@
 	input[type="text"]{width:70%;}
 	.blue_heading{text-align:center; padding:8px 0;cursor:pointer; background: #40a0dd;color: #FFF;font-size: 14px;font-weight: 400;margin-bottom:5px;}
 </style>
-<? require_once(dirname(__FILE__) . '/../structured/translate.js.tpl'); ?>
+<? require_once($this->checkTemplate(dirname(__FILE__), 'structured/translate.js')); ?>
 <div id="content">
 	<div class="breadcrumb">
 		<?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -104,53 +104,53 @@
 				</div>
 				<div class="th_style"></div>
 				<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
-					<?php require_once(dirname(__FILE__) . '/product_tabs/tab-general.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/product_tabs/tab-data.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/product_tabs/tab-price.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/product_tabs/tab-parsing.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/product_tabs/tab-stock.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/product_tabs/tab-dimensions.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/product_tabs/tab-variants.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/product_tabs/tab-links.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/product_tabs/tab-attribute.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/product_tabs/tab-discount.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/product_tabs/tab-special.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/product_tabs/tab-image.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/product_tabs/tab-videos.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/product_tabs/tab-markdown.tpl'); ?>
-					<?php require_once(dirname(__FILE__) . '/product_tabs/tab-reward.tpl'); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-general')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-data')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-price')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-parsing')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-stock')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-dimensions')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-variants')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-links')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-attribute')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-discount')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-special')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-image')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-videos')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-markdown')); ?>
+					<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-reward')); ?>
 					
 
 					<?php if ($this->config->get('config_product_options_enable')) { ?>
-						<?php require_once(dirname(__FILE__) . '/product_tabs/tab-option.tpl'); ?>
+						<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-option')); ?>
 					<?php } ?>
 
 					<?php if ($this->config->get('config_product_profiles_enable')) { ?>
-						<?php require_once(dirname(__FILE__) . '/product_tabs/tab-profile.tpl'); ?>
+						<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-profile')); ?>
 					<?php } ?>
 
 					<?php if ($this->config->get('config_option_products_enable')) { ?>
-						<?php require_once(dirname(__FILE__) . '/product_tabs/tab-product-option.tpl'); ?>
+						<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-product-option')); ?>
 					<?php } ?>
 
 					<?php if ($this->config->get('config_use_separate_table_for_features')) { ?>
-						<?php require_once(dirname(__FILE__) . '/product_tabs/tab-feature.tpl'); ?>
+						<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-feature')); ?>
 					<?php } ?>
 
 					<?php if ($this->config->get('ukrcredits_status')) { ?>
-						<?php require_once(dirname(__FILE__) . '/product_tabs/tab-ukrcredits.tpl'); ?>
+						<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-ukrcredits')); ?>
 					<?php } ?>				
 
 					<?php if ($this->config->get('config_priceva_enable_api')) { ?>		
-						<?php require_once(dirname(__FILE__) . '/product_tabs/tab-priceva.tpl'); ?>
+						<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-priceva')); ?>
 					<?php } ?>
 
 					<?php if ($this->config->get('config_rainforest_enable_api')) { ?>		
-						<?php require_once(dirname(__FILE__) . '/product_tabs/tab-amazon.tpl'); ?>
+						<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-amazon')); ?>
 					<?php } ?>
 
 					<?php if ($this->config->get('config_country_id') == 176) { ?>
-						<?php require_once(dirname(__FILE__) . '/product_tabs/tab-yandex-market.tpl'); ?>
+						<?php require_once($this->checkTemplate(dirname(__FILE__) , 'catalog/product_tabs/tab-yandex-market')); ?>
 					<?php } ?>
 
 				</form>

@@ -15,10 +15,6 @@
 		<div class="heading order_head">
 			<h1><img src="view/image/setting.png" alt="" /> <?php echo $heading_title; ?> / <?php echo $config_name; ?></h1>			
 			<div class="buttons">
-				<?php /* ?>	
-					<a onclick="$('#save_button').toggle()" class="button">Показать кнопку сохранения</a>
-					<a onclick="$('#form').submit();" class="button" id="save_button" style="display:none; border-color:red;color:white;background-color: red">СОХРАНИТЬ [ НЕ НАЖИМАТЬ НА ХУЕВОМ ИНТЕРНЕТЕ ]</a>
-					<?php */ ?>	
 					<a href="<?php echo $cancel; ?>" class="button"><?php echo $button_cancel; ?></a>
 				</div>
 			</div>
@@ -39,10 +35,8 @@
 					<input type="hidden" name="store_id" value="0"/>
 					
 					<?php foreach ($tabs as $tab) { ?>
-						<?php foreach ($tab as $name => $setting) { ?>
-							<?php if (file_exists(dirname(__FILE__) . '/settings/' . $name . '.tpl')) { ?>
-								<?php require_once(dirname(__FILE__) . '/settings/' . $name . '.tpl'); ?>
-							<?php } ?>
+						<?php foreach ($tab as $name => $setting) { ?>							
+								<?php require_once($this->checkTemplate(dirname(__FILE__), 'setting/settings/' . $name)); ?>							
 						<?php } ?>
 					<?php } ?>
 				</form>

@@ -1,5 +1,5 @@
 <head>
-		<? require_once(dirname(__FILE__) . '/pwa.tpl'); ?>
+		<?php require_once($this->checkTemplate(dirname(__FILE__) , 'common/pwa.tpl')); ?>
 		
 		<meta charset="utf-8">
 		<meta name="viewport"

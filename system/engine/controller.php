@@ -11,7 +11,8 @@
 		protected $children 	= [];
 		protected $data 		= [];
 
-		private $default_template = 'default';
+		private const default_template 	= 'default';
+		private const overload_template = 'overload';
 		
 		public function __construct($registry) {			
 			$this->registry = $registry;
@@ -150,10 +151,14 @@
 		}
 
 		protected function checkTemplate($currentDir, $includeTemplate){
+			if (defined('IS_ADMIN')){
+				return $this->checkTemplateAdmin($currentDir, $includeTemplate);
+			}
+
 			$absPath = [];
 
 			$settledPath = '/' . $this->config->get('config_template') . '/template/';
-			$defaultPath = '/' . $this->default_template . '/template/';
+			$defaultPath = '/' . self::default_template . '/template/';
 
 			if (stripos($currentDir, $settledPath) !== false){
 				$absPath['settled'] = $currentDir;
@@ -170,6 +175,19 @@
 			return $absPath['default'] . $includeTemplate;
 		}
 
+		protected function checkTemplateAdmin($currentDir, $includeTemplate){
+			$includeTemplate = ltrim($includeTemplate, '/');
+			
+			if (mb_substr($includeTemplate, -4) != '.tpl'){
+					$includeTemplate = $includeTemplate . '.tpl';
+				}
+
+			if (file_exists( str_replace(self::default_template, self::overload_template . '/' . $this->config->get('config_template'), DIR_TEMPLATE) . $includeTemplate)){
+				return str_replace(self::default_template, self::overload_template . '/' . $this->config->get('config_template'), DIR_TEMPLATE) . $includeTemplate;
+			} else {
+				return DIR_TEMPLATE . $includeTemplate;
+			}		
+		}
 		
 		protected function render() {
 			foreach ($this->children as $child) {
@@ -186,8 +204,8 @@
 					$this->template = substr($this->template, mb_strlen($this->config->get('config_template')));
 				}
 
-				if (stripos($this->template, $this->default_template) === 0){
-					$this->template = substr($this->template, mb_strlen($this->default_template));
+				if (stripos($this->template, self::default_template) === 0){
+					$this->template = substr($this->template, mb_strlen(self::default_template));
 				}
 
 				$this->template = ltrim($this->template, '/');
@@ -202,20 +220,28 @@
 				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/' . $this->template)){
 					$this->template = $this->config->get('config_template') . '/template/' . $this->template;
 				} else {
-					$this->template = $this->default_template . '/template/' . $this->template;
+					$this->template = self::default_template . '/template/' . $this->template;
 				}
+
+				$final_template_file = DIR_TEMPLATE . $this->template;
 			} else {
 				if (mb_substr($this->template, -4) != '.tpl'){
 					$this->template = $this->template . '.tpl';
 				}
+
+				if (file_exists( str_replace(self::default_template, self::overload_template . '/' . $this->config->get('config_template'), DIR_TEMPLATE) . $this->template)){
+					$final_template_file = str_replace(self::default_template, self::overload_template . '/' . $this->config->get('config_template'), DIR_TEMPLATE) . $this->template;
+				} else {
+					$final_template_file = DIR_TEMPLATE . $this->template;
+				}
 			}							
 
-			if (file_exists(DIR_TEMPLATE . $this->template)) {
+			if (file_exists($final_template_file)) {
 				extract($this->data);
 				
 				ob_start();
 				
-				require(DIR_TEMPLATE . $this->template);				
+				require($final_template_file);				
 				$this->output = ob_get_contents();
 				
 				ob_end_clean();
