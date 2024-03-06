@@ -33,10 +33,10 @@
                         if ( e.attr('data-prop_id') ) {
                                 h=e.html();
                                 if( e.find("input").length ) {
-                                        e.after('<img data-prop_id="'+e.attr('data-prop_id')+'" src="view/template/csvprice_pro/q.png" width="12" height="12" class="f-icon-helper q_sign" alt="<?php echo $text_show_help;?>" title="<?php echo $text_show_help;?>">');
+                                        e.after('<img data-prop_id="'+e.attr('data-prop_id')+'" src="view/image/csvprice_pro/q.png" width="12" height="12" class="f-icon-helper q_sign" alt="<?php echo $text_show_help;?>" title="<?php echo $text_show_help;?>">');
                                         i=e.next();
                                 } else {
-                                        e.html('<img data-prop_id="'+e.attr('data-prop_id')+'" src="view/template/csvprice_pro/q.png" width="12" height="12" class="f-icon-helper q_sign" alt="<?php echo $text_show_help;?>" title="<?php echo $text_show_help;?>">'+h);
+                                        e.html('<img data-prop_id="'+e.attr('data-prop_id')+'" src="view/image/csvprice_pro/q.png" width="12" height="12" class="f-icon-helper q_sign" alt="<?php echo $text_show_help;?>" title="<?php echo $text_show_help;?>">'+h);
                                         i=e.find('.f-icon-helper');
                                 }
                                 if( i.length ) {

@@ -197,7 +197,7 @@ class ControllerCSVPriceProAppOrder extends Controller
     }
     private function outputTemplate()
     {
-        $this->model_csvprice_pro_app_setting->addDocumentStyle("view/template/csvprice_pro/stylesheet.css");
+        $this->model_csvprice_pro_app_setting->addDocumentStyle("view/stylesheet/stylesheet_csvpricepro.css");
         $this->model_csvprice_pro_app_setting->editSetting("Session", $this->session->data);
         $this->document->setTitle($this->language->get("heading_title_normal"));
         $this->data["breadcrumbs"] = [];

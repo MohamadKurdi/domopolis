@@ -41,9 +41,18 @@
 						}
 					}
 
+					$country = false;
+					if (!empty($record->country->names)){
+						if (!empty($record->country->names['ru'])){
+							$country = $record->country->names['ru'];
+						} elseif (!empty($record->country->names['en'])){
+							$country = $record->country->names['en'];
+						}
+					}
+
 					$data = [
 						'country_code' 		=> $record->country->isoCode,
-						'country_name' 		=> !empty($record->country->names['ru'])?$record->country->names['ru']:$record->country->names['en'],
+						'country_name' 		=> $country,
 						'continent_code' 	=> $record->continent->name,
 						'city' 				=> $city,
 					];

@@ -4,4 +4,4 @@ $_['text_copy'] = '<a target="_blank" href="http://www.opencartlabs.ru/">www.ope
 $_['text_version'] = 'Версия %s';
 $_['text_confirm_delete'] = 'Удаление невозможно отменить! Вы уверены, что хотите это сделать?';
 $_['text_show_help'] = 'Показать справку';
-$_['text_show_help_note'] = 'Для получения справки нажмите на иконку &nbsp;<img style="vertical-align: middle" src="view/template/csvprice_pro/q.png" width="12" height="12" class="f-icon-helper q_sign" alt="Show help">';
+$_['text_show_help_note'] = 'Для получения справки нажмите на иконку &nbsp;<img style="vertical-align: middle" src="view/image/csvprice_pro/q.png" width="12" height="12" class="f-icon-helper q_sign" alt="Show help">';
