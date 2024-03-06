@@ -5084,18 +5084,9 @@
 			if (isset($this->session->data['error_error'])){
 				$this->data['error_error'] = $this->session->data['error_error'];
 				unset($this->session->data['error_error']);
-			}
+			}			
 			
-			
-			if ($template_prefix = $this->user->getTemplatePrefix()){
-				if (file_exists(DIR_TEMPLATE . 'sale/order_forms/order_form'.$template_prefix.'.tpl')){
-					$this->template = 'sale/order_forms/order_form'.$template_prefix.'.tpl';			
-					} else {
-					$this->template = 'sale/order_form.tpl';
-				}			
-				} else {
-				$this->template = 'sale/order_form.tpl';
-			}
+			$this->template = 'sale/order_form.tpl';
 			
 			if ($return_data && $order_id){
 				$this->data['order_product'] = $this->data['order_products'];

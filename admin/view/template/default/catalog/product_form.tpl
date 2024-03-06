@@ -29,13 +29,13 @@
 			<h1><img src="view/image/product.png" alt="" /> <?php echo $product_id; ?> / <? echo $model; ?> <?php if ($asin) { ?> / <?php echo $asin; ?> <? } ?></h1>
 
 			<div style="float:left; padding-left:30px;">
-				<?php if ($this->session->data['config_rainforest_asin_deletion_mode']) { ?>
+				<?php if (!empty($this->session->data['config_rainforest_asin_deletion_mode'])) { ?>
 					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Включен режим исключения ASIN. Товары, которые будут удалены - никогда более не будут добавлены с Amazon!</small>
 				<?php } ?>
-				<?php if ($this->session->data['config_rainforest_variant_edition_mode']) { ?>
+				<?php if (!empty($this->session->data['config_rainforest_variant_edition_mode'])) { ?>
 					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Включен режим группового редактирования вариантов. Удаление одного варианта удалит и остальные!</small>
 				<?php } ?>
-				<?php if ($this->session->data['config_rainforest_translate_edition_mode']) { ?>
+				<?php if (!empty($this->session->data['config_rainforest_translate_edition_mode'])) { ?>
 					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Включен режим коррекции переводов. Одинаковые значения цветов, материалов, атрибутов будут перезаписаны!</small>
 				<?php } ?>
 			</div>
@@ -158,7 +158,7 @@
 		</div>
 	</div>
 
-		<script type="text/javascript">
+	<script type="text/javascript">
 		$('#tabs a').tabs(); 
 		$('#languages a').tabs();
 		$('#markdown-languages a').tabs(); 
