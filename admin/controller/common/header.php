@@ -424,12 +424,12 @@ class ControllerCommonHeader extends Controller
             $this->load->model('localisation/currency');
             $currencies = $this->model_localisation_currency->getCurrencies();
 
-            //count EUR TO UAH
+            
             foreach ($currencies as $currency) {
                 $this->data[$currency['code'] . 'EUR'] = $this->currency->format($currency['value'], $currency['code'], 1, true, false, false, true, 2);             
             }
 
-            //try to determine currency for order
+            
             if (isset($this->request->get['order_id'])) {
                 $order = $this->model_sale_order->getOrder($this->request->get['order_id']);
 
@@ -442,7 +442,6 @@ class ControllerCommonHeader extends Controller
                 }
             }
 
-            //try to determine currency for order
             if (isset($this->request->get['filter_store_id'])) {
                 $this->load->model('setting/setting');
                 $setting = $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', $this->request->get['filter_store_id']);
@@ -455,8 +454,8 @@ class ControllerCommonHeader extends Controller
                     }
                 }
             }
+            
 
-            //try to determine currency for order
             if (isset($this->request->get['filter_order_store_id'])) {
                 $this->load->model('setting/setting');
                 $setting = $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', $this->request->get['filter_order_store_id']);

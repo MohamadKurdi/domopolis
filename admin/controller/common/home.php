@@ -1,7 +1,7 @@
 <?php   
 	class ControllerCommonHome extends Controller {  
 		
-		public function session(){			
+		public function session(){
 			if ($this->user->isLogged() && isset($this->session->data['token'])) {				
 				$this->data['token'] = $this->session->data['token'];
 				} else {
@@ -220,8 +220,6 @@
 				if ($zero_price_products){
 					foreach ($zero_price_products as $zero_price_product_id => $zero_price_product_quantity){
 						$zero_product_current_price = $this->model_kp_price->getProductResultPriceByStore($zero_price_product_id, $result['store_id']);
-
-						//$this->log->debug($zero_product_current_price);
 						
 						if ($zero_product_current_price['special']){
 							$zero_product_current_price['price'] = $zero_product_current_price['special'];
@@ -524,8 +522,7 @@
 			return $orders;
 		}
 		
-		public function loadOrderStats(){
-			
+		public function loadOrderStats(){			
 			$this->load->model('setting/store');
 			$this->load->model('setting/setting');
 			$this->load->model('sale/order');
@@ -595,40 +592,35 @@
 				$this->redirect($this->url->link('sale/courier2', 'token=' . $this->session->data['token'], 'SSL'));				
 			}
 			
-			$this->data['heading_title'] = $this->language->get('heading_title');
-
-			$this->data['stores_count'] = count($this->model_setting_store->getStores());
-			
-			$this->data['text_overview'] = $this->language->get('text_overview');
-			$this->data['text_statistics'] = $this->language->get('text_statistics');
-			$this->data['text_latest_10_orders'] = $this->language->get('text_latest_10_orders');
-			$this->data['text_total_sale'] = $this->language->get('text_total_sale');
-			$this->data['text_total_sale_year'] = $this->language->get('text_total_sale_year');
-			$this->data['text_total_order'] = $this->language->get('text_total_order');
+			$this->data['heading_title'] 			= $this->language->get('heading_title');
+			$this->data['stores_count'] 			= count($this->model_setting_store->getStores());			
+			$this->data['text_overview'] 			= $this->language->get('text_overview');
+			$this->data['text_statistics'] 			= $this->language->get('text_statistics');
+			$this->data['text_latest_10_orders'] 	= $this->language->get('text_latest_10_orders');
+			$this->data['text_total_sale'] 			= $this->language->get('text_total_sale');
+			$this->data['text_total_sale_year'] 	= $this->language->get('text_total_sale_year');
+			$this->data['text_total_order'] 		= $this->language->get('text_total_order');
 			$this->data['text_total_customer'] = $this->language->get('text_total_customer');
 			$this->data['text_total_customer_approval'] = $this->language->get('text_total_customer_approval');
-			$this->data['text_total_review_approval'] = $this->language->get('text_total_review_approval');
-			$this->data['text_total_affiliate'] = $this->language->get('text_total_affiliate');
+			$this->data['text_total_review_approval'] 	= $this->language->get('text_total_review_approval');
+			$this->data['text_total_affiliate'] 		= $this->language->get('text_total_affiliate');
 			$this->data['text_total_affiliate_approval'] = $this->language->get('text_total_affiliate_approval');
-			$this->data['text_day'] = $this->language->get('text_day');
-			$this->data['text_week'] = $this->language->get('text_week');
-			$this->data['text_month'] = $this->language->get('text_month');
-			$this->data['text_year'] = $this->language->get('text_year');
-			$this->data['text_no_results'] = $this->language->get('text_no_results');
+			$this->data['text_day'] 		= $this->language->get('text_day');
+			$this->data['text_week'] 		= $this->language->get('text_week');
+			$this->data['text_month'] 		= $this->language->get('text_month');
+			$this->data['text_year'] 		= $this->language->get('text_year');
+			$this->data['text_no_results'] 	= $this->language->get('text_no_results');
 			
-			$this->data['column_order'] = $this->language->get('column_order');
-			$this->data['column_customer'] = $this->language->get('column_customer');
-			$this->data['column_status'] = $this->language->get('column_status');
-			$this->data['column_date_added'] = $this->language->get('column_date_added');
-			$this->data['column_total'] = $this->language->get('column_total');
-			$this->data['column_firstname'] = $this->language->get('column_firstname');
-			$this->data['column_lastname'] = $this->language->get('column_lastname');
-			$this->data['column_action'] = $this->language->get('column_action');
-			
-			$this->data['entry_range'] = $this->language->get('entry_range');
-			
-			
-			
+			$this->data['column_order'] 		= $this->language->get('column_order');
+			$this->data['column_customer'] 		= $this->language->get('column_customer');
+			$this->data['column_status'] 		= $this->language->get('column_status');
+			$this->data['column_date_added'] 	= $this->language->get('column_date_added');
+			$this->data['column_total'] 		= $this->language->get('column_total');
+			$this->data['column_firstname'] 	= $this->language->get('column_firstname');
+			$this->data['column_lastname'] 		= $this->language->get('column_lastname');
+			$this->data['column_action'] 		= $this->language->get('column_action');			
+			$this->data['entry_range'] 			= $this->language->get('entry_range');
+
 			$this->data['breadcrumbs'] = [];
 			
 			$this->data['breadcrumbs'][] = array(
@@ -673,7 +665,6 @@
 				$this->data['total_toapprove_orders'] = 0;
 			}
 			
-			// Для _content
 			$this->data['keyworder_link'] = $this->url->link('module/keyworder', 'token=' . $this->session->data['token']);
 			$this->data['category_link'] = $this->url->link('catalog/category', 'token=' . $this->session->data['token']);		
 			$this->data['batch_editor_link'] = $this->url->link('module/batch_editor', 'token=' . $this->session->data['token']);
@@ -714,16 +705,12 @@
 			
 			$this->response->setOutput($this->render());
 		}
-		
-		
-		
+						
 		public function getTTNScanResult(){
 			$query = $this->db->query("SELECT * FROM `temp` WHERE `key` = 'ttnscan_result'");
 			
-			$html = $query->row['value'];
-			
-			$html = preg_replace("!<order>(.*?)</order>!si","<a href='?token=".$this->session->data['token']."&route=sale/order/update&order_id=\\1' target='_blank'>\\1</a>", $html);
-			
+			$html = $query->row['value'];			
+			$html = preg_replace("!<order>(.*?)</order>!si","<a href='?token=".$this->session->data['token']."&route=sale/order/update&order_id=\\1' target='_blank'>\\1</a>", $html);			
 			$html = preg_replace("!<ttn>(.*?)</ttn>!si","<span class='get_ttn_info' data-ttn='\\1'>\\1</span>&nbsp;&nbsp;<span style='display:none;'></span>", $html);
 			
 			echo $html;
@@ -732,8 +719,7 @@
 		public function getMinusScanResult(){
 			$query = $this->db->query("SELECT * FROM `temp` WHERE `key` = 'minusscan_result'");
 			
-			$html = $query->row['value'];
-			
+			$html = $query->row['value'];			
 			$html = preg_replace("!<order>(.*?)</order>!si","<a href='?token=".$this->session->data['token']."&route=sale/order/update&order_id=\\1' target='_blank'>\\1</a>", $html);
 			
 			echo $html;
@@ -742,37 +728,27 @@
 		public function getOrdersResult(){
 			$query = $this->db->query("SELECT * FROM `temp` WHERE `key` = 'orders_result'");
 			
-			$html = $query->row['value'];
-			
-			$html = preg_replace("!<order>(.*?)</order>!si","<a href='?token=".$this->session->data['token']."&route=sale/order/update&order_id=\\1' target='_blank'>\\1</a>", $html);
-			
-			$html = preg_replace("!<customer>(.*?)</customer>!si","<a href='?token=".$this->session->data['token']."&route=sale/customer/update&customer_id=\\1' target='_blank'>\\1</a>", $html);
-			
-			$html = preg_replace("!<filter>(.*?)</filter>!si","<a href='?token=".$this->session->data['token']."&route=sale/order&filter_order_status_id=0&filter_customer=\\1' target='_blank'>фильтр</a>", $html);
-			
+			$html = $query->row['value'];			
+			$html = preg_replace("!<order>(.*?)</order>!si","<a href='?token=".$this->session->data['token']."&route=sale/order/update&order_id=\\1' target='_blank'>\\1</a>", $html);			
+			$html = preg_replace("!<customer>(.*?)</customer>!si","<a href='?token=".$this->session->data['token']."&route=sale/customer/update&customer_id=\\1' target='_blank'>\\1</a>", $html);			
+			$html = preg_replace("!<filter>(.*?)</filter>!si","<a href='?token=".$this->session->data['token']."&route=sale/order&filter_order_status_id=0&filter_customer=\\1' target='_blank'>фильтр</a>", $html);			
 			
 			echo $html;
 		}
 		
-		public function getNeedToCallResult(){
-			
+		public function getNeedToCallResult(){			
 			$query = $this->db->query("SELECT * FROM `temp` WHERE `key` = 'callscan_result'");
 			
-			$html = $query->row['value'];
-			
-			$html = preg_replace("!<order>(.*?)</order>!si","<a href='?token=".$this->session->data['token']."&route=sale/order/update&order_id=\\1' target='_blank'>\\1</a>", $html);
-			
-			$html = preg_replace("!<customer>(.*?)</customer>!si","<a href='?token=".$this->session->data['token']."&route=sale/customer/update&customer_id=\\1' target='_blank'>\\1</a>", $html);
-			
+			$html = $query->row['value'];			
+			$html = preg_replace("!<order>(.*?)</order>!si","<a href='?token=".$this->session->data['token']."&route=sale/order/update&order_id=\\1' target='_blank'>\\1</a>", $html);			
+			$html = preg_replace("!<customer>(.*?)</customer>!si","<a href='?token=".$this->session->data['token']."&route=sale/customer/update&customer_id=\\1' target='_blank'>\\1</a>", $html);			
 			$html = preg_replace("!<filter>(.*?)</filter>!si","<a href='?token=".$this->session->data['token']."&route=sale/order&filter_order_status_id=0&filter_customer=\\1' target='_blank'>фильтр</a>", $html);
 			
 			
-			echo $html;
-			
+			echo $html;			
 		}
 		
 		public function getNoPaidResult(){
-			
 			$query = $this->db->query("SELECT * FROM `temp` WHERE `key` = 'nopaid_result'");
 			
 			$html = $query->row['value'];
@@ -784,8 +760,7 @@
 			$html = preg_replace("!<filter>(.*?)</filter>!si","<a href='?token=".$this->session->data['token']."&route=sale/order&filter_order_status_id=0&filter_customer=\\1' target='_blank'>фильтр</a>", $html);
 			
 			
-			echo $html;
-			
+			echo $html;			
 		}
 		
 		public function cancelchart() {
@@ -1125,8 +1100,7 @@
 					$session_sval = $k[1];				
 				}
 				
-				if(!empty($getRequestVar)){
-					
+				if(!empty($getRequestVar)){					
 					if(isset($getRequestVar[$db_skey] )){
 						$getlink = array( $db_skey => $getRequestVar[$db_skey] );
 						
@@ -1140,8 +1114,7 @@
 							$url_skey =$key;
 							$url_sval = $value; 
 						}
-					}
-					
+					}					
 					
 					if($db_skey && $db_sval && $url_skey && $url_sval ){						
 						if ( $db_skey === $url_skey && $db_sval === $url_sval ) {
@@ -1157,9 +1130,8 @@
 					if (!$valid ) {						
 						header('Location: ' . HTTPS_CATALOG);
 						exit;
-					}
-					
-			}
+					}					
+				}
 		}	
 		
 		public function getCustomersOnlineAjax(){
