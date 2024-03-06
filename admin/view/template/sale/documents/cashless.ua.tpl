@@ -126,7 +126,7 @@
 			<td></td>
 			<td align="right" valign="bottom" style="height:78px; width:200px;text-align:right;vertical-align:bottom; border-bottom:1px solid black;">
 				<? if (!$noprint && $stamp) { ?>
-					<img src="<? echo HTTPS_SERVER . 'view/images/print/' . $stamp; ?>" style="padding-right:10px; z-index:150;" height="70px;" />
+					<img src="<? echo HTTPS_SERVER . 'view/image/print/' . $stamp; ?>" style="padding-right:10px; z-index:150;" height="70px;" />
 				<? } ?>
 			</td>
 			<td style="width:1px; text-align:right; white-space: nowrap; word-wrap: normal; vertical-align:bottom;" >&nbsp;&nbsp;<? if ($legalperson) { ?><? echo $legalperson['legalperson_name']; ?><? } else { ?>СПД Домбровський Олег Борисович<? } ?></td>

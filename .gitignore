@@ -10,6 +10,8 @@
 /admin/icons/*
 /admin/view/image/flags/*
 /admin/view/image/flags.*/*
+/admin/view/images/print/*
+/admin/view/image/print/*
 /admin/icon/*
 /admin/pwa/*
 /admin/manifest.json
@@ -18,7 +20,6 @@
 /admin/offline.html
 /admin/view/template/sale/bottom_texts/*
 /admin/view/template/sale/actiontemplates/*
-/admin/view/images/print/*
 /admin/view/template.*/
 /admin/view/batch_editor/setting/*
 

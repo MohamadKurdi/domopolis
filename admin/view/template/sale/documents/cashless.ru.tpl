@@ -182,7 +182,7 @@
 				<td style="height:1px;" height="1px"></td>
 				<td></td>
 				<td rowspan="4" style="width:200px;" width="200px">
-					<? if (!$noprint && $stamp) { ?><img src="<? echo HTTPS_SERVER . 'view/images/print/' . $stamp; ?>" style="" width="200px" height="200px" /><? } ?>
+					<? if (!$noprint && $stamp) { ?><img src="<? echo HTTPS_SERVER . 'view/image/print/' . $stamp; ?>" style="" width="200px" height="200px" /><? } ?>
 				</td>
 				<td></td>
 			</tr>

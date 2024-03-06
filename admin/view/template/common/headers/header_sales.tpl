@@ -8,7 +8,7 @@
 					<div class="div2">
 						<?php if ($logged) { ?>
 							<img class="d_img" src="view/image/<? echo FILE_LOGO; ?>" style="float:left;margin-top:0px;" title="<?php echo $heading_title; ?>" height="38px;" onclick="location = '<?php echo $home; ?>'" />	
-							<div style="float:left; color:#000; font-weight:700; padding-left:20px;"><? if ($this->user->getID() == 69) { ?><img src="view/images/fsmall.png" style="margin-right:5px;" /><? } else { ?><i class="fa fa-user-o icon_header"></i><? } ?><div style="display: inline-block;"><? echo $this->user->getUserFullName(); ?> (<? echo $this->user->getUserName(); ?>)
+							<div style="float:left; color:#000; font-weight:700; padding-left:20px;"><? if ($this->user->getID() == 69) { ?><img src="view/image/fsmall.png" style="margin-right:5px;" /><? } else { ?><i class="fa fa-user-o icon_header"></i><? } ?><div style="display: inline-block;"><? echo $this->user->getUserFullName(); ?> (<? echo $this->user->getUserName(); ?>)
 								<a style="color:#788084" href="<?php echo $logout; ?>"><b><i class="fa fa-external-link"></i></b></a>
 							<br /><? echo $this->user->getUserGroupName(); ?></div></div>
 						<? } ?>

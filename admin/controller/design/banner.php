@@ -386,11 +386,11 @@ class ControllerDesignBanner extends Controller {
 		}
 
 		$this->data['banner_layouts'] = [];
-		$banner_layouts = glob(DIR_APPLICATION . 'view/images/banner_layouts/*.jpg');
+		$banner_layouts = glob(DIR_APPLICATION . 'view/image/banner_layouts/*.jpg');
 
 		foreach ($banner_layouts as $banner_layout){
 			$this->data['banner_layouts'][] = [
-				'image'  => 'view/images/banner_layouts/' . pathinfo($banner_layout, PATHINFO_BASENAME),
+				'image'  => 'view/image/banner_layouts/' . pathinfo($banner_layout, PATHINFO_BASENAME),
 				'layout' => pathinfo($banner_layout, PATHINFO_FILENAME)
 			];
 		}

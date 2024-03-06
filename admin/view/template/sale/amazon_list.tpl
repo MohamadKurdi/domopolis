@@ -217,14 +217,14 @@
 																		<b><span style="color:#cf4a61;"><i class="fa fa-warning" aria-hidden="true"></i>&nbsp;ASIN нет в базе</span></b>
 																	<? } ?>
 																</td>
-																<td class="left"><img src="view/images/amazonicon20.png" />&nbsp;<? echo $product['name']; ?>
+																<td class="left"><img src="view/image/amazonicon20.png" />&nbsp;<? echo $product['name']; ?>
 																	<? if ($product['real_products']) { ?>																		
 																		<? foreach ($product['real_products'] as $real_product) { ?>
 																			<br />
 																			<? if (count($product['real_products'])>1) { ?>
 																				<i class="fa fa-warning" aria-hidden="true" style="color:#cf4a61;"></i>&nbsp;
 																			<? } ?>
-																			<img src="view/images/icon20.png" />&nbsp;<? echo $real_product['name']; ?>&nbsp;
+																			<img src="view/image/icon20.png" />&nbsp;<? echo $real_product['name']; ?>&nbsp;
 																			<a class="button" href="<? echo $real_product['sitelink'] ?>" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i></a>&nbsp;
 																			<a class="button" href="<? echo $real_product['adminlink'] ?>" target="_blank"><i class="fa fa-edit" aria-hidden="true"></i></a>
 																		<? } ?>
