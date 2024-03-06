@@ -5084,7 +5084,8 @@
 			if (isset($this->session->data['error_error'])){
 				$this->data['error_error'] = $this->session->data['error_error'];
 				unset($this->session->data['error_error']);
-			}			
+			}
+			
 			
 			$this->template = 'sale/order_form.tpl';
 			
