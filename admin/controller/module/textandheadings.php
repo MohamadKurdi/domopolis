@@ -1,8 +1,5 @@
 <?php
 	class ControllerModuleTextandheadings extends Controller {
-		// module: Текст и Заголовки!
-		// version: 0.1 Comercial
-		// autor: Шуляк Роман   roma78sha@gmail.com   www.opencartforum.com/index.php?app=core&module=search&do=user_activity&search_app=downloads&mid=678008
 		private $error = array(); 
 		
 		public function index() {   
@@ -18,12 +15,7 @@
 					foreach ($com as $langname => $lang){
 						foreach ($lang as $filename => $file){
 							foreach ($file as $varname => $var){
-								$href = DIR_CATALOG."language/".$langname."/".$filename.".php";
-								// var_dump($href); var_dump($varname); 
-								
-								// 1- название переменной, например heading_title
-								// 2- значение
-								// 3- путь к файлу
+								$href = DIR_CATALOG . "language/default/". $langname . "/" . $filename.".php";
 								tahChangeTitle($varname, $var, $href);
 							} 
 						}
@@ -36,12 +28,7 @@
 						foreach ($var as $dirname => $dir){ // var_dump($dir);
 							foreach ($dir as $filename => $file){
 								foreach ($file as $vname => $v){
-									$href = DIR_CATALOG."language/".$lang."/".$dirname."/".$filename.".php"; 
-									// var_dump($href);var_dump($vname);
-									
-									// 1- название переменной, например heading_title
-									// 2- значение
-									// 3- путь к файлу
+									$href = DIR_CATALOG."language/default/" . $lang . "/" . $dirname . "/" . $filename . ".php"; 
 									tahChangeTitle($vname, $v, $href);
 								}
 							}
@@ -100,39 +87,35 @@
 			
 			$this->load->model('localisation/language');
 			$languages = $this->model_localisation_language->getLanguages();
-			$this->data['languages'] = $languages; // var_dump($languages);
+			$this->data['languages'] = $languages;
 			
 			$languageArrey = array();
 			
-			foreach ($languages as $keys1 => $lang){   // var_dump($lang);
+			foreach ($languages as $keys1 => $lang){
 				
-				$langfile = DIR_CATALOG . 'language/' . $lang["directory"] . '/' . $lang["filename"] . '.php'; // var_dump($langfile);
+				$langfile = DIR_CATALOG . 'language/default/' . $lang["directory"] . '/' . $lang["filename"] . '.php'; // var_dump($langfile);
 				$langfileCom[$lang["directory"]]["filename"] = $lang["filename"];
 				$langfileCom[$lang["directory"]]["var"] = languageLoad($langfile);
 				
 				$langname = $lang["directory"];
 				
-				$dir = glob(DIR_CATALOG . 'language/' . $lang["directory"] . '/*', GLOB_ONLYDIR); // var_dump($dir, "+++");
+				$dir = glob(DIR_CATALOG . 'language/' . $lang["directory"] . '/*', GLOB_ONLYDIR);
 				
-				foreach ($dir as $keys2 => $indir){ // var_dump($indir);
-					$files = glob($indir . '/*.php'); // var_dump($files);
-					$dirname = basename($indir);  // var_dump($dirname, '111');
+				foreach ($dir as $keys2 => $indir){
+					$files = glob($indir . '/*.php');
+					$dirname = basename($indir);
 					
-					foreach ($files as $keys3 => $file){ // var_dump($file);
-						
-						$filename = basename($file, '.php'); // var_dump($filename);
-						
-						$contents = languageLoad($file); // var_dump($contents);
-						
-						// var_dump($langname, $dirname, $filename);
+					foreach ($files as $keys3 => $file){						
+						$filename = basename($file, '.php');						
+						$contents = languageLoad($file);
 						$languageArrey[$langname][$dirname][$filename] = $contents;
 						
 					}
 				}
-			} // var_dump($languageArrey);
+			}
 			
-			$this->data['languageArrey'] = $languageArrey;
-			$this->data['langfileCom'] = $langfileCom; // var_dump($this->data['langfileCom']); 
+			$this->data['languageArrey'] 	= $languageArrey;
+			$this->data['langfileCom'] 		= $langfileCom;
 			
 			$this->template = 'module/textandheadings.tpl';
 			$this->children = array(
@@ -173,31 +156,19 @@
 			return $_;
 			} else {
 			trigger_error('Error: Could not load language ' . $file . '!');
-			//	exit();
 		}
 	}
 	
-	/* ========================================================================================== */
-	/* Замена                                                                                     */
-	/* ========================================================================================== */ 
 	function tahChangeTitle($for_edit = "", $v = "", $hr = ""){
-		
-		// искомая строка
-		// $for_edit="heading_title";
-		
-		// на эту меняем
 		$replace = "\$_['".$for_edit."'] = '" . $v . "';";
 		$fopen=@file($hr);
 		
 		foreach($fopen as $key=>$value){
-			if(substr_count($value,$for_edit)){
-				
-				// добавка
-				$replace .= " // " . $value; // str_replace(" ","",$value);
+			if(substr_count($value,$for_edit)){								
+				$replace .= " // " . $value;
 				
 				$fopen[$key] = $replace.PHP_EOL;
 				file_put_contents($hr, join('', $fopen));
 			}
-		}
-		
+		}		
 	}
