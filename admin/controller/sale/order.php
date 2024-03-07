@@ -7865,7 +7865,7 @@
 				'payment_tax_id'     => $order_info['payment_tax_id'],
 				'payment_method'     => $order_info['payment_method'],
 				'product'            => $product_data,
-				'max_sku_length'     => max($sku_lengths),
+				'max_sku_length'     => (!empty($sku_lengths))?max($sku_lengths):0,
 				'voucher'            => $voucher_data,
 				'total'              => $real_total_data,
 				'need_sign'          => $this->customerNeedSign($order_info['shipping_code']),
