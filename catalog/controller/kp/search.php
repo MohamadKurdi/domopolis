@@ -229,6 +229,10 @@
 			foreach ($this->language->loadRetranslate('common/header') as $translationСode => $translationText){
 				$this->data[$translationСode] = $translationText;
 			}
+
+			if (empty($this->request->get['query']) && !empty($this->request->get['tag'])){
+				$this->request->get['query'] = $this->request->get['tag'];
+			}
 						
 			$query = trim(mb_strtolower($this->request->get['query']));			
 			if (!mb_strlen($query)){				
@@ -275,26 +279,18 @@
 					
 					$results = $this->elasticSearch->completition('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field4);
 					$r1 = $this->prepareResults($results, $field, true, $query);
-					
-					
 					$this->log->debug(json_encode($r1));
 					
-					} else {										
-					
-					//Самый первый запрос, просто поиск по названию, надеюсь в большинстве случаев его достаточно
+					} else {		
+													
 					$exact = true;
 					$results = $this->elasticSearch->fuzzy('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field4);	
 					
-					//	$this->log->debug(json_encode($results));
-					//die();
-					
-					//Запрос к альтернативному набору
 					if (!\hobotix\ElasticSearch::validateResult($results, true)){
 						$exact = false;
 						$results = $this->elasticSearch->fuzzy('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field2, $field4);
 					}		
-					
-					//TRY TO FIND BY SKU										
+									
 					if (\hobotix\Elasticsearch::validateResult($resultsP = $this->elasticSearch->sku($query)) == 1){				
 						} else {
 						

@@ -24,8 +24,8 @@ class ControllerProductSearch extends Controller {
 	private function elasticResults($results, $field){
 		$this->load->model('catalog/product');
 
-		$product_data = array();
-		$manufacturer_data = array();	
+		$product_data = [];
+		$manufacturer_data = [];	
 
 		foreach ($results['hits']['hits'] as $hit){
 
@@ -52,8 +52,8 @@ class ControllerProductSearch extends Controller {
 	}
 
 	private function elasticResultsCMA($results, $field, $exact){					
-		$data = array();
-		$manufacturers = array();
+		$data = [];
+		$manufacturers = [];
 
 		foreach ($results['hits']['hits'] as $hit){
 			$href 		= '';
@@ -264,7 +264,7 @@ class ControllerProductSearch extends Controller {
 
 		$this->document->addScript('catalog/view/javascript/jquery/jquery.total-storage.min.js');
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -348,9 +348,8 @@ class ControllerProductSearch extends Controller {
 
 		$this->data['compare'] = $this->url->link('product/compare');				
 
-		$this->data['products'] = array();
-
-		$this->data['sorts'] = array();
+		$this->data['products'] = [];
+		$this->data['sorts'] 	= [];
 
 		foreach ($this->registry->get('sorts') as $sortConfig){
 			if ($sortConfig['visible']){
@@ -377,8 +376,7 @@ class ControllerProductSearch extends Controller {
 			$total_results = 0;
 
 			try {
-
-				$query = $this->request->get['search'];
+				$query = !empty($this->request->get['search'])?$this->request->get['search']:'';
 				$query = $this->elasticSearch->prepareQueryExceptions($query);
 				$query = trim(mb_strtolower($query));	
 				$this->search = $query;
@@ -489,7 +487,7 @@ class ControllerProductSearch extends Controller {
 				$url .= '&order=' . $this->request->get['order'];
 			}
 
-			$this->data['limits'] = array();
+			$this->data['limits'] = [];
 
 			$limits = array_unique(array($this->config->get('config_catalog_limit'), $this->config->get('config_catalog_limit') * 2, $this->config->get('config_catalog_limit') * 3));
 

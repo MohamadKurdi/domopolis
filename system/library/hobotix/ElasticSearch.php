@@ -1,22 +1,23 @@
-<?
+<?php
 	
 	namespace hobotix;
 	
 	use Elasticsearch\ClientBuilder;
 	
 	class ElasticSearch{				
-		public $elastic;
-		private $db;
-		private $log;
-		private $cache;
-		private $config;
-		private $registry;
-		private $settings = [];
-		private $routes = [
+		public $elastic     = null;
+		private $db         = null;
+		private $log        = null;
+		private $cache      = null;
+		private $config     = null;
+		private $registry 	= null;
+		private $settings 	= [];
+		private $routes 	= [
 			'kp/search',
 			'kp/search/test',
 			'catalog/product_ext/delete'
 		];
+		private $params 	= ['query', 'tag', 'search'];
 		
 		const CATEGORY_PRIORITY = 20;
 		const MANUFACTURER_PRIORITY = 200;
@@ -35,15 +36,26 @@
 			$this->log 		= $registry->get('log');		
 			$this->request 	= $registry->get('request');	
 
-			if (is_cli() || $explicit || (!empty($this->request->get['route']) && in_array($this->request->get['route'], $this->routes)) || isset($this->request->get['search'])){ 
-				$this->elastic = ClientBuilder::create()->setHosts(['http://127.0.0.1:9200'])->build();
-			} else {
-				$this->elastic = null;
+			if (is_cli() || $explicit || (!empty($this->request->get['route']) && in_array($this->request->get['route'], $this->routes)) || isset($this->request->get['search'])){
+				try{
+					$this->elastic = ClientBuilder::create()->setHosts(['http://127.0.0.1:9200'])->build();
+				} catch (\Exception $e){				
+				}				
 			}
 			
 			$this->settings = loadJsonConfig('search');							
 		}
-		
+
+		private function check(){
+			if (!$this->elastic){
+				try{
+					$this->elastic = ClientBuilder::create()->setHosts(['http://127.0.0.1:9200'])->build();
+				} catch (\Exception $e){				
+				}	
+			}
+
+			return $this->elastic;
+		}		
 		
 		///////////////	 СЕРВИСНЫЕ ФУНКЦИИ //////////////////////////////////
 		
@@ -661,7 +673,7 @@
 				unset($params['body']['sort']);
 				unset($params['body']['suggest']);
 				unset($params['body']['highlight']);
-				return self::validateCountResult($this->elastic->count($params));
+				return self::validateCountResult($this->check()->count($params));
 			}
 			
 			if (!empty($data['count'])){
@@ -674,12 +686,10 @@
 				unset($params['body']['sort']);
 				unset($params['body']['suggest']);
 				unset($params['body']['highlight']);
-				return $this->elastic->search($params);
+				return $this->check()->search($params);
 			}
 
-			$results = $this->elastic->search($params);
-			
-		//	$this->log->debug($results);
+			$results = $this->check()->search($params);
 			
 			return $results;			
 		}
@@ -706,7 +716,7 @@
 			 			'filter' 	=> [ 'term' => [ 'stores' => $this->config->get('config_store_id') ], 'term' => [ 'status' => 1 ] ],			 
 						],			
 			] ] ];				
-			return $this->elastic->search($params);
+			return $this->check()->search($params);
 		}
 		
 		public function completition($index, $query, $field, $suggest, $data = array()){
@@ -735,7 +745,7 @@
 			] ];
 			
 			
-			return $this->elastic->search($params);
+			return $this->check()->search($params);
 		}
 		
 		public function fuzzy($index, $query, $field, $suggest, $data = array()){
@@ -777,7 +787,7 @@
 			] ];
 			
 			
-			return $this->elastic->search($params);
+			return $this->check()->search($params);
 		}
 		
 		public function getManufacturer($manufacturer_id){
@@ -791,7 +801,7 @@
 			'filter' => [ [ 'term' => ['manufacturer_id' => $manufacturer_id] ], [ 'term' => ['category_id' => 0] ], [ 'term' => ['collection_id' => 0] ]  ]			 
 			] ] ] ];
 			
-			return $this->elastic->search($params);
+			return $this->check()->search($params);
 		}
 		
 		public function getEntity($manufacturer_id = 0, $category_id = 0){
@@ -805,7 +815,7 @@
 			'filter' => [ [ 'term' => ['manufacturer_id' => $manufacturer_id] ], [ 'term' => ['category_id' => $category_id] ], [ 'term' => ['collection_id' => 0] ]  ]			 
 			] ] ] ];
 			
-			return $this->elastic->search($params);
+			return $this->check()->search($params);
 		}
 
 		public function deleteIndexes(){
@@ -813,12 +823,12 @@
 			$deleteParams = [
 			'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix')
 			];
-			$response = $this->elastic->indices()->delete($deleteParams);
+			$response = $this->check()->indices()->delete($deleteParams);
 
 			$deleteParams = [
 			'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix')
 			];
-			$response = $this->elastic->indices()->delete($deleteParams);
+			$response = $this->check()->indices()->delete($deleteParams);
 		}
 		
 		////////////// ФУНКЦИИ ИНДЕКСИРОВАНИЯ ///////////////////////////
@@ -833,7 +843,7 @@
 				$deleteParams = [
 				'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix')
 				];
-				$response = $this->elastic->indices()->delete($deleteParams);
+				$response = $this->check()->indices()->delete($deleteParams);
 			} catch (\Exception $e){
 				echoLine($e->getMessage());
 			}
@@ -885,7 +895,7 @@
 			] ];
 			
 			try{
-				$response =  $this->elastic->indices()->create($createParams);	
+				$response =  $this->check()->indices()->create($createParams);	
 			} catch (\Exception $e){
 				echoLine($e->getMessage());
 			}	
@@ -894,7 +904,7 @@
 				$deleteParams = [
 					'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix')
 				];
-			//	$response = $this->elastic->indices()->delete($deleteParams);
+			//	$response = $this->check()->indices()->delete($deleteParams);
 			} catch (\Exception $e){
 				echoLine($e->getMessage());
 			}
@@ -971,7 +981,7 @@
 			] ];
 			
 			try {
-				$response = $this->elastic->indices()->create($createParams);		
+				$response = $this->check()->indices()->create($createParams);		
 			} catch (\Exception $e){
 				echoLine($e->getMessage());
 			}
@@ -1006,7 +1016,7 @@
 				$mapping = ElasticSearch::createMappingToNonEmpty($storequery, 'store_id');
 				$this->createStoreIndexArray($mapping, 'stores', $params);
 				
-				$response = $this->elastic->index($params);
+				$response = $this->check()->index($params);
 				//	print_r($response);
 				
 			}
@@ -1035,7 +1045,7 @@
 				$mapping = ElasticSearch::createMappingToNonEmpty($storequery, 'store_id');
 				$this->createStoreIndexArray($mapping, 'stores', $params);								
 				
-				$response = $this->elastic->index($params);
+				$response = $this->check()->index($params);
 				//	print_r($response);
 				
 			}
@@ -1072,7 +1082,7 @@
 						$mapping = ElasticSearch::createMappingToNonEmpty($storequery, 'store_id');
 						$this->createStoreIndexArray($mapping, 'stores', $params);	
 						
-						$response = $this->elastic->index($params);
+						$response = $this->check()->index($params);
 						//	print_r($response);
 					}
 				}
@@ -1109,7 +1119,7 @@
 						$mapping = ElasticSearch::createMappingToNonEmpty($storequery, 'store_id');
 						$this->createStoreIndexArray($mapping, 'stores', $params);	
 						
-						$response = $this->elastic->index($params);
+						$response = $this->check()->index($params);
 					}
 				}
 			}
@@ -1121,7 +1131,7 @@
 			];
 			
 			
-			$response = $this->elastic->get($params);
+			$response = $this->check()->get($params);
 			print_r($response);
 			
 			return $this;			
@@ -1136,7 +1146,7 @@
 			if ($this->elastic){
 				
 				try {
-					$response = $this->elastic->delete($params);
+					$response = $this->check()->delete($params);
 				} catch (\Elasticsearch\Common\Exceptions\Missing404Exception $e){
 				//	$this->log->debug($e->getMessage());
 				}
@@ -1205,7 +1215,7 @@
 			self::createStoreIndexArray($mapping, 'stores', $params);		
 
 
-			$response = $this->elastic->index($params);
+			$response = $this->check()->index($params);
 		}
 
 		public function reindexproduct($product_id){
@@ -1242,7 +1252,7 @@
 			];
 			
 			
-			$response = $this->elastic->get($params);
+			$response = $this->check()->get($params);
 			print_r($response);
 			
 			return $this;
@@ -1257,7 +1267,7 @@
 			];
 			
 			
-			$response = $this->elastic->get($params);
+			$response = $this->check()->get($params);
 			print_r($response);
 		
 		}
