@@ -246,12 +246,7 @@ class ControllerCatalogProductExt extends Controller {
     }
 
     protected function getList() {
-		error_reporting(0);
-		
-        $this->document->addScript('view/javascript/jeditable-1.7.3/jquery.jeditable.js');
-        $this->document->addScript('view/javascript/admin.quick.edit.pro.js');
-        $this->document->addScript('view/javascript/jquery/ui/jquery-ui-timepicker-addon.js');
-
+		error_reporting(0);	
         $this->document->addStyle('view/stylesheet/aqe_style.css');
 
         $filters = [];

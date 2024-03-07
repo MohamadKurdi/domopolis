@@ -1,6 +1,3 @@
-<?
-	$this->load->model('setting/setting');
-?>
 <?php echo $header; ?>
 <style>
 	input[type="text"].filter{max-width:90px;}
@@ -46,19 +43,11 @@
 			<?php }	?>
 
 			<div class="buttons">
-				<? /*  
-					<span>Последн. деактуализация истории цен: <b><? echo $this->model_setting_setting->getKeySettingValue('history_prices', 'date_last_historical_price_update'); ?></b>
-					&nbsp;&nbsp;<span style='cursor:pointer;border-bottom:1px dashed black; display:inline-block;' onclick="if (confirm('Точно сделать?')) { $('#updatehisprice').load('index.php?route=catalog/product/setHistoricalPriceToPrice&token=<? echo $token; ?>'); }">Деактуализировать историю!</span><span id="updatehisprice"></span>&nbsp;&nbsp;|&nbsp;&nbsp;
-					</span>
-				*/ ?>	
-
 				<?php if ($this->config->get('config_enable_overprice')) { ?>
 					<a class="button" style="background-color: #ff7815; color:#FFF;" onclick="$('#success_').show(); $('#success_').html('Подожди, выполняю...'); $('#success_').load('index.php?route=catalog/product/setNewPrices&token=<? echo $token; ?>')"><i class="fa fa-refresh"></i> Создать цены из закупочной цены
 					</a>
 				<?php } ?>
 
-
-				
 				<?php if ($this->user->getUserGroup() == 123 ) { ?>													
 					<a class="button" onclick="$('#success_').show(); $('#success_').html('Подожди, выполняю...'); $('#success_').load('index.php?route=catalog/product/roundPrices&token=<? echo $token; ?>')">Округлить цены!
 					</a>
@@ -77,7 +66,9 @@
 				<table class="list">
 					<thead>
 						<tr>
-							<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked).trigger('change');" /></td>
+							<td width="1" style="text-align: center;">
+								<input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked).trigger('change');" />
+							</td>
 							<?php foreach($column_order as $col) { ?>
 								<?php if (!empty($column_info[$col]['sort'])) { ?>
 									<td class="<?php echo $column_info[$col]['align']; ?>"><a href="<?php echo $sorts[$col]; ?>"<?php echo ($sort == $column_info[$col]['sort']) ? ' class="' . strtolower($order) . '"' : ''; ?>><?php echo $columns[$col]; ?></a></td>

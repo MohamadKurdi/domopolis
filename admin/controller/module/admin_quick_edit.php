@@ -3,9 +3,9 @@ define('EXTENSION_NAME', 'Admin Quick Edit PRO');
 define('EXTENSION_VERSION', '3.5.4');
 define('EXTENSION_TYPE', 'vQmod');
 define('EXTENSION_COMPATIBILITY', 'OpenCart 1.5.6.x');
-define('EXTENSION_URL', 'http://www.opencart.com/index.php?route=extension/extension/info&extension_id=3805');
-define('EXTENSION_SUPPORT', 'support@opencart.ee');
-define('EXTENSION_SUPPORT_FORUM', 'http://forum.opencart.com/viewtopic.php?f=123&t=45057');
+define('EXTENSION_URL', '');
+define('EXTENSION_SUPPORT', '');
+define('EXTENSION_SUPPORT_FORUM', '');
 
 function column_sort($a, $b) {
     if ($a['index'] == $b['index']) {
@@ -297,9 +297,6 @@ class ControllerModuleAdminQuickEdit extends Controller {
         );
 
     public function index() {
-        $this->document->addScript('view/javascript/jquery.jeditable.js');
-        $this->document->addScript('view/javascript/admin.quick.edit.pro.js');
-
         $this->document->addStyle('view/stylesheet/aqe_style.css');
 
         $this->data = array_merge($this->data, $this->language->load('module/admin_quick_edit'));

@@ -26,6 +26,36 @@
 	<? if (isset($socnet_auth_code)) { ?>
 		<? echo $socnet_auth_code; ?>
 	<? } ?>
+	<style type="text/css">
+			.pull-right {
+            float:right;
+			}
+			.label {
+            display: inline;
+            padding: .2em .6em .3em;
+            font-size: 75%;
+            font-weight: bold;
+            line-height: 1;
+            color: #ffffff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: .25em;
+			}
+			.label-success {
+            background-color: #5cb85c;
+			}
+			.label-info {
+            background-color: #5bc0de;
+			}
+			.label-warning {
+            background-color: #f0ad4e;
+			}
+			.label-danger {
+            background-color: #d9534f;
+			}
+		</style>
+		
 	<style>
 					.admin_home{width:100%;background: #f3f3f3 url(/admin/view/image/bg_grey.png) repeat;}
 					.admin_home tr td{text-align:center; padding-bottom:30px;}
