@@ -38,7 +38,7 @@ final class OpenAIAdaptor
 				'presence_penalty' 	=> (float)$this->config->get('config_openai_category_alternatenames_presence_penalty'),
 			]);
 
-		return $this->parseCompletionResponse($response, 'completion', true);
+		return $this->parseCompletionResponse($response, 'chat', true);
 	}
 
 	private function parseCompletionResponse($response = null, $endpoint = 'completion', $check = false){

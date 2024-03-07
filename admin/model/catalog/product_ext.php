@@ -614,7 +614,7 @@ class ModelCatalogProductExt extends Model {
         return $this->productCount;
     }
 
-    public function quickEditProduct($product_id, $column, $value, $lang_id = null, $data = null) {
+    public function quickEditProduct($product_id, $column, $value, $lang_id = null, $data = null, $update_variants = true) {
         $this->load->model('catalog/product');
 
         $editable = array('manufacturer', 'image', 'name', 'tag', 'model', 'sku', 'asin', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'location', 'quantity', 'price', 'price_delayed', 'cost', 'weight', 'status', 'fill_from_amazon', 'sort_order', 'tax_class', 'minimum', 'subtract', 'stock_status', 'product_group', 'shipping', 'date_available', 'length', 'width', 'height', 'length_class', 'weight_class', 'points');
@@ -706,7 +706,6 @@ class ModelCatalogProductExt extends Model {
             $result = 1;
         } else if ($column == 'attributes') {
             $this->db->query("DELETE FROM product_attribute WHERE product_id = '" . (int)$product_id . "'");
-
             if (!empty($data['product_attribute'])) {
                 foreach ((array)$data['product_attribute'] as $product_attribute) {
                    if ($product_attribute['attribute_id']) {
@@ -837,7 +836,23 @@ class ModelCatalogProductExt extends Model {
 
             }
             $result = 1;
-        }        
+        }     
+
+        if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']){
+            if ($update_variants){
+               $editable = array('manufacturer', 'location', 'quantity', 'status', 'tax_class', 'product_group', 'shipping', 'date_available');
+
+                if (in_array($column, $editable)) {
+                    $variants = $this->model_catalog_product->getProductVariantsIds($product_id);
+
+                    if ($variants){
+                        foreach ($variants as $variant){
+                            $this->quickEditProduct($variant, $column, $value, $lang_id, $data, false);
+                        }
+                    }
+                }
+            }
+        }    
 
         $this->load->model('kp/content');
         $this->model_kp_content->addContent(['action' => 'edit', 'entity_type' => 'product', 'entity_id' => $product_id]);

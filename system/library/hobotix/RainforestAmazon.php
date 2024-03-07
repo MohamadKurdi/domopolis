@@ -27,6 +27,21 @@ class RainforestAmazon{
 	public const amazonSellerQualities 			= ['TE', 'T', 'E'];
 	public const amazonSellerQualitiesSorted 	= ['TE' => 3, 'T' => 2, 'E' => 1];
 
+	public const adminModes = [
+        'config_rainforest_asin_deletion_mode' => [
+            'icon'      => 'fa-amazon',
+            'btn_text'  => 'ASIN'
+        ],
+        'config_rainforest_variant_edition_mode' => [
+            'icon'      => 'fa-amazon',
+            'btn_text'  => 'VAR'
+        ],
+        'config_rainforest_translate_edition_mode' => [
+            'icon'      => 'fa-refresh',
+            'btn_text'  => 'TRNSL'
+        ],
+    ];
+
 	/*
 		zipcodeCount = максимальное количество zipcode (если в тарифе меньше - не страшно, будет пропущено)
 	*/

@@ -3,28 +3,13 @@ class ControllerSettingSetting extends Controller
 {
     private $error = [];
 
-    private $admin_modes = [
-        'config_rainforest_asin_deletion_mode' => [
-            'icon'      => 'fa-amazon',
-            'btn_text'  => 'ASIN'
-        ],
-        'config_rainforest_variant_edition_mode' => [
-            'icon'      => 'fa-amazon',
-            'btn_text'  => 'VAR'
-        ],
-        'config_rainforest_translate_edition_mode' => [
-            'icon'      => 'fa-refresh',
-            'btn_text'  => 'TRNSL'
-        ],
-    ];
-    
     public function getFPCINFO(){
         if (!$this->user->isLogged() || !isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])) {
         } else {
             $this->load->model('setting/setting');
             $this->load->model('catalog/product');
 
-            foreach ($this->admin_modes as $mode => $mode_config) {
+            foreach (\hobotix\RainforestAmazon::adminModes as $mode => $mode_config) {
                 if (!isset($this->session->data[$mode])) {
                     $this->session->data[$mode] = $this->config->get($mode);
                 }
@@ -41,16 +26,14 @@ class ControllerSettingSetting extends Controller
                 }
             }
 
-            if ($this->user->getAdminExtendedStats()) {
-                if ($this->config->get('config_enable_amazon_specific_modes')) {
-                    foreach ($this->admin_modes as $mode => $mode_config) {
-                        $this->data[$mode] = isset($this->session->data[$mode])?$this->session->data[$mode]:0;
-                        $this->data['set_' . $mode] = $this->url->link('setting/setting/setworkmode', 'token=' . $this->session->data['token'] . '&mode=' . $mode);
-                    }
+            if ($this->config->get('config_enable_amazon_specific_modes')) {
+                foreach (\hobotix\RainforestAmazon::adminModes as $mode => $mode_config) {
+                    $this->data[$mode] = isset($this->session->data[$mode])?$this->session->data[$mode]:0;
+                    $this->data['set_' . $mode] = $this->url->link('setting/setting/setworkmode', 'token=' . $this->session->data['token'] . '&mode=' . $mode);
                 }
             }
 
-            $this->data['admin_modes'] = $this->admin_modes;
+            $this->data['admin_modes'] = \hobotix\RainforestAmazon::adminModes;
             
             if (!$this->config->get('config_enable_highload_admin_mode') || $this->user->getUserGroup() == 1){
                 $this->data['clearMemCache'] = $this->url->link('setting/setting/clearMemCache', 'token=' . $this->session->data['token']);                    
@@ -113,14 +96,14 @@ class ControllerSettingSetting extends Controller
     public function setworkmode(){
         $mode = $this->request->get['mode'];
 
-        if (!empty($this->admin_modes[$mode])) {
+        if (!empty(\hobotix\RainforestAmazon::adminModes[$mode])) {
             if ($this->session->data[$mode] == '1') {
                 $this->session->data[$mode] = 0;
             } else {
                 $this->session->data[$mode] = 1;
             }
 
-                $this->response->setOutput($this->session->data[$mode]?'Вкл':'Выкл');
+                $this->response->setOutput($this->session->data[$mode]?'On':'Off');
         } else {
             $this->response->setOutput('INVALID MODE');
         }
@@ -142,7 +125,7 @@ class ControllerSettingSetting extends Controller
             }
             
             
-            echo (file_exists(DIR_CACHE . PAGECACHE_DIR . 'nopagecache')?'Выкл':'Вкл');
+            echo (file_exists(DIR_CACHE . PAGECACHE_DIR . 'nopagecache')?'Off':'On');
         } else {
             echo 'Недоступно';
         }
@@ -161,7 +144,7 @@ class ControllerSettingSetting extends Controller
                 $enableNCM = true;
             }
             
-            echo (file_exists(DIR_CACHE . BCACHE_DIR . 'nocache')?'Выкл':'Вкл');
+            echo (file_exists(DIR_CACHE . BCACHE_DIR . 'nocache')?'Off':'On');
         } else {
             echo 'Недоступно';
         }

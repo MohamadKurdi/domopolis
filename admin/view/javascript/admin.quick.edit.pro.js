@@ -485,7 +485,7 @@ var t;
             var last_name = $('<input />');
             var span = $('<span />');
             var br = $('<br />');
-            span.html("Last name:"); // TODO: translate
+            span.html("Last name:");
             last_name.attr({'autocomplete':'off', 'id':'last_name'}).val(json.last_name);
             $(this).append(br).append(span).append(last_name);
             $(":input", form).each(function() {
@@ -500,11 +500,31 @@ var t;
 
 })(jQuery);
 
+function extractFieldAndId(str) {
+  const regex = "/^(.+)-(\d+)$/";
+  
+  const match = str.match(regex);
+  
+  if (match) {
+    const field = match[1];
+    const id = parseInt(match[2]);
+    
+    return { field, id };
+  } else {
+    return null;
+  }
+}
+
 function quick_update(el, value, settings, update_url, params) {
     var $ = jQuery;
     var ret_val = el.revert;
     var elem = $(el);
     var data = {id : $(el).attr("id"), old : ret_val, new: value};
+
+    var field = extractFieldAndId($(el).attr("id"));
+    console.log($(el).attr("id"));
+    console.log(field);
+
     if (params) {
         $.extend(data, params);
     }
