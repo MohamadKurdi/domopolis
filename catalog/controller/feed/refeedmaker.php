@@ -150,6 +150,11 @@ class ControllerFeedReFeedMaker extends Controller
     }
 
     public function supplemental(){
+        if ($this->simpleProcess->isRunning('feed/refeedmaker/makeFeedsCron')){   
+            echoLine('[ControllerFeedReFeedMaker::supplemental] Process feed/refeedmaker/makeFeedsCron running we can not continue', 'e');
+            return;
+        }
+
         $this->load->model('catalog/product');
 
         $this->db->query("UPDATE product SET quantity = 0 WHERE quantity < 0 ");
@@ -254,6 +259,8 @@ class ControllerFeedReFeedMaker extends Controller
     }
 
     public function makeFeedsCron($stock = false){
+        $this->rainforestAmazon->offersParser->PriceLogic->updatePricesFromDelayed();
+
         $this->load->model('catalog/category');
         $this->load->model('catalog/product');
         $this->load->model('localisation/currency');

@@ -657,7 +657,7 @@ class PriceLogic
 	
 	public function updatePricesFromDelayed(){
 		if ($this->config->get('config_rainforest_delay_price_setting')){
-			echoLine('\[PriceLogic::updatePricesFromDelayed\] DELAYED PRICES IS ON!', 'w');
+			echoLine('[PriceLogic::updatePricesFromDelayed] DELAYED PRICES IS ON!', 'w');
 
 			$sql = "UPDATE product SET price = price_delayed WHERE price_delayed > 0";
 			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
@@ -686,7 +686,7 @@ class PriceLogic
 			$this->db->query($sql, $this->config->get('config_rainforest_debug_mysql_pricelogic'));
 
 		} else {
-			echoLine('\[PriceLogic::updatePricesFromDelayed\] DELAYED PRICES IS OFF, UPDATING IN LIVE!', 'w');
+			echoLine('[PriceLogic::updatePricesFromDelayed] DELAYED PRICES IS OFF, UPDATING IN LIVE!', 'w');
 		}
 	}
 
