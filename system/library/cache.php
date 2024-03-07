@@ -3,6 +3,7 @@ final class Cache {
 	private $expire 		= 3600;
 	private $prefix 		= '';
 	private $driver 		= 'Redis';
+	private $adaptor 		= null;
 	
 	public function __construct($driver) {
 		if (!$driver){
@@ -18,7 +19,7 @@ final class Cache {
 
 			$this->adaptor = new $class();
 		} else {
-			exit('Error: Could not load cache driver type ' . $driver . '!');
+			$this->adaptor = null;
 		}
 	} 	
 	
