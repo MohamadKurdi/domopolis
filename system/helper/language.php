@@ -45,7 +45,7 @@ function parseText($node, $keyword, $dom, $link, $target = '', $tooltip = 0){
 		}
 
 		$node->parentNode->insertBefore($span, $newNode);
-		$this->parseText($newNode, $keyword, $dom, $link, $target, $tooltip);
+        parseText($newNode, $keyword, $dom, $link, $target, $tooltip);
 	}
 }
 

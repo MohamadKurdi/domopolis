@@ -165,7 +165,7 @@
 			}
 			
 			$mijo_shop = class_exists( 'MijoShop' ) ? true : false;
-			$is_mobile = Mobile_Detect_MFP::create()->isMobile();
+			$is_mobile = IS_MOBILE_SESSION;
 			
 			if( $setting['position'] == 'content_top' && ! empty( $settings['change_top_to_column_on_mobile'] ) && $is_mobile ) {
 				$setting['position'] = 'column_left';
