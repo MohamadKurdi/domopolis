@@ -935,6 +935,12 @@
 						</tr>
 
 						<tr>
+							<td colspan="3" class="left" style="color:#cf4a61;">
+								<i class="fa fa-cogs"></i> <b>Очистка</b>
+							</td>
+						</tr>
+
+						<tr>
 							<td class="right">
 								<i class="fa fa-amazon"></i> Удалять или отключать товары с ценой меньше для автоматически добавленных товаров
 							</td>
@@ -986,6 +992,34 @@
 							<td>
 								<span class="help">
 									<i class="fa fa-info-circle" style="color:red"></i> Периодически товары пропадают из Amazon. В таком случае при попытке получить оффер, либо информацию о товаре его ASIN обозначается как INVALID. Если эта настройка включена, то такие товары будут периодически удаляться из базы. Обязательно отключать для магазинов, наполняемых вручную! Если товары есть в заказах, то они не удаляются, но отключаются.
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								<b style="color:#cf4a61"><i class="fa fa-exclamation-triangle"></i> Очищать атрибуты, у которых нет значений</b>
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_cleanup_empty_attributes" type="checkbox" class="checkbox" name="config_rainforest_cleanup_empty_attributes" <? if ($config_rainforest_cleanup_empty_attributes){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_cleanup_empty_attributes"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle" style="color:red"></i> Пустые атрибуты будут периодически удаляться
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								<b style="color:#cf4a61"><i class="fa fa-exclamation-triangle"></i> Очищать бренды без товаров</b>
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_cleanup_empty_manufacturers" type="checkbox" class="checkbox" name="config_rainforest_cleanup_empty_manufacturers" <? if ($config_rainforest_cleanup_empty_manufacturers){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_cleanup_empty_manufacturers"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle" style="color:red"></i> Пустые бренды (производители) будут периодически удаляться
 								</span>
 							</td>
 						</tr>
@@ -1070,7 +1104,7 @@
 
 						<tr>
 							<td class="right">
-								Обработка <br /><i>"Сравните с похожими"</i>
+								Обработка <i>"Сравните с похожими"</i>
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_enable_compare_with_similar_parsing" type="checkbox" class="checkbox" name="config_rainforest_enable_compare_with_similar_parsing" <? if ($config_rainforest_enable_compare_with_similar_parsing){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_compare_with_similar_parsing"></label>
@@ -1083,7 +1117,7 @@
 						</tr>
 						<tr>
 							<td class="right">
-								Добавление <br /><i>"Сравните с похожими"</i>
+								Добавление <i>"Сравните с похожими"</i>
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_enable_compare_with_similar_adding" type="checkbox" class="checkbox" name="config_rainforest_enable_compare_with_similar_adding" <? if ($config_rainforest_enable_compare_with_similar_adding){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_compare_with_similar_adding"></label>
@@ -1098,7 +1132,7 @@
 
 						<tr>
 							<td class="right">
-								Обработка <br /><i>"Сопутствующие товары"</i>
+								Обработка <i>"Сопутствующие товары"</i>
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_enable_related_parsing" type="checkbox" class="checkbox" name="config_rainforest_enable_related_parsing" <? if ($config_rainforest_enable_related_parsing){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_related_parsing"></label>
@@ -1111,7 +1145,7 @@
 						</tr>
 						<tr>
 							<td class="right">
-								Добавление <br /><i>"Сопутствующие товары"</i>
+								Добавление <i>"Сопутствующие товары"</i>
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_enable_related_adding" type="checkbox" class="checkbox" name="config_rainforest_enable_related_adding" <? if ($config_rainforest_enable_related_adding){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_related_adding"></label>
@@ -1125,7 +1159,7 @@
 
 						<tr>
 							<td class="right">
-								Обработка <br /><i>"Товары Спонсоров"</i>
+								Обработка <i>"Товары Спонсоров"</i>
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_enable_sponsored_parsing" type="checkbox" class="checkbox" name="config_rainforest_enable_sponsored_parsing" <? if ($config_rainforest_enable_sponsored_parsing){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_sponsored_parsing"></label>
@@ -1138,7 +1172,7 @@
 						</tr>
 						<tr>
 							<td class="right">
-								Добавление <br /><i>"Товары Спонсоров"</i>
+								Добавление <i>"Товары Спонсоров"</i>
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_enable_sponsored_adding" type="checkbox" class="checkbox" name="config_rainforest_enable_sponsored_adding" <? if ($config_rainforest_enable_sponsored_adding){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_sponsored_adding"></label>
@@ -1152,7 +1186,7 @@
 
 						<tr>
 							<td class="right">
-								Обработка <br /><i>"Предложения похожих"</i>
+								Обработка <i>"Предложения похожих"</i>
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_enable_similar_to_consider_parsing" type="checkbox" class="checkbox" name="config_rainforest_enable_similar_to_consider_parsing" <? if ($config_rainforest_enable_similar_to_consider_parsing){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_similar_to_consider_parsing"></label>
@@ -1165,7 +1199,7 @@
 						</tr>
 						<tr>
 							<td class="right">
-								Добавление <br /><i>"Предложения похожих"</i>
+								Добавление <i>"Предложения похожих"</i>
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_enable_similar_to_consider_adding" type="checkbox" class="checkbox" name="config_rainforest_enable_similar_to_consider_adding" <? if ($config_rainforest_enable_similar_to_consider_adding){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_similar_to_consider_adding"></label>
@@ -1179,7 +1213,7 @@
 
 						<tr>
 							<td class="right">
-								Обработка <br /><i>"Смотрели до покупки"</i>
+								Обработка <i>"Смотрели до покупки"</i>
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_enable_view_to_purchase_parsing" type="checkbox" class="checkbox" name="config_rainforest_enable_view_to_purchase_parsing" <? if ($config_rainforest_enable_view_to_purchase_parsing){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_view_to_purchase_parsing"></label>
@@ -1192,7 +1226,7 @@
 						</tr>
 						<tr>
 							<td class="right">
-								Добавление <br /><i>"Смотрели до покупки"</i>
+								Добавление <i>"Смотрели до покупки"</i>
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_enable_view_to_purchase_adding" type="checkbox" class="checkbox" name="config_rainforest_enable_view_to_purchase_adding" <? if ($config_rainforest_enable_view_to_purchase_adding){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_view_to_purchase_adding"></label>
@@ -1206,7 +1240,7 @@
 
 						<tr>
 							<td class="right">
-								Обработка <br /><i>"Также смотрели"</i>
+								Обработка <i>"Также смотрели"</i>
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_enable_also_viewed_parsing" type="checkbox" class="checkbox" name="config_rainforest_enable_also_viewed_parsing" <? if ($config_rainforest_enable_also_viewed_parsing){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_also_viewed_parsing"></label>
@@ -1219,7 +1253,7 @@
 						</tr>
 						<tr>
 							<td class="right">
-								Добавление <br /><i>"Также смотрели"</i>
+								Добавление <i>"Также смотрели"</i>
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_enable_also_viewed_adding" type="checkbox" class="checkbox" name="config_rainforest_enable_also_viewed_adding" <? if ($config_rainforest_enable_also_viewed_adding){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_also_viewed_adding"></label>
@@ -1233,7 +1267,7 @@
 
 						<tr>
 							<td class="right">
-								Обработка <br /><i>"Также купили"</i>
+								Обработка <i>"Также купили"</i>
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_enable_also_bought_parsing" type="checkbox" class="checkbox" name="config_rainforest_enable_also_bought_parsing" <? if ($config_rainforest_enable_also_bought_parsing){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_also_bought_parsing"></label>
@@ -1246,7 +1280,7 @@
 						</tr>
 						<tr>
 							<td class="right">
-								Добавление <br /><i>"Также купили"</i>
+								Добавление <i>"Также купили"</i>
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_enable_also_bought_adding" type="checkbox" class="checkbox" name="config_rainforest_enable_also_bought_adding" <? if ($config_rainforest_enable_also_bought_adding){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_also_bought_adding"></label>
@@ -1260,7 +1294,7 @@
 
 						<tr>
 							<td class="right">
-								Обработка <br /><i>"Шоппинг по виду"</i>
+								Обработка <i>"Шоппинг по виду"</i>
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_enable_shop_by_look_parsing" type="checkbox" class="checkbox" name="config_rainforest_enable_shop_by_look_parsing" <? if ($config_rainforest_enable_shop_by_look_parsing){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_shop_by_look_parsing"></label>
@@ -1273,7 +1307,7 @@
 						</tr>
 						<tr>
 							<td class="right">
-								Добавление <br /><i>"Шоппинг по виду"</i>
+								Добавление <i>"Шоппинг по виду"</i>
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_enable_shop_by_look_adding" type="checkbox" class="checkbox" name="config_rainforest_enable_shop_by_look_adding" <? if ($config_rainforest_enable_shop_by_look_adding){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_shop_by_look_adding"></label>

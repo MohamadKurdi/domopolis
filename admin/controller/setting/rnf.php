@@ -75,7 +75,10 @@ class ControllerSettingRnf extends Controller {
 
 		'config_rainforest_debug_curl_request_timeout',
 		'config_rainforest_debug_curl_connect_timeout',
-		'config_rainforest_debug_mysql_pricelogic'
+		'config_rainforest_debug_mysql_pricelogic',
+
+        'config_rainforest_cleanup_empty_attributes',
+        'config_rainforest_cleanup_empty_manufacturers'
 	];
 
 	private $other_settings = [

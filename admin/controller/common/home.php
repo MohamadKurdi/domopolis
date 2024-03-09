@@ -320,7 +320,9 @@
 			'filter_date_added_to' 			=> date('Y-m-d', strtotime('-1 year')),
 			'filter_order_status_notnull' 	=> true
 			);
-			
+
+            $this->data['online'] = 0;
+
 			$this->data['orders_last_year'] = $this->model_sale_order->getTotalOrders($data);			
 			$this->data['orders_diff'] = ($this->data['orders_now'] - $this->data['orders_last_year']);
 			

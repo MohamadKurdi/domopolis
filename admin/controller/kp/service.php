@@ -137,14 +137,29 @@
 				}
 			}
 
-            echoLine('[optimizeProductsDB] Cleaning empty attributes', 'i');
-            $this->load->model('catalog/attribute');
-            $query = $this->db->query("SELECT a.attribute_id, ad.name FROM attribute a LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id AND language_id = '" . (int)$this->config->get('config_language_id') . "') WHERE attribute_group_id = '" . $this->config->get('config_default_attr_id') . "' AND a.attribute_id NOT IN (SELECT attribute_id FROM product_attribute)");
+            if ($this->config->get('config_rainforest_cleanup_empty_manufacturers')){
+                echoLine('[optimizeProductsDB] Cleaning empty manufacturers', 'i');
+                $this->load->model('catalog/manufacturer');
 
-            foreach ($query->rows as $row){
-                echoLine('[optimizeProductsDB] Cleaning attribute: ' . $row['name'] . ' with id ' . $row['attribute_id'], 'w');
-                $this->model_catalog_attribute->deleteAttribute($row['attribute_id']);
+                $query = $this->db->query("SELECT manufacturer_id, name FROM manufacturer WHERE manufacturer_id NOT IN (SELECT manufacturer_id FROM product)");
+
+                foreach ($query->rows as $row){
+                    echoLine('[optimizeProductsDB] Cleaning manufacturer: ' . $row['name'] . ' with id ' . $row['manufacturer_id'], 'w');
+                    $this->model_catalog_manufacturer->deleteManufacturer($row['manufacturer_id']);
+                }
             }
+
+            if ($this->config->get('config_rainforest_cleanup_empty_attributes')){
+                echoLine('[optimizeProductsDB] Cleaning empty attributes', 'i');
+                $this->load->model('catalog/attribute');
+                $query = $this->db->query("SELECT a.attribute_id, ad.name FROM attribute a LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id AND language_id = '" . (int)$this->config->get('config_language_id') . "') WHERE attribute_group_id = '" . $this->config->get('config_default_attr_id') . "' AND a.attribute_id NOT IN (SELECT attribute_id FROM product_attribute)");
+
+                foreach ($query->rows as $row){
+                    echoLine('[optimizeProductsDB] Cleaning attribute: ' . $row['name'] . ' with id ' . $row['attribute_id'], 'w');
+                    $this->model_catalog_attribute->deleteAttribute($row['attribute_id']);
+                }
+            }
+
 
 			echoLine('[optimizeProductsDB] Нормализация наличия видео у товаров', 'i');
 			$this->db->query("UPDATE product SET xhasvideo = 1 WHERE product_id IN (SELECT DISTINCT product_id FROM product_video)");
