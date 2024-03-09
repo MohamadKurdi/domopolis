@@ -27,30 +27,6 @@ class ControllerModuleMegaFilter extends Controller {
 	private static $_tmp_sort_parameters = NULL;
 	
 	private $_mijoshop_update = array(
-		'../../mijoshop/opencart.php' => array(
-			'foreach ($modules as $module) {' => array(
-				'$idx=0;',
-				'$idxs=array();',
-				'foreach( $modules as $k => $v ) {$idxs[] = $k;}',
-				'foreach ($modules as $module) {',
-				'if( ! isset( $module[\'layout_id\'] ) ) { $module[\'layout_id\'] = 0; }',
-				'if( ! isset( $module[\'position\'] ) ) { $module[\'position\'] = \'\'; }',
-				'if( ! isset( $module[\'status\'] ) ) { $module[\'status\'] = \'0\'; }',
-				'if( ! isset( $module[\'sort_order\'] ) ) { $module[\'sort_order\'] = 0; }',
-				'if( ! is_array( $module[\'layout_id\'] ) ) { $module[\'layout_id\'] = array( $module[\'layout_id\'] ); }',
-				'$module[\'_idx\'] = $idxs[$idx++];'
-			),
-			'$module[\'layout_id\'] == $layout_id' => array( 
-				'( in_array( $layout_id, $module[\'layout_id\'] ) || in_array( \'-1\', $module[\'layout_id\'] ) )'
-			),
-			'$args[\'setting\'] = $module;' => array(
-				'if( $module_name != \'mega_filter\' ) {',
-					'unset( $module[\'_idx\'] );',
-					'$module[\'layout_id\'] = current( $module[\'layout_id\'] );',
-				'}',
-				'$args[\'setting\'] = $module;',
-			)
-		)
 	);
 	
 	//private static $_tmp_sort_parameters = NULL;
@@ -364,113 +340,7 @@ class ControllerModuleMegaFilter extends Controller {
 				'warning' => $this->language->get( 'error_missing_template_file' )
 			));
 		}
-		
-		if( is_readable( __FILE__ ) ) {
-			// sprawdź czy użytkownik skopiował plik szablonu
-			$files = glob( DIR_SYSTEM . '../catalog/view/theme/*/template/module/mega_filter.tpl' );
-			$source = filemtime( DIR_SYSTEM . '../catalog/view/theme/default/template/module/mega_filter.tpl' );
-			
-			foreach( $files as $id => $file ) {
-				$file = realpath( $file );
-				$parts = explode( DIRECTORY_SEPARATOR, $file );
-				
-				array_pop( $parts ); // nazwa pliku
-				array_pop( $parts ); // katalog 'module'
-				array_pop( $parts ); // katalog 'template'
-				
-				$theme = array_pop( $parts );
-				
-				if( $theme == 'default' || ! is_readable( $file ) ) {
-					unset( $files[$id] );
-				} else {
-					$time = filemtime( $file );
-					
-					if( $source - $time > 60 * 10 ) {
-						$files[$id] = '<span style="margin-left:15px; display: inline-block;"> - /catalog/view/theme/<b>' . $theme . '</b>/template/module/mega_filter.tpl</span>';
-					} else {
-						unset( $files[$id] );
-					}
-				}
-			}
-			
-			if( $files ) {
-				$this->_setErrors(array(
-					'warning' => sprintf( $this->language->get( 'error_upgrade_template_file' ), implode( '<br>', $files ) )
-				));
-			}
-		}
-		
-		if( class_exists( 'MijoShop' ) && version_compare( $this->config->get('mfilter_mijoshop'), $curr_ver, '<' ) ) {
-			$warnings = array();
-			
-			foreach( $this->_mijoshop_update as $file => $changes ) {
-				$file = realpath( DIR_SYSTEM . $file );
-				
-				if( file_exists( $file ) && is_readable( $file ) ) {
-					$tmp = NULL;
-					
-					if( file_exists( $file . '_backup_mf' ) ) {
-						if( is_readable( $file . '_backup_mf' ) ) {
-							$tmp = file_get_contents( $file . '_backup_mf' );
-						} else {
-							$warnings[] = sprintf( 'No permission to read the file "%s"', $file . '_backup_mf' );
-						}
-					} else {
-						$tmp = file_get_contents( $file );
-					}
-					
-					if( $tmp !== NULL ) {
-						foreach( $changes as $search => $replace ) {
-							$replace = implode( "\n", $replace );
 
-							if( mb_strpos( $tmp, $search, 0, 'utf-8' ) !== false ) {
-								$tmp = str_replace( $search, $replace, $tmp );
-							} else if( mb_strpos( $tmp, $replace, 0, 'utf-8' ) === false ) {
-								$warnings[] = sprintf( 'In the file "%s" not found string "%s"', $file, $search );
-							}
-						}
-					}
-					
-					if( ! $warnings ) {
-						if( ! is_writable( dirname( $file ) ) ) {
-							$warnings[] = sprintf( 'No permission to create a copy of the file "%s" in directory "%s"', $file, dirname( $file ) );
-						} else if( ! is_writable( $file ) ) {
-							$warnings[] = sprintf( 'No permission to modify the file "%s"', $file );
-						} else if( $tmp !== NULL ) {
-							if( ! file_exists( $file . '_backup_mf' ) ) {
-								copy( $file, $file . '_backup_mf' );
-							}
-							
-							file_put_contents( $file, $tmp );
-						}
-					}
-				}
-			}
-			
-			if( empty( $warnings ) ) {
-				$this->_saveSettings('mfilter_mijoshop', array(
-					'mfilter_mijoshop' => $this->_version
-				));
-			} else {
-				$warnings[] = 'You need to manually find and replace the following strings:';
-				$warnings[] = '';
-				
-				foreach( $this->_mijoshop_update as $file => $changes ) {
-					$file = realpath( DIR_SYSTEM . $file );
-					
-					foreach( $changes as $search => $replace ) {
-						$warnings[] = sprintf( 'String: <pre>%s</pre> replace to: <pre>%s</pre> in file <b>%s</b>', $search, implode( "\n", $replace ), $file );
-						$warnings[] = '';
-					}
-				}
-				
-				$warnings[] = sprintf( 'Remember to make backup your files! <a href="%s">Click here when you done</a>', $this->url->link('module/' . $this->_name . '/mijoshop_manually', 'token=' . $this->session->data['token'], 'SSL') );
-				
-				$this->_setErrors(array(
-					'warning' => implode( '<br />', $warnings )
-				));
-			}
-		}
 	}
 	
 	public function mijoshop_manually() {
