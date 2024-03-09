@@ -1,4 +1,4 @@
-<?
+<?php
 	
 	class ControllerKPService extends Controller {
 
@@ -104,8 +104,8 @@
 		}
 		
 		public function optimizeProductsDB(){
-			echoLine ('[optimizeProductsDB] Регулярные задачи обслуживания товарной базы', 'i');				
-			
+			echoLine ('[optimizeProductsDB] Регулярные задачи обслуживания товарной базы', 'i');
+
 			echoLine('[optimizeProductsDB] Очистка несуществующих записей', 'i');
 			$this->db->query("DELETE FROM product_description WHERE product_id NOT IN (SELECT product_id FROM product)");
 			
@@ -136,6 +136,15 @@
 					$this->db->query("INSERT IGNORE INTO review_description SET review_id = '" . (int)$row['review_id'] . "', language_id = '" . $language['language_id'] . "', text = '', answer = '', good = '', bads = ''");			
 				}
 			}
+
+            echoLine('[optimizeProductsDB] Cleaning empty attributes', 'i');
+            $this->load->model('catalog/attribute');
+            $query = $this->db->query("SELECT a.attribute_id, ad.name FROM attribute a LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id AND language_id = '" . (int)$this->config->get('config_language_id') . "') WHERE attribute_group_id = '" . $this->config->get('config_default_attr_id') . "' AND a.attribute_id NOT IN (SELECT attribute_id FROM product_attribute)");
+
+            foreach ($query->rows as $row){
+                echoLine('[optimizeProductsDB] Cleaning attribute: ' . $row['name'] . ' with id ' . $row['attribute_id'], 'w');
+                $this->model_catalog_attribute->deleteAttribute($row['attribute_id']);
+            }
 
 			echoLine('[optimizeProductsDB] Нормализация наличия видео у товаров', 'i');
 			$this->db->query("UPDATE product SET xhasvideo = 1 WHERE product_id IN (SELECT DISTINCT product_id FROM product_video)");
@@ -230,301 +239,206 @@
 			$this->db->non_cached_query("DELETE FROM product_price_national_to_yam WHERE price = 0");		
 
 			$this->fillSpecialCategory()->fillMarkDownCategory()->fillAlsoBoughtProducts()->fillRelatedCategories();	
-		}		
-		
-		public function dailyWork(){						
-			echo 'Статистика по работе сотрудников' . PHP_EOL;
-			
-			echo 'Инициализация записей на сегодня' . PHP_EOL;
-			$this->db->query("INSERT IGNORE INTO user_worktime (`user_id`, `date`) SELECT user_id, DATE(NOW()) FROM user WHERE count_worktime = 1 ");
-			
-			echo '>> Подсчет количества входящих звонков'  . PHP_EOL;
-			echo ''. PHP_EOL;
-			$this->db->query("UPDATE user_worktime uw SET inbound_call_count = (SELECT COUNT(DISTINCT cc.customer_call_id) FROM customer_calls cc WHERE DATE(cc.date_end) = DATE(NOW()) AND cc.inbound = 1 AND cc.manager_id = uw.user_id GROUP BY DATE(cc.date_end)) WHERE date = DATE(NOW())");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет количества исходящих звонков'  . PHP_EOL;
-			echo ''. PHP_EOL;
-			$this->db->query("UPDATE user_worktime uw SET outbound_call_count = (SELECT COUNT(DISTINCT cc.customer_call_id) FROM customer_calls cc WHERE DATE(cc.date_end) = DATE(NOW()) AND cc.inbound = 0 AND cc.manager_id = uw.user_id GROUP BY DATE(cc.date_end)) WHERE date = DATE(NOW())");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет длительности входящих звонков'  . PHP_EOL;
-			echo ''. PHP_EOL;
-			$this->db->query("UPDATE user_worktime uw SET inbound_call_duration = (SELECT SUM(cc.length) FROM customer_calls cc WHERE DATE(cc.date_end) = DATE(NOW()) AND cc.inbound = 1 AND cc.manager_id = uw.user_id GROUP BY DATE(cc.date_end)) WHERE date = DATE(NOW())");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет длительности исходящих звонков'  . PHP_EOL;
-			echo ''. PHP_EOL;
-			$this->db->query("UPDATE user_worktime uw SET outbound_call_duration = (SELECT SUM(cc.length) FROM customer_calls cc WHERE DATE(cc.date_end) = DATE(NOW()) AND cc.inbound = 0 AND cc.manager_id = uw.user_id GROUP BY DATE(cc.date_end)) WHERE date = DATE(NOW())");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет количества присвоенных заказов'  . PHP_EOL;
-			echo ''. PHP_EOL;
-			$this->db->query("UPDATE user_worktime uw SET owned_order_count = (SELECT COUNT(DISTINCT(order_id)) FROM `order` WHERE DATE(date_added) = DATE(NOW()) AND manager_id = uw.user_id GROUP BY DATE(date_added)) WHERE date = DATE(NOW())");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет количества модификаций заказов'  . PHP_EOL;
-			echo ''. PHP_EOL;
-			$this->db->query("UPDATE user_worktime uw SET edit_order_count = (SELECT COUNT(DISTINCT(order_id)) FROM `order_save_history` WHERE DATE(datetime) = DATE(NOW()) AND user_id = uw.user_id GROUP BY DATE(datetime)) WHERE date = DATE(NOW())");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет первого действия за день'  . PHP_EOL;
-			echo ''. PHP_EOL;
-			$this->db->query("UPDATE user_worktime uw SET worktime_start = (SELECT MIN(date) FROM `adminlog` WHERE DATE(date) = DATE(NOW()) AND user_id = uw.user_id) WHERE date = DATE(NOW())");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет последнего действия за день'  . PHP_EOL;
-			echo ''. PHP_EOL;
-			$this->db->query("UPDATE user_worktime uw SET worktime_finish = (SELECT MAX(date) FROM `adminlog` WHERE DATE(date) = DATE(NOW()) AND user_id = uw.user_id) WHERE date = DATE(NOW())");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет количества действий за день'  . PHP_EOL;
-			echo ''. PHP_EOL;
-			$this->db->query("UPDATE user_worktime uw SET daily_actions = (SELECT COUNT(DISTINCT log_id) FROM `adminlog` WHERE DATE(date) = DATE(NOW()) AND user_id = uw.user_id GROUP BY DATE(date)) WHERE date = DATE(NOW())");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет количества выполнений заказов за день'  . PHP_EOL;
-			echo ''. PHP_EOL;
-			$this->db->query("UPDATE user_worktime uw SET success_order_count = (SELECT COUNT(DISTINCT order_history_id) FROM `order_history` WHERE order_status_id = '" . $this->config->get('config_complete_status_id') . "' AND DATE(date_added) = DATE(NOW()) AND user_id = uw.user_id GROUP BY DATE(date_added)) WHERE date = DATE(NOW())");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет количества отмен заказов за день'  . PHP_EOL;
-			echo ''. PHP_EOL;
-			$this->db->query("UPDATE user_worktime uw SET cancel_order_count = (SELECT COUNT(DISTINCT order_history_id) FROM `order_history` WHERE order_status_id = '" . $this->config->get('config_cancelled_status_id') . "' AND DATE(date_added) = DATE(NOW()) AND user_id = uw.user_id GROUP BY DATE(date_added)) WHERE date = DATE(NOW())");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет количества обработанных заказов за день'  . PHP_EOL;
-			echo ''. PHP_EOL;
-			$this->db->query("UPDATE user_worktime uw SET treated_order_count = (SELECT COUNT(DISTINCT order_history_id) FROM `order_history` WHERE order_status_id = '" . $this->config->get('config_treated_status_id') . "' AND DATE(date_added) = DATE(NOW()) AND user_id = uw.user_id GROUP BY DATE(date_added)) WHERE date = DATE(NOW())");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет количества подтвержденных заказов за день'  . PHP_EOL;
-			echo ''. PHP_EOL;
-			$this->db->query("UPDATE user_worktime uw SET confirmed_order_count = (SELECT COUNT(DISTINCT order_history_id) FROM `order_history` WHERE order_status_id IN(" . implode(',',$this->config->get('config_manager_confirmed_order_status_id')) . ") AND DATE(date_added) = DATE(NOW()) AND user_id = uw.user_id GROUP BY DATE(date_added)) WHERE date = DATE(NOW())");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет количества проблемных заказов на момент времени'  . PHP_EOL;
-			echo ''. PHP_EOL;
-			$this->db->query("UPDATE user_worktime uw SET problem_order_count = (SELECT COUNT(DISTINCT order_id) as count FROM `order` WHERE (order_status_id IN (" . implode(',', $this->config->get('config_problem_order_status_id')) . ") OR (probably_cancel=1 OR probably_close=1 OR probably_problem=1) AND order_status_id > '0') AND manager_id = uw.user_id) WHERE date = DATE(NOW())");
-			echo PHP_EOL;
 		}
-				
-		public function optimizeCustomerDB(){
-			$this->load->model('setting/setting');
-			$this->load->model('setting/store');
 
-			echo 'Нормализуем поля' . PHP_EOL;
-			
-			echo '>> Нормализация пустых имен'  . PHP_EOL;
-			echo 'QUERY:' .  "UPDATE customer SET firstname = email WHERE LENGTH(firstname)<=2 OR ISNULL(firstname)" . PHP_EOL;
-			$this->db->query("UPDATE customer SET firstname = email WHERE LENGTH(firstname)<=2 OR ISNULL(firstname)");
-			echo PHP_EOL;
-			
-			echo '>> Нормализация адресов'  . PHP_EOL;
-			$this->db->query("UPDATE address SET address_1 = REPLACE(address_1, 'г ', '')");
-			$this->db->query("UPDATE address SET address_2 = REPLACE(address_2, 'г ', '')");
-			$this->db->query("UPDATE address SET city = REPLACE(city, 'г ', '')");
-			$this->db->query("UPDATE address SET address_1 = REPLACE(address_1, 'г.', '')");
-			$this->db->query("UPDATE address SET address_2 = REPLACE(address_2, 'г.', '')");
-			$this->db->query("UPDATE address SET city = REPLACE(city, 'г.', '')");
+        public function dailyWork(){
+            $this->echoLine('[dailyWork] Statistics on employee work', 'w');
 
-			$this->db->query("UPDATE address SET address_1 = REPLACE(address_1, 'м ', '')");
-			$this->db->query("UPDATE address SET address_2 = REPLACE(address_2, 'м ', '')");
-			$this->db->query("UPDATE address SET city = REPLACE(city, 'м ', '')");
-			$this->db->query("UPDATE address SET address_1 = REPLACE(address_1, 'м.', '')");
-			$this->db->query("UPDATE address SET address_2 = REPLACE(address_2, 'м.', '')");
-			$this->db->query("UPDATE address SET city = REPLACE(city, 'м.', '')");
-			
-			
-			echo '>> TRIM полей'  . PHP_EOL;
-			$this->db->query("UPDATE address SET address_1 = TRIM(address_1)");
-			$this->db->query("UPDATE address SET address_2 = TRIM(address_2)");
-			$this->db->query("UPDATE address SET city = TRIM(city)");
-			$this->db->query("UPDATE address SET firstname = TRIM(firstname)");
-			$this->db->query("UPDATE address SET lastname = TRIM(lastname)");
-			$this->db->query("UPDATE customer SET firstname = TRIM(firstname)");
-			$this->db->query("UPDATE customer SET lastname = TRIM(lastname)");
-			echo PHP_EOL;
-			
-			echo '>> Ключ авторизации'  . PHP_EOL;
-			echo 'QUERY:' .  "UPDATE customer SET utoken = md5(concat(email, '" . $this->config->get('config_encryption') . "')) WHERE 1" . PHP_EOL;
-			$this->db->query("UPDATE customer SET utoken = md5(concat(email, '" . $this->config->get('config_encryption') . "')) WHERE 1");
-			echo PHP_EOL;
-			
-			
-			echo '>> Убрать хреновую почту' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer SET email = telephone WHERE email = '" . $this->config->get('config_email') . "'" . PHP_EOL;
-			$this->db->query("UPDATE customer SET email = telephone WHERE email = '" . $this->config->get('config_email') . "'");
-			echo PHP_EOL;
-			
-			echo '>> Нормализация телефона' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer SET normalized_telephone = TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(telephone,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) WHERE LENGTH(telephone)>0" . PHP_EOL;
-			$this->db->query("UPDATE customer SET normalized_telephone = TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(telephone,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) WHERE LENGTH(telephone)>0");
-			echo PHP_EOL;
-			
-			echo '>> Нормализация телефона 2' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer SET normalized_fax = TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(fax,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) WHERE LENGTH(fax)>0" . PHP_EOL;
-			$this->db->query("UPDATE customer SET normalized_fax = TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(fax,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) WHERE LENGTH(fax)>0");
-			echo PHP_EOL;
-			
-			echo '>> Нормализация ДР' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE  customer SET birthday = '0000-00-00' WHERE birthday IN ('1970-01-01', '-0001-11-30')" . PHP_EOL;
-			$this->db->query("UPDATE  customer SET birthday = '0000-00-00' WHERE birthday IN ('1970-01-01', '-0001-11-30')");
-			echo PHP_EOL;
-			
-			echo '>> Пересчет даты рождения - день' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer SET birthday_date = DAY(DATE(birthday)) WHERE LENGTH(birthday) > 4 AND birthday <> '0000-00-00';" . PHP_EOL;
-			$this->db->query("UPDATE customer SET birthday_date = DAY(DATE(birthday)) WHERE LENGTH(birthday) > 4 AND birthday <> '0000-00-00';");
-			echo PHP_EOL;
-			
-			echo '>> Пересчет даты рождения - месяц' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer SET birthday_month = MONTH(DATE(birthday)) WHERE LENGTH(birthday) > 4 AND birthday <> '0000-00-00';" . PHP_EOL;
-			$this->db->query("UPDATE customer SET birthday_month = MONTH(DATE(birthday)) WHERE LENGTH(birthday) > 4 AND birthday <> '0000-00-00';");
-			echo PHP_EOL;
+            $this->echoLine('[dailyWork] Initializing records for today', 'w');
+            $this->db->query("INSERT IGNORE INTO user_worktime (`user_id`, `date`) SELECT user_id, DATE(NOW()) FROM user WHERE count_worktime = 1 ");
 
-			$this->db->query("UPDATE customer SET birthday_month = '0', birthday_date = '0' WHERE birthday = '0000-00-00'");
-			
-			echo '>> Проверка подписки на уведомления' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer SET has_push = 0 WHERE 1" . PHP_EOL;
-			$this->db->query("UPDATE customer SET has_push = 0 WHERE 1");
-			echo 'QUERY:' . "UPDATE customer SET has_push = 1 WHERE customer_id IN (SELECT DISTINCT customer_id FROM customer_push_ids WHERE 1)" . PHP_EOL;
-			$this->db->query("UPDATE customer SET has_push = 1 WHERE customer_id IN (SELECT DISTINCT customer_id FROM customer_push_ids WHERE 1)");
-			echo PHP_EOL;
-			
-			echo '>> Привязка товаров к покупателю' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE order_product op SET customer_id = (SELECT customer_id FROM `order` o WHERE op.order_id = o.order_id LIMIT 1)" . PHP_EOL;
-			$this->db->query("UPDATE order_product op SET customer_id = (SELECT customer_id FROM `order` o WHERE op.order_id = o.order_id LIMIT 1)");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет количества заказов' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer c SET order_count = (SELECT COUNT(*) FROM `order` WHERE customer_id = c.customer_id AND order_status_id > 0)" . PHP_EOL;
-			$this->db->query("UPDATE customer c SET order_count = (SELECT COUNT(*) FROM `order` WHERE customer_id = c.customer_id AND order_status_id > 0)");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет количества выполненных заказов' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer c SET order_good_count = (SELECT COUNT(*) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "')" . PHP_EOL;
-			$this->db->query("UPDATE customer c SET order_good_count = (SELECT COUNT(*) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "')");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет количества отмененных заказов' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer c SET order_bad_count = (SELECT COUNT(*) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_cancelled_status_id') . "')" . PHP_EOL;
-			$this->db->query("UPDATE customer c SET order_bad_count = (SELECT COUNT(*) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_cancelled_status_id') . "')");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет даты последнего выполненного заказа' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer c SET order_good_last_date = (SELECT DATE(date_added) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "' ORDER BY date_added DESC LIMIT 1)" . PHP_EOL;
-			$this->db->query("UPDATE customer c SET order_good_last_date = (SELECT DATE(date_added) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "' ORDER BY date_added DESC LIMIT 1)");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет даты первого выполненного заказа' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer c SET order_good_first_date = (SELECT DATE(date_added) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "' ORDER BY date_added ASC LIMIT 1)" . PHP_EOL;
-			$this->db->query("UPDATE customer c SET order_good_first_date = (SELECT DATE(date_added) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "' ORDER BY date_added ASC LIMIT 1)");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет даты последнего заказа' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer c SET order_last_date = (SELECT DATE(date_added) FROM `order` WHERE customer_id = c.customer_id AND order_status_id > 0 ORDER BY date_added DESC LIMIT 1)" . PHP_EOL;
-			$this->db->query("UPDATE customer c SET order_last_date = (SELECT DATE(date_added) FROM `order` WHERE customer_id = c.customer_id AND order_status_id > 0 ORDER BY date_added DESC LIMIT 1)");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет даты первого заказа' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer c SET order_first_date = (SELECT DATE(date_added) FROM `order` WHERE customer_id = c.customer_id AND order_status_id > 0 ORDER BY date_added ASC LIMIT 1)" . PHP_EOL;
-			$this->db->query("UPDATE customer c SET order_first_date = (SELECT DATE(date_added) FROM `order` WHERE customer_id = c.customer_id AND order_status_id > 0 ORDER BY date_added ASC LIMIT 1)");
-			echo PHP_EOL;
-			
-			echo '>> Выборка источника первого заказа' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer c SET first_order_source = (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(first_referrer, '/', 3), '://', -1), '/', 1), '?', 1) AS domain FROM `order` WHERE customer_id = c.customer_id AND order_status_id > 0 ORDER BY date_added ASC LIMIT 1)" . PHP_EOL;
-			$this->db->query("UPDATE customer c SET first_order_source = (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(first_referrer, '/', 3), '://', -1), '/', 1), '?', 1) AS domain FROM `order` WHERE customer_id = c.customer_id AND order_status_id > 0 ORDER BY date_added ASC LIMIT 1)");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет полной суммы' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer c SET total_cheque = (SELECT SUM(total_national) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "'  GROUP BY customer_id)" . PHP_EOL;
-			$this->db->query("UPDATE customer c SET total_cheque = (SELECT SUM(total_national) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "'  GROUP BY customer_id)");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет полной суммы по товарам' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer c SET total_product_cheque = (SELECT SUM(total_national) FROM `order_product` WHERE order_id IN (SELECT order_id FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "'))" . PHP_EOL;
-			$this->db->query("UPDATE customer c SET total_product_cheque = (SELECT SUM(total_national) FROM `order_product` WHERE order_id IN (SELECT order_id FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "'))");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет среднего чека' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer c SET avg_cheque = (SELECT AVG(total_national) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "'  GROUP BY customer_id)" . PHP_EOL;
-			$this->db->query("UPDATE customer c SET avg_cheque = (SELECT AVG(total_national) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "'  GROUP BY customer_id)");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет количества звонков' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer c SET total_calls = (SELECT COUNT(customer_call_id) FROM `customer_calls` WHERE customer_id = c.customer_id)" . PHP_EOL;
-			$this->db->query("UPDATE customer c SET total_calls = (SELECT COUNT(customer_call_id) FROM `customer_calls` WHERE customer_id = c.customer_id)");
-			echo PHP_EOL;
-			
-			echo '>> Подсчет средней длины звонка' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer c SET avg_calls_duration = (SELECT AVG(length) FROM `customer_calls` WHERE customer_id = c.customer_id AND length > 0 GROUP BY customer_id)" . PHP_EOL;
-			$this->db->query("UPDATE customer c SET avg_calls_duration = (SELECT AVG(length) FROM `customer_calls` WHERE customer_id = c.customer_id AND length > 0 GROUP BY customer_id)");
-			echo PHP_EOL;
-			
-			echo '>> Копирование страны' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer c SET country_id = (SELECT country_id FROM `address` WHERE address_id = c.address_id LIMIT 1)" . PHP_EOL;
-			$this->db->query("UPDATE customer c SET country_id = (SELECT country_id FROM `address` WHERE address_id = c.address_id LIMIT 1)");
-			echo PHP_EOL;
-			
-			
-			echo '>> Перестройка стран' . PHP_EOL;
-			foreach ($this->model_setting_store->getStores() as $store){
-				$sql = "UPDATE customer c SET country_id = '" . (int)$this->model_setting_setting->getKeyValue('config_country_id', $store['store_id']) . "' WHERE store_id = '" . $store['store_id'] . "'";
-				echoLine('[optimizeCustomerDB] ' . $sql);
-				$this->db->query($sql);
+            $this->echoLine('[dailyWork] Counting inbound calls', 'w');
+            $this->db->query("UPDATE user_worktime uw SET inbound_call_count = (SELECT COUNT(DISTINCT cc.customer_call_id) FROM customer_calls cc WHERE DATE(cc.date_end) = DATE(NOW()) AND cc.inbound = 1 AND cc.manager_id = uw.user_id GROUP BY DATE(cc.date_end)) WHERE date = DATE(NOW())");
 
-				$sql = "UPDATE address SET country_id = '" . (int)$this->model_setting_setting->getKeyValue('config_country_id', $store['store_id']) . "' WHERE customer_id IN (SELECT customer_id FROM customer WHERE store_id = '" . (int)$store['store_id'] . "') AND country_id = 0";
+            $this->echoLine('[dailyWork] Counting outbound calls', 'w');
+            $this->db->query("UPDATE user_worktime uw SET outbound_call_count = (SELECT COUNT(DISTINCT cc.customer_call_id) FROM customer_calls cc WHERE DATE(cc.date_end) = DATE(NOW()) AND cc.inbound = 0 AND cc.manager_id = uw.user_id GROUP BY DATE(cc.date_end)) WHERE date = DATE(NOW())");
 
-				echoLine('[optimizeCustomerDB] ' . $sql);
-				$this->db->query($sql);
-			}			
-			
-			echo '>> Копирование города' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer c SET city = (SELECT city FROM `address` a WHERE a.address_id = c.address_id LIMIT 1)" . PHP_EOL;
-			$this->db->query("UPDATE customer c SET city = (SELECT city FROM `address` a WHERE a.address_id = c.address_id LIMIT 1)");
-			echo PHP_EOL;
-			
-			echo '>> Обновление CSI клиентов' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer c SET c.csi_average =( SELECT AVG(o.csi_average) FROM `order` o WHERE o.customer_id = c.customer_id AND o.csi_average > 0 AND o.csi_reject = 0 GROUP BY customer_id )" . PHP_EOL;
-			$this->db->query("UPDATE customer c SET c.csi_average = ( SELECT AVG(o.csi_average) FROM `order` o WHERE o.customer_id = c.customer_id AND o.csi_average > 0 AND o.csi_reject = 0 GROUP BY o.customer_id )");
-			
-			
-			echo '>> Обновление динамики сегментации' . PHP_EOL;
-			echo 'QUERY:' . "INSERT INTO segments_dynamics (segment_id, customer_count, total_cheque, avg_cheque, order_good_count, order_bad_count, order_good_to_bad, avg_csi, date_added) (SELECT segment_id, customer_count, total_cheque, avg_cheque, order_good_count, order_bad_count, order_good_to_bad, avg_csi, NOW() FROM segments WHERE enabled = 1)" . PHP_EOL;
-			$this->db->query("INSERT INTO segments_dynamics (segment_id, customer_count, total_cheque, avg_cheque, order_good_count, order_bad_count, order_good_to_bad, avg_csi, date_added) (SELECT segment_id, customer_count, total_cheque, avg_cheque, order_good_count, order_bad_count, order_good_to_bad, avg_csi, NOW() FROM segments WHERE enabled = 1)");
-			echo PHP_EOL;
-			
-			echo '>> Обновление количества клиентов в сегменте' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE segments s SET customer_count = (SELECT COUNT(*) FROM customer_segments cs WHERE cs.segment_id = s.segment_id)" . PHP_EOL;
-			$this->db->query("UPDATE segments s SET customer_count = (SELECT COUNT(*) FROM customer_segments cs WHERE cs.segment_id = s.segment_id)");
-			echo PHP_EOL;
-			
-			echo '>> Обновление чека сегмента' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE segments s SET total_cheque =( SELECT SUM(total) AS total FROM `order` WHERE customer_id IN( SELECT customer_id FROM customer_segments WHERE segment_id = s.segment_id ) AND order_status_id = '" . $this->config->get('config_complete_status_id') . "')" . PHP_EOL;
-			$this->db->query("UPDATE segments s SET total_cheque =( SELECT SUM(total) AS total FROM `order` WHERE customer_id IN( SELECT customer_id FROM customer_segments WHERE segment_id = s.segment_id ) AND order_status_id = '" . $this->config->get('config_complete_status_id') . "')");
-			echo PHP_EOL;
-			
-			echo '>> Обновление среднего чека сегмента' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE segments s SET avg_cheque =( SELECT AVG(total) AS total FROM `order` WHERE customer_id IN( SELECT customer_id FROM customer_segments WHERE segment_id = s.segment_id ) AND order_status_id = '" . $this->config->get('config_complete_status_id') . "')" . PHP_EOL;
-			$this->db->query("UPDATE segments s SET avg_cheque =( SELECT AVG(total) AS total FROM `order` WHERE customer_id IN( SELECT customer_id FROM customer_segments WHERE segment_id = s.segment_id ) AND order_status_id = '" . $this->config->get('config_complete_status_id') . "')");
-			echo PHP_EOL;
-			
-			echo '>> Обновление количества выполненных заказов в сегментах' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE segments s SET order_good_count = (SELECT COUNT(DISTINCT order_id) FROM `order` WHERE customer_id IN( SELECT customer_id FROM customer_segments WHERE segment_id = s.segment_id ) AND order_status_id = '" . $this->config->get('config_complete_status_id') . "')" . PHP_EOL;
-			$this->db->query("UPDATE segments s SET order_good_count = (SELECT COUNT(DISTINCT order_id) FROM `order` WHERE customer_id IN( SELECT customer_id FROM customer_segments WHERE segment_id = s.segment_id ) AND order_status_id = '" . $this->config->get('config_complete_status_id') . "')");
-			echo PHP_EOL;
-			
-			echo '>> Обновление количества отмененных заказов в сегментах' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE segments s SET order_bad_count = (SELECT COUNT(DISTINCT order_id) FROM `order` WHERE customer_id IN( SELECT customer_id FROM customer_segments WHERE segment_id = s.segment_id ) AND order_status_id = '" . $this->config->get('config_cancelled_status_id') . "')" . PHP_EOL;
-			$this->db->query("UPDATE segments s SET order_bad_count = (SELECT COUNT(DISTINCT order_id) FROM `order` WHERE customer_id IN( SELECT customer_id FROM customer_segments WHERE segment_id = s.segment_id ) AND order_status_id = '" . $this->config->get('config_cancelled_status_id') . "')");
-			
-			echo '>> Обновление CSI клиентов' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE segments s SET avg_csi = (SELECT AVG(csi_average) FROM customer WHERE customer_id IN( SELECT customer_id FROM customer_segments WHERE segment_id = s.segment_id ) AND csi_average > 0)" . PHP_EOL;
-			$this->db->query("UPDATE segments s SET avg_csi = (SELECT AVG(csi_average) FROM customer WHERE customer_id IN( SELECT customer_id FROM customer_segments WHERE segment_id = s.segment_id ) AND csi_average > 0)");
-			
-			$this->db->query("UPDATE segments s SET order_good_to_bad = (order_bad_count/order_good_count)*100");
-			echo PHP_EOL;			
-		}
+            $this->echoLine('[dailyWork] Calculating inbound call duration', 'w');
+            $this->db->query("UPDATE user_worktime uw SET inbound_call_duration = (SELECT SUM(cc.length) FROM customer_calls cc WHERE DATE(cc.date_end) = DATE(NOW()) AND cc.inbound = 1 AND cc.manager_id = uw.user_id GROUP BY DATE(cc.date_end)) WHERE date = DATE(NOW())");
+
+            $this->echoLine('[dailyWork] Calculating outbound call duration', 'w');
+            $this->db->query("UPDATE user_worktime uw SET outbound_call_duration = (SELECT SUM(cc.length) FROM customer_calls cc WHERE DATE(cc.date_end) = DATE(NOW()) AND cc.inbound = 0 AND cc.manager_id = uw.user_id GROUP BY DATE(cc.date_end)) WHERE date = DATE(NOW())");
+
+            $this->echoLine('[dailyWork] Counting assigned orders', 'w');
+            $this->db->query("UPDATE user_worktime uw SET owned_order_count = (SELECT COUNT(DISTINCT(order_id)) FROM `order` WHERE DATE(date_added) = DATE(NOW()) AND manager_id = uw.user_id GROUP BY DATE(date_added)) WHERE date = DATE(NOW())");
+
+            $this->echoLine('[dailyWork] Counting order modifications', 'w');
+            $this->db->query("UPDATE user_worktime uw SET edit_order_count = (SELECT COUNT(DISTINCT(order_id)) FROM `order_save_history` WHERE DATE(datetime) = DATE(NOW()) AND user_id = uw.user_id GROUP BY DATE(datetime)) WHERE date = DATE(NOW())");
+
+            $this->echoLine('[dailyWork] Calculating first action of the day', 'w');
+            $this->db->query("UPDATE user_worktime uw SET worktime_start = (SELECT MIN(date) FROM `adminlog` WHERE DATE(date) = DATE(NOW()) AND user_id = uw.user_id) WHERE date = DATE(NOW())");
+
+            $this->echoLine('[dailyWork] Calculating last action of the day', 'w');
+            $this->db->query("UPDATE user_worktime uw SET worktime_finish = (SELECT MAX(date) FROM `adminlog` WHERE DATE(date) = DATE(NOW()) AND user_id = uw.user_id) WHERE date = DATE(NOW())");
+
+            $this->echoLine('[dailyWork] Counting daily actions', 'w');
+            $this->db->query("UPDATE user_worktime uw SET daily_actions = (SELECT COUNT(DISTINCT log_id) FROM `adminlog` WHERE DATE(date) = DATE(NOW()) AND user_id = uw.user_id GROUP BY DATE(date)) WHERE date = DATE(NOW())");
+
+            $this->echoLine('[dailyWork] Counting completed orders for the day', 'w');
+            $this->db->query("UPDATE user_worktime uw SET success_order_count = (SELECT COUNT(DISTINCT order_history_id) FROM `order_history` WHERE order_status_id = '" . $this->config->get('config_complete_status_id') . "' AND DATE(date_added) = DATE(NOW()) AND user_id = uw.user_id GROUP BY DATE(date_added)) WHERE date = DATE(NOW())");
+
+            $this->echoLine('[dailyWork] Counting canceled orders for the day', 'w');
+            $this->db->query("UPDATE user_worktime uw SET cancel_order_count = (SELECT COUNT(DISTINCT order_history_id) FROM `order_history` WHERE order_status_id = '" . $this->config->get('config_cancelled_status_id') . "' AND DATE(date_added) = DATE(NOW()) AND user_id = uw.user_id GROUP BY DATE(date_added)) WHERE date = DATE(NOW())");
+
+            $this->echoLine('[dailyWork] Counting processed orders for the day', 'w');
+            $this->db->query("UPDATE user_worktime uw SET treated_order_count = (SELECT COUNT(DISTINCT order_history_id) FROM `order_history` WHERE order_status_id = '" . $this->config->get('config_treated_status_id') . "' AND DATE(date_added) = DATE(NOW()) AND user_id = uw.user_id GROUP BY DATE(date_added)) WHERE date = DATE(NOW())");
+
+            $this->echoLine('[dailyWork] Counting confirmed orders for the day', 'w');
+            $this->db->query("UPDATE user_worktime uw SET confirmed_order_count = (SELECT COUNT(DISTINCT order_history_id) FROM `order_history` WHERE order_status_id IN(" . implode(',',$this->config->get('config_manager_confirmed_order_status_id')) . ") AND DATE(date_added) = DATE(NOW()) AND user_id = uw.user_id GROUP BY DATE(date_added)) WHERE date = DATE(NOW())");
+
+            $this->echoLine('[dailyWork] Counting problem orders at the moment', 'w');
+            $this->db->query("UPDATE user_worktime uw SET problem_order_count = (SELECT COUNT(DISTINCT order_id) as count FROM `order` WHERE (order_status_id IN (" . implode(',', $this->config->get('config_problem_order_status_id')) . ") OR (probably_cancel=1 OR probably_close=1 OR probably_problem=1) AND order_status_id > '0') AND manager_id = uw.user_id) WHERE date = DATE(NOW())");
+        }
+
+        public function optimizeCustomerDB(){
+            $this->load->model('setting/setting');
+            $this->load->model('setting/store');
+
+            echoLine('Normalizing fields', 'w');
+
+            echoLine('[optimizeCustomerDB] Normalizing empty names', 'w');
+            $this->db->query("UPDATE customer SET firstname = email WHERE LENGTH(firstname)<=2 OR ISNULL(firstname)");
+
+            echoLine('[optimizeCustomerDB] Normalizing addresses', 'w');
+            $this->db->query("UPDATE address SET address_1 = REPLACE(address_1, 'г ', '')");
+            $this->db->query("UPDATE address SET address_2 = REPLACE(address_2, 'г ', '')");
+            $this->db->query("UPDATE address SET city = REPLACE(city, 'г ', '')");
+            $this->db->query("UPDATE address SET address_1 = REPLACE(address_1, 'г.', '')");
+            $this->db->query("UPDATE address SET address_2 = REPLACE(address_2, 'г.', '')");
+            $this->db->query("UPDATE address SET city = REPLACE(city, 'г.', '')");
+
+            $this->db->query("UPDATE address SET address_1 = REPLACE(address_1, 'м ', '')");
+            $this->db->query("UPDATE address SET address_2 = REPLACE(address_2, 'м ', '')");
+            $this->db->query("UPDATE address SET city = REPLACE(city, 'м ', '')");
+            $this->db->query("UPDATE address SET address_1 = REPLACE(address_1, 'м.', '')");
+            $this->db->query("UPDATE address SET address_2 = REPLACE(address_2, 'м.', '')");
+            $this->db->query("UPDATE address SET city = REPLACE(city, 'м.', '')");
+
+
+            echoLine('[optimizeCustomerDB] TRIM fields', 'w');
+            $this->db->query("UPDATE address SET address_1 = TRIM(address_1)");
+            $this->db->query("UPDATE address SET address_2 = TRIM(address_2)");
+            $this->db->query("UPDATE address SET city = TRIM(city)");
+            $this->db->query("UPDATE address SET firstname = TRIM(firstname)");
+            $this->db->query("UPDATE address SET lastname = TRIM(lastname)");
+            $this->db->query("UPDATE customer SET firstname = TRIM(firstname)");
+            $this->db->query("UPDATE customer SET lastname = TRIM(lastname)");
+
+            echoLine('[optimizeCustomerDB] Authorization key', 'w');
+            $this->db->query("UPDATE customer SET utoken = md5(concat(email, '" . $this->config->get('config_encryption') . "')) WHERE 1");
+
+
+            echoLine('[optimizeCustomerDB] Remove bad email', 'w');
+            $this->db->query("UPDATE customer SET email = telephone WHERE email = '" . $this->config->get('config_email') . "'");
+
+            echoLine('[optimizeCustomerDB] Normalizing phone', 'w');
+            $this->db->query("UPDATE customer SET normalized_telephone = TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(telephone,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) WHERE LENGTH(telephone)>0");
+
+            echoLine('[optimizeCustomerDB] Normalizing fax', 'w');
+            $this->db->query("UPDATE customer SET normalized_fax = TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(fax,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) WHERE LENGTH(fax)>0");
+
+            echoLine('[optimizeCustomerDB] Normalizing birthday', 'w');
+            $this->db->query("UPDATE  customer SET birthday = '0000-00-00' WHERE birthday IN ('1970-01-01', '-0001-11-30')");
+
+            echoLine('[optimizeCustomerDB] Recalculating birthday - day', 'w');
+            $this->db->query("UPDATE customer SET birthday_date = DAY(DATE(birthday)) WHERE LENGTH(birthday) > 4 AND birthday <> '0000-00-00';");
+
+            echoLine('[optimizeCustomerDB] Recalculating birthday - month', 'w');
+            $this->db->query("UPDATE customer SET birthday_month = MONTH(DATE(birthday)) WHERE LENGTH(birthday) > 4 AND birthday <> '0000-00-00';");
+
+            $this->db->query("UPDATE customer SET birthday_month = '0', birthday_date = '0' WHERE birthday = '0000-00-00'");
+
+            echoLine('[optimizeCustomerDB] Checking push notification subscription', 'w');
+            $this->db->query("UPDATE customer SET has_push = 1 WHERE customer_id IN (SELECT DISTINCT customer_id FROM customer_push_ids WHERE 1)");
+
+            echoLine('[optimizeCustomerDB] Binding products to customer', 'w');
+            $this->db->query("UPDATE order_product op SET customer_id = (SELECT customer_id FROM `order` o WHERE op.order_id = o.order_id LIMIT 1)");
+
+            echoLine('[optimizeCustomerDB] Calculating order count', 'w');
+            $this->db->query("UPDATE customer c SET order_count = (SELECT COUNT(*) FROM `order` WHERE customer_id = c.customer_id AND order_status_id > 0)");
+
+            echoLine('[optimizeCustomerDB] Calculating completed order count', 'w');
+            $this->db->query("UPDATE customer c SET order_good_count = (SELECT COUNT(*) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "')");
+
+            echoLine('[optimizeCustomerDB] Calculating cancelled order count', 'w');
+            $this->db->query("UPDATE customer c SET order_bad_count = (SELECT COUNT(*) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_cancelled_status_id') . "')");
+
+            echoLine('[optimizeCustomerDB] Calculating date of last completed order', 'w');
+            $this->db->query("UPDATE customer c SET order_good_last_date = (SELECT DATE(date_added) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "' ORDER BY date_added DESC LIMIT 1)");
+
+            echoLine('[optimizeCustomerDB] Calculating date of first completed order', 'w');
+            $this->db->query("UPDATE customer c SET order_good_first_date = (SELECT DATE(date_added) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "' ORDER BY date_added ASC LIMIT 1)");
+
+            echoLine('[optimizeCustomerDB] Calculating date of last order', 'w');
+            $this->db->query("UPDATE customer c SET order_last_date = (SELECT DATE(date_added) FROM `order` WHERE customer_id = c.customer_id AND order_status_id > 0 ORDER BY date_added DESC LIMIT 1)");
+
+            echoLine('[optimizeCustomerDB] Calculating date of first order', 'w');
+            $this->db->query("UPDATE customer c SET order_first_date = (SELECT DATE(date_added) FROM `order` WHERE customer_id = c.customer_id AND order_status_id > 0 ORDER BY date_added ASC LIMIT 1)");
+
+            echoLine('[optimizeCustomerDB] Selecting source of first order', 'w');
+            $this->db->query("UPDATE customer c SET first_order_source = (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(first_referrer, '/', 3), '://', -1), '/', 1), '?', 1) AS domain FROM `order` WHERE customer_id = c.customer_id AND order_status_id > 0 ORDER BY date_added ASC LIMIT 1)");
+
+            echoLine('[optimizeCustomerDB] Calculating total amount', 'w');
+            $this->db->query("UPDATE customer c SET total_cheque = (SELECT SUM(total_national) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "'  GROUP BY customer_id)");
+
+            echoLine('[optimizeCustomerDB] Calculating total product amount', 'w');
+            $this->db->query("UPDATE customer c SET total_product_cheque = (SELECT SUM(total_national) FROM `order_product` WHERE order_id IN (SELECT order_id FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "'))");
+
+            echoLine('[optimizeCustomerDB] Calculating average check', 'w');
+            $this->db->query("UPDATE customer c SET avg_cheque = (SELECT AVG(total_national) FROM `order` WHERE customer_id = c.customer_id AND order_status_id = '" . $this->config->get('config_complete_status_id') . "'  GROUP BY customer_id)");
+
+            echoLine('[optimizeCustomerDB] Calculating call count', 'w');
+            $this->db->query("UPDATE customer c SET total_calls = (SELECT COUNT(customer_call_id) FROM `customer_calls` WHERE customer_id = c.customer_id)");
+
+            echoLine('[optimizeCustomerDB] Calculating average call duration', 'w');
+            $this->db->query("UPDATE customer c SET avg_calls_duration = (SELECT AVG(length) FROM `customer_calls` WHERE customer_id = c.customer_id AND length > 0 GROUP BY customer_id)");
+
+            echoLine('[optimizeCustomerDB] Copying country', 'w');
+            $this->db->query("UPDATE customer c SET country_id = (SELECT country_id FROM `address` WHERE address_id = c.address_id LIMIT 1)");
+
+
+            echoLine('[optimizeCustomerDB] Rebuilding countries', 'w');
+            foreach ($this->model_setting_store->getStores() as $store){
+                $sql = "UPDATE customer c SET country_id = '" . (int)$this->model_setting_setting->getKeyValue('config_country_id', $store['store_id']) . "' WHERE store_id = '" . $store['store_id'] . "'";
+                echoLine('[optimizeCustomerDB] ' . $sql, 'w');
+                $this->db->query($sql);
+
+                $sql = "UPDATE address SET country_id = '" . (int)$this->model_setting_setting->getKeyValue('config_country_id', $store['store_id']) . "' WHERE customer_id IN (SELECT customer_id FROM customer WHERE store_id = '" . (int)$store['store_id'] . "') AND country_id = 0";
+
+                echoLine('[optimizeCustomerDB] ' . $sql, 'w');
+                $this->db->query($sql);
+            }
+
+            echoLine('[optimizeCustomerDB] Copying city', 'w');
+            $this->db->query("UPDATE customer c SET city = (SELECT city FROM `address` a WHERE a.address_id = c.address_id LIMIT 1)");
+
+            echoLine('[optimizeCustomerDB] Updating customer CSI', 'w');
+            $this->db->query("UPDATE customer c SET c.csi_average = ( SELECT AVG(o.csi_average) FROM `order` o WHERE o.customer_id = c.customer_id AND o.csi_average > 0 AND o.csi_reject = 0 GROUP BY o.customer_id )");
+
+
+            echoLine('[optimizeCustomerDB] Updating segment dynamics', 'w');
+            $this->db->query("INSERT INTO segments_dynamics (segment_id, customer_count, total_cheque, avg_cheque, order_good_count, order_bad_count, order_good_to_bad, avg_csi, date_added) (SELECT segment_id, customer_count, total_cheque, avg_cheque, order_good_count, order_bad_count, order_good_to_bad, avg_csi, NOW() FROM segments WHERE enabled = 1)");
+
+            echoLine('[optimizeCustomerDB] Updating customer count in segment', 'w');
+            $this->db->query("UPDATE segments s SET customer_count = (SELECT COUNT(*) FROM customer_segments cs WHERE cs.segment_id = s.segment_id)");
+
+            echoLine('[optimizeCustomerDB] Updating segment total amount', 'w');
+            $this->db->query("UPDATE segments s SET total_cheque =( SELECT SUM(total) AS total FROM `order` WHERE customer_id IN( SELECT customer_id FROM customer_segments WHERE segment_id = s.segment_id ) AND order_status_id = '" . $this->config->get('config_complete_status_id') . "')");
+
+            echoLine('[optimizeCustomerDB] Updating segment average check', 'w');
+            $this->db->query("UPDATE segments s SET avg_cheque =( SELECT AVG(total) AS total FROM `order` WHERE customer_id IN( SELECT customer_id FROM customer_segments WHERE segment_id = s.segment_id ) AND order_status_id = '" . $this->config->get('config_complete_status_id') . "')");
+
+            echoLine('[optimizeCustomerDB] Updating completed order count in segments', 'w');
+            $this->db->query("UPDATE segments s SET order_good_count = (SELECT COUNT(DISTINCT order_id) FROM `order` WHERE customer_id IN( SELECT customer_id FROM customer_segments WHERE segment_id = s.segment_id ) AND order_status_id = '" . $this->config->get('config_complete_status_id') . "')");
+
+            echoLine('[optimizeCustomerDB] Updating cancelled order count in segments', 'w');
+            $this->db->query("UPDATE segments s SET order_bad_count = (SELECT COUNT(DISTINCT order_id) FROM `order` WHERE customer_id IN( SELECT customer_id FROM customer_segments WHERE segment_id = s.segment_id ) AND order_status_id = '" . $this->config->get('config_cancelled_status_id') . "')");
+
+            echoLine('[optimizeCustomerDB] Updating customer CSI in segments', 'w');
+            $this->db->query("UPDATE segments s SET avg_csi = (SELECT AVG(csi_average) FROM customer WHERE customer_id IN( SELECT customer_id FROM customer_segments WHERE segment_id = s.segment_id ) AND csi_average > 0)");
+
+            $this->db->query("UPDATE segments s SET order_good_to_bad = (order_bad_count/order_good_count)*100");
+        }
 				
 		public function optimizeDB(){
 			
