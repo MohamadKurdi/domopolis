@@ -55,7 +55,7 @@
                             </div> 
                         </div><!-- /.tab-navigation --> 
                         <div class="tab-content"> 
-                            <div id="control_panel" class="tab-pane fade"><?php require_once(DIR_APPLICATION.'view/template/module/'.$moduleNameSmall.'/tab_controlpanel.php'); ?></div>                         
+                            <div id="control_panel" class="tab-pane fade"><?php require_once(dirname(__FILE__) . '/discountonleave/tab_controlpanel.php'); ?></div>
                         </div> <!-- /.tab-content --> 
                     </div><!-- /.tabbable -->
                 </form>
