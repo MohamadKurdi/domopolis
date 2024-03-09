@@ -978,10 +978,14 @@ MegaFilter.prototype = {
         self._parseInfo('{"stock_status":[],"manufacturers":[],"rating":[],"attributes":[],"options":[],"filters":[]}', true);
     },
 
-    _parseInfo: function (data, first) {
+    _parseInfo: function (data, first) {    
+        if (typeof data != 'object'){
+            data = jQuery.parseJSON(data);
+        }
+
         var self = this,
-            filters = self.filters(),
-            json = jQuery.parseJSON(data);
+            filters = self.filters(),            
+            json = data;
 
         for (var i in json) {
             switch (i) {

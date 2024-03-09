@@ -2,7 +2,7 @@
 	class ControllerModuleMegaFilter extends Controller {
 		
 		private function _keysByAttribs( $attributes ) {
-			$keys = array();
+			$keys = [];
 			
 			foreach( $attributes as $key => $attribute ) {
 				$keys[$attribute['seo_name']] = $key;
@@ -28,19 +28,18 @@
 		
 		protected function index( $setting ) {
 			if( empty( $setting['base_attribs'] ) )
-			$setting['base_attribs'] = array();
+			$setting['base_attribs'] = [];
 			
 			if( empty( $setting['attribs'] ) )
-			$setting['attribs'] = array();
+			$setting['attribs'] = [];
 			
 			if( empty( $setting['options'] ) )
-			$setting['options'] = array();
+			$setting['options'] = [];
 			
 			if( empty( $setting['filters'] ) )
-			$setting['filters'] = array();
+			$setting['filters'] = [];
 
-			$settings	= $this->config->get('mega_filter_settings');	
-			
+			$settings	= $this->config->get('mega_filter_settings');				
 			$this->data['text_search_placeholder'] 		= $this->language->get('text_search_placeholder');
 			$this->data['text_price_placeholder_from'] 	= $this->language->get('text_price_placeholder_from');
 			$this->data['text_price_placeholder_to'] 	= $this->language->get('text_price_placeholder_to');
@@ -157,7 +156,7 @@
 			
 			
 			if( in_array( $route, array( 'product/search' ) ) && empty( $this->request->get['search'] ) && empty( $this->request->get['tag'] ) ) {
-				$attributes = array();
+				$attributes = [];
 			}
 			
 			if( ! $attributes ) {
@@ -230,11 +229,11 @@
 				unset( $baseTypes[$idx2] );
 			}
 			
-			echo json_encode( MegaFilterCore::newInstance( $this, NULL )->getJsonData($baseTypes, $idx) );
+			$this->response->setJSON(  MegaFilterCore::newInstance( $this, NULL )->getJsonData($baseTypes, $idx) );
 		}
 		
 		public function categories() {
-			$cats = array();
+			$cats = [];
 			
 			if( ! empty( $this->request->post['cat_id'] ) ) {
 				$this->load->model('catalog/category');
@@ -285,7 +284,7 @@
 			$this->document->setTitle($this->language->get('heading_title'));
 			$this->document->addScript('catalog/view/javascript/jquery/jquery.total-storage.min.js');						
 			
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 			$this->data['breadcrumbs'][] = array( 
        		'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home'),
@@ -301,7 +300,7 @@
 			$this->data['text_compare'] = sprintf($this->language->get('text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
 			$this->data['compare'] = $this->url->link('product/compare');
 			
-			$this->data['products'] = array();
+			$this->data['products'] = [];
 			
 			$data = array(
 			'sort'                => $sort,
@@ -373,7 +372,7 @@
 				$url .= '&mfp=' . $this->request->get['mfp'];
 			}
 			
-			$this->data['sorts'] = array();
+			$this->data['sorts'] = [];
 			
 			$this->data['sorts'][] = array(
 			'text'  => $this->language->get('text_default'),
@@ -445,7 +444,7 @@
 				$url .= '&order=' . $this->request->get['order'];
 			}
 			
-			$this->data['limits'] = array();
+			$this->data['limits'] = [];
 			
 			$limits = array_unique(array($this->config->get('config_catalog_limit'), 25, 50, 75, 100));
 			

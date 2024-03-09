@@ -187,7 +187,11 @@ class Response {
    */
   public function setJSON($json) {
   	$this->addHeader('Content-Type: application/json');		
-  	$this->output = trim(json_encode($json));
+    if (is_array($json)){
+        $this->output = json_encode($json);
+    } else {
+        $this->output = $json;
+    }  	
 
   	return $this;
   }
