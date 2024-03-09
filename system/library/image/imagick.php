@@ -15,22 +15,18 @@
 			$this->log = new Log('imagick-error.txt');
 
 			if (is_file($file)) {            
-				try {  
-
+				try {
 					$this->init($file);
-
 				} catch (\ImagickException $e) {
 					$this->log->write(get_class($this) . ', ' .  $this->file . ': ' . $e->getMessage());
 					$this->log->debug($e->getMessage());
 
 					$this->init(DIR_IMAGE . 'no_image.jpg');
 				}
-
 			}
 		}
 
 		protected function init($file){
-
 			$this->file     = $file;
 			$this->image    = new \Imagick($file);
 			$this->width    = $this->image->getImageWidth();
@@ -38,7 +34,6 @@
 			$this->bits     = $this->image->getImageLength();
 			$this->mime     = $this->image->getFormat();
 			$this->hasAlpha = $this->image->getImageAlphaChannel();
-
 		}
 
 		public static function cachedname($filename, $extension, $data = array()){
@@ -55,8 +50,6 @@
 
 			return ['full_path' => $full_image_path, 'relative_path' => $relative_image_path];
 		}
-
-
 
 		public function getFile() {
 			return $this->file;
@@ -98,8 +91,7 @@
 		}
 
 		public function save($file, $quality = IMAGE_QUALITY) {      
-			try { 
-
+			try {
 				$this->image->setCompressionQuality($quality);
 				$this->image->stripImage();
 				$this->image->writeImage($file);

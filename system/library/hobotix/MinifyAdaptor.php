@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace hobotix;
 
@@ -15,8 +15,8 @@ final class MinifyAdaptor
 			if ($npmDependencies = json_decode(file_get_contents(self::npmPackageLockFile), true)){
 				foreach ($npmDependencies['dependencies'] as $npmDependency => $npmInfo){
 
-					$npmPackageDirectory 	= DIR_ENGINE . 'js/node_modules/' . $npmDependency . '/';
-					$npmPackageRelative		= '/js/node_modules/' . $npmDependency . '/';
+					$npmPackageDirectory 	= DIR_ENGINE . 'js/node_modules/' . $npmDependency . DIRECTORY_SEPARATOR;
+					$npmPackageRelative		= '/js/node_modules/' . $npmDependency . DIRECTORY_SEPARATOR;
 					$npmPackageInfoFile 	= $npmPackageDirectory . 'package.json';
 
 					if (file_exists($npmPackageInfoFile)){
@@ -39,7 +39,7 @@ final class MinifyAdaptor
 		if (is_dir(DIR_MINIFIED . $time)){
 
 			foreach ($files = array_diff(scandir(DIR_MINIFIED . $time), ['.','..']) as $file){
-				unlink(DIR_MINIFIED . $time . '/' . $file);
+				unlink(DIR_MINIFIED . $time . DIRECTORY_SEPARATOR . $file);
 			}
 
 			rmdir(DIR_MINIFIED . $time);
@@ -47,6 +47,10 @@ final class MinifyAdaptor
 	}
 
 	public static function getCacheTime() {
+        if (!is_dir(DIR_MINIFIED)){
+            mkdir(DIR_MINIFIED, 0777, true);
+        }
+        
 		foreach (scandir(DIR_MINIFIED) as $subdir) {
 			if (ctype_digit($subdir)) {
 				return $subdir;
@@ -54,8 +58,8 @@ final class MinifyAdaptor
 		}
 
 		$time = (string)time();
-		mkdir(DIR_MINIFIED . '/' . $time, 0777);
-		chmod(DIR_MINIFIED . '/' . $time, 0777);
+		mkdir(DIR_MINIFIED . DIRECTORY_SEPARATOR . $time, 0777, true);
+		chmod(DIR_MINIFIED . DIRECTORY_SEPARATOR . $time, 0777);
 
 		return $time;
 	}
@@ -71,7 +75,7 @@ final class MinifyAdaptor
 		$files = [];
 		$times = [];
 		foreach ($input as $file){
-			$file = DIR_ENGINE . ltrim($file, '/');
+			$file = DIR_ENGINE . ltrim($file, DIRECTORY_SEPARATOR);
 			if (file_exists($file) && $time = filemtime($file)){
 				$files[] 		= $file;
 				$times[$file] 	= $time;	
@@ -92,8 +96,8 @@ final class MinifyAdaptor
 			}
 
 			$code 	  = md5(serialize($files));
-			$absolute = DIR_MINIFIED . $cacheTime . '/' . $code . '.' . $type;
-			$relative = DIR_MINIFIED_NAME . $cacheTime . '/' . $code . '.' . $type;
+			$absolute = DIR_MINIFIED . $cacheTime . DIRECTORY_SEPARATOR . $code . '.' . $type;
+			$relative = DIR_MINIFIED_NAME . $cacheTime . DIRECTORY_SEPARATOR . $code . '.' . $type;
 
 			if (!file_exists($absolute)){
 				foreach($files as $file){

@@ -2,7 +2,7 @@
 class ControllerModuleViewed extends Controller {
 
 	public function viewed(){
-		$viewed_products = array();
+		$viewed_products = [];
 
 		$this->load->model('catalog/viewed');
 		$this->load->model('catalog/product');
@@ -10,10 +10,10 @@ class ControllerModuleViewed extends Controller {
 
 		$limit = $this->config->get('viewed_count');
 
-		if ($this->model_catalog_viewed->getTotalViewed() >0 ) {
+		if ($this->model_catalog_viewed->getTotalViewed() > 0 ) {
 			$products = $this->model_catalog_viewed->getListViewed($limit);			
 		} else {
-			$products = array();
+			$products = [];
 		}
 
 		$this->language->load('module/viewed'); 
@@ -26,7 +26,7 @@ class ControllerModuleViewed extends Controller {
 			$this->data[$translationСode] = $translationText;
 		}
 
-		$results = array();
+		$results = [];
 		foreach ($products as $product_id) {
 			$product_info = $this->model_catalog_product->getProduct($product_id);
 
@@ -56,16 +56,12 @@ class ControllerModuleViewed extends Controller {
 	}
 
 	protected function index($setting) {
-
 		$out = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, $setting));
 
-		if ($out) {		
-
+		if ($out) {
 			$this->setCachedOutput($out);
-			
 		} else {
-
-			$viewed_products = array();
+			$viewed_products = [];
 
 			$this->load->model('catalog/viewed');
 			$this->load->model('tool/image');
@@ -82,7 +78,7 @@ class ControllerModuleViewed extends Controller {
 				$this->data[$translationСode] = $translationText;
 			}
 
-			$this->data['products'] = array();
+			$this->data['products'] = [];
 
 			$this->data['dimensions'] = array(
 				'w' => $setting['image_width'],
@@ -103,12 +99,11 @@ class ControllerModuleViewed extends Controller {
 				$indexes = array(1);
 			}
 
-
 			if (empty($setting['limit'])) {
 				$setting['limit'] = 10;
 			}				
 
-			$this->data['tabs'] = array();
+			$this->data['tabs'] = [];
 			foreach ($indexes as $idx) {
 				$products = [];			
 				if ($this->config->get('blockviewed_product_' . $idx)){
@@ -153,7 +148,6 @@ class ControllerModuleViewed extends Controller {
 
 					}
 				}
-
 
 				if (!$products){
 					continue;

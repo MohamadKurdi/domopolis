@@ -7,6 +7,10 @@ class ModelToolImage extends Model {
 			$uri = $this->request->server['REQUEST_URI'];
 		}
 
+        if (defined('LOCALHOST_ENVIRONMENT')){
+            $filename = 'no_image.jpg';
+        }
+
 		if (!$filename || !trim($filename)){
 			$filename = 'no_image.jpg';
 		}

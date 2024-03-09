@@ -1,4 +1,4 @@
-<?php			
+<?php
 	define('VERSION', '1.5.6.4');
 	define('IS_HTTPS', true);
 	header('X-ENGINE-ENTRANCE: INDEX'); 

@@ -6,11 +6,9 @@ final class PageCache{
 	private $lifetime 		= 600;
 	private $gzLevel 		= 4;
 	private $minify 		= false;
-
 	private $crawlerDetect 	= null;
 	private $mobileDetect 	= null;
 	private $htmlMinifier 	= null;
-
 	private $db 			= null;
 	private $log 			= null;
 	private $cache 			= null;
@@ -324,8 +322,11 @@ final class PageCache{
 	}
 
 	public function getRedisInfo(){
-		$redis = new \Redis();
-		if ($redis->connect(REDIS_SOCKET)) {
+        if (class_exists('Redis')){
+            $redis = new \Redis();
+        }
+
+		if (!empty($redis) && $redis->connect(REDIS_SOCKET)) {
 			$ans = $redis->info();
 
 			$body = $ans['used_memory_human'];
