@@ -79,30 +79,18 @@
 /.cache/
 
 #Шаблоны
-/catalog/view/theme/kp/
-/catalog/view/theme/dp/
-/catalog/view/theme/ho/
-/catalog/view/theme/dev/
-/catalog/view/theme/old/
-/catalog/view/theme/_dev/
-/catalog/view/theme/_old/
-/catalog/view/theme/kp_dev/
-/catalog/view/theme/dp_dev/
-/catalog/view/theme/ho_dev/
-/catalog/view/theme/kp_old/
-/catalog/view/theme/dp_old/
-/catalog/view/theme/ho_old/
+/catalog/view/theme/*
+!/catalog/view/theme/default/
 
 #Языки
-/catalog/language/russian
-/catalog/language/ukrainian
+/catalog/language/*
+!/catalog/language/default/
 
 #Рассылки
 /send/*
 
 #Composer
 /vendor/
-/composer.lock
 
 #Webpush service worker
 /sw_webpush.js
@@ -112,8 +100,18 @@
 /system/cache_mfp
 /system/config
 /system/config/*
+!/system/config/index.html
 !/system/config/api.json
 !/system/config/routes.json
+!/system/config/admin_seo_routes.json
+!/system/config/cron.json
+!/system/config/dbcache.json
+!/system/config/loader.json
+!/system/config/npm.json
+!/system/config/ocfilter.php
+!/system/config/settings_tabs.json
+!/system/config/sync.json
+!/system/config/amazon.json
 
 /system/csvprice_pro
 /system/logs
