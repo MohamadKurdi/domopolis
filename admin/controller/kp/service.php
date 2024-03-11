@@ -246,8 +246,7 @@
 			
 			echoLine('[optimizeProductsDB] Очистка неликвида', 'i');
 			$this->db->non_cached_query("UPDATE product p SET is_illiquid = 0 WHERE quantity_stock = 0 AND quantity_stockK = 0 AND quantity_stockM = 0");
-			
-			//Очистка нулевых переназначенных цен
+
 			$this->db->non_cached_query("DELETE FROM product_special WHERE price = 0");
 			$this->db->non_cached_query("DELETE FROM product_price_to_store WHERE price = 0");
 			$this->db->non_cached_query("DELETE FROM product_price_national_to_store WHERE price = 0");
@@ -495,11 +494,24 @@
 			
 			echo '[C] Чистим записи чеков. 3 месяцев.'  . PHP_EOL;
 			$this->db->query("DELETE FROM order_invoice_history WHERE DATE(datetime) <= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)");
-			$this->db->query("DELETE FROM order_invoice_history WHERE order_id NOT IN (SELECT DISTINCT order_id FROM `order`)");
+			$this->db->query("DELETE FROM order_invoice_history WHERE order_id NOT IN (SELECT DISTINCT order_id FROM `order`)");			
 			
 			echo '[C] Чистим записи сохранения выполненных заказов. 2-3 месяца.'  . PHP_EOL;
 			$this->db->query("DELETE FROM order_save_history WHERE DATE(datetime) <= DATE_SUB(CURDATE(), INTERVAL 2 MONTH) AND order_id IN (SELECT DISTINCT order_id FROM `order` WHERE order_status_id IN (17, 18, 23))");
 			$this->db->query("DELETE FROM order_save_history WHERE DATE(datetime) <= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) AND order_id NOT IN (SELECT DISTINCT order_id FROM `order` WHERE order_status_id IN (17, 18, 23))");
+
+			echoLine('[optimizeDB] Cleaning offers history older than three month', 'i');						
+			$this->db->query("DELETE FROM  product_offers_history  WHERE DATE(date_added) <= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)");
+
+			echoLine('[optimizeDB] Cleaning products tables from unexistent products', 'i');	
+			foreach ((array)\hobotix\RainforestAmazon::productRelatedTables as $table){
+				echoLine('[optimizeDB::products] Working with table ' . $table, 'w');
+				$sql = "DELETE FROM `" . $table . "` WHERE product_id NOT IN (SELECT product_id FROM product)";
+				$this->db->query($sql);
+			}
+
+			echoLine('[optimizeDB] Cleaning review descriptions', 'i');
+			$this->db->query("DELETE FROM review_description WHERE review_id NOT IN (SELECT review_id FROM review)");
 			
 			echo '[C] Динамика сегментов. Год'  . PHP_EOL;
 			$this->db->query("DELETE FROM segments_dynamics WHERE DATE(date_added) <= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)");
@@ -534,40 +546,21 @@
 			$handler->setDbDetails(DB_SESSION_HOSTNAME, DB_SESSION_USERNAME, DB_SESSION_PASSWORD, DB_SESSION_DATABASE);
 			$handler->setDbTable(DB_SESSION_TABLE);
 			$handler->gc($handler->lifeTime);			
-			
-			echo '[O] Оптимизация таблиц'  . PHP_EOL;
-			echo '[OТ] Оптимизация таблицы adminlog'  . PHP_EOL;
-			$this->db->query("OPTIMIZE table adminlog");
 
-			echo '[OТ] Оптимизация таблицы translate_stats'  . PHP_EOL;
-			$this->db->query("OPTIMIZE table translate_stats");
-			
-			echo '[OТ] Оптимизация таблицы superstat_viewed'  . PHP_EOL;
-			$this->db->query("OPTIMIZE table superstat_viewed");
-			
-			echo '[OТ] Оптимизация таблицы emailtemplate_logs'  . PHP_EOL;
-			$this->db->query("OPTIMIZE table emailtemplate_logs");
-			
-			echo '[OТ] Оптимизация таблицы customer'  . PHP_EOL;
-			$this->db->query("OPTIMIZE table customer");
+			echoLine('[optimizeDB] Optimizing products tables', 'w');
+			foreach ((array)\hobotix\RainforestAmazon::productRelatedTables as $table){
+				echoLine('[optimizeDB::products] Optimizing ' . $table, 'w');
+				$sql = "OPTIMIZE table `" . $table . "`";
+				$this->db->query($sql);
+			}
 
-			echo '[OТ] Оптимизация таблицы customer_online'  . PHP_EOL;
-			$this->db->query("OPTIMIZE table customer_online");
+			$to_optimize_tables = ['adminlog', 'translate_stats', 'superstat_viewed', 'emailtemplate_logs', 'customer', 'customer_online', 'address', 'customer_history', 'order_invoice_history', 'order_save_history', 'product_offers_history', 'order'];
 			
-			echo '[OТ] Оптимизация таблицы address'  . PHP_EOL;
-			$this->db->query("OPTIMIZE table address");
-			
-			echo '[OТ] Оптимизация таблицы customer_history'  . PHP_EOL;
-			$this->db->query("OPTIMIZE table customer_history");
-			
-			echo '[OТ] Оптимизация таблицы order_invoice_history'  . PHP_EOL;
-			$this->db->query("OPTIMIZE table order_invoice_history");
-			
-			echo '[OТ] Оптимизация таблицы order_save_history'  . PHP_EOL;
-			$this->db->query("OPTIMIZE table order_save_history");
-			
-			echo '[OТ] Оптимизация таблицы order'  . PHP_EOL;
-			$this->db->query("OPTIMIZE table `order`");					
+			echoLine('[optimizeDB] Optimizing other tables', 'w');
+			foreach ((array)$to_optimize_tables as $table){
+				echoLine('[optimizeDB::optimize] Optimizing ' . $table, 'w');
+				$sql = "OPTIMIZE table `" . $table . "`";
+				$this->db->query($sql);
+			}	
 		}
-
 	}	
