@@ -12,7 +12,7 @@ final class Installer
         if (is_file(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'config.parts' . DIRECTORY_SEPARATOR . 'INSTALLED')) {
             echoLine('[Installer::_construct] Found installation-ready marker file, exiting', 'e');
             echoLine('[Installer::_construct] If you want to do some reinstallation, remove system/config.parts/INSTALLED file and rerun', 'i');
-        //    die();
+            die();
         }
 
         return $this;
