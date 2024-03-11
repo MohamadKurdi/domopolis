@@ -1,7 +1,72 @@
 <?php
 
+function mkdir_with_echo($dir){
+    echoLine('[install::mkdir]' . $dir, 'w');
+
+    if (!is_dir($dir)){
+        mkdir($dir, 0755, true);
+    } else {
+        echoLine('[install::mkdir] directory exists!', 's');
+    }
+}
+
+function install(): void{
+    if (!is_file(dirname(__FILE__) . '/config.parts/INSTALLED')) {
+        echoLine('Not found install file, running directory creating', 'w');
+
+        if (is_dir(dirname(__FILE__) . '/config.parts/')){
+            if (defined('DIR_PIDS')){
+                mkdir_with_echo(DIR_PIDS);
+            }
+
+            if (defined('DIR_LOGS')){
+                mkdir_with_echo(DIR_LOGS);
+            }
+
+            if (defined('DIR_CACHE')){
+                mkdir_with_echo(DIR_CACHE);
+            }
+
+            if (defined('DIR_CACHE') && defined('PAGECACHE_DIR')){
+                mkdir_with_echo(DIR_CACHE . PAGECACHE_DIR);
+            }
+
+            if (defined('DIR_IMAGECACHE')){
+                mkdir_with_echo(DIR_IMAGECACHE);
+            }
+
+            if (defined('DIR_IMAGE')){
+                mkdir_with_echo(DIR_IMAGE);
+            }
+
+            if (defined('DIR_MINIFIED')){
+                mkdir_with_echo(DIR_MINIFIED);
+            }
+
+            if (defined('DIR_REFEEDS')){
+                mkdir_with_echo(DIR_REFEEDS);
+            }
+
+            if (defined('DIR_SITEMAPS_CACHE')){
+                mkdir_with_echo(DIR_SITEMAPS_CACHE);
+            }
+
+            if (defined('DIR_EXPORT')){
+                mkdir_with_echo(DIR_EXPORT);
+            }
+
+            touch(dirname(__FILE__) . '/config.parts/INSTALLED');
+
+        } else {
+            echoLine('Not found configuration files, exiting', 'e');
+        }
+    }
+
+    echoLine('Do not forget to run composer install and npm install', 'w');
+}
+
 if (!function_exists('is_cli')){
-	function is_cli(){
+	function is_cli(): bool{
 		return (php_sapi_name() == 'cli');		
 	}
 }
@@ -19,6 +84,8 @@ function getCliParamValue($string){
 
 if (!function_exists('loadJsonConfig')){
 	function loadJsonConfig($config){
+        $json = null;
+
 		if (defined('DIR_SYSTEM') && @file_exists(DIR_SYSTEM . 'config/' . $config . '.json')){
 
 			$json = file_get_contents(DIR_SYSTEM . 'config/' . $config . '.json');

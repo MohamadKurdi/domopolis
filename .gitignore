@@ -35,7 +35,7 @@
 #Страницы ошибок
 /ep/*
 
-#EXPORT: TODO, Там и статика и исполняемый код
+#EXPORT
 /export/
 
 #Фиды и сайтмапы
@@ -75,9 +75,6 @@
 #Старая директория api
 /api/
 
-#Кэш системного пользователя
-/.cache/
-
 #Шаблоны
 /catalog/view/theme/*
 !/catalog/view/theme/default/
@@ -100,6 +97,7 @@
 /system/cache_mfp
 /system/config
 /system/config/*
+/system/config.parts/*
 !/system/config/index.html
 !/system/config/api.json
 !/system/config/routes.json
@@ -119,4 +117,5 @@
 /system/pids
 
 #Директории IDE
+/.cache/
 .idea

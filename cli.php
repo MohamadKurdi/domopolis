@@ -8,7 +8,6 @@ ini_set('memory_limit', '4G');
 
 require_once(dirname(__FILE__) . '/system/jsonconfig.php');
 
-//Загрузка скриптов, в которых еще не определены константы конфига
 $loaderConfig = loadJsonConfig('loader');
 $stores = loadJsonConfig('stores');
 $configs = loadJsonConfig('configs');
@@ -101,6 +100,11 @@ echoLine('[CLI] Starting ' . $route . ' in app ' . $application . ' with config 
 echoLine('[CLI] Parameters: ' . implode(', ', $functionArguments), 'i');
 
 require_once($applicationLocation . $configFile);
+
+if ($argv[3] == 'install' && function_exists('install')) {
+    install();
+    exit();
+}
 
 if (!empty($loaderConfig['startup'])) {
     foreach ($loaderConfig['startup'] as $startupFile) {
