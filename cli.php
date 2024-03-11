@@ -114,6 +114,11 @@ if ($argv[3] == 'install') {
     require_once(dirname(__FILE__) . '/system/installer.php');
     $installer = new \hobotix\Installer();
     $installer->install();
+
+    if (!empty($argv[4])) {
+        $installer->setdomain(trim($argv[4]));
+    }
+
     exit();
 }
 

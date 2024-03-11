@@ -1,4 +1,4 @@
-<?
+<?php
 
 define('DIR_ENGINE', 			dirname(__FILE__) . '/../../');
 define('DIR_SITE', 				DIR_ENGINE);

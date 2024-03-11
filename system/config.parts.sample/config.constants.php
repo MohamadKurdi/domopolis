@@ -9,7 +9,7 @@ define('MYSQL_NOW_DATE_FORMAT', 'Y-m-d H:i:00');
 define ('DEFAULT_SORT', 'p.quantity DESC, p.date_modified');
 define ('ALERT_QUEUE', 'alert_queue_11');
 
-define('RESTRICTED_FUNCTIONS', true);
+define('RESTRICTED_FUNCTIONS', false);
 
 DEFINE('MANAGER_GROUPS', array(12, 19, 27));
 DEFINE('DEFAULT_QUEUE', 901);
