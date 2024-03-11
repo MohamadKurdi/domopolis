@@ -162,7 +162,7 @@ class DBMySQLi_Cached {
 	}
 
 	public function escape($value) {
-		if (is_null($value) || empty($value) || !$value){
+		if (is_null($value) || (string)$value === ''){
 			return false;
 		}
 
