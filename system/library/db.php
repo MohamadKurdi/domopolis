@@ -143,16 +143,21 @@ if (!class_exists('DB')){
 
         public function importSQL($file){
             $sql_file   = file_get_contents($file);
-            $queries    = explode(';', str_replace("\r", '', $sql_file));
+            $queries    = explode(';' . PHP_EOL, $sql_file);
 
+            $i      = 1;
+            $total  = count($queries);
             foreach ($queries as $query) {
                 $query = trim($query);
 
                 if (!empty($query)) {
+                    echoLine('[DB::importSQL] Executing query ' . $i . ' of ' . $total . ': ' . $query, 'i');
                     if (!$this->connection->query($query)) {
                         echoLine('[DB::importSQL] Error executing query ' . $this->connection->error);
                     }
                 }
+
+                $i++;
             }
         }
 

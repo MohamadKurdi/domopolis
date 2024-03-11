@@ -50,7 +50,7 @@ if (!isset($argv[3])) {
 }
 
 $application = trim($argv[1]);
-if (!in_array($application, ['admin', 'catalog'])) {
+if (!in_array($application, ['admin', 'catalog', 'install'])) {
     echoLine('[CLI] First parameter, must be admin, or catalog', 'e');
     die();
 }
@@ -109,14 +109,14 @@ echoLine('[CLI] Parameters: ' . implode(', ', $functionArguments), 'i');
 
 require_once($applicationLocation . $configFile);
 
-if ($argv[3] == 'install') {
+if ($argv[1] == 'install') {
     echoLine('[CLI] Running installation second iteration', 'w');
     require_once(dirname(__FILE__) . '/system/installer.php');
     $installer = new \hobotix\Installer();
     $installer->install();
 
-    if (!empty($argv[4])) {
-        $installer->setdomain(trim($argv[4]));
+    if (!empty($argv[3])) {
+        $installer->setdomain(trim($argv[3]));
     }
 
     exit();
