@@ -152,11 +152,15 @@ final class Installer
             echoLine('[Installer::install] No session database config set, skipping', 'w');
         }
 
-        echoLine('[Installer::install] Executing composer install', 'w');
-        exec('composer install');
+        if (function_exists('exec')) {
+            echoLine('[Installer::install] Executing composer install', 'w');
+            exec('composer install');
 
-        echoLine('[Installer::install] Executing npm install', 'w');
-        exec('cd ./js && npm install');
+            echoLine('[Installer::install] Executing npm install', 'w');
+            exec('cd ./js && npm install');
+        } else {
+            echoLine('[Installer::install] exec() function is forbidden, run composer install and npm install manually', 'e');
+        }
     }
 
     public function setdomain($domain): void
