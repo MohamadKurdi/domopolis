@@ -175,8 +175,8 @@ class ControllerSettingSetting extends Controller
         }
 
         $serialized = (int)is_array($value);
-        $value = (is_array($value)) ? serialize($value) : $value;
-        $key = trim($key, '[]');
+        $value      = (is_array($value)) ? serialize($value) : $value;
+        $key        = trim($key, '[]');
 
         if ($key) {
             $query = $this->db->query("SELECT * FROM setting WHERE store_id = '" . (int)$store_id . "' AND `group` = 'config' AND `key` = '" . $this->db->escape($key) . "'");

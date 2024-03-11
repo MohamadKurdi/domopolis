@@ -35,7 +35,6 @@ if (!class_exists('DB')){
 		}
 
 		public function __construct($driver, $hostname, $username, $password, $database) {
-
 			$this->driver 	= $driver;
 			$this->hostname = $hostname;
 			$this->username = $username;			
@@ -127,7 +126,7 @@ if (!class_exists('DB')){
 		}
 
 		public function escape($value) {
-			if (is_null($value) || empty($value) || !$value){
+			if (is_null($value) || (string)$value === ''){
 				return false;
 			}
 
