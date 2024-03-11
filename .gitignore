@@ -57,6 +57,8 @@
 
 #Статичные ресурсы PWA и само PWA
 /pwa/*
+!/pwa/mapper.manifest.json.php
+!/pwa/mapper.assetlinks.json.php
 /offline.html
 /offline.*.html
 /browserconfig.xml

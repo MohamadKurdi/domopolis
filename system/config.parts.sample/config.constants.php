@@ -1,5 +1,4 @@
-<?
-
+<?php
 
 define('BIRTHDAY_DISCOUNT_CATEGORY', 8308);
 define('GENERAL_DISCOUNT_CATEGORY', 6614);
@@ -22,3 +21,9 @@ define('BARBARATHEME', false);
 define('STOCK', 6474);	
 define('PRESENT', 6475);
 define('PRESENT_UA', 8307);
+
+define('DB_CONTENT_SYNC_DRIVER', false);
+define('DB_CONTENT_SYNC_HOSTNAME', false);
+define('DB_CONTENT_SYNC_USERNAME', false);
+define('DB_CONTENT_SYNC_PASSWORD', false);
+define('DB_CONTENT_SYNC_DATABASE', false);

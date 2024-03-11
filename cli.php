@@ -25,6 +25,14 @@ if (!is_cli()) {
 
 echoLine('[CLI] We are in CLI mode. PHP version: ' . phpversion() . ', time ' . date('Y-m-d H:i:s'), 's');
 
+if ($argv[1] == 'install') {
+    echoLine('[CLI] Running installation first iteration', 'w');
+    require_once(dirname(__FILE__) . '/system/installer.php');
+    $installer = new \hobotix\Installer();
+    $installer->preinstall();
+    exit();
+}
+
 //Первый параметр: admin, catalog, для выбора приложения
 if (!isset($argv[1])) {
     echoLine('[CLI] No first parameter, must be admin, or catalog', 'e');
@@ -101,8 +109,11 @@ echoLine('[CLI] Parameters: ' . implode(', ', $functionArguments), 'i');
 
 require_once($applicationLocation . $configFile);
 
-if ($argv[3] == 'install' && function_exists('install')) {
-    install();
+if ($argv[3] == 'install') {
+    echoLine('[CLI] Running installation second iteration', 'w');
+    require_once(dirname(__FILE__) . '/system/installer.php');
+    $installer = new \hobotix\Installer();
+    $installer->install();
     exit();
 }
 

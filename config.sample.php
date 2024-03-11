@@ -1,5 +1,4 @@
-<?
-
+<?php
 require_once(dirname(__FILE__) . '/system/config.parts/config.servers.php');
 require_once(dirname(__FILE__) . '/system/config.parts/config.path.php');
 require_once(dirname(__FILE__) . '/system/config.parts/config.constants.php');

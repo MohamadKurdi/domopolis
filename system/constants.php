@@ -52,9 +52,6 @@ if (isset($_HEADERS['X-Hello']) && $_HEADERS['X-Hello'] == 'world'){
 $imageConfig 	= loadJsonConfig('image');
 $imageQualities = $imageConfig['quality'];
 
-
-//IMAGES
-//WEBP
 if (isset($_SERVER['HTTP_ACCEPT']) && isset($_SERVER['HTTP_USER_AGENT'])) {
 	if( strpos( $_SERVER['HTTP_ACCEPT'], 'image/webp' ) !== false && (function_exists('imagewebp') || extension_loaded('imagick')) && (int)$imageQualities['config_image_webp_quality'] > 0) {
 		header('X-IMAGE-WEBP: TRUE');	
@@ -66,8 +63,6 @@ if (isset($_SERVER['HTTP_ACCEPT']) && isset($_SERVER['HTTP_USER_AGENT'])) {
 	define('WEBPACCEPTABLE', false);
 }
 
-//IMAGES
-//AVIF
 if (isset($_SERVER['HTTP_ACCEPT']) && isset($_SERVER['HTTP_USER_AGENT'])) {
 	if( strpos( $_SERVER['HTTP_ACCEPT'], 'image/avif' ) !== false && (extension_loaded('imagick')) && (int)$imageQualities['config_image_avif_quality'] > 0) {
 		header('X-IMAGE-AVIF: TRUE');
