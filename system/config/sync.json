@@ -1,0 +1,8 @@
+{
+	"sync": {
+		"ModelCatalogProduct":[
+			"deleteProduct",
+			"deleteProductSimple"
+		]
+	}
+}
