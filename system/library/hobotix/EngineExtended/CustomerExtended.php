@@ -527,6 +527,10 @@
 		public function getNewsletterFull(){
 			return ($this->newsletter && $this->newsletter_news && $this->newsletter_personal);
 		}
+
+		public function getGroupId() {
+			return $this->getCustomerGroupId();	
+		}
 		
 		public function getCustomerGroupId() {
 			return $this->customer_group_id;	

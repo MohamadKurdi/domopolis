@@ -102,7 +102,7 @@
 			}
 			
 			if( ! empty( $setting['customer_groups'] ) ) {
-				$customer_group_id = $this->customer->isLogged() ? $this->customer->getGroupId() : $this->config->get( 'config_customer_group_id' );
+				$customer_group_id = $this->customer->isLogged() ? $this->customer->getCustomerGroupId() : $this->config->get( 'config_customer_group_id' );
 				
 				if( ! in_array( $customer_group_id, $setting['customer_groups'] ) ) {
 					return;
