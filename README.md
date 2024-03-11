@@ -15,9 +15,11 @@ Requirements
 Installation (not full, in deveplopment)
 ------------
 
+* ./cli.php preinstall to copy sample config files
 * ./cli.php catalog config.php install to create directories
-* composer install at root directory to install all composer dependencies
-* npm install in js directory to install all js dependencies
+* ./cli.php catalog config.php install mydomain.name to set domain name in config files
+* composer install at root directory to install all composer dependencies (launches if exec is allowed)
+* npm install in js directory to install all js dependencies (launches if exec is allowed)
 * import database structure and fill settings
 
 

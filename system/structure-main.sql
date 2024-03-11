@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 16, 2023 at 03:27 PM
+-- Generation Time: Mar 11, 2024 at 05:22 PM
 -- Server version: 10.6.7-MariaDB-2ubuntu1.1-log
 -- PHP Version: 8.1.9
 
@@ -27,7 +27,6 @@ SET time_zone = "+00:00";
 -- Table structure for table `actions`
 --
 
-DROP TABLE IF EXISTS `actions`;
 CREATE TABLE `actions` (
   `actions_id` int(11) NOT NULL,
   `image` varchar(255) COLLATE utf8mb3_bin DEFAULT NULL,
@@ -54,7 +53,6 @@ CREATE TABLE `actions` (
 -- Table structure for table `actions_description`
 --
 
-DROP TABLE IF EXISTS `actions_description`;
 CREATE TABLE `actions_description` (
   `actions_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -80,7 +78,6 @@ CREATE TABLE `actions_description` (
 -- Table structure for table `actions_to_category`
 --
 
-DROP TABLE IF EXISTS `actions_to_category`;
 CREATE TABLE `actions_to_category` (
   `actions_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
@@ -92,7 +89,6 @@ CREATE TABLE `actions_to_category` (
 -- Table structure for table `actions_to_category_in`
 --
 
-DROP TABLE IF EXISTS `actions_to_category_in`;
 CREATE TABLE `actions_to_category_in` (
   `actions_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
@@ -104,7 +100,6 @@ CREATE TABLE `actions_to_category_in` (
 -- Table structure for table `actions_to_layout`
 --
 
-DROP TABLE IF EXISTS `actions_to_layout`;
 CREATE TABLE `actions_to_layout` (
   `actions_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -117,7 +112,6 @@ CREATE TABLE `actions_to_layout` (
 -- Table structure for table `actions_to_product`
 --
 
-DROP TABLE IF EXISTS `actions_to_product`;
 CREATE TABLE `actions_to_product` (
   `actions_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL
@@ -129,7 +123,6 @@ CREATE TABLE `actions_to_product` (
 -- Table structure for table `actions_to_store`
 --
 
-DROP TABLE IF EXISTS `actions_to_store`;
 CREATE TABLE `actions_to_store` (
   `actions_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -141,7 +134,6 @@ CREATE TABLE `actions_to_store` (
 -- Table structure for table `actiontemplate`
 --
 
-DROP TABLE IF EXISTS `actiontemplate`;
 CREATE TABLE `actiontemplate` (
   `actiontemplate_id` int(11) NOT NULL,
   `bottom` int(11) NOT NULL DEFAULT 0,
@@ -149,6 +141,7 @@ CREATE TABLE `actiontemplate` (
   `status` tinyint(1) NOT NULL DEFAULT 1,
   `image` varchar(255) NOT NULL,
   `use_for_manual` tinyint(1) DEFAULT 0,
+  `use_for_forgotten` tinyint(1) NOT NULL,
   `viewed` int(11) NOT NULL DEFAULT 0,
   `data_function` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -159,7 +152,6 @@ CREATE TABLE `actiontemplate` (
 -- Table structure for table `actiontemplate_description`
 --
 
-DROP TABLE IF EXISTS `actiontemplate_description`;
 CREATE TABLE `actiontemplate_description` (
   `actiontemplate_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -178,7 +170,6 @@ CREATE TABLE `actiontemplate_description` (
 -- Table structure for table `address`
 --
 
-DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address` (
   `address_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -207,7 +198,6 @@ CREATE TABLE `address` (
 -- Table structure for table `address_simple_fields`
 --
 
-DROP TABLE IF EXISTS `address_simple_fields`;
 CREATE TABLE `address_simple_fields` (
   `address_id` int(11) NOT NULL,
   `metadata` text DEFAULT NULL
@@ -219,7 +209,6 @@ CREATE TABLE `address_simple_fields` (
 -- Table structure for table `adminlog`
 --
 
-DROP TABLE IF EXISTS `adminlog`;
 CREATE TABLE `adminlog` (
   `log_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -237,7 +226,6 @@ CREATE TABLE `adminlog` (
 -- Table structure for table `advanced_coupon`
 --
 
-DROP TABLE IF EXISTS `advanced_coupon`;
 CREATE TABLE `advanced_coupon` (
   `advanced_coupon_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
@@ -255,7 +243,6 @@ CREATE TABLE `advanced_coupon` (
 -- Table structure for table `advanced_coupon_history`
 --
 
-DROP TABLE IF EXISTS `advanced_coupon_history`;
 CREATE TABLE `advanced_coupon_history` (
   `advanced_coupon_history_id` int(11) NOT NULL,
   `advanced_coupon_id` int(11) NOT NULL,
@@ -271,7 +258,6 @@ CREATE TABLE `advanced_coupon_history` (
 -- Table structure for table `affiliate`
 --
 
-DROP TABLE IF EXISTS `affiliate`;
 CREATE TABLE `affiliate` (
   `affiliate_id` int(11) NOT NULL,
   `firstname` varchar(32) NOT NULL,
@@ -330,7 +316,6 @@ CREATE TABLE `affiliate` (
 -- Table structure for table `affiliate_statistics`
 --
 
-DROP TABLE IF EXISTS `affiliate_statistics`;
 CREATE TABLE `affiliate_statistics` (
   `id` int(11) NOT NULL,
   `affiliate_id` int(11) NOT NULL,
@@ -345,7 +330,6 @@ CREATE TABLE `affiliate_statistics` (
 -- Table structure for table `affiliate_transaction`
 --
 
-DROP TABLE IF EXISTS `affiliate_transaction`;
 CREATE TABLE `affiliate_transaction` (
   `affiliate_transaction_id` int(11) NOT NULL,
   `affiliate_id` int(11) NOT NULL,
@@ -361,7 +345,6 @@ CREATE TABLE `affiliate_transaction` (
 -- Table structure for table `albums`
 --
 
-DROP TABLE IF EXISTS `albums`;
 CREATE TABLE `albums` (
   `album_id` int(11) NOT NULL,
   `album_type` int(11) NOT NULL,
@@ -377,7 +360,6 @@ CREATE TABLE `albums` (
 -- Table structure for table `alertlog`
 --
 
-DROP TABLE IF EXISTS `alertlog`;
 CREATE TABLE `alertlog` (
   `alertlog_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -394,7 +376,6 @@ CREATE TABLE `alertlog` (
 -- Table structure for table `alsoviewed`
 --
 
-DROP TABLE IF EXISTS `alsoviewed`;
 CREATE TABLE `alsoviewed` (
   `id` bigint(20) NOT NULL,
   `low` int(11) DEFAULT 0,
@@ -409,7 +390,6 @@ CREATE TABLE `alsoviewed` (
 -- Table structure for table `amazon_orders`
 --
 
-DROP TABLE IF EXISTS `amazon_orders`;
 CREATE TABLE `amazon_orders` (
   `order_id` int(11) NOT NULL,
   `amazon_id` varchar(255) NOT NULL,
@@ -426,7 +406,6 @@ CREATE TABLE `amazon_orders` (
 -- Table structure for table `amazon_orders_blobs`
 --
 
-DROP TABLE IF EXISTS `amazon_orders_blobs`;
 CREATE TABLE `amazon_orders_blobs` (
   `amazon_id` varchar(30) NOT NULL,
   `amazon_blob` longtext NOT NULL
@@ -438,7 +417,6 @@ CREATE TABLE `amazon_orders_blobs` (
 -- Table structure for table `amazon_orders_products`
 --
 
-DROP TABLE IF EXISTS `amazon_orders_products`;
 CREATE TABLE `amazon_orders_products` (
   `order_product_id` int(11) NOT NULL,
   `amazon_id` varchar(255) NOT NULL,
@@ -470,10 +448,27 @@ CREATE TABLE `amazon_orders_products` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `amazon_zipcodes`
+--
+
+CREATE TABLE `amazon_zipcodes` (
+  `zipcode_id` int(11) NOT NULL,
+  `zipcode_area` varchar(255) NOT NULL,
+  `zipcode_area2` varchar(255) NOT NULL,
+  `zipcode` varchar(32) NOT NULL,
+  `error_count` int(11) NOT NULL DEFAULT 0,
+  `request_count` int(11) NOT NULL DEFAULT 0,
+  `last_used` datetime DEFAULT NULL,
+  `added` datetime DEFAULT NULL,
+  `dropped` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `amzn_add_queue`
 --
 
-DROP TABLE IF EXISTS `amzn_add_queue`;
 CREATE TABLE `amzn_add_queue` (
   `asin` varchar(32) NOT NULL,
   `date_added` datetime NOT NULL,
@@ -489,7 +484,6 @@ CREATE TABLE `amzn_add_queue` (
 -- Table structure for table `amzn_add_variants_queue`
 --
 
-DROP TABLE IF EXISTS `amzn_add_variants_queue`;
 CREATE TABLE `amzn_add_variants_queue` (
   `product_id` int(11) NOT NULL,
   `asin` varchar(16) NOT NULL,
@@ -502,7 +496,6 @@ CREATE TABLE `amzn_add_variants_queue` (
 -- Table structure for table `amzn_product_queue`
 --
 
-DROP TABLE IF EXISTS `amzn_product_queue`;
 CREATE TABLE `amzn_product_queue` (
   `asin` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
   `date_added` datetime NOT NULL
@@ -514,7 +507,6 @@ CREATE TABLE `amzn_product_queue` (
 -- Table structure for table `apri`
 --
 
-DROP TABLE IF EXISTS `apri`;
 CREATE TABLE `apri` (
   `order_id` int(11) NOT NULL,
   `date_added` datetime NOT NULL
@@ -526,7 +518,6 @@ CREATE TABLE `apri` (
 -- Table structure for table `apri_unsubscribe`
 --
 
-DROP TABLE IF EXISTS `apri_unsubscribe`;
 CREATE TABLE `apri_unsubscribe` (
   `md5_email` varchar(255) NOT NULL,
   `date_added` datetime NOT NULL
@@ -538,7 +529,6 @@ CREATE TABLE `apri_unsubscribe` (
 -- Table structure for table `attribute`
 --
 
-DROP TABLE IF EXISTS `attribute`;
 CREATE TABLE `attribute` (
   `attribute_id` int(11) NOT NULL,
   `attribute_group_id` int(11) NOT NULL,
@@ -552,7 +542,6 @@ CREATE TABLE `attribute` (
 -- Table structure for table `attributes_category`
 --
 
-DROP TABLE IF EXISTS `attributes_category`;
 CREATE TABLE `attributes_category` (
   `attribute_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
@@ -564,7 +553,6 @@ CREATE TABLE `attributes_category` (
 -- Table structure for table `attributes_similar_category`
 --
 
-DROP TABLE IF EXISTS `attributes_similar_category`;
 CREATE TABLE `attributes_similar_category` (
   `attribute_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
@@ -576,7 +564,6 @@ CREATE TABLE `attributes_similar_category` (
 -- Table structure for table `attribute_description`
 --
 
-DROP TABLE IF EXISTS `attribute_description`;
 CREATE TABLE `attribute_description` (
   `attribute_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -589,7 +576,6 @@ CREATE TABLE `attribute_description` (
 -- Table structure for table `attribute_group`
 --
 
-DROP TABLE IF EXISTS `attribute_group`;
 CREATE TABLE `attribute_group` (
   `attribute_group_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL
@@ -601,7 +587,6 @@ CREATE TABLE `attribute_group` (
 -- Table structure for table `attribute_group_description`
 --
 
-DROP TABLE IF EXISTS `attribute_group_description`;
 CREATE TABLE `attribute_group_description` (
   `attribute_group_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -614,7 +599,6 @@ CREATE TABLE `attribute_group_description` (
 -- Table structure for table `attribute_group_tooltip`
 --
 
-DROP TABLE IF EXISTS `attribute_group_tooltip`;
 CREATE TABLE `attribute_group_tooltip` (
   `attribute_group_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -627,7 +611,6 @@ CREATE TABLE `attribute_group_tooltip` (
 -- Table structure for table `attribute_tooltip`
 --
 
-DROP TABLE IF EXISTS `attribute_tooltip`;
 CREATE TABLE `attribute_tooltip` (
   `attribute_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -640,7 +623,6 @@ CREATE TABLE `attribute_tooltip` (
 -- Table structure for table `attribute_value_image`
 --
 
-DROP TABLE IF EXISTS `attribute_value_image`;
 CREATE TABLE `attribute_value_image` (
   `attribute_value_image` int(11) NOT NULL,
   `attribute_id` int(11) NOT NULL,
@@ -655,7 +637,6 @@ CREATE TABLE `attribute_value_image` (
 -- Table structure for table `banner`
 --
 
-DROP TABLE IF EXISTS `banner`;
 CREATE TABLE `banner` (
   `banner_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
@@ -671,7 +652,6 @@ CREATE TABLE `banner` (
 -- Table structure for table `banner_image`
 --
 
-DROP TABLE IF EXISTS `banner_image`;
 CREATE TABLE `banner_image` (
   `banner_image_id` int(11) NOT NULL,
   `banner_id` int(11) NOT NULL,
@@ -685,7 +665,8 @@ CREATE TABLE `banner_image` (
   `class` varchar(255) NOT NULL,
   `class_sm` varchar(255) NOT NULL,
   `block` int(11) NOT NULL,
-  `block_sm` int(11) NOT NULL
+  `block_sm` int(11) NOT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -694,7 +675,6 @@ CREATE TABLE `banner_image` (
 -- Table structure for table `banner_image_description`
 --
 
-DROP TABLE IF EXISTS `banner_image_description`;
 CREATE TABLE `banner_image_description` (
   `banner_image_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -713,7 +693,6 @@ CREATE TABLE `banner_image_description` (
 -- Table structure for table `callback`
 --
 
-DROP TABLE IF EXISTS `callback`;
 CREATE TABLE `callback` (
   `call_id` int(11) NOT NULL,
   `name` varchar(30) NOT NULL,
@@ -738,7 +717,6 @@ CREATE TABLE `callback` (
 -- Table structure for table `category`
 --
 
-DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category` (
   `category_id` int(11) NOT NULL,
   `image` varchar(255) DEFAULT NULL,
@@ -795,7 +773,12 @@ CREATE TABLE `category` (
   `overload_formula_data` longtext NOT NULL,
   `overload_max_wc_multiplier` decimal(15,2) DEFAULT 0.00,
   `overload_max_multiplier` decimal(15,2) DEFAULT 0.00,
-  `overload_ignore_volumetric_weight` tinyint(1) DEFAULT 0
+  `overload_ignore_volumetric_weight` tinyint(1) DEFAULT 0,
+  `need_reprice` tinyint(1) NOT NULL DEFAULT 0,
+  `need_special_reprice` tinyint(1) NOT NULL DEFAULT 0,
+  `special_reprice_plus` tinyint(1) NOT NULL DEFAULT 0,
+  `special_reprice_minus` tinyint(1) NOT NULL DEFAULT 0,
+  `last_reprice` datetime DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -804,7 +787,6 @@ CREATE TABLE `category` (
 -- Table structure for table `category_amazon_bestseller_tree`
 --
 
-DROP TABLE IF EXISTS `category_amazon_bestseller_tree`;
 CREATE TABLE `category_amazon_bestseller_tree` (
   `category_id` varchar(255) NOT NULL,
   `parent_id` varchar(255) NOT NULL,
@@ -822,7 +804,6 @@ CREATE TABLE `category_amazon_bestseller_tree` (
 -- Table structure for table `category_amazon_tree`
 --
 
-DROP TABLE IF EXISTS `category_amazon_tree`;
 CREATE TABLE `category_amazon_tree` (
   `category_id` varchar(255) NOT NULL,
   `parent_id` varchar(255) NOT NULL,
@@ -838,7 +819,6 @@ CREATE TABLE `category_amazon_tree` (
 -- Table structure for table `category_description`
 --
 
-DROP TABLE IF EXISTS `category_description`;
 CREATE TABLE `category_description` (
   `category_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -865,7 +845,6 @@ CREATE TABLE `category_description` (
 -- Table structure for table `category_filter`
 --
 
-DROP TABLE IF EXISTS `category_filter`;
 CREATE TABLE `category_filter` (
   `category_id` int(11) NOT NULL,
   `filter_id` int(11) NOT NULL
@@ -877,7 +856,6 @@ CREATE TABLE `category_filter` (
 -- Table structure for table `category_hotline_tree`
 --
 
-DROP TABLE IF EXISTS `category_hotline_tree`;
 CREATE TABLE `category_hotline_tree` (
   `category_id` int(11) NOT NULL,
   `parent_id` int(11) NOT NULL,
@@ -892,7 +870,6 @@ CREATE TABLE `category_hotline_tree` (
 -- Table structure for table `category_menu_content`
 --
 
-DROP TABLE IF EXISTS `category_menu_content`;
 CREATE TABLE `category_menu_content` (
   `category_menu_content_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
@@ -913,12 +890,14 @@ CREATE TABLE `category_menu_content` (
 -- Table structure for table `category_overprice_rules`
 --
 
-DROP TABLE IF EXISTS `category_overprice_rules`;
 CREATE TABLE `category_overprice_rules` (
   `rule_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   `multiplier` decimal(15,2) NOT NULL,
   `default_multiplier` decimal(15,2) NOT NULL,
+  `multiplier_old` decimal(15,2) NOT NULL,
+  `default_multiplier_old` decimal(15,2) NOT NULL,
+  `discount` tinyint(1) NOT NULL DEFAULT 0,
   `min` int(11) NOT NULL,
   `max` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -929,7 +908,6 @@ CREATE TABLE `category_overprice_rules` (
 -- Table structure for table `category_path`
 --
 
-DROP TABLE IF EXISTS `category_path`;
 CREATE TABLE `category_path` (
   `category_id` int(11) NOT NULL,
   `path_id` int(11) NOT NULL,
@@ -942,7 +920,6 @@ CREATE TABLE `category_path` (
 -- Table structure for table `category_product_count`
 --
 
-DROP TABLE IF EXISTS `category_product_count`;
 CREATE TABLE `category_product_count` (
   `category_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -955,7 +932,6 @@ CREATE TABLE `category_product_count` (
 -- Table structure for table `category_psm_template`
 --
 
-DROP TABLE IF EXISTS `category_psm_template`;
 CREATE TABLE `category_psm_template` (
   `category_psm_template_id` int(11) NOT NULL,
   `category_entity` varchar(64) DEFAULT NULL,
@@ -970,7 +946,6 @@ CREATE TABLE `category_psm_template` (
 -- Table structure for table `category_related`
 --
 
-DROP TABLE IF EXISTS `category_related`;
 CREATE TABLE `category_related` (
   `category_id` int(11) NOT NULL,
   `related_category_id` int(11) NOT NULL
@@ -982,7 +957,6 @@ CREATE TABLE `category_related` (
 -- Table structure for table `category_review`
 --
 
-DROP TABLE IF EXISTS `category_review`;
 CREATE TABLE `category_review` (
   `categoryreview_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
@@ -998,10 +972,39 @@ CREATE TABLE `category_review` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `category_search_words`
+--
+
+CREATE TABLE `category_search_words` (
+  `category_search_word_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `category_word_type` varchar(64) NOT NULL,
+  `category_search_word` varchar(256) NOT NULL,
+  `category_word_category` varchar(512) NOT NULL,
+  `category_word_category_id` varchar(64) NOT NULL,
+  `category_search_sort` varchar(32) NOT NULL,
+  `category_search_min_price` decimal(15,2) NOT NULL,
+  `category_search_max_price` double(15,2) NOT NULL,
+  `category_search_min_offers` int(11) NOT NULL,
+  `category_search_min_rating` decimal(15,1) NOT NULL DEFAULT 0.0,
+  `category_search_min_reviews` int(11) NOT NULL DEFAULT 0,
+  `category_search_has_prime` tinyint(1) NOT NULL DEFAULT 0,
+  `category_search_exact_words` varchar(512) NOT NULL DEFAULT '0',
+  `category_search_auto` tinyint(1) NOT NULL DEFAULT 0,
+  `category_word_last_search` datetime NOT NULL,
+  `category_word_total_products` int(11) NOT NULL,
+  `category_word_total_pages` int(11) NOT NULL,
+  `category_word_pages_parsed` int(11) NOT NULL,
+  `category_word_product_added` int(11) NOT NULL,
+  `category_word_user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `category_to_actions`
 --
 
-DROP TABLE IF EXISTS `category_to_actions`;
 CREATE TABLE `category_to_actions` (
   `category_id` int(11) NOT NULL,
   `actions_id` int(11) NOT NULL
@@ -1013,7 +1016,6 @@ CREATE TABLE `category_to_actions` (
 -- Table structure for table `category_to_layout`
 --
 
-DROP TABLE IF EXISTS `category_to_layout`;
 CREATE TABLE `category_to_layout` (
   `category_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -1026,7 +1028,6 @@ CREATE TABLE `category_to_layout` (
 -- Table structure for table `category_to_store`
 --
 
-DROP TABLE IF EXISTS `category_to_store`;
 CREATE TABLE `category_to_store` (
   `category_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -1038,7 +1039,6 @@ CREATE TABLE `category_to_store` (
 -- Table structure for table `category_yam_tree`
 --
 
-DROP TABLE IF EXISTS `category_yam_tree`;
 CREATE TABLE `category_yam_tree` (
   `category_id` int(11) NOT NULL,
   `parent_id` int(11) NOT NULL,
@@ -1053,7 +1053,6 @@ CREATE TABLE `category_yam_tree` (
 -- Table structure for table `cdek_cities`
 --
 
-DROP TABLE IF EXISTS `cdek_cities`;
 CREATE TABLE `cdek_cities` (
   `city_id` int(11) NOT NULL,
   `code` int(11) NOT NULL,
@@ -1086,7 +1085,6 @@ CREATE TABLE `cdek_cities` (
 -- Table structure for table `cdek_city`
 --
 
-DROP TABLE IF EXISTS `cdek_city`;
 CREATE TABLE `cdek_city` (
   `id` varchar(11) NOT NULL,
   `name` varchar(64) NOT NULL,
@@ -1104,7 +1102,6 @@ CREATE TABLE `cdek_city` (
 -- Table structure for table `cdek_deliverypoints`
 --
 
-DROP TABLE IF EXISTS `cdek_deliverypoints`;
 CREATE TABLE `cdek_deliverypoints` (
   `deliverypoint_id` int(11) NOT NULL,
   `code` varchar(12) COLLATE utf8mb4_bin NOT NULL,
@@ -1149,7 +1146,6 @@ CREATE TABLE `cdek_deliverypoints` (
 -- Table structure for table `cdek_dispatch`
 --
 
-DROP TABLE IF EXISTS `cdek_dispatch`;
 CREATE TABLE `cdek_dispatch` (
   `dispatch_id` int(11) NOT NULL,
   `dispatch_number` varchar(30) NOT NULL,
@@ -1163,7 +1159,6 @@ CREATE TABLE `cdek_dispatch` (
 -- Table structure for table `cdek_order`
 --
 
-DROP TABLE IF EXISTS `cdek_order`;
 CREATE TABLE `cdek_order` (
   `order_id` int(11) NOT NULL,
   `dispatch_id` int(11) NOT NULL,
@@ -1208,7 +1203,6 @@ CREATE TABLE `cdek_order` (
 -- Table structure for table `cdek_order_add_service`
 --
 
-DROP TABLE IF EXISTS `cdek_order_add_service`;
 CREATE TABLE `cdek_order_add_service` (
   `service_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -1222,7 +1216,6 @@ CREATE TABLE `cdek_order_add_service` (
 -- Table structure for table `cdek_order_call`
 --
 
-DROP TABLE IF EXISTS `cdek_order_call`;
 CREATE TABLE `cdek_order_call` (
   `call_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -1244,7 +1237,6 @@ CREATE TABLE `cdek_order_call` (
 -- Table structure for table `cdek_order_call_history_delay`
 --
 
-DROP TABLE IF EXISTS `cdek_order_call_history_delay`;
 CREATE TABLE `cdek_order_call_history_delay` (
   `order_id` int(11) NOT NULL,
   `date` int(11) NOT NULL,
@@ -1257,7 +1249,6 @@ CREATE TABLE `cdek_order_call_history_delay` (
 -- Table structure for table `cdek_order_call_history_fail`
 --
 
-DROP TABLE IF EXISTS `cdek_order_call_history_fail`;
 CREATE TABLE `cdek_order_call_history_fail` (
   `order_id` int(11) NOT NULL,
   `fail_id` int(11) NOT NULL,
@@ -1271,7 +1262,6 @@ CREATE TABLE `cdek_order_call_history_fail` (
 -- Table structure for table `cdek_order_call_history_good`
 --
 
-DROP TABLE IF EXISTS `cdek_order_call_history_good`;
 CREATE TABLE `cdek_order_call_history_good` (
   `order_id` int(11) NOT NULL,
   `date` int(11) NOT NULL,
@@ -1284,7 +1274,6 @@ CREATE TABLE `cdek_order_call_history_good` (
 -- Table structure for table `cdek_order_courier`
 --
 
-DROP TABLE IF EXISTS `cdek_order_courier`;
 CREATE TABLE `cdek_order_courier` (
   `courier_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -1309,7 +1298,6 @@ CREATE TABLE `cdek_order_courier` (
 -- Table structure for table `cdek_order_delay_history`
 --
 
-DROP TABLE IF EXISTS `cdek_order_delay_history`;
 CREATE TABLE `cdek_order_delay_history` (
   `order_id` int(11) NOT NULL,
   `delay_id` int(11) NOT NULL,
@@ -1323,7 +1311,6 @@ CREATE TABLE `cdek_order_delay_history` (
 -- Table structure for table `cdek_order_package`
 --
 
-DROP TABLE IF EXISTS `cdek_order_package`;
 CREATE TABLE `cdek_order_package` (
   `package_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -1341,7 +1328,6 @@ CREATE TABLE `cdek_order_package` (
 -- Table structure for table `cdek_order_package_item`
 --
 
-DROP TABLE IF EXISTS `cdek_order_package_item`;
 CREATE TABLE `cdek_order_package_item` (
   `package_item_id` int(11) NOT NULL,
   `package_id` int(11) NOT NULL,
@@ -1360,7 +1346,6 @@ CREATE TABLE `cdek_order_package_item` (
 -- Table structure for table `cdek_order_reason`
 --
 
-DROP TABLE IF EXISTS `cdek_order_reason`;
 CREATE TABLE `cdek_order_reason` (
   `reason_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -1374,7 +1359,6 @@ CREATE TABLE `cdek_order_reason` (
 -- Table structure for table `cdek_order_schedule`
 --
 
-DROP TABLE IF EXISTS `cdek_order_schedule`;
 CREATE TABLE `cdek_order_schedule` (
   `attempt_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -1396,7 +1380,6 @@ CREATE TABLE `cdek_order_schedule` (
 -- Table structure for table `cdek_order_schedule_delay`
 --
 
-DROP TABLE IF EXISTS `cdek_order_schedule_delay`;
 CREATE TABLE `cdek_order_schedule_delay` (
   `order_id` int(11) NOT NULL,
   `attempt_id` int(11) NOT NULL,
@@ -1410,7 +1393,6 @@ CREATE TABLE `cdek_order_schedule_delay` (
 -- Table structure for table `cdek_order_status_history`
 --
 
-DROP TABLE IF EXISTS `cdek_order_status_history`;
 CREATE TABLE `cdek_order_status_history` (
   `order_id` int(11) NOT NULL,
   `status_id` int(11) NOT NULL,
@@ -1426,7 +1408,6 @@ CREATE TABLE `cdek_order_status_history` (
 -- Table structure for table `cdek_zones`
 --
 
-DROP TABLE IF EXISTS `cdek_zones`;
 CREATE TABLE `cdek_zones` (
   `zone_id` int(11) NOT NULL,
   `country_id` int(11) NOT NULL,
@@ -1442,7 +1423,6 @@ CREATE TABLE `cdek_zones` (
 -- Table structure for table `collection`
 --
 
-DROP TABLE IF EXISTS `collection`;
 CREATE TABLE `collection` (
   `collection_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -1462,7 +1442,6 @@ CREATE TABLE `collection` (
 -- Table structure for table `collection_description`
 --
 
-DROP TABLE IF EXISTS `collection_description`;
 CREATE TABLE `collection_description` (
   `collection_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -1483,7 +1462,6 @@ CREATE TABLE `collection_description` (
 -- Table structure for table `collection_image`
 --
 
-DROP TABLE IF EXISTS `collection_image`;
 CREATE TABLE `collection_image` (
   `collection_id` int(11) NOT NULL,
   `image` varchar(500) NOT NULL,
@@ -1496,7 +1474,6 @@ CREATE TABLE `collection_image` (
 -- Table structure for table `collection_to_store`
 --
 
-DROP TABLE IF EXISTS `collection_to_store`;
 CREATE TABLE `collection_to_store` (
   `collection_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -1508,7 +1485,6 @@ CREATE TABLE `collection_to_store` (
 -- Table structure for table `competitors`
 --
 
-DROP TABLE IF EXISTS `competitors`;
 CREATE TABLE `competitors` (
   `competitor_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -1522,7 +1498,6 @@ CREATE TABLE `competitors` (
 -- Table structure for table `competitor_price`
 --
 
-DROP TABLE IF EXISTS `competitor_price`;
 CREATE TABLE `competitor_price` (
   `competitor_price_id` int(11) NOT NULL,
   `competitor_id` int(11) NOT NULL,
@@ -1541,7 +1516,6 @@ CREATE TABLE `competitor_price` (
 -- Table structure for table `competitor_urls`
 --
 
-DROP TABLE IF EXISTS `competitor_urls`;
 CREATE TABLE `competitor_urls` (
   `competitor_id` int(11) NOT NULL,
   `url` text NOT NULL,
@@ -1555,7 +1529,6 @@ CREATE TABLE `competitor_urls` (
 -- Table structure for table `counters`
 --
 
-DROP TABLE IF EXISTS `counters`;
 CREATE TABLE `counters` (
   `counter_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -1569,7 +1542,6 @@ CREATE TABLE `counters` (
 -- Table structure for table `country`
 --
 
-DROP TABLE IF EXISTS `country`;
 CREATE TABLE `country` (
   `country_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
@@ -1587,7 +1559,6 @@ CREATE TABLE `country` (
 -- Table structure for table `countrybrand`
 --
 
-DROP TABLE IF EXISTS `countrybrand`;
 CREATE TABLE `countrybrand` (
   `countrybrand_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -1604,7 +1575,6 @@ CREATE TABLE `countrybrand` (
 -- Table structure for table `countrybrand_description`
 --
 
-DROP TABLE IF EXISTS `countrybrand_description`;
 CREATE TABLE `countrybrand_description` (
   `countrybrand_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -1625,7 +1595,6 @@ CREATE TABLE `countrybrand_description` (
 -- Table structure for table `countrybrand_image`
 --
 
-DROP TABLE IF EXISTS `countrybrand_image`;
 CREATE TABLE `countrybrand_image` (
   `countrybrand_id` int(11) NOT NULL,
   `image` varchar(500) NOT NULL,
@@ -1638,7 +1607,6 @@ CREATE TABLE `countrybrand_image` (
 -- Table structure for table `countrybrand_to_store`
 --
 
-DROP TABLE IF EXISTS `countrybrand_to_store`;
 CREATE TABLE `countrybrand_to_store` (
   `countrybrand_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -1650,7 +1618,6 @@ CREATE TABLE `countrybrand_to_store` (
 -- Table structure for table `country_to_fias`
 --
 
-DROP TABLE IF EXISTS `country_to_fias`;
 CREATE TABLE `country_to_fias` (
   `country_id` int(11) NOT NULL,
   `fias_id` int(11) NOT NULL
@@ -1662,7 +1629,6 @@ CREATE TABLE `country_to_fias` (
 -- Table structure for table `coupon`
 --
 
-DROP TABLE IF EXISTS `coupon`;
 CREATE TABLE `coupon` (
   `coupon_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
@@ -1691,7 +1657,9 @@ CREATE TABLE `coupon` (
   `display_list` tinyint(1) NOT NULL DEFAULT 0,
   `action_id` int(11) NOT NULL,
   `only_in_stock` tinyint(1) NOT NULL DEFAULT 0,
-  `display_in_account` tinyint(1) NOT NULL DEFAULT 0
+  `display_in_account` tinyint(1) NOT NULL DEFAULT 0,
+  `random` tinyint(1) NOT NULL DEFAULT 0,
+  `random_string` varchar(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -1700,7 +1668,6 @@ CREATE TABLE `coupon` (
 -- Table structure for table `coupon_category`
 --
 
-DROP TABLE IF EXISTS `coupon_category`;
 CREATE TABLE `coupon_category` (
   `coupon_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
@@ -1712,7 +1679,6 @@ CREATE TABLE `coupon_category` (
 -- Table structure for table `coupon_collection`
 --
 
-DROP TABLE IF EXISTS `coupon_collection`;
 CREATE TABLE `coupon_collection` (
   `coupon_id` int(11) NOT NULL,
   `collection_id` int(11) NOT NULL
@@ -1724,7 +1690,6 @@ CREATE TABLE `coupon_collection` (
 -- Table structure for table `coupon_description`
 --
 
-DROP TABLE IF EXISTS `coupon_description`;
 CREATE TABLE `coupon_description` (
   `coupon_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -1739,7 +1704,6 @@ CREATE TABLE `coupon_description` (
 -- Table structure for table `coupon_history`
 --
 
-DROP TABLE IF EXISTS `coupon_history`;
 CREATE TABLE `coupon_history` (
   `coupon_history_id` int(11) NOT NULL,
   `coupon_id` int(11) NOT NULL,
@@ -1755,7 +1719,6 @@ CREATE TABLE `coupon_history` (
 -- Table structure for table `coupon_manufacturer`
 --
 
-DROP TABLE IF EXISTS `coupon_manufacturer`;
 CREATE TABLE `coupon_manufacturer` (
   `coupon_id` int(11) NOT NULL,
   `manufacturer_id` int(11) NOT NULL
@@ -1767,7 +1730,6 @@ CREATE TABLE `coupon_manufacturer` (
 -- Table structure for table `coupon_product`
 --
 
-DROP TABLE IF EXISTS `coupon_product`;
 CREATE TABLE `coupon_product` (
   `coupon_product_id` int(11) NOT NULL,
   `coupon_id` int(11) NOT NULL,
@@ -1777,10 +1739,22 @@ CREATE TABLE `coupon_product` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `coupon_random`
+--
+
+CREATE TABLE `coupon_random` (
+  `coupon_random_id` int(11) NOT NULL,
+  `coupon_id` int(11) NOT NULL,
+  `coupon_code` varchar(32) NOT NULL,
+  `coupon_random` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `coupon_review`
 --
 
-DROP TABLE IF EXISTS `coupon_review`;
 CREATE TABLE `coupon_review` (
   `coupon_id` int(11) NOT NULL,
   `code` varchar(8) COLLATE utf8mb3_bin NOT NULL,
@@ -1793,7 +1767,6 @@ CREATE TABLE `coupon_review` (
 -- Table structure for table `csvprice_pro`
 --
 
-DROP TABLE IF EXISTS `csvprice_pro`;
 CREATE TABLE `csvprice_pro` (
   `setting_id` int(11) NOT NULL,
   `key` varchar(64) NOT NULL,
@@ -1807,7 +1780,6 @@ CREATE TABLE `csvprice_pro` (
 -- Table structure for table `csvprice_pro_crontab`
 --
 
-DROP TABLE IF EXISTS `csvprice_pro_crontab`;
 CREATE TABLE `csvprice_pro_crontab` (
   `job_id` int(11) NOT NULL,
   `profile_id` int(11) NOT NULL,
@@ -1827,7 +1799,6 @@ CREATE TABLE `csvprice_pro_crontab` (
 -- Table structure for table `csvprice_pro_images`
 --
 
-DROP TABLE IF EXISTS `csvprice_pro_images`;
 CREATE TABLE `csvprice_pro_images` (
   `catalog_id` int(11) NOT NULL,
   `image_key` char(32) NOT NULL,
@@ -1840,7 +1811,6 @@ CREATE TABLE `csvprice_pro_images` (
 -- Table structure for table `csvprice_pro_profiles`
 --
 
-DROP TABLE IF EXISTS `csvprice_pro_profiles`;
 CREATE TABLE `csvprice_pro_profiles` (
   `profile_id` int(11) NOT NULL,
   `key` varchar(64) NOT NULL,
@@ -1855,7 +1825,6 @@ CREATE TABLE `csvprice_pro_profiles` (
 -- Table structure for table `currency`
 --
 
-DROP TABLE IF EXISTS `currency`;
 CREATE TABLE `currency` (
   `currency_id` int(11) NOT NULL,
   `title` varchar(32) NOT NULL,
@@ -1886,7 +1855,6 @@ CREATE TABLE `currency` (
 -- Table structure for table `customer`
 --
 
-DROP TABLE IF EXISTS `customer`;
 CREATE TABLE `customer` (
   `customer_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL DEFAULT 0,
@@ -1897,6 +1865,8 @@ CREATE TABLE `customer` (
   `email` varchar(96) NOT NULL,
   `telephone` varchar(32) NOT NULL,
   `normalized_telephone` varchar(32) NOT NULL,
+  `onetime_code` int(11) DEFAULT NULL,
+  `onetime_code_valid` datetime DEFAULT NULL,
   `fax` varchar(32) NOT NULL,
   `normalized_fax` varchar(32) NOT NULL,
   `password` varchar(40) NOT NULL,
@@ -1936,6 +1906,8 @@ CREATE TABLE `customer` (
   `has_push` tinyint(1) NOT NULL,
   `notify` tinyint(1) NOT NULL,
   `passport_serie` varchar(30) NOT NULL,
+  `passport_date` date NOT NULL,
+  `passport_inn` varchar(64) NOT NULL,
   `passport_given` text NOT NULL,
   `cashless_info` text NOT NULL,
   `sendpulse_push_id` varchar(255) NOT NULL,
@@ -1975,7 +1947,6 @@ CREATE TABLE `customer` (
 -- Table structure for table `customer_ban_ip`
 --
 
-DROP TABLE IF EXISTS `customer_ban_ip`;
 CREATE TABLE `customer_ban_ip` (
   `customer_ban_ip_id` int(11) NOT NULL,
   `ip` varchar(40) NOT NULL
@@ -1987,7 +1958,6 @@ CREATE TABLE `customer_ban_ip` (
 -- Table structure for table `customer_calls`
 --
 
-DROP TABLE IF EXISTS `customer_calls`;
 CREATE TABLE `customer_calls` (
   `customer_call_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2009,7 +1979,6 @@ CREATE TABLE `customer_calls` (
 -- Table structure for table `customer_emails_blacklist`
 --
 
-DROP TABLE IF EXISTS `customer_emails_blacklist`;
 CREATE TABLE `customer_emails_blacklist` (
   `email` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL
@@ -2021,7 +1990,6 @@ CREATE TABLE `customer_emails_blacklist` (
 -- Table structure for table `customer_emails_whitelist`
 --
 
-DROP TABLE IF EXISTS `customer_emails_whitelist`;
 CREATE TABLE `customer_emails_whitelist` (
   `email` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL
@@ -2033,7 +2001,6 @@ CREATE TABLE `customer_emails_whitelist` (
 -- Table structure for table `customer_email_campaigns`
 --
 
-DROP TABLE IF EXISTS `customer_email_campaigns`;
 CREATE TABLE `customer_email_campaigns` (
   `customer_email_campaigns_id` bigint(20) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2049,7 +2016,6 @@ CREATE TABLE `customer_email_campaigns` (
 -- Table structure for table `customer_email_campaigns_names`
 --
 
-DROP TABLE IF EXISTS `customer_email_campaigns_names`;
 CREATE TABLE `customer_email_campaigns_names` (
   `email_campaign_mailwizz_id` varchar(100) NOT NULL,
   `email_campaign_name` varchar(255) NOT NULL
@@ -2061,7 +2027,6 @@ CREATE TABLE `customer_email_campaigns_names` (
 -- Table structure for table `customer_field`
 --
 
-DROP TABLE IF EXISTS `customer_field`;
 CREATE TABLE `customer_field` (
   `customer_id` int(11) NOT NULL,
   `custom_field_id` int(11) NOT NULL,
@@ -2077,7 +2042,6 @@ CREATE TABLE `customer_field` (
 -- Table structure for table `customer_group`
 --
 
-DROP TABLE IF EXISTS `customer_group`;
 CREATE TABLE `customer_group` (
   `customer_group_id` int(11) NOT NULL,
   `approval` int(11) NOT NULL,
@@ -2094,7 +2058,6 @@ CREATE TABLE `customer_group` (
 -- Table structure for table `customer_group_description`
 --
 
-DROP TABLE IF EXISTS `customer_group_description`;
 CREATE TABLE `customer_group_description` (
   `customer_group_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2108,7 +2071,6 @@ CREATE TABLE `customer_group_description` (
 -- Table structure for table `customer_group_price`
 --
 
-DROP TABLE IF EXISTS `customer_group_price`;
 CREATE TABLE `customer_group_price` (
   `customer_group_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
@@ -2122,7 +2084,6 @@ CREATE TABLE `customer_group_price` (
 -- Table structure for table `customer_history`
 --
 
-DROP TABLE IF EXISTS `customer_history`;
 CREATE TABLE `customer_history` (
   `customer_history_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2146,7 +2107,6 @@ CREATE TABLE `customer_history` (
 -- Table structure for table `customer_ip`
 --
 
-DROP TABLE IF EXISTS `customer_ip`;
 CREATE TABLE `customer_ip` (
   `customer_ip_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2160,7 +2120,6 @@ CREATE TABLE `customer_ip` (
 -- Table structure for table `customer_online`
 --
 
-DROP TABLE IF EXISTS `customer_online`;
 CREATE TABLE `customer_online` (
   `ip` varchar(40) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2178,7 +2137,6 @@ CREATE TABLE `customer_online` (
 -- Table structure for table `customer_online_history`
 --
 
-DROP TABLE IF EXISTS `customer_online_history`;
 CREATE TABLE `customer_online_history` (
   `customer_count` int(11) NOT NULL,
   `date_added` datetime NOT NULL
@@ -2190,7 +2148,6 @@ CREATE TABLE `customer_online_history` (
 -- Table structure for table `customer_push_ids`
 --
 
-DROP TABLE IF EXISTS `customer_push_ids`;
 CREATE TABLE `customer_push_ids` (
   `customer_id` int(11) NOT NULL,
   `sendpulse_push_id` varchar(255) NOT NULL,
@@ -2203,7 +2160,6 @@ CREATE TABLE `customer_push_ids` (
 -- Table structure for table `customer_reward`
 --
 
-DROP TABLE IF EXISTS `customer_reward`;
 CREATE TABLE `customer_reward` (
   `customer_reward_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL DEFAULT 0,
@@ -2224,7 +2180,6 @@ CREATE TABLE `customer_reward` (
 -- Table structure for table `customer_reward_queue`
 --
 
-DROP TABLE IF EXISTS `customer_reward_queue`;
 CREATE TABLE `customer_reward_queue` (
   `customer_reward_queue_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2242,7 +2197,6 @@ CREATE TABLE `customer_reward_queue` (
 -- Table structure for table `customer_search_history`
 --
 
-DROP TABLE IF EXISTS `customer_search_history`;
 CREATE TABLE `customer_search_history` (
   `customer_history_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2256,7 +2210,6 @@ CREATE TABLE `customer_search_history` (
 -- Table structure for table `customer_segments`
 --
 
-DROP TABLE IF EXISTS `customer_segments`;
 CREATE TABLE `customer_segments` (
   `customer_id` int(11) NOT NULL,
   `segment_id` int(11) NOT NULL,
@@ -2269,7 +2222,6 @@ CREATE TABLE `customer_segments` (
 -- Table structure for table `customer_simple_fields`
 --
 
-DROP TABLE IF EXISTS `customer_simple_fields`;
 CREATE TABLE `customer_simple_fields` (
   `customer_id` int(11) NOT NULL,
   `metadata` text DEFAULT NULL,
@@ -2284,7 +2236,6 @@ CREATE TABLE `customer_simple_fields` (
 -- Table structure for table `customer_test`
 --
 
-DROP TABLE IF EXISTS `customer_test`;
 CREATE TABLE `customer_test` (
   `email` varchar(255) NOT NULL,
   `firstname` varchar(255) NOT NULL
@@ -2296,7 +2247,6 @@ CREATE TABLE `customer_test` (
 -- Table structure for table `customer_transaction`
 --
 
-DROP TABLE IF EXISTS `customer_transaction`;
 CREATE TABLE `customer_transaction` (
   `customer_transaction_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2328,7 +2278,6 @@ CREATE TABLE `customer_transaction` (
 -- Table structure for table `customer_viewed`
 --
 
-DROP TABLE IF EXISTS `customer_viewed`;
 CREATE TABLE `customer_viewed` (
   `customer_id` int(11) NOT NULL,
   `type` enum('c','m','p') NOT NULL,
@@ -2342,7 +2291,6 @@ CREATE TABLE `customer_viewed` (
 -- Table structure for table `custom_field`
 --
 
-DROP TABLE IF EXISTS `custom_field`;
 CREATE TABLE `custom_field` (
   `custom_field_id` int(11) NOT NULL,
   `type` varchar(32) NOT NULL,
@@ -2359,7 +2307,6 @@ CREATE TABLE `custom_field` (
 -- Table structure for table `custom_field_description`
 --
 
-DROP TABLE IF EXISTS `custom_field_description`;
 CREATE TABLE `custom_field_description` (
   `custom_field_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2372,7 +2319,6 @@ CREATE TABLE `custom_field_description` (
 -- Table structure for table `custom_field_to_customer_group`
 --
 
-DROP TABLE IF EXISTS `custom_field_to_customer_group`;
 CREATE TABLE `custom_field_to_customer_group` (
   `custom_field_id` int(11) NOT NULL,
   `customer_group_id` int(11) NOT NULL
@@ -2384,7 +2330,6 @@ CREATE TABLE `custom_field_to_customer_group` (
 -- Table structure for table `custom_field_value`
 --
 
-DROP TABLE IF EXISTS `custom_field_value`;
 CREATE TABLE `custom_field_value` (
   `custom_field_value_id` int(11) NOT NULL,
   `custom_field_id` int(11) NOT NULL,
@@ -2397,7 +2342,6 @@ CREATE TABLE `custom_field_value` (
 -- Table structure for table `custom_field_value_description`
 --
 
-DROP TABLE IF EXISTS `custom_field_value_description`;
 CREATE TABLE `custom_field_value_description` (
   `custom_field_value_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2411,7 +2355,6 @@ CREATE TABLE `custom_field_value_description` (
 -- Table structure for table `custom_url_404`
 --
 
-DROP TABLE IF EXISTS `custom_url_404`;
 CREATE TABLE `custom_url_404` (
   `custom_url_404_id` int(11) NOT NULL,
   `hit` int(11) DEFAULT NULL,
@@ -2425,7 +2368,6 @@ CREATE TABLE `custom_url_404` (
 -- Table structure for table `deleted_asins`
 --
 
-DROP TABLE IF EXISTS `deleted_asins`;
 CREATE TABLE `deleted_asins` (
   `asin` varchar(16) NOT NULL,
   `name` varchar(1024) NOT NULL,
@@ -2439,7 +2381,6 @@ CREATE TABLE `deleted_asins` (
 -- Table structure for table `direct_timezones`
 --
 
-DROP TABLE IF EXISTS `direct_timezones`;
 CREATE TABLE `direct_timezones` (
   `geomd5` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   `timezone` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL
@@ -2451,7 +2392,6 @@ CREATE TABLE `direct_timezones` (
 -- Table structure for table `download`
 --
 
-DROP TABLE IF EXISTS `download`;
 CREATE TABLE `download` (
   `download_id` int(11) NOT NULL,
   `filename` varchar(128) NOT NULL,
@@ -2466,7 +2406,6 @@ CREATE TABLE `download` (
 -- Table structure for table `download_description`
 --
 
-DROP TABLE IF EXISTS `download_description`;
 CREATE TABLE `download_description` (
   `download_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2479,7 +2418,6 @@ CREATE TABLE `download_description` (
 -- Table structure for table `emailmarketing_logs`
 --
 
-DROP TABLE IF EXISTS `emailmarketing_logs`;
 CREATE TABLE `emailmarketing_logs` (
   `emailmarketing_log_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2505,7 +2443,6 @@ CREATE TABLE `emailmarketing_logs` (
 -- Table structure for table `emailtemplate`
 --
 
-DROP TABLE IF EXISTS `emailtemplate`;
 CREATE TABLE `emailtemplate` (
   `emailtemplate_id` int(11) NOT NULL,
   `emailtemplate_key` varchar(64) NOT NULL,
@@ -2546,7 +2483,6 @@ CREATE TABLE `emailtemplate` (
 -- Table structure for table `emailtemplate_config`
 --
 
-DROP TABLE IF EXISTS `emailtemplate_config`;
 CREATE TABLE `emailtemplate_config` (
   `emailtemplate_config_id` int(11) NOT NULL,
   `emailtemplate_config_name` varchar(64) NOT NULL,
@@ -2620,7 +2556,6 @@ CREATE TABLE `emailtemplate_config` (
 -- Table structure for table `emailtemplate_description`
 --
 
-DROP TABLE IF EXISTS `emailtemplate_description`;
 CREATE TABLE `emailtemplate_description` (
   `emailtemplate_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2639,7 +2574,6 @@ CREATE TABLE `emailtemplate_description` (
 -- Table structure for table `emailtemplate_logs`
 --
 
-DROP TABLE IF EXISTS `emailtemplate_logs`;
 CREATE TABLE `emailtemplate_logs` (
   `emailtemplate_log_id` bigint(20) UNSIGNED NOT NULL,
   `emailtemplate_log_sent` datetime DEFAULT NULL,
@@ -2671,7 +2605,6 @@ CREATE TABLE `emailtemplate_logs` (
 -- Table structure for table `emailtemplate_shortcode`
 --
 
-DROP TABLE IF EXISTS `emailtemplate_shortcode`;
 CREATE TABLE `emailtemplate_shortcode` (
   `emailtemplate_shortcode_id` int(11) NOT NULL,
   `emailtemplate_shortcode_code` varchar(255) NOT NULL,
@@ -2686,7 +2619,6 @@ CREATE TABLE `emailtemplate_shortcode` (
 -- Table structure for table `email_emailto`
 --
 
-DROP TABLE IF EXISTS `email_emailto`;
 CREATE TABLE `email_emailto` (
   `email` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -2697,7 +2629,6 @@ CREATE TABLE `email_emailto` (
 -- Table structure for table `entity_reward`
 --
 
-DROP TABLE IF EXISTS `entity_reward`;
 CREATE TABLE `entity_reward` (
   `entity_reward_id` int(11) NOT NULL,
   `entity_id` int(11) NOT NULL,
@@ -2716,7 +2647,6 @@ CREATE TABLE `entity_reward` (
 -- Table structure for table `excluded_asins`
 --
 
-DROP TABLE IF EXISTS `excluded_asins`;
 CREATE TABLE `excluded_asins` (
   `text` varchar(255) NOT NULL,
   `category_id` int(11) NOT NULL DEFAULT 0,
@@ -2731,7 +2661,6 @@ CREATE TABLE `excluded_asins` (
 -- Table structure for table `extension`
 --
 
-DROP TABLE IF EXISTS `extension`;
 CREATE TABLE `extension` (
   `extension_id` int(11) NOT NULL,
   `type` varchar(32) NOT NULL,
@@ -2744,7 +2673,6 @@ CREATE TABLE `extension` (
 -- Table structure for table `facategory`
 --
 
-DROP TABLE IF EXISTS `facategory`;
 CREATE TABLE `facategory` (
   `facategory_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL
@@ -2756,7 +2684,6 @@ CREATE TABLE `facategory` (
 -- Table structure for table `facategory_to_faproduct`
 --
 
-DROP TABLE IF EXISTS `facategory_to_faproduct`;
 CREATE TABLE `facategory_to_faproduct` (
   `facategory_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL
@@ -2768,7 +2695,6 @@ CREATE TABLE `facategory_to_faproduct` (
 -- Table structure for table `faproduct_to_facategory`
 --
 
-DROP TABLE IF EXISTS `faproduct_to_facategory`;
 CREATE TABLE `faproduct_to_facategory` (
   `product_id` int(11) NOT NULL,
   `facategory_id` int(11) NOT NULL
@@ -2780,7 +2706,6 @@ CREATE TABLE `faproduct_to_facategory` (
 -- Table structure for table `faq_category`
 --
 
-DROP TABLE IF EXISTS `faq_category`;
 CREATE TABLE `faq_category` (
   `category_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0,
@@ -2793,7 +2718,6 @@ CREATE TABLE `faq_category` (
 -- Table structure for table `faq_category_description`
 --
 
-DROP TABLE IF EXISTS `faq_category_description`;
 CREATE TABLE `faq_category_description` (
   `category_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2806,7 +2730,6 @@ CREATE TABLE `faq_category_description` (
 -- Table structure for table `faq_question`
 --
 
-DROP TABLE IF EXISTS `faq_question`;
 CREATE TABLE `faq_question` (
   `question_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
@@ -2820,7 +2743,6 @@ CREATE TABLE `faq_question` (
 -- Table structure for table `faq_question_description`
 --
 
-DROP TABLE IF EXISTS `faq_question_description`;
 CREATE TABLE `faq_question_description` (
   `question_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2834,7 +2756,6 @@ CREATE TABLE `faq_question_description` (
 -- Table structure for table `feed_queue`
 --
 
-DROP TABLE IF EXISTS `feed_queue`;
 CREATE TABLE `feed_queue` (
   `category_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -2845,7 +2766,6 @@ CREATE TABLE `feed_queue` (
 -- Table structure for table `filter`
 --
 
-DROP TABLE IF EXISTS `filter`;
 CREATE TABLE `filter` (
   `filter_id` int(11) NOT NULL,
   `filter_group_id` int(11) NOT NULL,
@@ -2858,7 +2778,6 @@ CREATE TABLE `filter` (
 -- Table structure for table `filterpro_seo`
 --
 
-DROP TABLE IF EXISTS `filterpro_seo`;
 CREATE TABLE `filterpro_seo` (
   `url` varchar(255) NOT NULL,
   `data` text NOT NULL
@@ -2870,7 +2789,6 @@ CREATE TABLE `filterpro_seo` (
 -- Table structure for table `filter_description`
 --
 
-DROP TABLE IF EXISTS `filter_description`;
 CREATE TABLE `filter_description` (
   `filter_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2884,7 +2802,6 @@ CREATE TABLE `filter_description` (
 -- Table structure for table `filter_group`
 --
 
-DROP TABLE IF EXISTS `filter_group`;
 CREATE TABLE `filter_group` (
   `filter_group_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL
@@ -2896,7 +2813,6 @@ CREATE TABLE `filter_group` (
 -- Table structure for table `filter_group_description`
 --
 
-DROP TABLE IF EXISTS `filter_group_description`;
 CREATE TABLE `filter_group_description` (
   `filter_group_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2909,7 +2825,6 @@ CREATE TABLE `filter_group_description` (
 -- Table structure for table `geo`
 --
 
-DROP TABLE IF EXISTS `geo`;
 CREATE TABLE `geo` (
   `id` int(11) NOT NULL,
   `zone_id` int(11) NOT NULL,
@@ -2928,7 +2843,6 @@ CREATE TABLE `geo` (
 -- Table structure for table `geoname_alternatename`
 --
 
-DROP TABLE IF EXISTS `geoname_alternatename`;
 CREATE TABLE `geoname_alternatename` (
   `alternatenameId` int(11) NOT NULL,
   `geonameid` int(11) DEFAULT NULL,
@@ -2946,7 +2860,6 @@ CREATE TABLE `geoname_alternatename` (
 -- Table structure for table `geoname_geoname`
 --
 
-DROP TABLE IF EXISTS `geoname_geoname`;
 CREATE TABLE `geoname_geoname` (
   `geonameid` int(11) NOT NULL,
   `name` varchar(200) DEFAULT NULL,
@@ -2975,7 +2888,6 @@ CREATE TABLE `geoname_geoname` (
 -- Table structure for table `geo_ip`
 --
 
-DROP TABLE IF EXISTS `geo_ip`;
 CREATE TABLE `geo_ip` (
   `start` bigint(20) NOT NULL,
   `end` bigint(20) NOT NULL,
@@ -2988,7 +2900,6 @@ CREATE TABLE `geo_ip` (
 -- Table structure for table `geo_zone`
 --
 
-DROP TABLE IF EXISTS `geo_zone`;
 CREATE TABLE `geo_zone` (
   `geo_zone_id` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
@@ -3003,7 +2914,6 @@ CREATE TABLE `geo_zone` (
 -- Table structure for table `google_base_category`
 --
 
-DROP TABLE IF EXISTS `google_base_category`;
 CREATE TABLE `google_base_category` (
   `google_base_category_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL
@@ -3015,7 +2925,6 @@ CREATE TABLE `google_base_category` (
 -- Table structure for table `hj_any_feed_feeds`
 --
 
-DROP TABLE IF EXISTS `hj_any_feed_feeds`;
 CREATE TABLE `hj_any_feed_feeds` (
   `id` int(11) NOT NULL,
   `name` varchar(256) DEFAULT NULL,
@@ -3031,7 +2940,6 @@ CREATE TABLE `hj_any_feed_feeds` (
 -- Table structure for table `imagemaps`
 --
 
-DROP TABLE IF EXISTS `imagemaps`;
 CREATE TABLE `imagemaps` (
   `imagemap_id` int(11) NOT NULL,
   `module_code` varchar(64) NOT NULL,
@@ -3045,7 +2953,6 @@ CREATE TABLE `imagemaps` (
 -- Table structure for table `information`
 --
 
-DROP TABLE IF EXISTS `information`;
 CREATE TABLE `information` (
   `information_id` int(11) NOT NULL,
   `bottom` int(11) NOT NULL DEFAULT 0,
@@ -3062,7 +2969,6 @@ CREATE TABLE `information` (
 -- Table structure for table `information_attribute`
 --
 
-DROP TABLE IF EXISTS `information_attribute`;
 CREATE TABLE `information_attribute` (
   `information_attribute_id` int(11) NOT NULL,
   `bottom` int(11) NOT NULL DEFAULT 0,
@@ -3079,7 +2985,6 @@ CREATE TABLE `information_attribute` (
 -- Table structure for table `information_attribute_description`
 --
 
-DROP TABLE IF EXISTS `information_attribute_description`;
 CREATE TABLE `information_attribute_description` (
   `information_attribute_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3097,7 +3002,6 @@ CREATE TABLE `information_attribute_description` (
 -- Table structure for table `information_attribute_to_layout`
 --
 
-DROP TABLE IF EXISTS `information_attribute_to_layout`;
 CREATE TABLE `information_attribute_to_layout` (
   `information_attribute_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -3110,7 +3014,6 @@ CREATE TABLE `information_attribute_to_layout` (
 -- Table structure for table `information_attribute_to_store`
 --
 
-DROP TABLE IF EXISTS `information_attribute_to_store`;
 CREATE TABLE `information_attribute_to_store` (
   `information_attribute_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -3122,7 +3025,6 @@ CREATE TABLE `information_attribute_to_store` (
 -- Table structure for table `information_description`
 --
 
-DROP TABLE IF EXISTS `information_description`;
 CREATE TABLE `information_description` (
   `information_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3140,7 +3042,6 @@ CREATE TABLE `information_description` (
 -- Table structure for table `information_to_layout`
 --
 
-DROP TABLE IF EXISTS `information_to_layout`;
 CREATE TABLE `information_to_layout` (
   `information_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -3153,7 +3054,6 @@ CREATE TABLE `information_to_layout` (
 -- Table structure for table `information_to_store`
 --
 
-DROP TABLE IF EXISTS `information_to_store`;
 CREATE TABLE `information_to_store` (
   `information_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -3165,7 +3065,6 @@ CREATE TABLE `information_to_store` (
 -- Table structure for table `interplusplus`
 --
 
-DROP TABLE IF EXISTS `interplusplus`;
 CREATE TABLE `interplusplus` (
   `inter_id` int(11) NOT NULL,
   `num_order` int(11) DEFAULT NULL,
@@ -3183,7 +3082,6 @@ CREATE TABLE `interplusplus` (
 -- Table structure for table `justin_cities`
 --
 
-DROP TABLE IF EXISTS `justin_cities`;
 CREATE TABLE `justin_cities` (
   `city_id` int(11) NOT NULL,
   `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3203,7 +3101,6 @@ CREATE TABLE `justin_cities` (
 -- Table structure for table `justin_city_regions`
 --
 
-DROP TABLE IF EXISTS `justin_city_regions`;
 CREATE TABLE `justin_city_regions` (
   `region_id` int(11) NOT NULL,
   `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3222,7 +3119,6 @@ CREATE TABLE `justin_city_regions` (
 -- Table structure for table `justin_streets`
 --
 
-DROP TABLE IF EXISTS `justin_streets`;
 CREATE TABLE `justin_streets` (
   `street_id` int(11) NOT NULL,
   `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3240,7 +3136,6 @@ CREATE TABLE `justin_streets` (
 -- Table structure for table `justin_warehouses`
 --
 
-DROP TABLE IF EXISTS `justin_warehouses`;
 CREATE TABLE `justin_warehouses` (
   `warehouse_id` int(11) NOT NULL,
   `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3276,7 +3171,6 @@ CREATE TABLE `justin_warehouses` (
 -- Table structure for table `justin_zones`
 --
 
-DROP TABLE IF EXISTS `justin_zones`;
 CREATE TABLE `justin_zones` (
   `zone_id` int(11) NOT NULL,
   `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3292,7 +3186,6 @@ CREATE TABLE `justin_zones` (
 -- Table structure for table `justin_zone_regions`
 --
 
-DROP TABLE IF EXISTS `justin_zone_regions`;
 CREATE TABLE `justin_zone_regions` (
   `region_id` int(11) NOT NULL,
   `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3311,7 +3204,6 @@ CREATE TABLE `justin_zone_regions` (
 -- Table structure for table `keyworder`
 --
 
-DROP TABLE IF EXISTS `keyworder`;
 CREATE TABLE `keyworder` (
   `keyworder_id` int(11) NOT NULL,
   `manufacturer_id` int(11) NOT NULL,
@@ -3324,7 +3216,6 @@ CREATE TABLE `keyworder` (
 -- Table structure for table `keyworder_description`
 --
 
-DROP TABLE IF EXISTS `keyworder_description`;
 CREATE TABLE `keyworder_description` (
   `keyworder_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3344,7 +3235,6 @@ CREATE TABLE `keyworder_description` (
 -- Table structure for table `landingpage`
 --
 
-DROP TABLE IF EXISTS `landingpage`;
 CREATE TABLE `landingpage` (
   `landingpage_id` int(11) NOT NULL,
   `bottom` int(11) NOT NULL DEFAULT 0,
@@ -3360,7 +3250,6 @@ CREATE TABLE `landingpage` (
 -- Table structure for table `landingpage_description`
 --
 
-DROP TABLE IF EXISTS `landingpage_description`;
 CREATE TABLE `landingpage_description` (
   `landingpage_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3378,7 +3267,6 @@ CREATE TABLE `landingpage_description` (
 -- Table structure for table `landingpage_to_layout`
 --
 
-DROP TABLE IF EXISTS `landingpage_to_layout`;
 CREATE TABLE `landingpage_to_layout` (
   `landingpage_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -3391,7 +3279,6 @@ CREATE TABLE `landingpage_to_layout` (
 -- Table structure for table `landingpage_to_store`
 --
 
-DROP TABLE IF EXISTS `landingpage_to_store`;
 CREATE TABLE `landingpage_to_store` (
   `landingpage_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -3403,7 +3290,6 @@ CREATE TABLE `landingpage_to_store` (
 -- Table structure for table `language`
 --
 
-DROP TABLE IF EXISTS `language`;
 CREATE TABLE `language` (
   `language_id` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
@@ -3427,7 +3313,6 @@ CREATE TABLE `language` (
 -- Table structure for table `layout`
 --
 
-DROP TABLE IF EXISTS `layout`;
 CREATE TABLE `layout` (
   `layout_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL
@@ -3439,7 +3324,6 @@ CREATE TABLE `layout` (
 -- Table structure for table `layout_route`
 --
 
-DROP TABLE IF EXISTS `layout_route`;
 CREATE TABLE `layout_route` (
   `layout_route_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL,
@@ -3454,7 +3338,6 @@ CREATE TABLE `layout_route` (
 -- Table structure for table `legalperson`
 --
 
-DROP TABLE IF EXISTS `legalperson`;
 CREATE TABLE `legalperson` (
   `legalperson_id` int(11) NOT NULL,
   `legalperson_name` varchar(255) NOT NULL,
@@ -3473,7 +3356,6 @@ CREATE TABLE `legalperson` (
 -- Table structure for table `length_class`
 --
 
-DROP TABLE IF EXISTS `length_class`;
 CREATE TABLE `length_class` (
   `length_class_id` int(11) NOT NULL,
   `value` decimal(15,8) NOT NULL,
@@ -3488,7 +3370,6 @@ CREATE TABLE `length_class` (
 -- Table structure for table `length_class_description`
 --
 
-DROP TABLE IF EXISTS `length_class_description`;
 CREATE TABLE `length_class_description` (
   `length_class_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3502,7 +3383,6 @@ CREATE TABLE `length_class_description` (
 -- Table structure for table `local_supplier_products`
 --
 
-DROP TABLE IF EXISTS `local_supplier_products`;
 CREATE TABLE `local_supplier_products` (
   `supplier_id` int(11) NOT NULL,
   `supplier_product_id` int(11) NOT NULL,
@@ -3522,7 +3402,6 @@ CREATE TABLE `local_supplier_products` (
 -- Table structure for table `mailwizz_queue`
 --
 
-DROP TABLE IF EXISTS `mailwizz_queue`;
 CREATE TABLE `mailwizz_queue` (
   `customer_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -3533,7 +3412,6 @@ CREATE TABLE `mailwizz_queue` (
 -- Table structure for table `manager_kpi`
 --
 
-DROP TABLE IF EXISTS `manager_kpi`;
 CREATE TABLE `manager_kpi` (
   `manager_id` int(11) NOT NULL,
   `date_added` date NOT NULL,
@@ -3546,7 +3424,6 @@ CREATE TABLE `manager_kpi` (
 -- Table structure for table `manager_order_status_dynamics`
 --
 
-DROP TABLE IF EXISTS `manager_order_status_dynamics`;
 CREATE TABLE `manager_order_status_dynamics` (
   `manager_id` int(11) NOT NULL,
   `order_status_id` int(11) NOT NULL,
@@ -3560,7 +3437,6 @@ CREATE TABLE `manager_order_status_dynamics` (
 -- Table structure for table `manager_order_status_dynamics2`
 --
 
-DROP TABLE IF EXISTS `manager_order_status_dynamics2`;
 CREATE TABLE `manager_order_status_dynamics2` (
   `manager_id` int(11) NOT NULL,
   `order_status_id` int(11) NOT NULL,
@@ -3574,7 +3450,6 @@ CREATE TABLE `manager_order_status_dynamics2` (
 -- Table structure for table `manufacturer`
 --
 
-DROP TABLE IF EXISTS `manufacturer`;
 CREATE TABLE `manufacturer` (
   `manufacturer_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
@@ -3588,10 +3463,15 @@ CREATE TABLE `manufacturer` (
   `banner_width` int(11) NOT NULL,
   `banner_height` int(11) NOT NULL,
   `tpl` varchar(255) NOT NULL,
+  `new` tinyint(1) NOT NULL DEFAULT 0,
   `priceva_enable` tinyint(4) NOT NULL DEFAULT 0,
   `priceva_feed` varchar(32) NOT NULL DEFAULT '0',
   `hotline_enable` tinyint(1) NOT NULL DEFAULT 0,
-  `sort_order` int(11) NOT NULL
+  `bought_for_month` int(11) DEFAULT 0,
+  `products_total` int(11) DEFAULT 0,
+  `products_total_enabled` int(11) DEFAULT 0,
+  `sort_order` int(11) NOT NULL,
+  `date_added` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -3600,7 +3480,6 @@ CREATE TABLE `manufacturer` (
 -- Table structure for table `manufacturer_description`
 --
 
-DROP TABLE IF EXISTS `manufacturer_description`;
 CREATE TABLE `manufacturer_description` (
   `manufacturer_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3634,7 +3513,6 @@ CREATE TABLE `manufacturer_description` (
 -- Table structure for table `manufacturer_page_content`
 --
 
-DROP TABLE IF EXISTS `manufacturer_page_content`;
 CREATE TABLE `manufacturer_page_content` (
   `manufacturer_page_content_id` int(11) NOT NULL,
   `manufacturer_id` int(11) NOT NULL,
@@ -3654,7 +3532,6 @@ CREATE TABLE `manufacturer_page_content` (
 -- Table structure for table `manufacturer_to_layout`
 --
 
-DROP TABLE IF EXISTS `manufacturer_to_layout`;
 CREATE TABLE `manufacturer_to_layout` (
   `manufacturer_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -3667,7 +3544,6 @@ CREATE TABLE `manufacturer_to_layout` (
 -- Table structure for table `manufacturer_to_store`
 --
 
-DROP TABLE IF EXISTS `manufacturer_to_store`;
 CREATE TABLE `manufacturer_to_store` (
   `manufacturer_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -3679,7 +3555,6 @@ CREATE TABLE `manufacturer_to_store` (
 -- Table structure for table `maxmind_geo_country`
 --
 
-DROP TABLE IF EXISTS `maxmind_geo_country`;
 CREATE TABLE `maxmind_geo_country` (
   `start` bigint(20) NOT NULL,
   `end` bigint(20) NOT NULL,
@@ -3692,15 +3567,17 @@ CREATE TABLE `maxmind_geo_country` (
 -- Table structure for table `mono_orders`
 --
 
-DROP TABLE IF EXISTS `mono_orders`;
 CREATE TABLE `mono_orders` (
   `Id` int(11) NOT NULL,
   `InvoiceId` varchar(50) DEFAULT NULL,
+  `CheckoutOrderId` varchar(255) NOT NULL,
   `OrderId` int(10) DEFAULT NULL,
   `SecretKey` varchar(51) DEFAULT NULL,
   `is_refunded` int(10) DEFAULT 0,
   `amount_refunded` decimal(15,4) DEFAULT 0.0000,
   `refund_status` varchar(51) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `payment_data` longtext DEFAULT NULL,
   `is_hold` int(10) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
@@ -3710,7 +3587,6 @@ CREATE TABLE `mono_orders` (
 -- Table structure for table `multi_pay_payment`
 --
 
-DROP TABLE IF EXISTS `multi_pay_payment`;
 CREATE TABLE `multi_pay_payment` (
   `payment_id` int(11) NOT NULL,
   `service_cod` varchar(50) DEFAULT NULL,
@@ -3730,7 +3606,6 @@ CREATE TABLE `multi_pay_payment` (
 -- Table structure for table `nauthor`
 --
 
-DROP TABLE IF EXISTS `nauthor`;
 CREATE TABLE `nauthor` (
   `nauthor_id` int(11) NOT NULL,
   `adminid` varchar(64) COLLATE utf8mb3_bin NOT NULL,
@@ -3744,7 +3619,6 @@ CREATE TABLE `nauthor` (
 -- Table structure for table `nauthor_description`
 --
 
-DROP TABLE IF EXISTS `nauthor_description`;
 CREATE TABLE `nauthor_description` (
   `nauthor_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3760,7 +3634,6 @@ CREATE TABLE `nauthor_description` (
 -- Table structure for table `ncategory`
 --
 
-DROP TABLE IF EXISTS `ncategory`;
 CREATE TABLE `ncategory` (
   `ncategory_id` int(11) NOT NULL,
   `image` varchar(255) COLLATE utf8mb3_bin DEFAULT NULL,
@@ -3779,7 +3652,6 @@ CREATE TABLE `ncategory` (
 -- Table structure for table `ncategory_description`
 --
 
-DROP TABLE IF EXISTS `ncategory_description`;
 CREATE TABLE `ncategory_description` (
   `ncategory_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3795,7 +3667,6 @@ CREATE TABLE `ncategory_description` (
 -- Table structure for table `ncategory_to_layout`
 --
 
-DROP TABLE IF EXISTS `ncategory_to_layout`;
 CREATE TABLE `ncategory_to_layout` (
   `ncategory_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -3808,7 +3679,6 @@ CREATE TABLE `ncategory_to_layout` (
 -- Table structure for table `ncategory_to_store`
 --
 
-DROP TABLE IF EXISTS `ncategory_to_store`;
 CREATE TABLE `ncategory_to_store` (
   `ncategory_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -3820,7 +3690,6 @@ CREATE TABLE `ncategory_to_store` (
 -- Table structure for table `ncomments`
 --
 
-DROP TABLE IF EXISTS `ncomments`;
 CREATE TABLE `ncomments` (
   `ncomment_id` int(11) NOT NULL,
   `news_id` int(11) NOT NULL,
@@ -3839,7 +3708,6 @@ CREATE TABLE `ncomments` (
 -- Table structure for table `news`
 --
 
-DROP TABLE IF EXISTS `news`;
 CREATE TABLE `news` (
   `news_id` int(11) NOT NULL,
   `nauthor_id` int(11) NOT NULL,
@@ -3867,7 +3735,6 @@ CREATE TABLE `news` (
 -- Table structure for table `news_description`
 --
 
-DROP TABLE IF EXISTS `news_description`;
 CREATE TABLE `news_description` (
   `news_id` int(11) NOT NULL DEFAULT 0,
   `language_id` int(11) NOT NULL DEFAULT 0,
@@ -3891,7 +3758,6 @@ CREATE TABLE `news_description` (
 -- Table structure for table `news_gallery`
 --
 
-DROP TABLE IF EXISTS `news_gallery`;
 CREATE TABLE `news_gallery` (
   `news_image_id` int(11) NOT NULL,
   `news_id` int(11) NOT NULL,
@@ -3906,7 +3772,6 @@ CREATE TABLE `news_gallery` (
 -- Table structure for table `news_related`
 --
 
-DROP TABLE IF EXISTS `news_related`;
 CREATE TABLE `news_related` (
   `news_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL
@@ -3918,7 +3783,6 @@ CREATE TABLE `news_related` (
 -- Table structure for table `news_to_layout`
 --
 
-DROP TABLE IF EXISTS `news_to_layout`;
 CREATE TABLE `news_to_layout` (
   `news_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -3931,7 +3795,6 @@ CREATE TABLE `news_to_layout` (
 -- Table structure for table `news_to_ncategory`
 --
 
-DROP TABLE IF EXISTS `news_to_ncategory`;
 CREATE TABLE `news_to_ncategory` (
   `news_id` int(11) NOT NULL,
   `ncategory_id` int(11) NOT NULL
@@ -3943,7 +3806,6 @@ CREATE TABLE `news_to_ncategory` (
 -- Table structure for table `news_to_store`
 --
 
-DROP TABLE IF EXISTS `news_to_store`;
 CREATE TABLE `news_to_store` (
   `news_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL DEFAULT 0
@@ -3955,7 +3817,6 @@ CREATE TABLE `news_to_store` (
 -- Table structure for table `news_video`
 --
 
-DROP TABLE IF EXISTS `news_video`;
 CREATE TABLE `news_video` (
   `news_video_id` int(11) NOT NULL,
   `news_id` int(11) NOT NULL,
@@ -3972,7 +3833,6 @@ CREATE TABLE `news_video` (
 -- Table structure for table `novaposhta_cities`
 --
 
-DROP TABLE IF EXISTS `novaposhta_cities`;
 CREATE TABLE `novaposhta_cities` (
   `CityID` int(11) NOT NULL,
   `Ref` varchar(36) NOT NULL,
@@ -4011,7 +3871,6 @@ CREATE TABLE `novaposhta_cities` (
 -- Table structure for table `novaposhta_cities_ww`
 --
 
-DROP TABLE IF EXISTS `novaposhta_cities_ww`;
 CREATE TABLE `novaposhta_cities_ww` (
   `CityID` int(11) NOT NULL,
   `Ref` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -4038,7 +3897,6 @@ CREATE TABLE `novaposhta_cities_ww` (
 -- Table structure for table `novaposhta_streets`
 --
 
-DROP TABLE IF EXISTS `novaposhta_streets`;
 CREATE TABLE `novaposhta_streets` (
   `StreetID` int(11) NOT NULL,
   `Ref` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -4055,7 +3913,6 @@ CREATE TABLE `novaposhta_streets` (
 -- Table structure for table `novaposhta_warehouses`
 --
 
-DROP TABLE IF EXISTS `novaposhta_warehouses`;
 CREATE TABLE `novaposhta_warehouses` (
   `WarehouseID` int(11) NOT NULL,
   `SiteKey` int(11) NOT NULL,
@@ -4095,7 +3952,6 @@ CREATE TABLE `novaposhta_warehouses` (
 -- Table structure for table `novaposhta_zones`
 --
 
-DROP TABLE IF EXISTS `novaposhta_zones`;
 CREATE TABLE `novaposhta_zones` (
   `ZoneID` int(11) NOT NULL,
   `Ref` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -4110,7 +3966,6 @@ CREATE TABLE `novaposhta_zones` (
 -- Table structure for table `ocfilter_option`
 --
 
-DROP TABLE IF EXISTS `ocfilter_option`;
 CREATE TABLE `ocfilter_option` (
   `option_id` int(11) NOT NULL,
   `type` varchar(16) NOT NULL DEFAULT 'checkbox',
@@ -4129,7 +3984,6 @@ CREATE TABLE `ocfilter_option` (
 -- Table structure for table `ocfilter_option_description`
 --
 
-DROP TABLE IF EXISTS `ocfilter_option_description`;
 CREATE TABLE `ocfilter_option_description` (
   `option_id` int(11) NOT NULL,
   `language_id` tinyint(4) NOT NULL,
@@ -4144,7 +3998,6 @@ CREATE TABLE `ocfilter_option_description` (
 -- Table structure for table `ocfilter_option_to_category`
 --
 
-DROP TABLE IF EXISTS `ocfilter_option_to_category`;
 CREATE TABLE `ocfilter_option_to_category` (
   `option_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
@@ -4156,7 +4009,6 @@ CREATE TABLE `ocfilter_option_to_category` (
 -- Table structure for table `ocfilter_option_to_store`
 --
 
-DROP TABLE IF EXISTS `ocfilter_option_to_store`;
 CREATE TABLE `ocfilter_option_to_store` (
   `option_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -4168,7 +4020,6 @@ CREATE TABLE `ocfilter_option_to_store` (
 -- Table structure for table `ocfilter_option_value`
 --
 
-DROP TABLE IF EXISTS `ocfilter_option_value`;
 CREATE TABLE `ocfilter_option_value` (
   `value_id` bigint(20) NOT NULL,
   `option_id` int(11) NOT NULL DEFAULT 0,
@@ -4184,7 +4035,6 @@ CREATE TABLE `ocfilter_option_value` (
 -- Table structure for table `ocfilter_option_value_description`
 --
 
-DROP TABLE IF EXISTS `ocfilter_option_value_description`;
 CREATE TABLE `ocfilter_option_value_description` (
   `value_id` bigint(20) NOT NULL,
   `option_id` int(11) NOT NULL,
@@ -4198,7 +4048,6 @@ CREATE TABLE `ocfilter_option_value_description` (
 -- Table structure for table `ocfilter_option_value_to_product`
 --
 
-DROP TABLE IF EXISTS `ocfilter_option_value_to_product`;
 CREATE TABLE `ocfilter_option_value_to_product` (
   `ocfilter_option_value_to_product_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -4214,7 +4063,6 @@ CREATE TABLE `ocfilter_option_value_to_product` (
 -- Table structure for table `ocfilter_option_value_to_product_description`
 --
 
-DROP TABLE IF EXISTS `ocfilter_option_value_to_product_description`;
 CREATE TABLE `ocfilter_option_value_to_product_description` (
   `product_id` int(11) NOT NULL,
   `value_id` bigint(20) NOT NULL,
@@ -4229,7 +4077,6 @@ CREATE TABLE `ocfilter_option_value_to_product_description` (
 -- Table structure for table `ocfilter_page`
 --
 
-DROP TABLE IF EXISTS `ocfilter_page`;
 CREATE TABLE `ocfilter_page` (
   `ocfilter_page_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
@@ -4249,7 +4096,6 @@ CREATE TABLE `ocfilter_page` (
 -- Table structure for table `oc_feedback`
 --
 
-DROP TABLE IF EXISTS `oc_feedback`;
 CREATE TABLE `oc_feedback` (
   `feedback_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0,
@@ -4264,7 +4110,6 @@ CREATE TABLE `oc_feedback` (
 -- Table structure for table `oc_sms_log`
 --
 
-DROP TABLE IF EXISTS `oc_sms_log`;
 CREATE TABLE `oc_sms_log` (
   `id` int(11) NOT NULL,
   `phone` varchar(255) NOT NULL,
@@ -4278,7 +4123,6 @@ CREATE TABLE `oc_sms_log` (
 -- Table structure for table `oc_yandex_category`
 --
 
-DROP TABLE IF EXISTS `oc_yandex_category`;
 CREATE TABLE `oc_yandex_category` (
   `yandex_category_id` int(11) NOT NULL,
   `level1` varchar(50) NOT NULL,
@@ -4294,7 +4138,6 @@ CREATE TABLE `oc_yandex_category` (
 -- Table structure for table `odinass_product_queue`
 --
 
-DROP TABLE IF EXISTS `odinass_product_queue`;
 CREATE TABLE `odinass_product_queue` (
   `product_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -4305,7 +4148,6 @@ CREATE TABLE `odinass_product_queue` (
 -- Table structure for table `option`
 --
 
-DROP TABLE IF EXISTS `option`;
 CREATE TABLE `option` (
   `option_id` int(11) NOT NULL,
   `type` varchar(32) NOT NULL,
@@ -4318,7 +4160,6 @@ CREATE TABLE `option` (
 -- Table structure for table `option_description`
 --
 
-DROP TABLE IF EXISTS `option_description`;
 CREATE TABLE `option_description` (
   `option_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -4331,7 +4172,6 @@ CREATE TABLE `option_description` (
 -- Table structure for table `option_tooltip`
 --
 
-DROP TABLE IF EXISTS `option_tooltip`;
 CREATE TABLE `option_tooltip` (
   `option_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -4344,7 +4184,6 @@ CREATE TABLE `option_tooltip` (
 -- Table structure for table `option_value`
 --
 
-DROP TABLE IF EXISTS `option_value`;
 CREATE TABLE `option_value` (
   `option_value_id` int(11) NOT NULL,
   `option_id` int(11) NOT NULL,
@@ -4358,7 +4197,6 @@ CREATE TABLE `option_value` (
 -- Table structure for table `option_value_description`
 --
 
-DROP TABLE IF EXISTS `option_value_description`;
 CREATE TABLE `option_value_description` (
   `option_value_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -4372,7 +4210,6 @@ CREATE TABLE `option_value_description` (
 -- Table structure for table `order`
 --
 
-DROP TABLE IF EXISTS `order`;
 CREATE TABLE `order` (
   `order_id` int(11) NOT NULL COMMENT 'Номер заказа',
   `order_id2` varchar(30) NOT NULL COMMENT 'Вторичный номер заказа (не используется)',
@@ -4413,7 +4250,9 @@ CREATE TABLE `order` (
   `payment_secondary_code` varchar(255) NOT NULL COMMENT 'Вторичный метод оплаты (платежная система, код)',
   `shipping_firstname` varchar(32) NOT NULL COMMENT 'Имя получателя',
   `shipping_lastname` varchar(32) NOT NULL COMMENT 'Фамилия получателя',
-  `shipping_passport_serie` varchar(30) NOT NULL COMMENT 'Серия паспорта получателя',
+  `shipping_passport_serie` varchar(30) NOT NULL COMMENT 'Серия и номер паспорта получателя',
+  `shipping_passport_date` date NOT NULL,
+  `shipping_passport_inn` varchar(64) NOT NULL,
   `shipping_passport_given` text NOT NULL COMMENT 'Кем выдан паспорт получателя',
   `shipping_company` varchar(32) NOT NULL COMMENT 'Название компании получателя',
   `shipping_address_1` varchar(500) NOT NULL COMMENT 'Адрес получателя (строка 1)',
@@ -4452,6 +4291,8 @@ CREATE TABLE `order` (
   `user_agent` varchar(255) NOT NULL COMMENT 'Юзер-агент клиента',
   `accept_language` varchar(255) NOT NULL COMMENT 'Accept-Language клиента',
   `product_review_reminder` int(11) NOT NULL COMMENT 'Связь с напоминалкой о необходимости оставить отзыв',
+  `forgotten_cart_reminder` int(11) NOT NULL DEFAULT 0,
+  `forgotten_cart_sent` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `weight` decimal(15,8) NOT NULL COMMENT 'Общий вес товаров',
   `date_added` datetime NOT NULL COMMENT 'Дата добавления',
   `date_added_timestamp` int(11) NOT NULL,
@@ -4523,6 +4364,8 @@ CREATE TABLE `order` (
   `monocheckout` tinyint(1) NOT NULL DEFAULT 0,
   `yam` tinyint(1) NOT NULL DEFAULT 0,
   `yam_id` int(11) NOT NULL,
+  `yam_express` tinyint(1) DEFAULT 0,
+  `yam_campaign_id` int(11) DEFAULT NULL,
   `yam_shipment_date` date NOT NULL,
   `yam_status` varchar(32) NOT NULL,
   `yam_substatus` varchar(64) NOT NULL,
@@ -4542,7 +4385,6 @@ CREATE TABLE `order` (
 -- Table structure for table `order_amazon`
 --
 
-DROP TABLE IF EXISTS `order_amazon`;
 CREATE TABLE `order_amazon` (
   `order_id` int(11) NOT NULL,
   `amazon_order_id` varchar(255) NOT NULL,
@@ -4555,7 +4397,6 @@ CREATE TABLE `order_amazon` (
 -- Table structure for table `order_amazon_product`
 --
 
-DROP TABLE IF EXISTS `order_amazon_product`;
 CREATE TABLE `order_amazon_product` (
   `order_product_id` int(11) NOT NULL,
   `amazon_order_item_code` varchar(255) NOT NULL
@@ -4567,7 +4408,6 @@ CREATE TABLE `order_amazon_product` (
 -- Table structure for table `order_amazon_report`
 --
 
-DROP TABLE IF EXISTS `order_amazon_report`;
 CREATE TABLE `order_amazon_report` (
   `order_id` int(11) NOT NULL,
   `submission_id` varchar(255) NOT NULL,
@@ -4581,7 +4421,6 @@ CREATE TABLE `order_amazon_report` (
 -- Table structure for table `order_courier_history`
 --
 
-DROP TABLE IF EXISTS `order_courier_history`;
 CREATE TABLE `order_courier_history` (
   `order_id` int(11) NOT NULL,
   `courier_id` varchar(100) NOT NULL,
@@ -4598,7 +4437,6 @@ CREATE TABLE `order_courier_history` (
 -- Table structure for table `order_download`
 --
 
-DROP TABLE IF EXISTS `order_download`;
 CREATE TABLE `order_download` (
   `order_download_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4615,7 +4453,6 @@ CREATE TABLE `order_download` (
 -- Table structure for table `order_field`
 --
 
-DROP TABLE IF EXISTS `order_field`;
 CREATE TABLE `order_field` (
   `order_id` int(11) NOT NULL,
   `custom_field_id` int(11) NOT NULL,
@@ -4631,7 +4468,6 @@ CREATE TABLE `order_field` (
 -- Table structure for table `order_fraud`
 --
 
-DROP TABLE IF EXISTS `order_fraud`;
 CREATE TABLE `order_fraud` (
   `order_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -4694,7 +4530,6 @@ CREATE TABLE `order_fraud` (
 -- Table structure for table `order_history`
 --
 
-DROP TABLE IF EXISTS `order_history`;
 CREATE TABLE `order_history` (
   `order_history_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4714,7 +4549,6 @@ CREATE TABLE `order_history` (
 -- Table structure for table `order_invoice_history`
 --
 
-DROP TABLE IF EXISTS `order_invoice_history`;
 CREATE TABLE `order_invoice_history` (
   `order_invoice_id` bigint(20) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4732,7 +4566,6 @@ CREATE TABLE `order_invoice_history` (
 -- Table structure for table `order_option`
 --
 
-DROP TABLE IF EXISTS `order_option`;
 CREATE TABLE `order_option` (
   `order_option_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4750,7 +4583,6 @@ CREATE TABLE `order_option` (
 -- Table structure for table `order_product`
 --
 
-DROP TABLE IF EXISTS `order_product`;
 CREATE TABLE `order_product` (
   `order_product_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4793,7 +4625,6 @@ CREATE TABLE `order_product` (
 -- Table structure for table `order_product_bought`
 --
 
-DROP TABLE IF EXISTS `order_product_bought`;
 CREATE TABLE `order_product_bought` (
   `bought_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4809,7 +4640,6 @@ CREATE TABLE `order_product_bought` (
 -- Table structure for table `order_product_history`
 --
 
-DROP TABLE IF EXISTS `order_product_history`;
 CREATE TABLE `order_product_history` (
   `order_product_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4837,7 +4667,6 @@ CREATE TABLE `order_product_history` (
 -- Table structure for table `order_product_nogood`
 --
 
-DROP TABLE IF EXISTS `order_product_nogood`;
 CREATE TABLE `order_product_nogood` (
   `order_product_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4875,7 +4704,6 @@ CREATE TABLE `order_product_nogood` (
 -- Table structure for table `order_product_reserves`
 --
 
-DROP TABLE IF EXISTS `order_product_reserves`;
 CREATE TABLE `order_product_reserves` (
   `order_reserve_id` int(11) NOT NULL,
   `order_product_id` int(11) NOT NULL,
@@ -4891,7 +4719,6 @@ CREATE TABLE `order_product_reserves` (
 -- Table structure for table `order_product_supply`
 --
 
-DROP TABLE IF EXISTS `order_product_supply`;
 CREATE TABLE `order_product_supply` (
   `order_product_supply_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4914,7 +4741,6 @@ CREATE TABLE `order_product_supply` (
 -- Table structure for table `order_product_tracker`
 --
 
-DROP TABLE IF EXISTS `order_product_tracker`;
 CREATE TABLE `order_product_tracker` (
   `order_product_tracker_id` int(11) NOT NULL,
   `order_product` int(11) NOT NULL,
@@ -4929,7 +4755,6 @@ CREATE TABLE `order_product_tracker` (
 -- Table structure for table `order_product_untaken`
 --
 
-DROP TABLE IF EXISTS `order_product_untaken`;
 CREATE TABLE `order_product_untaken` (
   `order_product_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4971,7 +4796,6 @@ CREATE TABLE `order_product_untaken` (
 -- Table structure for table `order_receipt`
 --
 
-DROP TABLE IF EXISTS `order_receipt`;
 CREATE TABLE `order_receipt` (
   `order_receipt_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4994,7 +4818,6 @@ CREATE TABLE `order_receipt` (
 -- Table structure for table `order_recurring`
 --
 
-DROP TABLE IF EXISTS `order_recurring`;
 CREATE TABLE `order_recurring` (
   `order_recurring_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -5024,7 +4847,6 @@ CREATE TABLE `order_recurring` (
 -- Table structure for table `order_recurring_transaction`
 --
 
-DROP TABLE IF EXISTS `order_recurring_transaction`;
 CREATE TABLE `order_recurring_transaction` (
   `order_recurring_transaction_id` int(11) NOT NULL,
   `order_recurring_id` int(11) NOT NULL,
@@ -5039,7 +4861,6 @@ CREATE TABLE `order_recurring_transaction` (
 -- Table structure for table `order_reject_reason`
 --
 
-DROP TABLE IF EXISTS `order_reject_reason`;
 CREATE TABLE `order_reject_reason` (
   `reject_reason_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -5052,7 +4873,6 @@ CREATE TABLE `order_reject_reason` (
 -- Table structure for table `order_related`
 --
 
-DROP TABLE IF EXISTS `order_related`;
 CREATE TABLE `order_related` (
   `order_id` int(11) NOT NULL,
   `related_order_id` int(11) NOT NULL
@@ -5064,7 +4884,6 @@ CREATE TABLE `order_related` (
 -- Table structure for table `order_save_history`
 --
 
-DROP TABLE IF EXISTS `order_save_history`;
 CREATE TABLE `order_save_history` (
   `order_save_id` bigint(20) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -5079,7 +4898,6 @@ CREATE TABLE `order_save_history` (
 -- Table structure for table `order_set`
 --
 
-DROP TABLE IF EXISTS `order_set`;
 CREATE TABLE `order_set` (
   `order_set_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -5110,7 +4928,6 @@ CREATE TABLE `order_set` (
 -- Table structure for table `order_simple_fields`
 --
 
-DROP TABLE IF EXISTS `order_simple_fields`;
 CREATE TABLE `order_simple_fields` (
   `order_id` int(11) NOT NULL,
   `metadata` text DEFAULT NULL,
@@ -5134,7 +4951,9 @@ CREATE TABLE `order_simple_fields` (
   `ukrpost_postcode` text DEFAULT NULL,
   `test_field` text DEFAULT NULL,
   `newsletter_news` int(11) NOT NULL,
-  `newsletter_personal` int(11) NOT NULL
+  `newsletter_personal` int(11) NOT NULL,
+  `viber_news` int(11) NOT NULL,
+  `do_not_call` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -5143,7 +4962,6 @@ CREATE TABLE `order_simple_fields` (
 -- Table structure for table `order_sms_history`
 --
 
-DROP TABLE IF EXISTS `order_sms_history`;
 CREATE TABLE `order_sms_history` (
   `order_history_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -5162,7 +4980,6 @@ CREATE TABLE `order_sms_history` (
 -- Table structure for table `order_status`
 --
 
-DROP TABLE IF EXISTS `order_status`;
 CREATE TABLE `order_status` (
   `order_status_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -5179,7 +4996,6 @@ CREATE TABLE `order_status` (
 -- Table structure for table `order_status_linked`
 --
 
-DROP TABLE IF EXISTS `order_status_linked`;
 CREATE TABLE `order_status_linked` (
   `order_status_id` int(11) NOT NULL,
   `linked_order_status_id` int(11) NOT NULL
@@ -5191,7 +5007,6 @@ CREATE TABLE `order_status_linked` (
 -- Table structure for table `order_total`
 --
 
-DROP TABLE IF EXISTS `order_total`;
 CREATE TABLE `order_total` (
   `order_total_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -5210,7 +5025,6 @@ CREATE TABLE `order_total` (
 -- Table structure for table `order_total_tax`
 --
 
-DROP TABLE IF EXISTS `order_total_tax`;
 CREATE TABLE `order_total_tax` (
   `order_total_id` int(11) NOT NULL DEFAULT 0,
   `code` varchar(255) DEFAULT NULL,
@@ -5223,7 +5037,6 @@ CREATE TABLE `order_total_tax` (
 -- Table structure for table `order_to_1c_queue`
 --
 
-DROP TABLE IF EXISTS `order_to_1c_queue`;
 CREATE TABLE `order_to_1c_queue` (
   `order_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -5234,7 +5047,6 @@ CREATE TABLE `order_to_1c_queue` (
 -- Table structure for table `order_tracker`
 --
 
-DROP TABLE IF EXISTS `order_tracker`;
 CREATE TABLE `order_tracker` (
   `order_tracker_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -5248,7 +5060,6 @@ CREATE TABLE `order_tracker` (
 -- Table structure for table `order_tracker_sms`
 --
 
-DROP TABLE IF EXISTS `order_tracker_sms`;
 CREATE TABLE `order_tracker_sms` (
   `tracker_sms_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -5263,7 +5074,6 @@ CREATE TABLE `order_tracker_sms` (
 -- Table structure for table `order_ttns`
 --
 
-DROP TABLE IF EXISTS `order_ttns`;
 CREATE TABLE `order_ttns` (
   `order_ttn_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -5284,7 +5094,6 @@ CREATE TABLE `order_ttns` (
 -- Table structure for table `order_ukrcredits`
 --
 
-DROP TABLE IF EXISTS `order_ukrcredits`;
 CREATE TABLE `order_ukrcredits` (
   `order_id` int(11) NOT NULL,
   `ukrcredits_payment_type` varchar(2) NOT NULL,
@@ -5299,7 +5108,6 @@ CREATE TABLE `order_ukrcredits` (
 -- Table structure for table `order_voucher`
 --
 
-DROP TABLE IF EXISTS `order_voucher`;
 CREATE TABLE `order_voucher` (
   `order_voucher_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -5318,10 +5126,21 @@ CREATE TABLE `order_voucher` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `otp_tries`
+--
+
+CREATE TABLE `otp_tries` (
+  `ip_addr` varchar(128) NOT NULL,
+  `tries` int(11) NOT NULL,
+  `timestamp` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `parser_queue`
 --
 
-DROP TABLE IF EXISTS `parser_queue`;
 CREATE TABLE `parser_queue` (
   `parser_queue_id` int(11) NOT NULL,
   `manufacturer_id` int(11) NOT NULL,
@@ -5335,7 +5154,6 @@ CREATE TABLE `parser_queue` (
 -- Table structure for table `pavoslidergroups`
 --
 
-DROP TABLE IF EXISTS `pavoslidergroups`;
 CREATE TABLE `pavoslidergroups` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
@@ -5348,7 +5166,6 @@ CREATE TABLE `pavoslidergroups` (
 -- Table structure for table `pavosliderlayers`
 --
 
-DROP TABLE IF EXISTS `pavosliderlayers`;
 CREATE TABLE `pavosliderlayers` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
@@ -5367,7 +5184,6 @@ CREATE TABLE `pavosliderlayers` (
 -- Table structure for table `priceva_data`
 --
 
-DROP TABLE IF EXISTS `priceva_data`;
 CREATE TABLE `priceva_data` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -5389,7 +5205,6 @@ CREATE TABLE `priceva_data` (
 -- Table structure for table `priceva_sources`
 --
 
-DROP TABLE IF EXISTS `priceva_sources`;
 CREATE TABLE `priceva_sources` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -5414,7 +5229,6 @@ CREATE TABLE `priceva_sources` (
 -- Table structure for table `product`
 --
 
-DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product` (
   `product_id` int(11) NOT NULL,
   `model` varchar(64) NOT NULL COMMENT 'Артикул или модель',
@@ -5446,6 +5260,7 @@ CREATE TABLE `product` (
   `quantity_stockMN_onway` int(11) NOT NULL DEFAULT 0,
   `quantity_stockAS_onway` int(11) NOT NULL DEFAULT 0,
   `stock_status_id` int(11) DEFAULT NULL,
+  `product_group_id` int(11) NOT NULL DEFAULT 0,
   `image` varchar(255) DEFAULT NULL,
   `manufacturer_id` int(11) NOT NULL,
   `collection_id` bigint(20) NOT NULL,
@@ -5457,6 +5272,8 @@ CREATE TABLE `product` (
   `actual_cost_date` date NOT NULL DEFAULT '0000-00-00',
   `price` decimal(15,2) NOT NULL DEFAULT 0.00,
   `price_delayed` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `price_special` decimal(15,2) NOT NULL,
+  `price_special_delayed` decimal(15,2) NOT NULL,
   `price_national` decimal(15,2) NOT NULL,
   `mpp_price` decimal(15,2) NOT NULL,
   `yam_price` decimal(15,2) NOT NULL,
@@ -5552,6 +5369,7 @@ CREATE TABLE `product` (
   `amazon_best_price` decimal(15,2) NOT NULL DEFAULT 0.00 COMMENT 'Лучший оффер на Amazon',
   `amazon_lowest_price` decimal(15,2) NOT NULL,
   `added_from_amazon` tinyint(1) NOT NULL DEFAULT 0,
+  `added_from_supplier` int(11) DEFAULT 0,
   `fill_from_amazon` tinyint(1) NOT NULL DEFAULT 0,
   `filled_from_amazon` tinyint(1) NOT NULL DEFAULT 0,
   `description_filled_from_amazon` tinyint(4) NOT NULL DEFAULT 0,
@@ -5573,7 +5391,6 @@ CREATE TABLE `product` (
 -- Table structure for table `product_additional_offer`
 --
 
-DROP TABLE IF EXISTS `product_additional_offer`;
 CREATE TABLE `product_additional_offer` (
   `product_additional_offer_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -5596,7 +5413,6 @@ CREATE TABLE `product_additional_offer` (
 -- Table structure for table `product_additional_offer_to_store`
 --
 
-DROP TABLE IF EXISTS `product_additional_offer_to_store`;
 CREATE TABLE `product_additional_offer_to_store` (
   `product_additional_offer_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -5608,7 +5424,6 @@ CREATE TABLE `product_additional_offer_to_store` (
 -- Table structure for table `product_also_bought`
 --
 
-DROP TABLE IF EXISTS `product_also_bought`;
 CREATE TABLE `product_also_bought` (
   `product_id` int(11) NOT NULL,
   `also_bought_id` int(11) NOT NULL
@@ -5620,7 +5435,6 @@ CREATE TABLE `product_also_bought` (
 -- Table structure for table `product_also_viewed`
 --
 
-DROP TABLE IF EXISTS `product_also_viewed`;
 CREATE TABLE `product_also_viewed` (
   `product_id` int(11) NOT NULL,
   `also_viewed_id` int(11) NOT NULL
@@ -5632,7 +5446,6 @@ CREATE TABLE `product_also_viewed` (
 -- Table structure for table `product_amzn_data`
 --
 
-DROP TABLE IF EXISTS `product_amzn_data`;
 CREATE TABLE `product_amzn_data` (
   `product_id` int(11) NOT NULL,
   `asin` varchar(255) COLLATE utf8mb3_bin NOT NULL,
@@ -5646,7 +5459,6 @@ CREATE TABLE `product_amzn_data` (
 -- Table structure for table `product_amzn_offers`
 --
 
-DROP TABLE IF EXISTS `product_amzn_offers`;
 CREATE TABLE `product_amzn_offers` (
   `amazon_offer_id` int(11) NOT NULL,
   `asin` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -5690,7 +5502,6 @@ CREATE TABLE `product_amzn_offers` (
 -- Table structure for table `product_anyrelated`
 --
 
-DROP TABLE IF EXISTS `product_anyrelated`;
 CREATE TABLE `product_anyrelated` (
   `product_id` int(11) NOT NULL,
   `anyrelated_id` int(11) NOT NULL
@@ -5702,7 +5513,6 @@ CREATE TABLE `product_anyrelated` (
 -- Table structure for table `product_attribute`
 --
 
-DROP TABLE IF EXISTS `product_attribute`;
 CREATE TABLE `product_attribute` (
   `product_id` int(11) NOT NULL,
   `attribute_id` int(11) NOT NULL,
@@ -5716,7 +5526,6 @@ CREATE TABLE `product_attribute` (
 -- Table structure for table `product_child`
 --
 
-DROP TABLE IF EXISTS `product_child`;
 CREATE TABLE `product_child` (
   `product_id` int(11) NOT NULL,
   `child_id` int(11) NOT NULL
@@ -5728,7 +5537,6 @@ CREATE TABLE `product_child` (
 -- Table structure for table `product_costs`
 --
 
-DROP TABLE IF EXISTS `product_costs`;
 CREATE TABLE `product_costs` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -5743,7 +5551,6 @@ CREATE TABLE `product_costs` (
 -- Table structure for table `product_description`
 --
 
-DROP TABLE IF EXISTS `product_description`;
 CREATE TABLE `product_description` (
   `product_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -5781,7 +5588,6 @@ CREATE TABLE `product_description` (
 -- Table structure for table `product_discount`
 --
 
-DROP TABLE IF EXISTS `product_discount`;
 CREATE TABLE `product_discount` (
   `product_discount_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -5800,7 +5606,6 @@ CREATE TABLE `product_discount` (
 -- Table structure for table `product_feature`
 --
 
-DROP TABLE IF EXISTS `product_feature`;
 CREATE TABLE `product_feature` (
   `product_id` int(11) NOT NULL,
   `feature_id` int(11) NOT NULL,
@@ -5814,7 +5619,6 @@ CREATE TABLE `product_feature` (
 -- Table structure for table `product_filter`
 --
 
-DROP TABLE IF EXISTS `product_filter`;
 CREATE TABLE `product_filter` (
   `product_id` int(11) NOT NULL,
   `filter_id` int(11) NOT NULL
@@ -5826,7 +5630,6 @@ CREATE TABLE `product_filter` (
 -- Table structure for table `product_front_price`
 --
 
-DROP TABLE IF EXISTS `product_front_price`;
 CREATE TABLE `product_front_price` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -5839,10 +5642,26 @@ CREATE TABLE `product_front_price` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `product_groups`
+--
+
+CREATE TABLE `product_groups` (
+  `product_group_id` int(11) NOT NULL,
+  `product_group_name` varchar(255) NOT NULL,
+  `product_group_exclude_remarketing` tinyint(1) NOT NULL DEFAULT 0,
+  `product_group_feed` tinyint(1) NOT NULL DEFAULT 0,
+  `product_group_feed_file` varchar(255) NOT NULL,
+  `product_group_text_color` varchar(255) NOT NULL,
+  `product_group_bg_color` varchar(255) NOT NULL,
+  `product_group_fa_icon` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `product_image`
 --
 
-DROP TABLE IF EXISTS `product_image`;
 CREATE TABLE `product_image` (
   `product_image_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -5856,7 +5675,6 @@ CREATE TABLE `product_image` (
 -- Table structure for table `product_master`
 --
 
-DROP TABLE IF EXISTS `product_master`;
 CREATE TABLE `product_master` (
   `master_product_id` int(11) NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
@@ -5869,7 +5687,6 @@ CREATE TABLE `product_master` (
 -- Table structure for table `product_offers_history`
 --
 
-DROP TABLE IF EXISTS `product_offers_history`;
 CREATE TABLE `product_offers_history` (
   `offer_history_id` int(11) NOT NULL,
   `asin` varchar(32) NOT NULL,
@@ -5891,7 +5708,6 @@ CREATE TABLE `product_offers_history` (
 -- Table structure for table `product_option`
 --
 
-DROP TABLE IF EXISTS `product_option`;
 CREATE TABLE `product_option` (
   `product_option_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -5906,7 +5722,6 @@ CREATE TABLE `product_option` (
 -- Table structure for table `product_option_value`
 --
 
-DROP TABLE IF EXISTS `product_option_value`;
 CREATE TABLE `product_option_value` (
   `product_option_value_id` int(11) NOT NULL,
   `product_option_id` int(11) NOT NULL,
@@ -5934,7 +5749,6 @@ CREATE TABLE `product_option_value` (
 -- Table structure for table `product_price_history`
 --
 
-DROP TABLE IF EXISTS `product_price_history`;
 CREATE TABLE `product_price_history` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -5951,11 +5765,11 @@ CREATE TABLE `product_price_history` (
 -- Table structure for table `product_price_national_to_store`
 --
 
-DROP TABLE IF EXISTS `product_price_national_to_store`;
 CREATE TABLE `product_price_national_to_store` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `price` decimal(15,2) NOT NULL,
+  `price_delayed` decimal(15,2) NOT NULL,
   `special` decimal(15,2) NOT NULL,
   `currency` varchar(4) NOT NULL,
   `dot_not_overload_1c` tinyint(1) NOT NULL DEFAULT 0,
@@ -5968,7 +5782,6 @@ CREATE TABLE `product_price_national_to_store` (
 -- Table structure for table `product_price_national_to_store1`
 --
 
-DROP TABLE IF EXISTS `product_price_national_to_store1`;
 CREATE TABLE `product_price_national_to_store1` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -5985,7 +5798,6 @@ CREATE TABLE `product_price_national_to_store1` (
 -- Table structure for table `product_price_national_to_yam`
 --
 
-DROP TABLE IF EXISTS `product_price_national_to_yam`;
 CREATE TABLE `product_price_national_to_yam` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -6002,7 +5814,6 @@ CREATE TABLE `product_price_national_to_yam` (
 -- Table structure for table `product_price_to_store`
 --
 
-DROP TABLE IF EXISTS `product_price_to_store`;
 CREATE TABLE `product_price_to_store` (
   `product_id` bigint(20) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -6019,7 +5830,6 @@ CREATE TABLE `product_price_to_store` (
 -- Table structure for table `product_product_option`
 --
 
-DROP TABLE IF EXISTS `product_product_option`;
 CREATE TABLE `product_product_option` (
   `product_product_option_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -6035,7 +5845,6 @@ CREATE TABLE `product_product_option` (
 -- Table structure for table `product_product_option_value`
 --
 
-DROP TABLE IF EXISTS `product_product_option_value`;
 CREATE TABLE `product_product_option_value` (
   `product_product_option_value_id` int(11) NOT NULL,
   `product_product_option_id` int(11) NOT NULL,
@@ -6050,7 +5859,6 @@ CREATE TABLE `product_product_option_value` (
 -- Table structure for table `product_profile`
 --
 
-DROP TABLE IF EXISTS `product_profile`;
 CREATE TABLE `product_profile` (
   `product_id` int(11) NOT NULL,
   `profile_id` int(11) NOT NULL,
@@ -6063,7 +5871,6 @@ CREATE TABLE `product_profile` (
 -- Table structure for table `product_purchase`
 --
 
-DROP TABLE IF EXISTS `product_purchase`;
 CREATE TABLE `product_purchase` (
   `purchase_uuid` varchar(64) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -6080,7 +5887,6 @@ CREATE TABLE `product_purchase` (
 -- Table structure for table `product_recurring`
 --
 
-DROP TABLE IF EXISTS `product_recurring`;
 CREATE TABLE `product_recurring` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -6092,7 +5898,6 @@ CREATE TABLE `product_recurring` (
 -- Table structure for table `product_related`
 --
 
-DROP TABLE IF EXISTS `product_related`;
 CREATE TABLE `product_related` (
   `product_id` int(11) NOT NULL,
   `related_id` int(11) NOT NULL,
@@ -6105,7 +5910,6 @@ CREATE TABLE `product_related` (
 -- Table structure for table `product_related_set`
 --
 
-DROP TABLE IF EXISTS `product_related_set`;
 CREATE TABLE `product_related_set` (
   `product_id` int(11) NOT NULL,
   `related_id` int(11) NOT NULL
@@ -6117,7 +5921,6 @@ CREATE TABLE `product_related_set` (
 -- Table structure for table `product_reward`
 --
 
-DROP TABLE IF EXISTS `product_reward`;
 CREATE TABLE `product_reward` (
   `product_reward_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL DEFAULT 0,
@@ -6137,7 +5940,6 @@ CREATE TABLE `product_reward` (
 -- Table structure for table `product_shop_by_look`
 --
 
-DROP TABLE IF EXISTS `product_shop_by_look`;
 CREATE TABLE `product_shop_by_look` (
   `product_id` int(11) NOT NULL,
   `shop_by_look_id` int(11) NOT NULL
@@ -6149,7 +5951,6 @@ CREATE TABLE `product_shop_by_look` (
 -- Table structure for table `product_similar`
 --
 
-DROP TABLE IF EXISTS `product_similar`;
 CREATE TABLE `product_similar` (
   `product_id` int(11) NOT NULL,
   `similar_id` int(11) NOT NULL
@@ -6161,7 +5962,6 @@ CREATE TABLE `product_similar` (
 -- Table structure for table `product_similar_to_consider`
 --
 
-DROP TABLE IF EXISTS `product_similar_to_consider`;
 CREATE TABLE `product_similar_to_consider` (
   `product_id` int(11) NOT NULL,
   `similar_to_consider_id` int(11) NOT NULL
@@ -6173,7 +5973,6 @@ CREATE TABLE `product_similar_to_consider` (
 -- Table structure for table `product_sources`
 --
 
-DROP TABLE IF EXISTS `product_sources`;
 CREATE TABLE `product_sources` (
   `product_source_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -6187,7 +5986,6 @@ CREATE TABLE `product_sources` (
 -- Table structure for table `product_special`
 --
 
-DROP TABLE IF EXISTS `product_special`;
 CREATE TABLE `product_special` (
   `product_special_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -6201,6 +5999,7 @@ CREATE TABLE `product_special` (
   `date_start` date NOT NULL DEFAULT '0000-00-00',
   `date_end` date NOT NULL DEFAULT '0000-00-00',
   `parser_info_price` date NOT NULL DEFAULT '0000-00-00',
+  `set_by_reprice` tinyint(1) NOT NULL DEFAULT 0,
   `set_by_stock` tinyint(1) NOT NULL DEFAULT 0,
   `set_by_stock_illiquid` tinyint(1) NOT NULL DEFAULT 0,
   `date_settled_by_stock` date NOT NULL DEFAULT '0000-00-00'
@@ -6212,7 +6011,6 @@ CREATE TABLE `product_special` (
 -- Table structure for table `product_special_attribute`
 --
 
-DROP TABLE IF EXISTS `product_special_attribute`;
 CREATE TABLE `product_special_attribute` (
   `product_special_attribute_id` int(10) UNSIGNED NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
@@ -6225,20 +6023,23 @@ CREATE TABLE `product_special_attribute` (
 -- Table structure for table `product_special_backup`
 --
 
-DROP TABLE IF EXISTS `product_special_backup`;
 CREATE TABLE `product_special_backup` (
   `product_special_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
-  `customer_group_id` int(11) NOT NULL,
+  `customer_group_id` int(11) NOT NULL DEFAULT 1,
   `priority` int(11) NOT NULL DEFAULT 1,
-  `price` decimal(15,4) NOT NULL DEFAULT 0.0000,
-  `old_price` decimal(15,4) NOT NULL,
+  `price` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `old_price` decimal(15,2) NOT NULL DEFAULT 0.00,
   `store_id` int(11) NOT NULL DEFAULT -1,
-  `points_special` decimal(15,4) NOT NULL,
+  `currency_scode` varchar(3) DEFAULT NULL,
+  `points_special` decimal(15,2) NOT NULL DEFAULT 0.00,
   `date_start` date NOT NULL DEFAULT '0000-00-00',
   `date_end` date NOT NULL DEFAULT '0000-00-00',
-  `parser_info_price` date NOT NULL,
-  `set_by_stock` tinyint(1) NOT NULL DEFAULT 0
+  `parser_info_price` date NOT NULL DEFAULT '0000-00-00',
+  `set_by_reprice` tinyint(1) NOT NULL DEFAULT 0,
+  `set_by_stock` tinyint(1) NOT NULL DEFAULT 0,
+  `set_by_stock_illiquid` tinyint(1) NOT NULL DEFAULT 0,
+  `date_settled_by_stock` date NOT NULL DEFAULT '0000-00-00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -6247,7 +6048,6 @@ CREATE TABLE `product_special_backup` (
 -- Table structure for table `product_sponsored`
 --
 
-DROP TABLE IF EXISTS `product_sponsored`;
 CREATE TABLE `product_sponsored` (
   `product_id` int(11) NOT NULL,
   `sponsored_id` int(11) NOT NULL
@@ -6259,7 +6059,6 @@ CREATE TABLE `product_sponsored` (
 -- Table structure for table `product_status`
 --
 
-DROP TABLE IF EXISTS `product_status`;
 CREATE TABLE `product_status` (
   `product_id` int(11) NOT NULL,
   `status_id` int(11) NOT NULL,
@@ -6274,7 +6073,6 @@ CREATE TABLE `product_status` (
 -- Table structure for table `product_sticker`
 --
 
-DROP TABLE IF EXISTS `product_sticker`;
 CREATE TABLE `product_sticker` (
   `product_sticker_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -6293,7 +6091,6 @@ CREATE TABLE `product_sticker` (
 -- Table structure for table `product_stock_limits`
 --
 
-DROP TABLE IF EXISTS `product_stock_limits`;
 CREATE TABLE `product_stock_limits` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -6307,7 +6104,6 @@ CREATE TABLE `product_stock_limits` (
 -- Table structure for table `product_stock_status`
 --
 
-DROP TABLE IF EXISTS `product_stock_status`;
 CREATE TABLE `product_stock_status` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -6320,7 +6116,6 @@ CREATE TABLE `product_stock_status` (
 -- Table structure for table `product_stock_waits`
 --
 
-DROP TABLE IF EXISTS `product_stock_waits`;
 CREATE TABLE `product_stock_waits` (
   `product_id` int(11) NOT NULL,
   `quantity_stock` int(11) NOT NULL DEFAULT 0,
@@ -6336,7 +6131,6 @@ CREATE TABLE `product_stock_waits` (
 -- Table structure for table `product_tab`
 --
 
-DROP TABLE IF EXISTS `product_tab`;
 CREATE TABLE `product_tab` (
   `tab_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL,
@@ -6352,7 +6146,6 @@ CREATE TABLE `product_tab` (
 -- Table structure for table `product_tab_content`
 --
 
-DROP TABLE IF EXISTS `product_tab_content`;
 CREATE TABLE `product_tab_content` (
   `product_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -6366,7 +6159,6 @@ CREATE TABLE `product_tab_content` (
 -- Table structure for table `product_tab_default`
 --
 
-DROP TABLE IF EXISTS `product_tab_default`;
 CREATE TABLE `product_tab_default` (
   `tab_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -6379,7 +6171,6 @@ CREATE TABLE `product_tab_default` (
 -- Table structure for table `product_tab_name`
 --
 
-DROP TABLE IF EXISTS `product_tab_name`;
 CREATE TABLE `product_tab_name` (
   `tab_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -6392,7 +6183,6 @@ CREATE TABLE `product_tab_name` (
 -- Table structure for table `product_tmp`
 --
 
-DROP TABLE IF EXISTS `product_tmp`;
 CREATE TABLE `product_tmp` (
   `product_id` int(11) NOT NULL,
   `model` varchar(64) NOT NULL,
@@ -6489,7 +6279,6 @@ CREATE TABLE `product_tmp` (
 -- Table structure for table `product_to_category`
 --
 
-DROP TABLE IF EXISTS `product_to_category`;
 CREATE TABLE `product_to_category` (
   `product_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
@@ -6503,7 +6292,6 @@ CREATE TABLE `product_to_category` (
 -- Table structure for table `product_to_download`
 --
 
-DROP TABLE IF EXISTS `product_to_download`;
 CREATE TABLE `product_to_download` (
   `product_id` int(11) NOT NULL,
   `download_id` int(11) NOT NULL
@@ -6515,7 +6303,6 @@ CREATE TABLE `product_to_download` (
 -- Table structure for table `product_to_layout`
 --
 
-DROP TABLE IF EXISTS `product_to_layout`;
 CREATE TABLE `product_to_layout` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -6528,7 +6315,6 @@ CREATE TABLE `product_to_layout` (
 -- Table structure for table `product_to_set`
 --
 
-DROP TABLE IF EXISTS `product_to_set`;
 CREATE TABLE `product_to_set` (
   `set_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -6547,7 +6333,6 @@ CREATE TABLE `product_to_set` (
 -- Table structure for table `product_to_store`
 --
 
-DROP TABLE IF EXISTS `product_to_store`;
 CREATE TABLE `product_to_store` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL DEFAULT 0
@@ -6559,7 +6344,6 @@ CREATE TABLE `product_to_store` (
 -- Table structure for table `product_to_tab`
 --
 
-DROP TABLE IF EXISTS `product_to_tab`;
 CREATE TABLE `product_to_tab` (
   `product_id` int(11) NOT NULL,
   `tab_id` int(11) NOT NULL,
@@ -6572,7 +6356,6 @@ CREATE TABLE `product_to_tab` (
 -- Table structure for table `product_ukrcredits`
 --
 
-DROP TABLE IF EXISTS `product_ukrcredits`;
 CREATE TABLE `product_ukrcredits` (
   `product_id` int(11) NOT NULL,
   `product_pp` int(1) NOT NULL,
@@ -6598,7 +6381,6 @@ CREATE TABLE `product_ukrcredits` (
 -- Table structure for table `product_variants`
 --
 
-DROP TABLE IF EXISTS `product_variants`;
 CREATE TABLE `product_variants` (
   `main_asin` varchar(32) NOT NULL,
   `variant_asin` varchar(32) NOT NULL
@@ -6610,7 +6392,6 @@ CREATE TABLE `product_variants` (
 -- Table structure for table `product_variants_ids`
 --
 
-DROP TABLE IF EXISTS `product_variants_ids`;
 CREATE TABLE `product_variants_ids` (
   `product_id` int(11) NOT NULL,
   `variant_id` int(11) NOT NULL
@@ -6622,7 +6403,6 @@ CREATE TABLE `product_variants_ids` (
 -- Table structure for table `product_video`
 --
 
-DROP TABLE IF EXISTS `product_video`;
 CREATE TABLE `product_video` (
   `product_video_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -6637,7 +6417,6 @@ CREATE TABLE `product_video` (
 -- Table structure for table `product_video_description`
 --
 
-DROP TABLE IF EXISTS `product_video_description`;
 CREATE TABLE `product_video_description` (
   `product_video_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -6651,7 +6430,6 @@ CREATE TABLE `product_video_description` (
 -- Table structure for table `product_view_to_purchase`
 --
 
-DROP TABLE IF EXISTS `product_view_to_purchase`;
 CREATE TABLE `product_view_to_purchase` (
   `product_id` int(11) NOT NULL,
   `view_to_purchase_id` int(11) NOT NULL
@@ -6663,7 +6441,6 @@ CREATE TABLE `product_view_to_purchase` (
 -- Table structure for table `product_yam_data`
 --
 
-DROP TABLE IF EXISTS `product_yam_data`;
 CREATE TABLE `product_yam_data` (
   `product_id` int(11) NOT NULL,
   `yam_real_price` decimal(15,2) NOT NULL,
@@ -6681,7 +6458,6 @@ CREATE TABLE `product_yam_data` (
 -- Table structure for table `product_yam_recommended_prices`
 --
 
-DROP TABLE IF EXISTS `product_yam_recommended_prices`;
 CREATE TABLE `product_yam_recommended_prices` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -6699,7 +6475,6 @@ CREATE TABLE `product_yam_recommended_prices` (
 -- Table structure for table `profile`
 --
 
-DROP TABLE IF EXISTS `profile`;
 CREATE TABLE `profile` (
   `profile_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL,
@@ -6721,7 +6496,6 @@ CREATE TABLE `profile` (
 -- Table structure for table `profile_description`
 --
 
-DROP TABLE IF EXISTS `profile_description`;
 CREATE TABLE `profile_description` (
   `profile_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -6734,7 +6508,6 @@ CREATE TABLE `profile_description` (
 -- Table structure for table `queue_mail`
 --
 
-DROP TABLE IF EXISTS `queue_mail`;
 CREATE TABLE `queue_mail` (
   `queue_mail_id` int(11) NOT NULL,
   `body` text NOT NULL
@@ -6746,7 +6519,6 @@ CREATE TABLE `queue_mail` (
 -- Table structure for table `queue_push`
 --
 
-DROP TABLE IF EXISTS `queue_push`;
 CREATE TABLE `queue_push` (
   `queue_push_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -6759,10 +6531,10 @@ CREATE TABLE `queue_push` (
 -- Table structure for table `queue_sms`
 --
 
-DROP TABLE IF EXISTS `queue_sms`;
 CREATE TABLE `queue_sms` (
   `queue_sms_id` int(11) NOT NULL,
-  `body` text NOT NULL
+  `body` text NOT NULL,
+  `raw` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -6771,7 +6543,6 @@ CREATE TABLE `queue_sms` (
 -- Table structure for table `redirect`
 --
 
-DROP TABLE IF EXISTS `redirect`;
 CREATE TABLE `redirect` (
   `redirect_id` int(11) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 0,
@@ -6789,7 +6560,6 @@ CREATE TABLE `redirect` (
 -- Table structure for table `referrer_patterns`
 --
 
-DROP TABLE IF EXISTS `referrer_patterns`;
 CREATE TABLE `referrer_patterns` (
   `pattern_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
@@ -6803,7 +6573,6 @@ CREATE TABLE `referrer_patterns` (
 -- Table structure for table `return`
 --
 
-DROP TABLE IF EXISTS `return`;
 CREATE TABLE `return` (
   `return_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -6841,7 +6610,6 @@ CREATE TABLE `return` (
 -- Table structure for table `return_action`
 --
 
-DROP TABLE IF EXISTS `return_action`;
 CREATE TABLE `return_action` (
   `return_action_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL DEFAULT 0,
@@ -6854,7 +6622,6 @@ CREATE TABLE `return_action` (
 -- Table structure for table `return_history`
 --
 
-DROP TABLE IF EXISTS `return_history`;
 CREATE TABLE `return_history` (
   `return_history_id` int(11) NOT NULL,
   `return_id` int(11) NOT NULL,
@@ -6870,7 +6637,6 @@ CREATE TABLE `return_history` (
 -- Table structure for table `return_reason`
 --
 
-DROP TABLE IF EXISTS `return_reason`;
 CREATE TABLE `return_reason` (
   `return_reason_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL DEFAULT 0,
@@ -6883,7 +6649,6 @@ CREATE TABLE `return_reason` (
 -- Table structure for table `return_status`
 --
 
-DROP TABLE IF EXISTS `return_status`;
 CREATE TABLE `return_status` (
   `return_status_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL DEFAULT 0,
@@ -6896,7 +6661,6 @@ CREATE TABLE `return_status` (
 -- Table structure for table `review`
 --
 
-DROP TABLE IF EXISTS `review`;
 CREATE TABLE `review` (
   `review_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -6916,7 +6680,10 @@ CREATE TABLE `review` (
   `status` tinyint(1) NOT NULL DEFAULT 0,
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `auto_gen` tinyint(1) NOT NULL DEFAULT 0
+  `date_approved` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `auto_gen` tinyint(1) NOT NULL DEFAULT 0,
+  `store_id` int(11) NOT NULL DEFAULT 0,
+  `rewarded` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -6925,7 +6692,6 @@ CREATE TABLE `review` (
 -- Table structure for table `review_description`
 --
 
-DROP TABLE IF EXISTS `review_description`;
 CREATE TABLE `review_description` (
   `review_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -6941,7 +6707,6 @@ CREATE TABLE `review_description` (
 -- Table structure for table `review_fields`
 --
 
-DROP TABLE IF EXISTS `review_fields`;
 CREATE TABLE `review_fields` (
   `review_id` int(11) NOT NULL,
   `mark` varchar(255) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
@@ -6954,7 +6719,6 @@ CREATE TABLE `review_fields` (
 -- Table structure for table `review_name`
 --
 
-DROP TABLE IF EXISTS `review_name`;
 CREATE TABLE `review_name` (
   `review_name_id` int(11) NOT NULL,
   `l_code` varchar(5) DEFAULT NULL,
@@ -6967,7 +6731,6 @@ CREATE TABLE `review_name` (
 -- Table structure for table `review_template`
 --
 
-DROP TABLE IF EXISTS `review_template`;
 CREATE TABLE `review_template` (
   `review_template_id` int(11) NOT NULL,
   `l_code` varchar(5) DEFAULT NULL,
@@ -6980,7 +6743,6 @@ CREATE TABLE `review_template` (
 -- Table structure for table `search_history`
 --
 
-DROP TABLE IF EXISTS `search_history`;
 CREATE TABLE `search_history` (
   `text` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
   `times` int(11) NOT NULL,
@@ -6993,7 +6755,6 @@ CREATE TABLE `search_history` (
 -- Table structure for table `segments`
 --
 
-DROP TABLE IF EXISTS `segments`;
 CREATE TABLE `segments` (
   `segment_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -7021,7 +6782,6 @@ CREATE TABLE `segments` (
 -- Table structure for table `segments_dynamics`
 --
 
-DROP TABLE IF EXISTS `segments_dynamics`;
 CREATE TABLE `segments_dynamics` (
   `segment_dynamics_id` int(11) NOT NULL,
   `segment_id` int(11) NOT NULL,
@@ -7041,7 +6801,6 @@ CREATE TABLE `segments_dynamics` (
 -- Table structure for table `seocities`
 --
 
-DROP TABLE IF EXISTS `seocities`;
 CREATE TABLE `seocities` (
   `seocity_id` bigint(20) NOT NULL,
   `seocity_name` varchar(255) NOT NULL,
@@ -7058,7 +6817,6 @@ CREATE TABLE `seocities` (
 -- Table structure for table `seo_hreflang`
 --
 
-DROP TABLE IF EXISTS `seo_hreflang`;
 CREATE TABLE `seo_hreflang` (
   `language_id` int(11) NOT NULL,
   `query` varchar(255) NOT NULL,
@@ -7071,7 +6829,6 @@ CREATE TABLE `seo_hreflang` (
 -- Table structure for table `set`
 --
 
-DROP TABLE IF EXISTS `set`;
 CREATE TABLE `set` (
   `set_id` int(11) NOT NULL,
   `product_id` int(11) DEFAULT NULL,
@@ -7093,7 +6850,6 @@ CREATE TABLE `set` (
 -- Table structure for table `setting`
 --
 
-DROP TABLE IF EXISTS `setting`;
 CREATE TABLE `setting` (
   `setting_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL DEFAULT 0,
@@ -7109,7 +6865,6 @@ CREATE TABLE `setting` (
 -- Table structure for table `set_description`
 --
 
-DROP TABLE IF EXISTS `set_description`;
 CREATE TABLE `set_description` (
   `set_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -7123,7 +6878,6 @@ CREATE TABLE `set_description` (
 -- Table structure for table `set_to_category`
 --
 
-DROP TABLE IF EXISTS `set_to_category`;
 CREATE TABLE `set_to_category` (
   `set_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
@@ -7135,7 +6889,6 @@ CREATE TABLE `set_to_category` (
 -- Table structure for table `set_to_store`
 --
 
-DROP TABLE IF EXISTS `set_to_store`;
 CREATE TABLE `set_to_store` (
   `set_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -7147,7 +6900,6 @@ CREATE TABLE `set_to_store` (
 -- Table structure for table `shift`
 --
 
-DROP TABLE IF EXISTS `shift`;
 CREATE TABLE `shift` (
   `id` int(11) NOT NULL,
   `shift_id` varchar(64) NOT NULL,
@@ -7163,7 +6915,6 @@ CREATE TABLE `shift` (
 -- Table structure for table `shoputils_citycourier_description`
 --
 
-DROP TABLE IF EXISTS `shoputils_citycourier_description`;
 CREATE TABLE `shoputils_citycourier_description` (
   `language_id` int(11) NOT NULL,
   `name` text NOT NULL,
@@ -7176,7 +6927,6 @@ CREATE TABLE `shoputils_citycourier_description` (
 -- Table structure for table `shoputils_cumulative_discounts`
 --
 
-DROP TABLE IF EXISTS `shoputils_cumulative_discounts`;
 CREATE TABLE `shoputils_cumulative_discounts` (
   `discount_id` int(11) NOT NULL,
   `days` int(11) NOT NULL DEFAULT 0,
@@ -7193,7 +6943,6 @@ CREATE TABLE `shoputils_cumulative_discounts` (
 -- Table structure for table `shoputils_cumulative_discounts_cmsdata`
 --
 
-DROP TABLE IF EXISTS `shoputils_cumulative_discounts_cmsdata`;
 CREATE TABLE `shoputils_cumulative_discounts_cmsdata` (
   `language_id` int(11) NOT NULL,
   `store_id` int(11) DEFAULT 0,
@@ -7207,7 +6956,6 @@ CREATE TABLE `shoputils_cumulative_discounts_cmsdata` (
 -- Table structure for table `shoputils_cumulative_discounts_description`
 --
 
-DROP TABLE IF EXISTS `shoputils_cumulative_discounts_description`;
 CREATE TABLE `shoputils_cumulative_discounts_description` (
   `discount_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -7220,7 +6968,6 @@ CREATE TABLE `shoputils_cumulative_discounts_description` (
 -- Table structure for table `shoputils_cumulative_discounts_to_customer_group`
 --
 
-DROP TABLE IF EXISTS `shoputils_cumulative_discounts_to_customer_group`;
 CREATE TABLE `shoputils_cumulative_discounts_to_customer_group` (
   `discount_id` int(11) NOT NULL,
   `customer_group_id` int(11) NOT NULL
@@ -7232,7 +6979,6 @@ CREATE TABLE `shoputils_cumulative_discounts_to_customer_group` (
 -- Table structure for table `shoputils_cumulative_discounts_to_manufacturer`
 --
 
-DROP TABLE IF EXISTS `shoputils_cumulative_discounts_to_manufacturer`;
 CREATE TABLE `shoputils_cumulative_discounts_to_manufacturer` (
   `discount_id` int(11) NOT NULL,
   `manufacturer_id` int(11) NOT NULL
@@ -7244,7 +6990,6 @@ CREATE TABLE `shoputils_cumulative_discounts_to_manufacturer` (
 -- Table structure for table `shoputils_cumulative_discounts_to_store`
 --
 
-DROP TABLE IF EXISTS `shoputils_cumulative_discounts_to_store`;
 CREATE TABLE `shoputils_cumulative_discounts_to_store` (
   `discount_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -7256,7 +7001,6 @@ CREATE TABLE `shoputils_cumulative_discounts_to_store` (
 -- Table structure for table `shop_rating`
 --
 
-DROP TABLE IF EXISTS `shop_rating`;
 CREATE TABLE `shop_rating` (
   `rate_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -7278,7 +7022,6 @@ CREATE TABLE `shop_rating` (
 -- Table structure for table `shop_rating_answers`
 --
 
-DROP TABLE IF EXISTS `shop_rating_answers`;
 CREATE TABLE `shop_rating_answers` (
   `id` int(11) NOT NULL,
   `rate_id` int(11) NOT NULL,
@@ -7294,7 +7037,6 @@ CREATE TABLE `shop_rating_answers` (
 -- Table structure for table `shop_rating_custom_types`
 --
 
-DROP TABLE IF EXISTS `shop_rating_custom_types`;
 CREATE TABLE `shop_rating_custom_types` (
   `id` int(11) NOT NULL,
   `title` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
@@ -7307,7 +7049,6 @@ CREATE TABLE `shop_rating_custom_types` (
 -- Table structure for table `shop_rating_custom_values`
 --
 
-DROP TABLE IF EXISTS `shop_rating_custom_values`;
 CREATE TABLE `shop_rating_custom_values` (
   `id` int(11) NOT NULL,
   `custom_id` int(11) NOT NULL,
@@ -7321,7 +7062,6 @@ CREATE TABLE `shop_rating_custom_values` (
 -- Table structure for table `shop_rating_description`
 --
 
-DROP TABLE IF EXISTS `shop_rating_description`;
 CREATE TABLE `shop_rating_description` (
   `rate_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -7337,7 +7077,6 @@ CREATE TABLE `shop_rating_description` (
 -- Table structure for table `short_url_alias`
 --
 
-DROP TABLE IF EXISTS `short_url_alias`;
 CREATE TABLE `short_url_alias` (
   `url_id` int(11) NOT NULL,
   `url` varchar(255) NOT NULL,
@@ -7352,7 +7091,6 @@ CREATE TABLE `short_url_alias` (
 -- Table structure for table `simple_cart`
 --
 
-DROP TABLE IF EXISTS `simple_cart`;
 CREATE TABLE `simple_cart` (
   `simple_cart_id` int(11) NOT NULL,
   `store_id` int(11) DEFAULT NULL,
@@ -7362,7 +7100,9 @@ CREATE TABLE `simple_cart` (
   `lastname` varchar(32) DEFAULT NULL,
   `telephone` varchar(32) DEFAULT NULL,
   `products` text DEFAULT NULL,
-  `date_added` datetime NOT NULL
+  `date_added` datetime NOT NULL,
+  `reminder` int(11) NOT NULL DEFAULT 0,
+  `reminder_sent` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -7371,7 +7111,6 @@ CREATE TABLE `simple_cart` (
 -- Table structure for table `simple_custom_data`
 --
 
-DROP TABLE IF EXISTS `simple_custom_data`;
 CREATE TABLE `simple_custom_data` (
   `object_type` tinyint(4) NOT NULL,
   `object_id` int(11) NOT NULL,
@@ -7385,7 +7124,6 @@ CREATE TABLE `simple_custom_data` (
 -- Table structure for table `sms_log`
 --
 
-DROP TABLE IF EXISTS `sms_log`;
 CREATE TABLE `sms_log` (
   `id` int(11) NOT NULL,
   `phone` varchar(255) NOT NULL,
@@ -7399,7 +7137,6 @@ CREATE TABLE `sms_log` (
 -- Table structure for table `socnetauth2_customer2account`
 --
 
-DROP TABLE IF EXISTS `socnetauth2_customer2account`;
 CREATE TABLE `socnetauth2_customer2account` (
   `id` int(11) NOT NULL,
   `customer_id` varchar(100) NOT NULL,
@@ -7416,7 +7153,6 @@ CREATE TABLE `socnetauth2_customer2account` (
 -- Table structure for table `socnetauth2_precode`
 --
 
-DROP TABLE IF EXISTS `socnetauth2_precode`;
 CREATE TABLE `socnetauth2_precode` (
   `id` int(11) NOT NULL,
   `identity` varchar(300) NOT NULL,
@@ -7430,7 +7166,6 @@ CREATE TABLE `socnetauth2_precode` (
 -- Table structure for table `socnetauth2_records`
 --
 
-DROP TABLE IF EXISTS `socnetauth2_records`;
 CREATE TABLE `socnetauth2_records` (
   `id` int(11) NOT NULL,
   `state` varchar(100) NOT NULL,
@@ -7444,7 +7179,6 @@ CREATE TABLE `socnetauth2_records` (
 -- Table structure for table `special_attribute`
 --
 
-DROP TABLE IF EXISTS `special_attribute`;
 CREATE TABLE `special_attribute` (
   `special_attribute_id` int(10) UNSIGNED NOT NULL,
   `special_attribute_group_id` int(10) UNSIGNED NOT NULL,
@@ -7458,7 +7192,6 @@ CREATE TABLE `special_attribute` (
 -- Table structure for table `special_attribute_group`
 --
 
-DROP TABLE IF EXISTS `special_attribute_group`;
 CREATE TABLE `special_attribute_group` (
   `special_attribute_group_id` int(10) UNSIGNED NOT NULL,
   `special_attribute_group_name` varchar(100) NOT NULL DEFAULT '',
@@ -7471,7 +7204,6 @@ CREATE TABLE `special_attribute_group` (
 -- Table structure for table `sphinx_suggestions`
 --
 
-DROP TABLE IF EXISTS `sphinx_suggestions`;
 CREATE TABLE `sphinx_suggestions` (
   `id` int(11) NOT NULL,
   `keyword` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
@@ -7485,7 +7217,6 @@ CREATE TABLE `sphinx_suggestions` (
 -- Table structure for table `status`
 --
 
-DROP TABLE IF EXISTS `status`;
 CREATE TABLE `status` (
   `status_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -7500,7 +7231,6 @@ CREATE TABLE `status` (
 -- Table structure for table `stocks_dynamics`
 --
 
-DROP TABLE IF EXISTS `stocks_dynamics`;
 CREATE TABLE `stocks_dynamics` (
   `stock_dynamics_id` int(11) NOT NULL,
   `date_added` date NOT NULL,
@@ -7515,7 +7245,6 @@ CREATE TABLE `stocks_dynamics` (
 -- Table structure for table `stock_status`
 --
 
-DROP TABLE IF EXISTS `stock_status`;
 CREATE TABLE `stock_status` (
   `stock_status_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -7528,7 +7257,6 @@ CREATE TABLE `stock_status` (
 -- Table structure for table `store`
 --
 
-DROP TABLE IF EXISTS `store`;
 CREATE TABLE `store` (
   `store_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
@@ -7542,7 +7270,6 @@ CREATE TABLE `store` (
 -- Table structure for table `subscribe`
 --
 
-DROP TABLE IF EXISTS `subscribe`;
 CREATE TABLE `subscribe` (
   `subscribe_id` int(11) NOT NULL,
   `email` text NOT NULL,
@@ -7555,7 +7282,6 @@ CREATE TABLE `subscribe` (
 -- Table structure for table `subscribe_auth_description`
 --
 
-DROP TABLE IF EXISTS `subscribe_auth_description`;
 CREATE TABLE `subscribe_auth_description` (
   `subscribe_auth_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -7568,7 +7294,6 @@ CREATE TABLE `subscribe_auth_description` (
 -- Table structure for table `subscribe_email_description`
 --
 
-DROP TABLE IF EXISTS `subscribe_email_description`;
 CREATE TABLE `subscribe_email_description` (
   `subscribe_desc_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -7581,7 +7306,6 @@ CREATE TABLE `subscribe_email_description` (
 -- Table structure for table `superstat_viewed`
 --
 
-DROP TABLE IF EXISTS `superstat_viewed`;
 CREATE TABLE `superstat_viewed` (
   `entity_type` enum('p','c','m') NOT NULL,
   `entity_id` int(11) NOT NULL,
@@ -7596,7 +7320,6 @@ CREATE TABLE `superstat_viewed` (
 -- Table structure for table `suppliers`
 --
 
-DROP TABLE IF EXISTS `suppliers`;
 CREATE TABLE `suppliers` (
   `supplier_id` int(11) NOT NULL,
   `supplier_name` varchar(255) NOT NULL,
@@ -7630,8 +7353,72 @@ CREATE TABLE `suppliers` (
   `is_native` tinyint(1) NOT NULL DEFAULT 0,
   `rating50` int(11) DEFAULT NULL,
   `ratings_total` int(11) DEFAULT NULL,
-  `positive_ratings100` int(11) DEFAULT NULL
+  `positive_ratings100` int(11) DEFAULT NULL,
+  `path_to_feed` varchar(1024) DEFAULT NULL,
+  `rrp_in_feed` tinyint(1) NOT NULL DEFAULT 0,
+  `language_in_feed` varchar(3) NOT NULL,
+  `sync_field` varchar(32) NOT NULL,
+  `parser` varchar(64) DEFAULT NULL,
+  `parser_status` tinyint(1) NOT NULL DEFAULT 0,
+  `admin_status` tinyint(1) NOT NULL DEFAULT 0,
+  `stock` tinyint(1) NOT NULL DEFAULT 0,
+  `prices` tinyint(1) NOT NULL DEFAULT 0,
+  `auto_enable` tinyint(1) NOT NULL DEFAULT 0,
+  `skip_no_category` int(11) NOT NULL DEFAULT 0,
+  `same_as_warehouse` tinyint(1) NOT NULL DEFAULT 0,
+  `currency` varchar(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `supplier_attributes`
+--
+
+CREATE TABLE `supplier_attributes` (
+  `supplier_attribute_id` int(11) NOT NULL,
+  `supplier_id` int(11) NOT NULL,
+  `supplier_attribute` varchar(512) NOT NULL,
+  `attribute_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `supplier_categories`
+--
+
+CREATE TABLE `supplier_categories` (
+  `supplier_category_id` int(11) NOT NULL,
+  `supplier_id` int(11) NOT NULL,
+  `supplier_infeed_id` varchar(512) NOT NULL,
+  `supplier_infeed_parent` varchar(512) NOT NULL,
+  `supplier_category` varchar(1024) NOT NULL,
+  `supplier_category_full` varchar(2048) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `products` tinyint(1) NOT NULL DEFAULT 0,
+  `stocks` tinyint(1) NOT NULL DEFAULT 0,
+  `prices` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `supplier_products`
+--
+
+CREATE TABLE `supplier_products` (
+  `product_supplier_id` int(11) NOT NULL,
+  `supplier_id` int(11) NOT NULL,
+  `supplier_product_id` varchar(512) NOT NULL,
+  `sku` varchar(256) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `price` decimal(15,2) NOT NULL,
+  `price_special` decimal(15,2) NOT NULL,
+  `stock` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 0,
+  `raw` longtext NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -7639,7 +7426,6 @@ CREATE TABLE `suppliers` (
 -- Table structure for table `tax_class`
 --
 
-DROP TABLE IF EXISTS `tax_class`;
 CREATE TABLE `tax_class` (
   `tax_class_id` int(11) NOT NULL,
   `title` varchar(32) NOT NULL,
@@ -7654,7 +7440,6 @@ CREATE TABLE `tax_class` (
 -- Table structure for table `tax_rate`
 --
 
-DROP TABLE IF EXISTS `tax_rate`;
 CREATE TABLE `tax_rate` (
   `tax_rate_id` int(11) NOT NULL,
   `geo_zone_id` int(11) NOT NULL DEFAULT 0,
@@ -7671,7 +7456,6 @@ CREATE TABLE `tax_rate` (
 -- Table structure for table `tax_rate_to_customer_group`
 --
 
-DROP TABLE IF EXISTS `tax_rate_to_customer_group`;
 CREATE TABLE `tax_rate_to_customer_group` (
   `tax_rate_id` int(11) NOT NULL,
   `customer_group_id` int(11) NOT NULL
@@ -7683,7 +7467,6 @@ CREATE TABLE `tax_rate_to_customer_group` (
 -- Table structure for table `tax_rule`
 --
 
-DROP TABLE IF EXISTS `tax_rule`;
 CREATE TABLE `tax_rule` (
   `tax_rule_id` int(11) NOT NULL,
   `tax_class_id` int(11) NOT NULL,
@@ -7698,7 +7481,6 @@ CREATE TABLE `tax_rule` (
 -- Table structure for table `telegram_chats`
 --
 
-DROP TABLE IF EXISTS `telegram_chats`;
 CREATE TABLE `telegram_chats` (
   `id` bigint(20) NOT NULL DEFAULT 0 COMMENT 'Unique user or chat identifier',
   `type` char(10) DEFAULT '' COMMENT 'chat type private groupe or channel',
@@ -7713,7 +7495,6 @@ CREATE TABLE `telegram_chats` (
 -- Table structure for table `telegram_messages`
 --
 
-DROP TABLE IF EXISTS `telegram_messages`;
 CREATE TABLE `telegram_messages` (
   `update_id` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'The update''s unique identifier.',
   `message_id` bigint(20) DEFAULT NULL COMMENT 'Unique message identifier',
@@ -7747,7 +7528,6 @@ CREATE TABLE `telegram_messages` (
 -- Table structure for table `telegram_users`
 --
 
-DROP TABLE IF EXISTS `telegram_users`;
 CREATE TABLE `telegram_users` (
   `id` bigint(20) NOT NULL DEFAULT 0 COMMENT 'Unique user identifier',
   `first_name` char(255) NOT NULL DEFAULT '' COMMENT 'User first name',
@@ -7763,7 +7543,6 @@ CREATE TABLE `telegram_users` (
 -- Table structure for table `telegram_users_chats`
 --
 
-DROP TABLE IF EXISTS `telegram_users_chats`;
 CREATE TABLE `telegram_users_chats` (
   `user_id` bigint(20) NOT NULL DEFAULT 0 COMMENT 'Unique user identifier',
   `chat_id` bigint(20) NOT NULL DEFAULT 0 COMMENT 'Unique user or chat identifier'
@@ -7775,7 +7554,6 @@ CREATE TABLE `telegram_users_chats` (
 -- Table structure for table `temp`
 --
 
-DROP TABLE IF EXISTS `temp`;
 CREATE TABLE `temp` (
   `key` varchar(255) NOT NULL,
   `value` longtext NOT NULL,
@@ -7788,7 +7566,6 @@ CREATE TABLE `temp` (
 -- Table structure for table `tickets`
 --
 
-DROP TABLE IF EXISTS `tickets`;
 CREATE TABLE `tickets` (
   `ticket_id` int(11) NOT NULL,
   `user_group_id` int(11) DEFAULT NULL,
@@ -7814,7 +7591,6 @@ CREATE TABLE `tickets` (
 -- Table structure for table `ticket_sort`
 --
 
-DROP TABLE IF EXISTS `ticket_sort`;
 CREATE TABLE `ticket_sort` (
   `ticket_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL
@@ -7826,7 +7602,6 @@ CREATE TABLE `ticket_sort` (
 -- Table structure for table `tracker`
 --
 
-DROP TABLE IF EXISTS `tracker`;
 CREATE TABLE `tracker` (
   `id` bigint(20) NOT NULL,
   `ip` varchar(32) DEFAULT NULL,
@@ -7850,7 +7625,6 @@ CREATE TABLE `tracker` (
 -- Table structure for table `translate_stats`
 --
 
-DROP TABLE IF EXISTS `translate_stats`;
 CREATE TABLE `translate_stats` (
   `time` datetime NOT NULL,
   `amount` int(11) NOT NULL
@@ -7862,7 +7636,6 @@ CREATE TABLE `translate_stats` (
 -- Table structure for table `trigger_history`
 --
 
-DROP TABLE IF EXISTS `trigger_history`;
 CREATE TABLE `trigger_history` (
   `trigger_history_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -7878,7 +7651,6 @@ CREATE TABLE `trigger_history` (
 -- Table structure for table `url_alias`
 --
 
-DROP TABLE IF EXISTS `url_alias`;
 CREATE TABLE `url_alias` (
   `url_alias_id` int(11) NOT NULL,
   `query` varchar(255) NOT NULL,
@@ -7892,7 +7664,6 @@ CREATE TABLE `url_alias` (
 -- Table structure for table `url_alias_cached`
 --
 
-DROP TABLE IF EXISTS `url_alias_cached`;
 CREATE TABLE `url_alias_cached` (
   `store_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -7908,7 +7679,6 @@ CREATE TABLE `url_alias_cached` (
 -- Table structure for table `user`
 --
 
-DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `user_id` int(11) NOT NULL,
   `user_group_id` int(11) NOT NULL,
@@ -7921,6 +7691,7 @@ CREATE TABLE `user` (
   `email` varchar(96) NOT NULL,
   `code` varchar(40) NOT NULL,
   `is_av` tinyint(1) NOT NULL,
+  `extended_stats` tinyint(1) NOT NULL DEFAULT 0,
   `is_mainmanager` tinyint(1) NOT NULL,
   `is_headsales` tinyint(1) NOT NULL DEFAULT 0,
   `internal_pbx_num` varchar(255) NOT NULL,
@@ -7945,14 +7716,13 @@ CREATE TABLE `user` (
 -- Table structure for table `user_content`
 --
 
-DROP TABLE IF EXISTS `user_content`;
 CREATE TABLE `user_content` (
   `user_id` int(11) NOT NULL,
   `datetime` datetime NOT NULL,
   `date` date NOT NULL,
   `action` varchar(10) NOT NULL,
   `entity_type` varchar(32) NOT NULL,
-  `entity_id` int(11) NOT NULL
+  `entity_id` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -7961,7 +7731,6 @@ CREATE TABLE `user_content` (
 -- Table structure for table `user_group`
 --
 
-DROP TABLE IF EXISTS `user_group`;
 CREATE TABLE `user_group` (
   `user_group_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
@@ -7979,7 +7748,6 @@ CREATE TABLE `user_group` (
 -- Table structure for table `user_group_to_store`
 --
 
-DROP TABLE IF EXISTS `user_group_to_store`;
 CREATE TABLE `user_group_to_store` (
   `user_group_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -7991,7 +7759,6 @@ CREATE TABLE `user_group_to_store` (
 -- Table structure for table `user_worktime`
 --
 
-DROP TABLE IF EXISTS `user_worktime`;
 CREATE TABLE `user_worktime` (
   `user_id` int(11) NOT NULL,
   `date` date NOT NULL,
@@ -8012,7 +7779,8 @@ CREATE TABLE `user_worktime` (
   `treated_order_count` int(11) NOT NULL DEFAULT 0,
   `confirmed_order_count` int(11) NOT NULL DEFAULT 0,
   `problem_order_count` int(11) NOT NULL DEFAULT 0,
-  `edit_csi_count` int(11) NOT NULL
+  `edit_csi_count` int(11) NOT NULL,
+  `customer_manual_count` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -8021,7 +7789,6 @@ CREATE TABLE `user_worktime` (
 -- Table structure for table `vk_export_album`
 --
 
-DROP TABLE IF EXISTS `vk_export_album`;
 CREATE TABLE `vk_export_album` (
   `category_id` int(11) NOT NULL,
   `vk_album_id` varchar(32) NOT NULL,
@@ -8034,7 +7801,6 @@ CREATE TABLE `vk_export_album` (
 -- Table structure for table `vk_export_photo`
 --
 
-DROP TABLE IF EXISTS `vk_export_photo`;
 CREATE TABLE `vk_export_photo` (
   `product_id` int(11) NOT NULL,
   `vk_photo_id` varchar(32) NOT NULL,
@@ -8049,7 +7815,6 @@ CREATE TABLE `vk_export_photo` (
 -- Table structure for table `voucher`
 --
 
-DROP TABLE IF EXISTS `voucher`;
 CREATE TABLE `voucher` (
   `voucher_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -8073,7 +7838,6 @@ CREATE TABLE `voucher` (
 -- Table structure for table `voucher_history`
 --
 
-DROP TABLE IF EXISTS `voucher_history`;
 CREATE TABLE `voucher_history` (
   `voucher_history_id` int(11) NOT NULL,
   `voucher_id` int(11) NOT NULL,
@@ -8088,7 +7852,6 @@ CREATE TABLE `voucher_history` (
 -- Table structure for table `voucher_theme`
 --
 
-DROP TABLE IF EXISTS `voucher_theme`;
 CREATE TABLE `voucher_theme` (
   `voucher_theme_id` int(11) NOT NULL,
   `image` varchar(255) NOT NULL
@@ -8100,7 +7863,6 @@ CREATE TABLE `voucher_theme` (
 -- Table structure for table `voucher_theme_description`
 --
 
-DROP TABLE IF EXISTS `voucher_theme_description`;
 CREATE TABLE `voucher_theme_description` (
   `voucher_theme_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -8113,7 +7875,6 @@ CREATE TABLE `voucher_theme_description` (
 -- Table structure for table `wayforpay_orders`
 --
 
-DROP TABLE IF EXISTS `wayforpay_orders`;
 CREATE TABLE `wayforpay_orders` (
   `wayforpay_order_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -8129,7 +7890,6 @@ CREATE TABLE `wayforpay_orders` (
 -- Table structure for table `wc_continents`
 --
 
-DROP TABLE IF EXISTS `wc_continents`;
 CREATE TABLE `wc_continents` (
   `code` char(2) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -8142,7 +7902,6 @@ CREATE TABLE `wc_continents` (
 -- Table structure for table `wc_countries`
 --
 
-DROP TABLE IF EXISTS `wc_countries`;
 CREATE TABLE `wc_countries` (
   `code` char(2) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -8157,7 +7916,6 @@ CREATE TABLE `wc_countries` (
 -- Table structure for table `weight_class`
 --
 
-DROP TABLE IF EXISTS `weight_class`;
 CREATE TABLE `weight_class` (
   `weight_class_id` int(11) NOT NULL,
   `value` decimal(15,8) NOT NULL DEFAULT 0.00000000,
@@ -8172,7 +7930,6 @@ CREATE TABLE `weight_class` (
 -- Table structure for table `weight_class_description`
 --
 
-DROP TABLE IF EXISTS `weight_class_description`;
 CREATE TABLE `weight_class_description` (
   `weight_class_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -8186,7 +7943,6 @@ CREATE TABLE `weight_class_description` (
 -- Table structure for table `yandex_feeds`
 --
 
-DROP TABLE IF EXISTS `yandex_feeds`;
 CREATE TABLE `yandex_feeds` (
   `store_id` int(11) NOT NULL,
   `currency` varchar(5) NOT NULL,
@@ -8201,7 +7957,6 @@ CREATE TABLE `yandex_feeds` (
 -- Table structure for table `yandex_queue`
 --
 
-DROP TABLE IF EXISTS `yandex_queue`;
 CREATE TABLE `yandex_queue` (
   `order_id` int(11) NOT NULL,
   `status` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -8214,7 +7969,6 @@ CREATE TABLE `yandex_queue` (
 -- Table structure for table `yandex_stock_queue`
 --
 
-DROP TABLE IF EXISTS `yandex_stock_queue`;
 CREATE TABLE `yandex_stock_queue` (
   `yam_product_id` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
   `stock` int(11) NOT NULL,
@@ -8227,7 +7981,6 @@ CREATE TABLE `yandex_stock_queue` (
 -- Table structure for table `zone`
 --
 
-DROP TABLE IF EXISTS `zone`;
 CREATE TABLE `zone` (
   `zone_id` int(11) NOT NULL,
   `country_id` int(11) NOT NULL,
@@ -8242,7 +7995,6 @@ CREATE TABLE `zone` (
 -- Table structure for table `zone_to_geo_zone`
 --
 
-DROP TABLE IF EXISTS `zone_to_geo_zone`;
 CREATE TABLE `zone_to_geo_zone` (
   `zone_to_geo_zone_id` int(11) NOT NULL,
   `country_id` int(11) NOT NULL,
@@ -8258,7 +8010,6 @@ CREATE TABLE `zone_to_geo_zone` (
 -- Table structure for table `_temp`
 --
 
-DROP TABLE IF EXISTS `_temp`;
 CREATE TABLE `_temp` (
   `value` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -8269,7 +8020,6 @@ CREATE TABLE `_temp` (
 -- Table structure for table `_temp_discount`
 --
 
-DROP TABLE IF EXISTS `_temp_discount`;
 CREATE TABLE `_temp_discount` (
   `id` int(11) NOT NULL,
   `card_id` varchar(30) NOT NULL
@@ -8339,7 +8089,8 @@ ALTER TABLE `actions_to_store`
 --
 ALTER TABLE `actiontemplate`
   ADD PRIMARY KEY (`actiontemplate_id`),
-  ADD KEY `use_for_manual` (`use_for_manual`);
+  ADD KEY `use_for_manual` (`use_for_manual`),
+  ADD KEY `use_for_forgotten` (`use_for_forgotten`);
 
 --
 -- Indexes for table `actiontemplate_description`
@@ -8478,6 +8229,16 @@ ALTER TABLE `amazon_orders_products`
   ADD KEY `date_expected` (`date_expected`),
   ADD KEY `supplier` (`supplier`),
   ADD KEY `delivery_status_ru` (`delivery_status_ru`);
+
+--
+-- Indexes for table `amazon_zipcodes`
+--
+ALTER TABLE `amazon_zipcodes`
+  ADD PRIMARY KEY (`zipcode_id`),
+  ADD UNIQUE KEY `zipcode_2` (`zipcode`),
+  ADD KEY `error_count` (`error_count`),
+  ADD KEY `request_count` (`request_count`),
+  ADD KEY `dropped` (`dropped`);
 
 --
 -- Indexes for table `amzn_add_queue`
@@ -8632,7 +8393,8 @@ ALTER TABLE `category`
   ADD KEY `bought` (`bought_for_month`),
   ADD KEY `final` (`final`),
   ADD KEY `special` (`special`),
-  ADD KEY `hotline_enable` (`hotline_enable`);
+  ADD KEY `hotline_enable` (`hotline_enable`),
+  ADD KEY `need_reprice` (`need_reprice`);
 
 --
 -- Indexes for table `category_amazon_bestseller_tree`
@@ -8650,7 +8412,7 @@ ALTER TABLE `category_amazon_bestseller_tree`
 -- Indexes for table `category_amazon_tree`
 --
 ALTER TABLE `category_amazon_tree`
-  ADD KEY `category_id` (`category_id`),
+  ADD UNIQUE KEY `category_id` (`category_id`) USING BTREE,
   ADD KEY `parent_id` (`parent_id`),
   ADD KEY `final_category` (`final_category`),
   ADD KEY `name` (`name`),
@@ -8731,6 +8493,19 @@ ALTER TABLE `category_related`
 ALTER TABLE `category_review`
   ADD PRIMARY KEY (`categoryreview_id`),
   ADD KEY `category_id` (`category_id`);
+
+--
+-- Indexes for table `category_search_words`
+--
+ALTER TABLE `category_search_words`
+  ADD PRIMARY KEY (`category_search_word_id`),
+  ADD KEY `category_id` (`category_id`),
+  ADD KEY `category_word_type` (`category_word_type`),
+  ADD KEY `category_word_last_search` (`category_word_last_search`),
+  ADD KEY `category_word_total_pages` (`category_word_total_pages`),
+  ADD KEY `category_word_pages_parsed` (`category_word_pages_parsed`),
+  ADD KEY `category_search_auto` (`category_search_auto`),
+  ADD KEY `category_word_user_id` (`category_word_user_id`);
 
 --
 -- Indexes for table `category_to_actions`
@@ -9074,6 +8849,14 @@ ALTER TABLE `coupon_product`
   ADD PRIMARY KEY (`coupon_product_id`),
   ADD KEY `coupon_id` (`coupon_id`),
   ADD KEY `product_id` (`product_id`);
+
+--
+-- Indexes for table `coupon_random`
+--
+ALTER TABLE `coupon_random`
+  ADD PRIMARY KEY (`coupon_random_id`),
+  ADD KEY `coupon_random` (`coupon_random`),
+  ADD KEY `coupon_code` (`coupon_code`);
 
 --
 -- Indexes for table `coupon_review`
@@ -9911,7 +9694,9 @@ ALTER TABLE `manufacturer`
   ADD KEY `priceva_feed` (`priceva_feed`),
   ADD KEY `menu_brand` (`menu_brand`),
   ADD KEY `homepage` (`homepage`),
-  ADD KEY `hotline_enable` (`hotline_enable`);
+  ADD KEY `hotline_enable` (`hotline_enable`),
+  ADD KEY `products_total` (`products_total`),
+  ADD KEY `product_total_enabled` (`products_total_enabled`);
 
 --
 -- Indexes for table `manufacturer_description`
@@ -9951,7 +9736,8 @@ ALTER TABLE `maxmind_geo_country`
 --
 ALTER TABLE `mono_orders`
   ADD PRIMARY KEY (`Id`),
-  ADD KEY `OrderId` (`OrderId`);
+  ADD KEY `OrderId` (`OrderId`),
+  ADD KEY `CheckoutOrderId` (`CheckoutOrderId`);
 
 --
 -- Indexes for table `multi_pay_payment`
@@ -10291,7 +10077,9 @@ ALTER TABLE `order`
   ADD KEY `fcheque_link` (`fcheque_link`),
   ADD KEY `needs_checkboxua` (`needs_checkboxua`),
   ADD KEY `monocheckout` (`monocheckout`),
-  ADD KEY `amazon_offers_type` (`amazon_offers_type`);
+  ADD KEY `amazon_offers_type` (`amazon_offers_type`),
+  ADD KEY `yam_campaign_id` (`yam_campaign_id`),
+  ADD KEY `yam_express` (`yam_express`);
 
 --
 -- Indexes for table `order_amazon`
@@ -10595,6 +10383,12 @@ ALTER TABLE `order_voucher`
   ADD KEY `voucher_theme_id` (`voucher_theme_id`);
 
 --
+-- Indexes for table `otp_tries`
+--
+ALTER TABLE `otp_tries`
+  ADD PRIMARY KEY (`ip_addr`);
+
+--
 -- Indexes for table `parser_queue`
 --
 ALTER TABLE `parser_queue`
@@ -10669,9 +10463,6 @@ ALTER TABLE `product`
   ADD KEY `lock_points` (`lock_points`),
   ADD KEY `priceva_enable` (`priceva_enable`),
   ADD KEY `priceva_disable` (`priceva_disable`),
-  ADD KEY `yam_product_id` (`yam_product_id`),
-  ADD KEY `yam_in_feed` (`yam_in_feed`),
-  ADD KEY `yam_hidden` (`yam_hidden`),
   ADD KEY `is_illiquid` (`is_illiquid`),
   ADD KEY `amzn_invalid_asin` (`amzn_invalid_asin`),
   ADD KEY `amzn_not_found` (`amzn_not_found`),
@@ -10703,7 +10494,9 @@ ALTER TABLE `product`
   ADD KEY `price_delayed` (`price_delayed`),
   ADD KEY `amazon_offers_type` (`amazon_offers_type`),
   ADD KEY `amazon_seller_quality` (`amazon_seller_quality`),
-  ADD KEY `hotline_disable` (`hotline_disable`);
+  ADD KEY `hotline_disable` (`hotline_disable`),
+  ADD KEY `added_from_supplier` (`added_from_supplier`),
+  ADD KEY `product_group_id` (`product_group_id`);
 
 --
 -- Indexes for table `product_additional_offer`
@@ -10848,6 +10641,13 @@ ALTER TABLE `product_front_price`
   ADD KEY `currency` (`currency`);
 
 --
+-- Indexes for table `product_groups`
+--
+ALTER TABLE `product_groups`
+  ADD PRIMARY KEY (`product_group_id`),
+  ADD KEY `product_group_exclude_remarketing` (`product_group_exclude_remarketing`);
+
+--
 -- Indexes for table `product_image`
 --
 ALTER TABLE `product_image`
@@ -10910,7 +10710,8 @@ ALTER TABLE `product_price_national_to_store`
   ADD KEY `store_id` (`store_id`),
   ADD KEY `currency` (`currency`),
   ADD KEY `price` (`price`),
-  ADD KEY `getProduct` (`product_id`,`store_id`,`price`);
+  ADD KEY `getProduct` (`product_id`,`store_id`,`price`),
+  ADD KEY `price_delayed` (`price_delayed`);
 
 --
 -- Indexes for table `product_price_national_to_store1`
@@ -11065,10 +10866,7 @@ ALTER TABLE `product_special_attribute`
 -- Indexes for table `product_special_backup`
 --
 ALTER TABLE `product_special_backup`
-  ADD PRIMARY KEY (`product_special_id`),
-  ADD KEY `product_id` (`product_id`),
-  ADD KEY `store_id` (`store_id`),
-  ADD KEY `priority` (`priority`);
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `product_sponsored`
@@ -11385,7 +11183,8 @@ ALTER TABLE `review`
   ADD KEY `product_id` (`product_id`),
   ADD KEY `rating` (`rating`),
   ADD KEY `status` (`status`),
-  ADD KEY `date_added` (`date_added`);
+  ADD KEY `date_added` (`date_added`),
+  ADD KEY `rewarded` (`rewarded`);
 
 --
 -- Indexes for table `review_description`
@@ -11717,7 +11516,37 @@ ALTER TABLE `suppliers`
   ADD KEY `ratings_total` (`ratings_total`),
   ADD KEY `telephone` (`telephone`),
   ADD KEY `email` (`email`),
-  ADD KEY `supplier_country` (`supplier_country`);
+  ADD KEY `supplier_country` (`supplier_country`),
+  ADD KEY `parser_status` (`parser_status`),
+  ADD KEY `admin_status` (`admin_status`);
+
+--
+-- Indexes for table `supplier_attributes`
+--
+ALTER TABLE `supplier_attributes`
+  ADD PRIMARY KEY (`supplier_attribute_id`),
+  ADD UNIQUE KEY `supplier_id_2` (`supplier_id`,`supplier_attribute`),
+  ADD KEY `supplier_attribute` (`supplier_attribute`),
+  ADD KEY `supplier_id` (`supplier_id`);
+
+--
+-- Indexes for table `supplier_categories`
+--
+ALTER TABLE `supplier_categories`
+  ADD PRIMARY KEY (`supplier_category_id`),
+  ADD UNIQUE KEY `supplier_id_2` (`supplier_id`,`supplier_category_full`) USING HASH,
+  ADD KEY `supplier_id` (`supplier_id`),
+  ADD KEY `supplier_infeed_id` (`supplier_infeed_id`),
+  ADD KEY `supplier_infeed_parent` (`supplier_infeed_parent`);
+
+--
+-- Indexes for table `supplier_products`
+--
+ALTER TABLE `supplier_products`
+  ADD PRIMARY KEY (`product_supplier_id`),
+  ADD UNIQUE KEY `supplier_id_2` (`supplier_id`,`supplier_product_id`),
+  ADD KEY `supplier_id` (`supplier_id`),
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `tax_class`
@@ -12106,6 +11935,12 @@ ALTER TABLE `amazon_orders_products`
   MODIFY `order_product_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `amazon_zipcodes`
+--
+ALTER TABLE `amazon_zipcodes`
+  MODIFY `zipcode_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `attribute`
 --
 ALTER TABLE `attribute`
@@ -12176,6 +12011,12 @@ ALTER TABLE `category_psm_template`
 --
 ALTER TABLE `category_review`
   MODIFY `categoryreview_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `category_search_words`
+--
+ALTER TABLE `category_search_words`
+  MODIFY `category_search_word_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `cdek_cities`
@@ -12284,6 +12125,12 @@ ALTER TABLE `coupon_history`
 --
 ALTER TABLE `coupon_product`
   MODIFY `coupon_product_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `coupon_random`
+--
+ALTER TABLE `coupon_random`
+  MODIFY `coupon_random_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `csvprice_pro`
@@ -12940,6 +12787,12 @@ ALTER TABLE `product_discount`
   MODIFY `product_discount_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `product_groups`
+--
+ALTER TABLE `product_groups`
+  MODIFY `product_group_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `product_image`
 --
 ALTER TABLE `product_image`
@@ -13262,6 +13115,24 @@ ALTER TABLE `subscribe_email_description`
 --
 ALTER TABLE `suppliers`
   MODIFY `supplier_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `supplier_attributes`
+--
+ALTER TABLE `supplier_attributes`
+  MODIFY `supplier_attribute_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `supplier_categories`
+--
+ALTER TABLE `supplier_categories`
+  MODIFY `supplier_category_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `supplier_products`
+--
+ALTER TABLE `supplier_products`
+  MODIFY `product_supplier_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tax_class`

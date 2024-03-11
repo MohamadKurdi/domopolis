@@ -97,6 +97,7 @@
 #Всякая системная шляпа
 /system/cache
 /system/cache_mfp
+/system/structure-demo.sql
 /system/config
 /system/config/*
 /system/config.parts/*

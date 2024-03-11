@@ -25,7 +25,7 @@ if (!is_cli()) {
 
 echoLine('[CLI] We are in CLI mode. PHP version: ' . phpversion() . ', time ' . date('Y-m-d H:i:s'), 's');
 
-if ($argv[1] == 'install') {
+if ($argv[1] == 'preinstall') {
     echoLine('[CLI] Running installation first iteration', 'w');
     require_once(dirname(__FILE__) . '/system/installer.php');
     $installer = new \hobotix\Installer();

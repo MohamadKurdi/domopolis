@@ -141,8 +141,22 @@ if (!class_exists('DB')){
 			return $this->connection->getLastId();
 		}
 
-		public function doUpdateQuery($table, $entity_id, $entity_name, $fields){
+        public function importSQL($file){
+            $sql_file   = file_get_contents($file);
+            $queries    = explode(';', str_replace("\r", '', $sql_file));
 
+            foreach ($queries as $query) {
+                $query = trim($query);
+
+                if (!empty($query)) {
+                    if (!$this->connection->query($query)) {
+                        echoLine('[DB::importSQL] Error executing query ' . $this->connection->error);
+                    }
+                }
+            }
+        }
+
+		public function doUpdateQuery($table, $entity_id, $entity_name, $fields){
 			$sql = "UPDATE `" . $this->escape($table) . "` SET ";
 			foreach ($fields as $field) {
 				if ($field['type'] == 'int') {
