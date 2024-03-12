@@ -47,12 +47,7 @@ class Indexer
                         $reparsedName = $mapping[$language_id] . ' ' . $altManufacturer;
                     }
 
-                    if ($language_id == 5) {
-                        $params['body']['names_' . $language_code][] = $reparsedName;
-                        $params['body']['names_' . 'uk'][] = $reparsedName;
-                    } else {
-                        $params['body']['names_' . $language_code][] = $reparsedName;
-                    }
+                    $params['body']['names_' . $language_code][] = $reparsedName;
                 }
             }
         }
@@ -72,19 +67,7 @@ class Indexer
             if (!empty($mapping[$language_id])) {
                 $params['body']['name_' . $language_code] = $mapping[$language_id];
 
-                if ($language_id == 6) {
-                    if (empty($mapping[5])) {
-                        $mapping[5] = $mapping[6];
-                    }
-
-                    if (empty($altmapping[5])) {
-                        $altmapping[5] = $altmapping[6];
-                    }
-
-                    $params['body']['names_' . $language_code] = array_values(array_unique(array_merge(array($mapping[$language_id]), array($mapping[5]), $altmapping[$language_id], $altmapping[5])));
-                } else {
-                    $params['body']['names_' . $language_code] = array_values(array_unique(array_merge(array($mapping[$language_id]), $altmapping[$language_id])));
-                }
+                $params['body']['names_' . $language_code] = array_values(array_unique(array_merge(array($mapping[$language_id]), $altmapping[$language_id])));
 
                 if (!empty($params['body']['name_' . $language_code])) {
                     $params['body']['suggest_' . $language_code] = $params['body']['name_' . $language_code];
@@ -126,12 +109,7 @@ class Indexer
                             $reparsedName = $mapping[$language_id] . ' ' . $reparsedName;
                         }
 
-                        if ($language_id == 5) {
-                            $params['body']['names_' . $language_code][] = $reparsedName;
-                            $params['body']['names_' . 'uk'][] = $reparsedName;
-                        } else {
-                            $params['body']['names_' . $language_code][] = $reparsedName;
-                        }
+                        $params['body']['names_' . $language_code][] = $reparsedName;
                     }
                 }
             }
@@ -153,37 +131,16 @@ class Indexer
 
                 $categoryMapping[$language_id] = trim(str_replace($manufacturerMapping[$language_id], '', $categoryMapping[$language_id]));
 
-                echoLine('>> Категория ' . $categoryMapping[$language_id]);
+                echoLine('[Indexer::prepareCategoryManufacturerInterSectionIndex] Category ' . $categoryMapping[$language_id], 'w');
 
-                if (!$collectionLogic && $language_id == 6) {
-
-                    if (empty($categoryMapping[5])) {
-                        $categoryMapping[5] = !empty($categoryMapping[2]) ? $categoryMapping[2] : $categoryMapping[6];
-                    }
-
-                    if (empty($manufacturerMapping[5])) {
-                        $manufacturerMapping[2] = !empty($manufacturerMapping[2]) ? $manufacturerMapping[2] : $manufacturerMapping[6];
-                    }
-
-                    $categoryMapping[5] = trim(str_replace($manufacturerMapping[5], '', $categoryMapping[5]));
-
-                    $params['body']['name_' . $language_code] = array_values(array_unique([trim($categoryMapping[$language_id] . ' ' . $manufacturerMapping[$language_id]), trim($categoryMapping[5] . ' ' . $manufacturerMapping[5])]));
-
-                } else {
-                    $params['body']['name_' . $language_code] = trim($categoryMapping[$language_id] . ' ' . $manufacturerMapping[$language_id]);
-                }
+                $params['body']['name_' . $language_code] = trim($categoryMapping[$language_id] . ' ' . $manufacturerMapping[$language_id]);
             }
 
             if (!empty($categoryAltMapping[$language_id])) {
                 foreach ($categoryAltMapping[$language_id] as $categoryAlt) {
 
                     if (!empty($manufacturerMapping[$language_id]) && trim($categoryAlt)) {
-                        if ($language_id == 5) {
-                            $params['body']['names_' . $language_code][] = trim($categoryAlt . ' ' . $manufacturerMapping[$language_id]);
-                            $params['body']['names_' . 'uk'][] = trim($categoryAlt . ' ' . $manufacturerMapping[$language_id]);
-                        } else {
-                            $params['body']['names_' . $language_code][] = trim($categoryAlt . ' ' . $manufacturerMapping[$language_id]);
-                        }
+                       $params['body']['names_' . $language_code][] = trim($categoryAlt . ' ' . $manufacturerMapping[$language_id]);
                     }
                 }
                 unset($categoryAlt);
@@ -193,22 +150,12 @@ class Indexer
 
                 foreach ($manufacturerAltMapping[$language_id] as $manufacturerAlt) {
                     if (trim($manufacturerAlt)) {
-                        if (!$collectionLogic && $language_id == 5) {
-                            $params['body']['names_' . $language_code][] = trim($categoryMapping[$language_id] . ' ' . $manufacturerAlt);
-                            $params['body']['names_' . 'uk'][] = trim($categoryMapping[$language_id] . ' ' . $manufacturerAlt);
-                        } else {
-                            $params['body']['names_' . $language_code][] = trim($categoryMapping[$language_id] . ' ' . $manufacturerAlt);
-                        }
+                       $params['body']['names_' . $language_code][] = trim($categoryMapping[$language_id] . ' ' . $manufacturerAlt);
 
                         if (!empty($categoryAltMapping[$language_id])) {
                             foreach ($categoryAltMapping[$language_id] as $categoryAlt) {
                                 if (trim($categoryAlt)) {
-                                    if ($language_id == 5) {
-                                        $params['body']['names_' . $language_code][] = trim($categoryAlt . ' ' . $manufacturerAlt);
-                                        $params['body']['names_' . 'uk'][] = trim($categoryAlt . ' ' . $manufacturerAlt);
-                                    } else {
-                                        $params['body']['names_' . $language_code][] = trim($categoryAlt . ' ' . $manufacturerAlt);
-                                    }
+                                    $params['body']['names_' . $language_code][] = trim($categoryAlt . ' ' . $manufacturerAlt);
                                 }
                             }
                         }
@@ -228,19 +175,8 @@ class Indexer
 
         foreach ($this->registry->get('languages_id_code_mapping') as $language_id => $language_code) {
             if (!empty($mapping[$language_id])) {
-                if ($language_id == 6) {
-                    if (empty($mapping[5])) {
-                        $mapping[5] = $mapping[6];
-                    }
-
-                    $params['body']['name_' . $language_code] = array_values(array_unique(array_merge(array($mapping[$language_id]), array($mapping[5]))));
-                    $params['body']['names_' . $language_code] = array_values(array_unique(array_merge(array($mapping[$language_id]), array($mapping[5]))));
-
-                } else {
-
-                    $params['body']['name_' . $language_code] = $mapping[$language_id];
-                    $params['body']['names_' . $language_code] = [$mapping[$language_id]];
-                }
+                $params['body']['name_' . $language_code] = $mapping[$language_id];
+                $params['body']['names_' . $language_code] = [$mapping[$language_id]];
             }
         }
     }
@@ -263,7 +199,7 @@ class Indexer
         $response = $this->registry->get('elasticSearch')->connection()->indices()->delete($deleteParams);
     }
 
-    public function refillEntitiesIndex()
+    public function recreateEntitiesIndex()
     {
         try {
             $deleteParams = [
@@ -327,6 +263,12 @@ class Indexer
             $mapping = StaticFunctions::createMappingToNonEmpty($stores_query, 'store_id');
             StaticFunctions::createStoreIndexArray($mapping, 'stores', $this->registry->get('stores_to_main_language_mapping'), $params);
 
+            foreach ($this->registry->get('languages_id_code_mapping') as $language_id => $language_code) {
+                if (!empty($params['body']['names_' . $language_code]) && count($params['body']['names_' . $language_code]) == 1){
+                    unset($params['body']['names_' . $language_code]);
+                }
+            } 
+
             $response = $this->registry->get('elasticSearch')->connection()->index($params);
         }
 
@@ -348,6 +290,12 @@ class Indexer
                 $stores_query = $this->db->query("SELECT store_id FROM manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer['manufacturer_id'] . "'");
                 $mapping = StaticFunctions::createMappingToNonEmpty($stores_query, 'store_id');
                 StaticFunctions::createStoreIndexArray($mapping, 'stores', $this->registry->get('stores_to_main_language_mapping'), $params);
+
+                foreach ($this->registry->get('languages_id_code_mapping') as $language_id => $language_code) {
+                    if (!empty($params['body']['names_' . $language_code]) && count($params['body']['names_' . $language_code]) == 1){
+                        unset($params['body']['names_' . $language_code]);
+                    }
+                }  
 
                 $response = $this->registry->get('elasticSearch')->connection()->index($params);
             }
@@ -383,6 +331,12 @@ class Indexer
                         $mapping = StaticFunctions::createMappingToNonEmpty($stores_query, 'store_id');
                         StaticFunctions::createStoreIndexArray($mapping, 'stores', $this->registry->get('stores_to_main_language_mapping'), $params);
 
+                        foreach ($this->registry->get('languages_id_code_mapping') as $language_id => $language_code) {
+                            if (!empty($params['body']['names_' . $language_code]) && count($params['body']['names_' . $language_code]) == 1){
+                                unset($params['body']['names_' . $language_code]);
+                            }
+                        } 
+
                         $response = $this->registry->get('elasticSearch')->connection()->index($params);
                     }
                 }
@@ -416,6 +370,12 @@ class Indexer
                         $stores_query = $this->db->query("SELECT store_id FROM collection_to_store WHERE collection_id = '" . $namequery2->row['collection_id'] . "'");
                         $mapping = StaticFunctions::createMappingToNonEmpty($stores_query, 'store_id');
                         StaticFunctions::createStoreIndexArray($mapping, 'stores', $this->registry->get('stores_to_main_language_mapping'), $params);
+
+                        foreach ($this->registry->get('languages_id_code_mapping') as $language_id => $language_code) {
+                            if (!empty($params['body']['names_' . $language_code]) && count($params['body']['names_' . $language_code]) == 1){
+                                unset($params['body']['names_' . $language_code]);
+                            }
+                        } 
 
                         $response = $this->registry->get('elasticSearch')->connection()->index($params);
                     }
@@ -505,6 +465,11 @@ class Indexer
         $mapping = StaticFunctions::createMappingToNonEmpty($store_query, 'store_id');
         StaticFunctions::createStoreIndexArray($mapping, 'stores', $this->registry->get('stores_to_main_language_mapping'), $params);
 
+        foreach ($this->registry->get('languages_id_code_mapping') as $language_id => $language_code) {
+                if (!empty($params['body']['names_' . $language_code]) && count($params['body']['names_' . $language_code]) == 1){
+                    unset($params['body']['names_' . $language_code]);
+                }
+            }     
 
         $response = $this->registry->get('elasticSearch')->connection()->index($params);
     }

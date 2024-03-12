@@ -37,14 +37,11 @@
                         'priority' => ['type' => 'integer', 'index' => 'true'],
                         'type' => ['type' => 'text', 'index' => 'true'],
                         'name_ru' => ['type' => 'text', 'analyzer' => 'russian', 'index' => 'true'],
-                        'name_ua' => ['type' => 'text', 'analyzer' => 'russian', 'index' => 'true'],
                         'name_uk' => ['type' => 'text', 'analyzer' => 'ukrainian', 'index' => 'true'],
                         'suggest_ru' => ['type' => 'completion', 'preserve_separators' => 'false', 'preserve_position_increments' => 'false', 'analyzer' => 'russian', 'index' => 'true', 'contexts' => [['name' => 'suggest-priority', 'type' => 'category', 'path' => 'type']]],
-                        'suggest_ua' => ['type' => 'completion', 'preserve_separators' => 'false', 'preserve_position_increments' => 'false', 'analyzer' => 'russian', 'index' => 'true', 'contexts' => [['name' => 'suggest-priority', 'type' => 'category', 'path' => 'type']]],
                         'suggest_uk' => ['type' => 'completion', 'preserve_separators' => 'false', 'preserve_position_increments' => 'false', 'analyzer' => 'ukrainian', 'index' => 'true', 'contexts' => [['name' => 'suggest-priority', 'type' => 'category', 'path' => 'type']]],
                         'names_ru' => ['type' => 'text', 'analyzer' => 'russian', 'index' => 'true'],
-                        'names_ua' => ['type' => 'text', 'analyzer' => 'ukrainian', 'index' => 'true'],
-                        'names_uk' => ['type' => 'text', 'analyzer' => 'russian', 'index' => 'true'],
+                        'names_uk' => ['type' => 'text', 'analyzer' => 'ukrainian', 'index' => 'true'],
                         'stores' => ['type' => 'integer', 'index' => 'true']
                     ]
                 ]

@@ -22,17 +22,6 @@ class Query
         $this->request = $registry->get('request');
     }
 
-    public function checkUAName($name)
-    {
-        if ($this->config->get('config_language') == 'uk') {
-            if (is_array($name)) {
-                $name = $name[0];
-            }
-        }
-
-        return $name;
-    }
-
     public function buildField($field)
     {
         $result = $field . '_' . $this->config->get('config_language');
@@ -45,24 +34,35 @@ class Query
 
     public function getProductByID($product_id)
     {
-        $params = [
-            'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix'),
-            'id' => $product_id
-        ];
+        try{
+            $params = [
+                'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix'),
+                'id' => $product_id
+            ];
 
 
-        return $response = $this->registry->get('elasticSearch')->connection()->get($params);        
+            return $response = $this->registry->get('elasticSearch')->connection()->get($params);    
+        } catch (\Elasticsearch\Common\Exceptions\Missing404Exception $e) {
+            return $e->getMessage();
+        } catch (\Exception $e){
+            return ['error' => $e->getMessage()];
+        }    
     }
 
     public function getEntityByID($type, $entity_id)
     {
-        $params = [
-            'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix'),
-            'id'    => $type . '-' . $entity_id
-        ];
+        try{
+            $params = [
+                'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix'),
+                'id'    => $type . '-' . $entity_id
+            ];
 
-
-        return $response = $this->registry->get('elasticSearch')->connection()->get($params);       
+            return $response = $this->registry->get('elasticSearch')->connection()->get($params);       
+        } catch (\Elasticsearch\Common\Exceptions\Missing404Exception $e) {
+            return $e->getMessage();
+        } catch (\Exception $e){
+            return ['error' => $e->getMessage()];
+        }
     }
 
     public function completitionQuery($index, $query, $field, $suggest, $data = [])

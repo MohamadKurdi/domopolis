@@ -72,10 +72,8 @@
 				
 			}	
 			
-			$name = $this->elasticSearch->Query->checkUAName($name);
-			
 			if ($suggestLogic){
-				$name 	= mb_strtolower($this->elasticSearch->Query->checkUAName($hit['_source'][$field]));
+				$name 	= mb_strtolower($hit['_source'][$field]);
 				
 				if ($query){
 					$name = str_ireplace($query, '<b>' . $query . '</b>', $name);
@@ -129,7 +127,7 @@
 						
 						
 						$data[$idtype] = array(
-						'name' 		=> $this->elasticSearch->Query->checkUAName($name),
+						'name' 		=> $name,
 						'href' 		=> $href,
 						'id'   		=> $id,
 						'idtype'   	=> $idtype,	
@@ -260,7 +258,7 @@
 				$field4 = $this->elasticSearch->Query->buildField('suggest');
 				
 				
-				if ($length <= 3){
+				if ($length <= (int)$this->config->get('config_elasticseach_index_autocomplete_symbols')){
 					
 					$results = $this->elasticSearch->Query->completitionQuery('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field4);
 					$r1 = $this->prepareResults($results, $field, true, $query);
@@ -335,12 +333,20 @@
 			$this->response->setOutput($this->render());			
 		}
 		
+		public function fullindexer(){	
+			if (!is_cli()){
+				die('CLI ONLY');
+			}
+
+			$this->registry->get('elasticSearch')->Indexer->fillEntitiesIndex()->fillProductsIndex();			
+		}
+
 		public function entityindexer(){	
 			if (!is_cli()){
 				die('CLI ONLY');
 			}
 
-			$this->registry->get('elasticSearch')->Indexer->recreateEntitiesIndex()->fillEntitiesIndex();
+			$this->registry->get('elasticSearch')->Indexer->recreateEntitiesIndex()->fillEntitiesIndex();			
 		}
 
 		public function productsindexer(){	

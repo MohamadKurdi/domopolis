@@ -4462,7 +4462,8 @@ class ControllerSettingSetting extends Controller
             'config_elasticseach_many_skus',
             'config_elasticseach_many_textnumbers',
             'config_elasticseach_index_manufacturers',
-            'config_elasticseach_index_keyworder'
+            'config_elasticseach_index_keyworder',
+            'config_elasticseach_index_autocomplete_symbols',
         ];
 
          foreach ($elasticseach_settings as $elasticseach_setting) {

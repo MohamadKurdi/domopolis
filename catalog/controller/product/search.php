@@ -102,7 +102,7 @@ class ControllerProductSearch extends Controller {
 			}
 
 			$data[$idtype] = array(
-				'name' 		=> $this->elasticSearch->Query->checkUAName($name),
+				'name' 		=> $name,
 				'href' 		=> $href,
 				'id'   		=> $id,
 				'idtype'   	=> $idtype,	
@@ -121,7 +121,7 @@ class ControllerProductSearch extends Controller {
 
 
 						$data[$idtype] = array(
-							'name' 		=> $this->elasticSearch->Query->checkUAName($name),
+							'name' 		=> $name,
 							'href' 		=> $href,
 							'id'   		=> $id,
 							'idtype'   	=> $idtype,	
@@ -148,7 +148,7 @@ class ControllerProductSearch extends Controller {
 					$href = $this->url->link('product/search', 'search=' . $this->search . '&filter_category_id=' . $category['category_id']);
 					
 					$data[] = array(
-						'name' 		=> $this->elasticSearch->Query->checkUAName($category['name']),
+						'name' 		=> $category['name'],
 						'active' 	=> ($category['category_id'] == $this->filter_category_id),
 						'href' 		=> $href,
 						'count' 	=> $result['doc_count']
@@ -172,10 +172,10 @@ class ControllerProductSearch extends Controller {
 				if ($manufacturer){
 
 					$data[] = array(
-						'name' 	=> $this->elasticSearch->Query->checkUAName($manufacturer['name']),
+						'name' 		=> $manufacturer['name'],
 						'active' 	=> ($manufacturer['manufacturer_id'] == $this->filter_manufacturer_id),
-						'href' 	=> $this->url->link('product/search', 'search=' . $this->search . '&filter_manufacturer_id=' . $manufacturer['manufacturer_id']),
-						'count' => $result['doc_count']
+						'href' 		=> $this->url->link('product/search', 'search=' . $this->search . '&filter_manufacturer_id=' . $manufacturer['manufacturer_id']),
+						'count' 	=> $result['doc_count']
 					);
 
 				}
