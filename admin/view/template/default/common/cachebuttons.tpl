@@ -12,13 +12,15 @@
 		</a>
 	<?php } ?>
 
-	<?php if ($this->config->get('config_amazon_product_stats_enable')) { ?>
-		<a class="link_headr link_enter cache-button-good" href="<? echo $product_ext; ?>" >
-			<i class="fa fa-list" aria-hidden="true"></i> <?php echo $totalProducts; ?>
-			<?php if (!empty($totalProductsInTechnicalCategory)) { ?>
-				/ <?php echo $totalProductsInTechnicalCategory; ?>
-			<?php } ?>
-		</a>
+	<?php if ($this->user->getAdminExtendedStats()) { ?>
+		<?php if ($this->config->get('config_amazon_product_stats_enable')) { ?>
+			<a class="link_headr link_enter cache-button-good" href="<? echo $product_ext; ?>" >
+				<i class="fa fa-list" aria-hidden="true"></i> <?php echo $totalProducts; ?>
+				<?php if (!empty($totalProductsInTechnicalCategory)) { ?>
+					/ <?php echo $totalProductsInTechnicalCategory; ?>
+				<?php } ?>
+			</a>
+		<?php } ?>
 	<?php } ?>
 <? } ?>
 
@@ -34,7 +36,6 @@
 
 
 <?php if (!empty($noPageCacheModeLink)) { ?>
-
 	<a class="link_headr <? if ($noPageCacheMode) { ?>link_enter cache-button-bad<? } else { ?> cache-button-good<?php } ?>" onclick="$('#noPageCacheR').load('<? echo $noPageCacheModeLink ?>');">FPC 
 		<span id='noPageCacheR'>
 			<? echo ($noPageCacheMode?'OFF':'ON'); ?> 
@@ -43,13 +44,5 @@
 	</a>
 
 	<a class="hidden-xs link_headr cache-button-<?php echo $pageCacheInfo['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-server"></i> <?php echo $pageCacheInfo['used'] . ' of ' . $pageCacheInfo['total'];?></a>
-	<?php /* ?>
-	<a class="link_headr cache-button-<?php echo $serverResponceTime['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-rocket"></i> <?php echo $serverResponceTime['body'];?></a>
-	<?php */ ?>
 	<a class="hidden-xs link_headr cache-button-<?php echo $redisMem['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-cog" aria-hidden="true"></i> <?php echo $redisMem['body'];?></a>
-
-	<?php /* ?>
-	<a class="hidden-xs link_headr cache-button-<?php echo $serverResponceTime['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-code" aria-hidden="true"></i> <?php echo $serverResponceTime['engine'];?></a>
-	<?php */ ?>
-
-	<?php } ?>
+<?php } ?>
