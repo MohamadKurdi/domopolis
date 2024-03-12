@@ -7,14 +7,6 @@
 				$this->load->model('kp/search');
 				$this->model_kp_search->clearSearchHistory($this->request->post['id']);
 			}
-		}			
-		
-		public function test(){
-			$product_id = 2608078;
-			
-			$result = $this->elasticSearch->getProductByID($product_id);
-			
-			$this->log->debug($result);			
 		}
 		
 		private function createData($hit, $field, $exact, $suggestLogic, $query, &$data){
@@ -291,7 +283,7 @@
 						$resultsP = $this->elasticSearch->Query->fuzzyProductsQuery('products' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field2, $field3);		
 						
 						if (!\hobotix\Elasticsearch\StaticFunctions::validateResult($resultsP)){
-							$resultsP = $this->elasticSearch->sku($query);
+							$resultsP = $this->elasticSearch->Query->nonFuzzySkuQuery($query);
 						}
 					}
 
