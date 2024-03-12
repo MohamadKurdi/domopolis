@@ -27,7 +27,7 @@ class ElasticSearch{
 
 		if (is_cli() || $explicit || (!empty($this->request->get['route']) && in_array($this->request->get['route'], $this->routes)) || isset($this->request->get['search'])){
 			try{
-				$this->elasticConnection = \Elasticsearch\ClientBuilder::create()->setHosts(['http://127.0.0.1:9200'])->build();
+				$this->elasticConnection = \Elasticsearch\ClientBuilder::create()->setHosts([ELASTICSEARCH_HOSTPORT])->build();
 			} catch (\Exception $e){				
 			}				
 		}

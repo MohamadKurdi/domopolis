@@ -12,3 +12,5 @@ define('REDIS_PORT', '6379');
 define('MEMCACHE_HOSTNAME', 'localhost');
 define('MEMCACHE_PORT', '11211');
 define('CACHE_NAMESPACE', 'nmspc:');
+
+define('ELASTICSEARCH_HOSTPORT', 'http://127.0.0.1:9200');
