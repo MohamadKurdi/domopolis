@@ -21,7 +21,7 @@
 
 			<td style="width:20%">									
 				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><i class="fa fa-search"></i> Много sku</span></p>
-				<select name="config_elasticseach_many_skus">
+				<select name="$config_elasticseach_many_skus">
 					<?php if ($config_elasticseach_many_skus) { ?>
 						<option value="1" selected="selected">Да</option>
 						<option value="0">Нет</option>
@@ -54,7 +54,7 @@
 			<td style="width:20%">
 				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><i class="fa fa-search"></i> Индексировать бренды</span></p>
 				<select name="config_elasticseach_index_manufacturers">
-					<?php if (config_elasticseach_index_manufacturers) { ?>
+					<?php if ($config_elasticseach_index_manufacturers) { ?>
 					<option value="1" selected="selected">Да</option>
 					<option value="0">Нет</option>
 					<?php } else { ?>
@@ -70,7 +70,7 @@
 			<td style="width:20%">
 				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><i class="fa fa-search"></i> Индексировать связки</span></p>
 				<select name="config_elasticseach_index_keyworder">
-					<?php if (config_elasticseach_index_keyworder) { ?>
+					<?php if ($config_elasticseach_index_keyworder) { ?>
 					<option value="1" selected="selected">Да</option>
 					<option value="0">Нет</option>
 					<?php } else { ?>

@@ -52,16 +52,7 @@ class Indexer
         }
     }
 
-    public function createStoreIndexArray($mapping, $index, &$params)
-    {
-        $params['body'][$index] = [];
-
-        foreach ($this->registry->get('stores_to_main_language_mapping') as $store_id => $language_code) {
-            if (!empty($mapping[$store_id])) {
-                $params['body'][$index][] = $store_id;
-            }
-        }
-    }
+   
 
     public function prepareProductManufacturerIndex($namequery, $manquery, &$params)
     {
@@ -259,9 +250,9 @@ class Indexer
         }
     }
 
-    public function prepareProductIndex($namequery, &$params)
+    public function prepareProductNamesIndex($product_names, &$params)
     {
-        $mapping = ElasticSearch\StaticFunctions::createMappingToIDS($namequery, 'language_id', 'name');
+        $mapping = ElasticSearch\StaticFunctions::createMappingToIDS($product_names, 'language_id', 'name');
 
         foreach ($this->registry->get('languages_id_code_mapping') as $language_id => $language_code) {
             if (!empty($mapping[$language_id])) {
@@ -348,16 +339,12 @@ class Indexer
                         'priority' => ['type' => 'integer', 'index' => 'true'],
                         'type' => ['type' => 'text', 'index' => 'true'],
                         'name_ru' => ['type' => 'text', 'analyzer' => 'russian', 'index' => 'true'],
-                        'name_kz' => ['type' => 'text', 'analyzer' => 'russian', 'index' => 'true'],
-                        'name_by' => ['type' => 'text', 'analyzer' => 'russian', 'index' => 'true'],
                         'name_ua' => ['type' => 'text', 'analyzer' => 'russian', 'index' => 'true'],
                         'name_uk' => ['type' => 'text', 'analyzer' => 'ukrainian', 'index' => 'true'],
                         'suggest_ru' => ['type' => 'completion', 'preserve_separators' => 'false', 'preserve_position_increments' => 'false', 'analyzer' => 'russian', 'index' => 'true', 'contexts' => [['name' => 'suggest-priority', 'type' => 'category', 'path' => 'type']]],
                         'suggest_ua' => ['type' => 'completion', 'preserve_separators' => 'false', 'preserve_position_increments' => 'false', 'analyzer' => 'russian', 'index' => 'true', 'contexts' => [['name' => 'suggest-priority', 'type' => 'category', 'path' => 'type']]],
                         'suggest_uk' => ['type' => 'completion', 'preserve_separators' => 'false', 'preserve_position_increments' => 'false', 'analyzer' => 'ukrainian', 'index' => 'true', 'contexts' => [['name' => 'suggest-priority', 'type' => 'category', 'path' => 'type']]],
                         'names_ru' => ['type' => 'text', 'analyzer' => 'russian', 'index' => 'true'],
-                        'names_kz' => ['type' => 'text', 'analyzer' => 'russian', 'index' => 'true'],
-                        'names_by' => ['type' => 'text', 'analyzer' => 'russian', 'index' => 'true'],
                         'names_ua' => ['type' => 'text', 'analyzer' => 'ukrainian', 'index' => 'true'],
                         'names_uk' => ['type' => 'text', 'analyzer' => 'russian', 'index' => 'true'],
                         'stores' => ['type' => 'integer', 'index' => 'true']
@@ -461,123 +448,114 @@ class Indexer
             $params['body']['priority'] = ElasticSearch::CATEGORY_PRIORITY;
             $params['body']['type'] = 'category';
 
-            $namequery = $this->db->query("SELECT name as name, alternate_name as alternate_name, language_id FROM category_description WHERE category_id = '" . (int)$category_id['category_id'] . "'");
-            $this->prepareCategoryManufacturerIndex($namequery, $category_id['category_id'], 0, 0, $params);
+            $category_name_query = $this->db->query("SELECT name as name, alternate_name as alternate_name, language_id FROM category_description WHERE category_id = '" . (int)$category_id['category_id'] . "'");
+            $this->prepareCategoryManufacturerIndex($category_name_query, $category_id['category_id'], 0, 0, $params);
 
-            echoLine('[elastic] Категория ' . $category_id['category_id']);
+            echoLine('[Indexer:createEntitiesIndex] Indexing category ' . $category_id['category_id'], 'i');
 
-            $storequery = $this->db->query("SELECT store_id FROM category_to_store WHERE category_id = '" . (int)$category_id['category_id'] . "'");
-            $mapping = ElasticSearch\StaticFunctions::createMappingToNonEmpty($storequery, 'store_id');
-            $this->createStoreIndexArray($mapping, 'stores', $params);
-
-            $response = $this->registry->get('elasticSearch')->connection()->index($params);
-        }
-
-        $query = $this->db->query("SELECT manufacturer_id FROM manufacturer WHERE 1");
-        foreach ($query->rows as $manufacturer_id) {
-
-            $params = [];
-            $params['index'] = 'categories' . $this->config->get('config_elasticsearch_index_suffix');
-            $params['id'] = $i;
-            $i++;
-            $params['body'] = [];
-            $params['body']['priority'] = ElasticSearch::MANUFACTURER_PRIORITY;
-            $params['body']['type'] = 'manufacturer';
-
-            $namequery = $this->db->query("SELECT m.manufacturer_id, m.name as name, md.alternate_name as alternate_name, md.language_id FROM manufacturer m LEFT JOIN manufacturer_description md ON m.manufacturer_id = md.manufacturer_id WHERE m.manufacturer_id = '" . (int)$manufacturer_id['manufacturer_id'] . "'");
-            $this->prepareCategoryManufacturerIndex($namequery, 0, $manufacturer_id['manufacturer_id'], 0, $params);
-
-            echoLine('[elastic] Бренд ' . $manufacturer_id['manufacturer_id']);
-
-            $storequery = $this->db->query("SELECT store_id FROM manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id['manufacturer_id'] . "'");
-            $mapping = ElasticSearch\StaticFunctions::createMappingToNonEmpty($storequery, 'store_id');
-            $this->createStoreIndexArray($mapping, 'stores', $params);
+            $stores_query = $this->db->query("SELECT store_id FROM category_to_store WHERE category_id = '" . (int)$category_id['category_id'] . "'");
+            $mapping = ElasticSearch\StaticFunctions::createMappingToNonEmpty($stores_query, 'store_id');
+            ElasticSearch\StaticFunctions::createStoreIndexArray($mapping, 'stores', $this->registry->get('stores_to_main_language_mapping'), $params);
 
             $response = $this->registry->get('elasticSearch')->connection()->index($params);
         }
 
-        unset($manufacturer_id);
-        foreach ($query->rows as $manufacturer_id) {
+        if ($this->config->get('config_elasticseach_index_manufacturers')){
+            $query = $this->db->query("SELECT manufacturer_id FROM manufacturer WHERE 1");
+            foreach ($query->rows as $manufacturer_id) {
+                $params = [];
+                $params['index'] = 'categories' . $this->config->get('config_elasticsearch_index_suffix');
+                $params['id'] = $i;
+                $i++;
+                $params['body'] = [];
+                $params['body']['priority'] = ElasticSearch::MANUFACTURER_PRIORITY;
+                $params['body']['type'] = 'manufacturer';
 
-            echoLine('Категории производитель ' . $manufacturer_id['manufacturer_id']);
+                $namequery = $this->db->query("SELECT m.manufacturer_id, m.name as name, md.alternate_name as alternate_name, md.language_id FROM manufacturer m LEFT JOIN manufacturer_description md ON m.manufacturer_id = md.manufacturer_id WHERE m.manufacturer_id = '" . (int)$manufacturer_id['manufacturer_id'] . "'");
+                $this->prepareCategoryManufacturerIndex($namequery, 0, $manufacturer_id['manufacturer_id'], 0, $params);
 
-            $namequery = $this->db->query("SELECT m.manufacturer_id, m.name as name, md.alternate_name as alternate_name, md.language_id FROM manufacturer m LEFT JOIN manufacturer_description md ON m.manufacturer_id = md.manufacturer_id WHERE m.manufacturer_id = '" . (int)$manufacturer_id['manufacturer_id'] . "'");
+                 echoLine('[Indexer:createEntitiesIndex] Indexing manufacturer ' . $manufacturer_id['manufacturer_id'], 'i');
 
-            $namequery2 = $this->db->query("SELECT DISTINCT c.category_id FROM category c LEFT JOIN keyworder k ON (k.category_id = c.category_id) LEFT JOIN keyworder_description kd ON (k.keyworder_id = kd.keyworder_id) WHERE k.manufacturer_id = '" . $manufacturer_id['manufacturer_id'] . "' AND c.status = 1 AND kd.keyworder_status = 1");
+                $stores_query = $this->db->query("SELECT store_id FROM manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id['manufacturer_id'] . "'");
+                $mapping = ElasticSearch\StaticFunctions::createMappingToNonEmpty($stores_query, 'store_id');
+                ElasticSearch\StaticFunctions::createStoreIndexArray($mapping, 'stores', $this->registry->get('stores_to_main_language_mapping'), $params);
 
-            if ($namequery2->num_rows) {
-
-                foreach ($namequery2->rows as $row) {
-                    $params = [];
-                    $params['index'] = 'categories' . $this->config->get('config_elasticsearch_index_suffix');
-                    $params['id'] = $i;
-                    $i++;
-                    $params['body'] = [];
-                    $params['body']['priority'] = ElasticSearch::KEYWORDER_PRIORITY;
-                    $params['body']['category_id'] = $row['category_id'];
-                    $params['body']['manufacturer_id'] = $manufacturer_id['manufacturer_id'];
-                    $params['body']['collection_id'] = 0;
-                    $params['body']['type'] = 'keyworder';
-
-
-                    $namequery3 = $this->db->query("SELECT name as name, alternate_name as alternate_name, language_id FROM category_description WHERE category_id = '" . (int)$row['category_id'] . "'");
-
-                    $this->prepareCategoryManufacturerInterSectionIndex($namequery, $namequery3, $params);
-                    $storequery = $this->db->query("SELECT store_id FROM manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id['manufacturer_id'] . "' AND store_id IN (SELECT store_id FROM category_to_store WHERE category_id = '" . $namequery2->row['category_id'] . "')");
-                    $mapping = ElasticSearch\StaticFunctions::createMappingToNonEmpty($storequery, 'store_id');
-                    $this->createStoreIndexArray($mapping, 'stores', $params);
-
-                    $response = $this->registry->get('elasticSearch')->connection()->index($params);
-                }
+                $response = $this->registry->get('elasticSearch')->connection()->index($params);
             }
         }
 
-        unset($manufacturer_id);
-        foreach ($query->rows as $manufacturer_id) {
+        if ($this->config->get('config_elasticseach_index_keyworder')){
+            unset($manufacturer_id);
+            foreach ($query->rows as $manufacturer_id) {
+               
+                echoLine('[Indexer::createEntitiesIndex ] Indexing categories for brand ' . $manufacturer_id['manufacturer_id'], 'i');
 
-            echoLine('Коллекции производитель ' . $manufacturer_id['manufacturer_id']);
+                $namequery = $this->db->query("SELECT m.manufacturer_id, m.name as name, md.alternate_name as alternate_name, md.language_id FROM manufacturer m LEFT JOIN manufacturer_description md ON m.manufacturer_id = md.manufacturer_id WHERE m.manufacturer_id = '" . (int)$manufacturer_id['manufacturer_id'] . "'");
 
-            $namequery = $this->db->query("SELECT m.manufacturer_id, m.name as name, md.alternate_name as alternate_name, md.language_id FROM manufacturer m LEFT JOIN manufacturer_description md ON m.manufacturer_id = md.manufacturer_id WHERE m.manufacturer_id = '" . (int)$manufacturer_id['manufacturer_id'] . "'");
+                $namequery2 = $this->db->query("SELECT DISTINCT c.category_id FROM category c LEFT JOIN keyworder k ON (k.category_id = c.category_id) LEFT JOIN keyworder_description kd ON (k.keyworder_id = kd.keyworder_id) WHERE k.manufacturer_id = '" . $manufacturer_id['manufacturer_id'] . "' AND c.status = 1 AND kd.keyworder_status = 1");
 
-            $namequery2 = $this->db->query("SELECT DISTINCT c.collection_id FROM collection c WHERE c.manufacturer_id = '" . $manufacturer_id['manufacturer_id'] . "'");
+                if ($namequery2->num_rows) {
 
-            if ($namequery2->num_rows) {
-                foreach ($namequery2->rows as $row) {
-                    $params = [];
-                    $params['index'] = 'categories' . $this->config->get('config_elasticsearch_index_suffix');
-                    $params['id'] = $i;
-                    $i++;
-                    $params['body'] = [];
-                    $params['body']['priority'] = ElasticSearch::COLLECTION_PRIORITY;
-                    $params['body']['category_id'] = 0;
-                    $params['body']['manufacturer_id'] = $manufacturer_id['manufacturer_id'];
-                    $params['body']['collection_id'] = $row['collection_id'];
-                    $params['body']['type'] = 'collection';
+                    foreach ($namequery2->rows as $row) {
+                        $params = [];
+                        $params['index'] = 'categories' . $this->config->get('config_elasticsearch_index_suffix');
+                        $params['id'] = $i;
+                        $i++;
+                        $params['body'] = [];
+                        $params['body']['priority'] = ElasticSearch::KEYWORDER_PRIORITY;
+                        $params['body']['category_id'] = $row['category_id'];
+                        $params['body']['manufacturer_id'] = $manufacturer_id['manufacturer_id'];
+                        $params['body']['collection_id'] = 0;
+                        $params['body']['type'] = 'keyworder';
 
 
-                    $namequery3 = $this->db->query("SELECT c.name as name, cd.alternate_name as alternate_name, cd.language_id FROM collection_description cd LEFT JOIN collection c ON (cd.collection_id = c.collection_id) WHERE cd.collection_id = '" . (int)$row['collection_id'] . "'");
+                        $namequery3 = $this->db->query("SELECT name as name, alternate_name as alternate_name, language_id FROM category_description WHERE category_id = '" . (int)$row['category_id'] . "'");
 
-                    ElasticSearch::prepareCategoryManufacturerInterSectionIndex($namequery, $namequery3, $params, true);
+                        $this->prepareCategoryManufacturerInterSectionIndex($namequery, $namequery3, $params);
+                        $stores_query = $this->db->query("SELECT store_id FROM manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id['manufacturer_id'] . "' AND store_id IN (SELECT store_id FROM category_to_store WHERE category_id = '" . $namequery2->row['category_id'] . "')");
+                        $mapping = ElasticSearch\StaticFunctions::createMappingToNonEmpty($stores_query, 'store_id');
+                        ElasticSearch\StaticFunctions::createStoreIndexArray($mapping, 'stores', $this->registry->get('stores_to_main_language_mapping'), $params);
 
-                    //Привязка к магазинам
-                    $storequery = $this->db->query("SELECT store_id FROM collection_to_store WHERE collection_id = '" . $namequery2->row['collection_id'] . "'");
-                    $mapping = ElasticSearch\StaticFunctions::createMappingToNonEmpty($storequery, 'store_id');
-                    $this->createStoreIndexArray($mapping, 'stores', $params);
+                        $response = $this->registry->get('elasticSearch')->connection()->index($params);
+                    }
+                }
+            }
 
-                    $response = $this->registry->get('elasticSearch')->connection()->index($params);
+            unset($manufacturer_id);
+            foreach ($query->rows as $manufacturer_id) {
+                echoLine('[Indexer::createEntitiesIndex ] Indexing collections for brand ' . $manufacturer_id['manufacturer_id'], 'i');
+
+                $namequery = $this->db->query("SELECT m.manufacturer_id, m.name as name, md.alternate_name as alternate_name, md.language_id FROM manufacturer m LEFT JOIN manufacturer_description md ON m.manufacturer_id = md.manufacturer_id WHERE m.manufacturer_id = '" . (int)$manufacturer_id['manufacturer_id'] . "'");
+
+                $namequery2 = $this->db->query("SELECT DISTINCT c.collection_id FROM collection c WHERE c.manufacturer_id = '" . $manufacturer_id['manufacturer_id'] . "'");
+
+                if ($namequery2->num_rows) {
+                    foreach ($namequery2->rows as $row) {
+                        $params = [];
+                        $params['index'] = 'categories' . $this->config->get('config_elasticsearch_index_suffix');
+                        $params['id'] = $i;
+                        $i++;
+                        $params['body'] = [];
+                        $params['body']['priority'] = ElasticSearch::COLLECTION_PRIORITY;
+                        $params['body']['category_id'] = 0;
+                        $params['body']['manufacturer_id'] = $manufacturer_id['manufacturer_id'];
+                        $params['body']['collection_id'] = $row['collection_id'];
+                        $params['body']['type'] = 'collection';
+
+
+                        $namequery3 = $this->db->query("SELECT c.name as name, cd.alternate_name as alternate_name, cd.language_id FROM collection_description cd LEFT JOIN collection c ON (cd.collection_id = c.collection_id) WHERE cd.collection_id = '" . (int)$row['collection_id'] . "'");
+
+                        $this->prepareCategoryManufacturerInterSectionIndex($namequery, $namequery3, $params, true);
+
+                        $stores_query = $this->db->query("SELECT store_id FROM collection_to_store WHERE collection_id = '" . $namequery2->row['collection_id'] . "'");
+                        $mapping = ElasticSearch\StaticFunctions::createMappingToNonEmpty($stores_query, 'store_id');
+                        ElasticSearch\StaticFunctions::createStoreIndexArray($mapping, 'stores', $this->registry->get('stores_to_main_language_mapping'), $params);
+
+                        $response = $this->registry->get('elasticSearch')->connection()->index($params);
+                    }
                 }
             }
         }
-
-
-        $params = [
-            'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix'),
-            'id' => $i - 1
-        ];
-
-
-        $response = $this->registry->get('elasticSearch')->connection()->get($params);
-        print_r($response);
 
         return $this;
     }
@@ -588,24 +566,15 @@ class Indexer
 
         $i = 1;
         foreach ($query->rows as $product) {
-
-            echoLine($i . ' Товар ' . $product['product_id']);
+            echoLine('[Indexer::createAllProductsIndex] Creating index for product ' . $product['product_id']);
             $i++;
 
-            $this->indexproduct($product);
+            $this->createSingleProductIndex($product);
         }
-
-        $params = [
-            'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix'),
-            'id' => $product['product_id']
-        ];
-
-
-        $response = $this->registry->get('elasticSearch')->connection()->get($params);
-        print_r($response);
 
         return $this;
     }
+
     private function createSingleProductIndex($product)
     {
         $params = [];
@@ -644,15 +613,17 @@ class Indexer
 
         $params['body']['identifier'] = array_values(array_unique(array_merge([$product['product_id'], $product['asin'], $product['ean']], $models, $skus)));
 
-        $namequery = $this->db->query("SELECT name as name, language_id FROM product_description WHERE product_id = '" . (int)$product['product_id'] . "'");
-        $this->prepareProductIndex($namequery, $params);
+        $product_names_query = $this->db->query("SELECT name as name, language_id FROM product_description WHERE product_id = '" . (int)$product['product_id'] . "'");
+        $this->prepareProductNamesIndex($product_names_query, $params);
 
-        $manquery = $this->db->query("SELECT m.name, md.alternate_name as alternate_name, md.language_id FROM manufacturer_description md LEFT JOIN manufacturer m ON (m.manufacturer_id = md.manufacturer_id) WHERE md.manufacturer_id = '" . (int)$product['manufacturer_id'] . "'");
-        $this->prepareProductManufacturerIndex($namequery, $manquery, $params);
+        if ($this->config->get('config_elasticseach_index_manufacturers')){
+            $manufacturer_query = $this->db->query("SELECT m.name, md.alternate_name as alternate_name, md.language_id FROM manufacturer_description md LEFT JOIN manufacturer m ON (m.manufacturer_id = md.manufacturer_id) WHERE md.manufacturer_id = '" . (int)$product['manufacturer_id'] . "'");
+            $this->prepareProductManufacturerIndex($product_names_query, $manufacturer_query, $params);
 
-        $colquery = $this->db->query("SELECT c.name as name, cd.alternate_name as alternate_name, cd.language_id FROM collection_description cd LEFT JOIN collection c ON (c.collection_id = cd.collection_id) WHERE cd.collection_id = '" . (int)$product['collection_id'] . "'");
-        $this->prepareProductManufacturerIndex($namequery, $colquery, $params);
-        $this->prepareProductManufacturerCollectionIndex($namequery, $manquery, $colquery, $params);
+            $collection_query = $this->db->query("SELECT c.name as name, cd.alternate_name as alternate_name, cd.language_id FROM collection_description cd LEFT JOIN collection c ON (c.collection_id = cd.collection_id) WHERE cd.collection_id = '" . (int)$product['collection_id'] . "'");
+            $this->prepareProductManufacturerIndex($product_names_query, $collection_query, $params);
+            $this->prepareProductManufacturerCollectionIndex($product_names_query, $manufacturer_query, $collection_query, $params);
+        }
 
         if ($this->config->get('config_elasticseach_many_textnumbers')) {
             $this->makeTextNumbers($params);
@@ -666,7 +637,7 @@ class Indexer
 
         $store_query = $this->db->query("SELECT store_id FROM product_to_store WHERE product_id = '" . (int)$product['product_id'] . "'");
         $mapping = ElasticSearch\StaticFunctions::createMappingToNonEmpty($store_query, 'store_id');
-        self::createStoreIndexArray($mapping, 'stores', $params);
+        ElasticSearch\StaticFunctions::createStoreIndexArray($mapping, 'stores', $this->registry->get('stores_to_main_language_mapping'), $params);
 
 
         $response = $this->registry->get('elasticSearch')->connection()->index($params);

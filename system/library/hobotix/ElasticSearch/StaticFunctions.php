@@ -71,7 +71,6 @@ class StaticFunctions{
 		return false;			
 	}
 
-
 	public static function createIndexArray($mapping, $index, &$params){			
 		$params['body'][$index] = [];
 		
@@ -91,6 +90,18 @@ class StaticFunctions{
 			
 			return $mapping;
 		}
+
+	public function createStoreIndexArray($mapping, $index, $stores, &$params)
+    {
+        $params['body'][$index] = [];
+
+        foreach ($stores as $store_id => $language_code) {
+            if (!empty($mapping[$store_id])) {
+                $params['body'][$index][] = $store_id;
+            }
+        }
+    }
+
 
 	public static function remapAlternateMapping(&$mapping){			
 		foreach ($mapping as &$mapline){
