@@ -119,7 +119,7 @@
 			foreach ($manufacturers as $manufacturer_id => $manufacturer){
 				if (empty($data['m' . $manufacturer_id])){
 					
-					if (\hobotix\Elasticsearch\StaticFunctions::validateResult($resultManufacturer = $this->elasticSearch->getManufacturer($manufacturer_id))){
+					if (\hobotix\Elasticsearch\StaticFunctions::validateResult($resultManufacturer = $this->elasticSearch->Query->getEntityByID('manufacturer', $manufacturer_id))){
 						$name 	= $resultManufacturer['hits']['hits'][0]['_source'][$field];
 						$href 	= $this->url->link('catalog/manufacturer', 'manufacturer_id=' . $manufacturer_id);						
 						$id 	= $manufacturer_id;
@@ -262,9 +262,9 @@
 				
 				if ($length <= 3){
 					
-					$results = $this->elasticSearch->Query->completition('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field4);
+					$results = $this->elasticSearch->Query->completitionQuery('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field4);
 					$r1 = $this->prepareResults($results, $field, true, $query);
-					$this->log->debug(json_encode($r1));
+					//$this->log->debug(json_encode($r1));
 					
 					} else {		
 													
@@ -335,7 +335,29 @@
 			$this->response->setOutput($this->render());			
 		}
 		
-		public function fullindexer(){	
-			$this->elasticSearch->recreateIndices()->createEntitiesIndex()->createAllProductsIndex();
+		public function entityindexer(){	
+			if (!is_cli()){
+				die('CLI ONLY');
+			}
+
+			$this->registry->get('elasticSearch')->Indexer->recreateEntitiesIndex()->fillEntitiesIndex();
+		}
+
+		public function productsindexer(){	
+			if (!is_cli()){
+				die('CLI ONLY');
+			}
+
+			$this->registry->get('elasticSearch')->Indexer->recreateProductsIndex()->fillProductsIndex();
+		}
+
+		public function product(){	
+			$result = $this->registry->get('elasticSearch')->Query->getProductByID($this->request->get['product_id']);
+			$this->response->setJSON($result);
+		}
+
+		public function entity(){	
+			$result = $this->registry->get('elasticSearch')->Query->getEntityByID($this->request->get['type'], $this->request->get['category_id']);
+			$this->response->setJSON($result);
 		}
 	}

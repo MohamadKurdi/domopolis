@@ -91,7 +91,7 @@ class StaticFunctions{
 			return $mapping;
 		}
 
-	public function createStoreIndexArray($mapping, $index, $stores, &$params)
+	public static function createStoreIndexArray($mapping, $index, $stores, &$params)
     {
         $params['body'][$index] = [];
 
@@ -204,6 +204,32 @@ class StaticFunctions{
 
 		return array_filter(array_values(array_unique($results)));		
 	}	
+
+	public static function makeTextNumbers($languages_id_code_mapping, &$params)
+    {
+        $tmp = $params;
+
+        foreach ($languages_id_code_mapping as $language_id => $language_code) {
+            if (!empty($tmp['body']['names_' . $language_code])) {
+                foreach ($tmp['body']['names_' . $language_code] as $tmp_name) {
+                    for ($i = 100; $i >= 1; $i--) {
+                        if (strpos($tmp_name, ' ' . $i . ' ') !== false) {
+                            foreach (self::transformNumber($i, $language_code) as $numberCases) {
+                                $new_name = str_replace(' ' . $i . ' ', ' ' . $numberCases . ' ', $tmp_name);
+
+                                $params['body']['names_' . $language_code][] = $new_name;
+                                echoLine($tmp_name . ' -> ' . $new_name, 'i');
+                                if ($language_code == 'uk') {
+                                    $params['body']['names_' . $language_code][] = str_replace("'", '', $new_name);
+                                    echoLine($tmp_name . ' -> ' . str_replace("'", '', $new_name));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 	public static function transformNumber($number, $language_code){
 		if ($language_code == 'uk'){

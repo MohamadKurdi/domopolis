@@ -51,44 +51,18 @@ class Query
         ];
 
 
-        $response = $this->registry->get('elasticSearch')->connection()->get($params);
-        print_r($response);
+        return $response = $this->registry->get('elasticSearch')->connection()->get($params);        
     }
 
-    public function getManufacturer($manufacturer_id)
+    public function getEntityByID($type, $entity_id)
     {
         $params = [
             'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix'),
-            'from' => '0',
-            'size' => '1',
-            'body' => [
-                'query' => [
-                    'bool' => [
-                        'filter' => [['term' => ['manufacturer_id' => $manufacturer_id]], ['term' => ['category_id' => 0]], ['term' => ['collection_id' => 0]]]
-                    ]
-                ]
-            ]
+            'id'    => $type . '-' . $entity_id
         ];
 
-        return $this->registry->get('elasticSearch')->connection()->search($params);
-    }
 
-    public function getEntity($manufacturer_id = 0, $category_id = 0)
-    {
-        $params = [
-            'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix'),
-            'from' => '0',
-            'size' => '1',
-            'body' => [
-                'query' => [
-                    'bool' => [
-                        'filter' => [['term' => ['manufacturer_id' => $manufacturer_id]], ['term' => ['category_id' => $category_id]], ['term' => ['collection_id' => 0]]]
-                    ]
-                ]
-            ]
-        ];
-
-        return $this->registry->get('elasticSearch')->connection()->search($params);
+        return $response = $this->registry->get('elasticSearch')->connection()->get($params);       
     }
 
     public function completitionQuery($index, $query, $field, $suggest, $data = [])

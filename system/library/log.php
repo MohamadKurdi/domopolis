@@ -62,7 +62,7 @@
 			}
 
 			return;
-		}
+		}		
 		
 		public function debug($variable, $message = false, $sql = false, $echo = false){			
 			if ((defined('IS_DEBUG') && IS_DEBUG) || $echo || is_cli()) {	
@@ -76,6 +76,7 @@
 				if ($sql){				
 					echo (new \Doctrine\SqlFormatter\SqlFormatter())->format($variable);
 					} else {
+
 					if ($variable){
 						print_r($variable);
 						} else {
