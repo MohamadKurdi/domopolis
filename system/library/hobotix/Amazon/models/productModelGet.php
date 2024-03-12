@@ -23,8 +23,7 @@ class productModelGet extends hoboModel{
 
 			$this->cache->set('amazon.rainforest.excluded_texts.' . $category_id, $excluded_texts);
 		}
-		
-	
+
 		return $excluded_texts;
 	}
 
@@ -103,14 +102,6 @@ class productModelGet extends hoboModel{
 	}
 
 	public function getAsinAddQueue(){
-		// return [[
-		// 	'asin' 			=> 'B08M8P8RNQ',
-		// 	'brand_logic' 	=> 1,
-		// 	'category_id' 	=> 0
-		// ]];
-
-		$result = [];
-
 		$sql = "SELECT DISTINCT asin, category_id, brand_logic FROM amzn_add_queue WHERE product_id = '0' ORDER BY date_added ASC LIMIT " . (int)\hobotix\RainforestAmazon::productRequestLimits;
 
 		$query = $this->db->ncquery($sql);

@@ -91,7 +91,8 @@ class ControllerCatalogProductExt extends Controller {
                      }
 
                     $this->model_catalog_product->deleteProduct($product_id);
-                    $this->model_kp_product->deleteElastic($product_id);                     
+                     $this->registry->get('elasticSearch')->Indexer->deleteProduct($product_id, true);
+
                 }
             }                       
 
@@ -1050,7 +1051,7 @@ class ControllerCatalogProductExt extends Controller {
 
                     foreach ($product_images as $product_image) {
                         $this->data['product_images'][] = array(
-                            'image'      => $image,
+                            'image'      => $product_image,
                             'thumb'      => $this->model_tool_image->resize($product_image['image'], 100, 100),
                             'sort_order' => $product_image['sort_order']
                         );

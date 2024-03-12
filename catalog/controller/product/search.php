@@ -374,13 +374,13 @@ class ControllerProductSearch extends Controller {
 					}
 				}
 
-
 				$field = $this->elasticSearch->Query->buildField('name');
 				$field2 = $this->elasticSearch->Query->buildField('names');
 				$field3 = $this->elasticSearch->Query->buildField('description');
 				$field4 = $this->elasticSearch->Query->buildField('suggest');
 
-				$product_total = $this->elasticSearch->Query->fuzzyProductsQuery('products' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field2, $field3, ['getTotal' => true]);				
+				$product_total = $this->elasticSearch->Query->fuzzyProductsQuery('products' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field2, $field3, ['getTotal' => true]);
+
 				$resultsE = $this->elasticSearch->Query->fuzzyProductsQuery('products' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field2, $field3, ['start' => (($page - 1) * $limit), 'limit' => $limit, 'filter_manufacturer_id' => $filter_manufacturer_id, 'filter_category_id' => $filter_category_id, 'sort' => $sort, 'order' => $order]);
 
 				$results = $this->elasticResults($resultsE, $field);

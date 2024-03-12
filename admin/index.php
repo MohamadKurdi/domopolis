@@ -69,6 +69,7 @@ require_once(DIR_SYSTEM . 'library/hobotix/TranslateAdaptor.php');
 require_once(DIR_SYSTEM . 'library/hobotix/CheckBoxUA.php');		
 require_once(DIR_SYSTEM . 'library/hobotix/Fiscalisation.php');
 require_once(DIR_SYSTEM . 'library/hobotix/SupplierAdaptor.php');
+require_once(DIR_SYSTEM . 'library/hobotix/ElasticSearch.php');
 if (class_exists('chillerlan\QRCode\Output\QRGdImage')){
 	require_once(DIR_SYSTEM . 'library/hobotix/QRCodeExtender.php');
 }
@@ -220,6 +221,7 @@ $registry->set('checkBoxUA', 		new hobotix\CheckBoxUA($registry));
 $registry->set('Fiscalisation',		new hobotix\Fiscalisation($registry));
 $registry->set('supplierAdaptor',	new hobotix\SupplierAdaptor($registry));
 $registry->set('couponRandom',		new hobotix\CouponRandom($registry));
+$registry->set('elasticSearch',		new hobotix\ElasticSearch($registry));
 
 if (!$registry->get('config')->get('config_enable_amazon_specific_modes')){
 	$registry->set('bypass_rainforest_caches_and_settings', true);

@@ -4460,7 +4460,9 @@ class ControllerSettingSetting extends Controller
             'config_elasticsearch_use_local_stock',            
             'config_elasticseach_many_models',
             'config_elasticseach_many_skus',
-            'config_elasticseach_many_textnumbers'               
+            'config_elasticseach_many_textnumbers',
+            'config_elasticseach_index_manufacturers',
+            'config_elasticseach_index_keyworder'
         ];
 
          foreach ($elasticseach_settings as $elasticseach_setting) {

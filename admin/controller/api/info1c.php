@@ -153,7 +153,7 @@ class ControllerApiInfo1C extends Controller
 
         if ($products = $this->rainforestAmazon->offersParser->PriceLogic->priceUpdaterQueue->getQueue()) {
             $this->model_kp_info1c->ping1CToUpdateProducts($products);
-            $this->model_kp_product->reindexElastic($products);
+            $this->registry->get('elasticSearch')->Indexer->reindexProducts($products, true);
             $this->rainforestAmazon->offersParser->PriceLogic->priceUpdaterQueue->cleanQueue();
         }
     }

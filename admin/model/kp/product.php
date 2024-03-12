@@ -127,21 +127,6 @@ class ModelKPProduct extends Model {
 		];
 	}
 
-	public function reindexElastic($product_ids){
-		$this->load->library('hobotix/ElasticSearch');
-		$elasticSearch = new \hobotix\ElasticSearch($this->registry);
-
-		foreach ($product_ids as $product_id){
-			$elasticSearch->reindexproduct($product_id);
-		}
-	}
-
-	public function deleteElastic($product_id){
-		$this->load->library('hobotix/ElasticSearch');
-		$elasticSearch = new \hobotix\ElasticSearch($this->registry);
-		$elasticSearch->deleteproduct($product_id);
-	}
-
 	public function getProductRelated($product_id, $limit, $store_id, $exclude) {
 		$product_related_data = array();
 

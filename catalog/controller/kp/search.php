@@ -212,7 +212,6 @@
 		}				
 		
 		public function index(){
-			
 			foreach ($this->language->loadRetranslate('common/header') as $translationСode => $translationText){
 				$this->data[$translationСode] = $translationText;
 			}
@@ -337,10 +336,6 @@
 		}
 		
 		public function fullindexer(){	
-			$this->elasticSearch->recreateIndices()->indexer()->productsindexer();		
-		}
-
-		public function productindexer($product_id){			
-			$this->elasticSearch->reindexproduct($product_id);
+			$this->elasticSearch->recreateIndices()->createEntitiesIndex()->createAllProductsIndex();
 		}
 	}

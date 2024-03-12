@@ -4,7 +4,6 @@ namespace hobotix\ElasticSearch;
 
 class Query
 {
-    private $elasticConnection = null;
     private $db = null;
     private $log = null;
     private $cache = null;
@@ -12,7 +11,7 @@ class Query
     private $registry = null;
 
 
-    public function __construct($registry, $elasticConnection)
+    public function __construct($registry)
     {
         $this->registry = $registry;
 
@@ -21,10 +20,7 @@ class Query
         $this->config = $registry->get('config');
         $this->log = $registry->get('log');
         $this->request = $registry->get('request');
-
-        $this->elasticConnection = $elasticConnection;
     }
-
 
     public function checkUAName($name)
     {
@@ -55,22 +51,9 @@ class Query
         ];
 
 
-        $response = $this->check()->get($params);
+        $response = $this->registry->get('elasticSearch')->connection()->get($params);
         print_r($response);
     }
-
-    private function check()
-    {
-        if (!$this->elasticConnection) {
-            try {
-                $this->elasticConnection = \Elasticsearch\ClientBuilder::create()->setHosts([ELASTICSEARCH_HOSTPORT])->build();
-            } catch (\Exception $e) {
-            }
-        }
-
-        return $this->elasticConnection;
-    }
-
 
     public function getManufacturer($manufacturer_id)
     {
@@ -87,7 +70,7 @@ class Query
             ]
         ];
 
-        return $this->check()->search($params);
+        return $this->registry->get('elasticSearch')->connection()->search($params);
     }
 
     public function getEntity($manufacturer_id = 0, $category_id = 0)
@@ -105,7 +88,7 @@ class Query
             ]
         ];
 
-        return $this->check()->search($params);
+        return $this->registry->get('elasticSearch')->connection()->search($params);
     }
 
     public function completitionQuery($index, $query, $field, $suggest, $data = [])
@@ -136,7 +119,7 @@ class Query
         ];
 
 
-        return $this->check()->search($params);
+        return $this->registry->get('elasticSearch')->connection()->search($params);
     }
 
     public function fuzzyCategoriesQuery($index, $query, $field, $suggest, $data = [])
@@ -183,7 +166,7 @@ class Query
         ];
 
 
-        return $this->check()->search($params);
+        return $this->registry->get('elasticSearch')->connection()->search($params);
     }
 
 
@@ -289,7 +272,10 @@ class Query
             unset($params['body']['sort']);
             unset($params['body']['suggest']);
             unset($params['body']['highlight']);
-            return StaticFunctions::validateCountResult($this->check()->count($params));
+
+            $result = $this->registry->get('elasticSearch')->connection()->count($params);
+
+            return StaticFunctions::validateCountResult($result);
         }
 
         if (!empty($data['count'])) {
@@ -302,10 +288,10 @@ class Query
             unset($params['body']['sort']);
             unset($params['body']['suggest']);
             unset($params['body']['highlight']);
-            return $this->check()->search($params);
+            return $this->registry->get('elasticSearch')->connection()->search($params);
         }
 
-        $results = $this->check()->search($params);
+        $results = $this->registry->get('elasticSearch')->connection()->search($params);
 
         return $results;
     }
@@ -334,7 +320,7 @@ class Query
                 ]
             ]
         ];
-        return $this->check()->search($params);
+        return $this->registry->get('elasticSearch')->connection()->search($params);
     }
 
 

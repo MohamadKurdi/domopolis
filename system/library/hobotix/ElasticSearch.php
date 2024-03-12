@@ -32,7 +32,20 @@ class ElasticSearch{
 			}				
 		}
 
-		$this->Indexer 	= new ElasticSearch\Indexer($registry, $this->elasticConnection);
-		$this->Query 	= new ElasticSearch\Query($registry, $this->elasticConnection);
+		$this->Indexer 	= new ElasticSearch\Indexer($registry);
+		$this->Query 	= new ElasticSearch\Query($registry);
 	}
+
+    public function connection()
+    {
+        if (!$this->elasticConnection) {
+            try {
+                $this->elasticConnection = \Elasticsearch\ClientBuilder::create()->setHosts([ELASTICSEARCH_HOSTPORT])->build();
+            } catch (\Exception $e) {
+                print_r($e->getMessage());
+            }
+        }
+
+        return $this->elasticConnection;
+    }
 }																					
