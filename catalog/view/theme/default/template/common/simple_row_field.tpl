@@ -56,11 +56,11 @@
             <input type="hidden" name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo $value ?>">
             <?php } elseif ($type == 'tel') { ?>
             <div class="quick_order_wrap">
-                <input class="field" type="<?php echo ($type == 'date' || $type == 'time' || $type == 'datetime') ? 'text' : $type ?>" <?php echo $type == 'password' ? 'data-validate-on="keyup"' : '' ?> name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo $value ?>" placeholder="<?php echo $placeholder ?>" <?php echo $attrs ?> <?php echo $reload ? 'data-onchange="reloadAll"' : 'data-reload-payment-form="true"'?>>
+                <input class="field" type="tel" <?php echo $type == 'password' ? 'data-validate-on="keyup"' : '' ?> name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo $value ?>" placeholder="<?php echo $placeholder ?>" <?php echo $attrs ?> <?php echo $reload ? 'data-onchange="reloadAll"' : 'data-reload-payment-form="true"'?>>
                 <input type="button" class="btn disable-btn 1" id="quick_order_simplecheckout_btn" name="" value="Быстрый заказ" title="">                
             </div>
             <?php } else { ?>
-            <input class="field" type="<?php echo ($type == 'date' || $type == 'time' || $type == 'datetime') ? 'text' : $type ?>" <?php echo $type == 'password' ? 'data-validate-on="keyup"' : '' ?> name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo $value ?>" placeholder="<?php echo $placeholder ?>" <?php echo $attrs ?> <?php echo $reload ? 'data-onchange="reloadAll"' : 'data-reload-payment-form="true"'?>>
+            <input class="field" type="<?php echo ($type == 'time' || $type == 'datetime') ? 'text' : $type ?>" <?php echo $type == 'password' ? 'data-validate-on="keyup"' : '' ?> name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo $value ?>" placeholder="<?php echo $placeholder ?>" <?php echo $attrs ?> <?php echo $reload ? 'data-onchange="reloadAll"' : 'data-reload-payment-form="true"'?>>
         <?php } ?>
         <?php if (!empty($rules)) { ?>
             <div class="simplecheckout-rule-group" data-for="<?php echo $id ?>">

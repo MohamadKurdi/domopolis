@@ -851,7 +851,7 @@
             return [false, ""];
         };
 
-        $(self.params.mainContainer).find("input[type=date],input[type=datetime],input[data-type=date],input[data-type=datetime]").each(function() {
+        $(self.params.mainContainer).find("input[type=datetime],input[data-type=datetime]").each(function() {
             var onlyWeekdays = $(this).attr("data-weekdays-only") ? true : false,
                 min = new Date(),
                 max = new Date();
