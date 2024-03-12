@@ -327,7 +327,7 @@ class Indexer
                         $namequery3 = $this->db->query("SELECT name as name, alternate_name as alternate_name, language_id FROM category_description WHERE category_id = '" . (int)$row['category_id'] . "'");
 
                         $this->prepareCategoryManufacturerInterSectionIndex($namequery, $namequery3, $params);
-                        $stores_query = $this->db->query("SELECT store_id FROM manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id['manufacturer_id'] . "' AND store_id IN (SELECT store_id FROM category_to_store WHERE category_id = '" . $namequery2->row['category_id'] . "')");
+                        $stores_query = $this->db->query("SELECT store_id FROM manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer['manufacturer_id'] . "' AND store_id IN (SELECT store_id FROM category_to_store WHERE category_id = '" . $namequery2->row['category_id'] . "')");
                         $mapping = StaticFunctions::createMappingToNonEmpty($stores_query, 'store_id');
                         StaticFunctions::createStoreIndexArray($mapping, 'stores', $this->registry->get('stores_to_main_language_mapping'), $params);
 
@@ -343,22 +343,22 @@ class Indexer
             }
 
             unset($manufacturer_id);
-            foreach ($query->rows as $manufacturer_id) {
-                echoLine('[Indexer::fillEntitiesIndex ] Indexing collections for brand ' . $manufacturer_id['manufacturer_id'], 'i');
+            foreach ($query->rows as $manufacturer) {
+                echoLine('[Indexer::fillEntitiesIndex ] Indexing collections for brand ' . $manufacturer['manufacturer_id'], 'i');
 
-                $namequery = $this->db->query("SELECT m.manufacturer_id, m.name as name, md.alternate_name as alternate_name, md.language_id FROM manufacturer m LEFT JOIN manufacturer_description md ON m.manufacturer_id = md.manufacturer_id WHERE m.manufacturer_id = '" . (int)$manufacturer_id['manufacturer_id'] . "'");
+                $namequery = $this->db->query("SELECT m.manufacturer_id, m.name as name, md.alternate_name as alternate_name, md.language_id FROM manufacturer m LEFT JOIN manufacturer_description md ON m.manufacturer_id = md.manufacturer_id WHERE m.manufacturer_id = '" . (int)$manufacturer['manufacturer_id'] . "'");
 
-                $namequery2 = $this->db->query("SELECT DISTINCT c.collection_id FROM collection c WHERE c.manufacturer_id = '" . $manufacturer_id['manufacturer_id'] . "'");
+                $namequery2 = $this->db->query("SELECT DISTINCT c.collection_id FROM collection c WHERE c.manufacturer_id = '" . $manufacturer['manufacturer_id'] . "'");
 
                 if ($namequery2->num_rows) {
                     foreach ($namequery2->rows as $row) {
                         $params = [];
                         $params['index'] = 'categories' . $this->config->get('config_elasticsearch_index_suffix');
-                        $params['id'] = 'collection-' . $row['collection_id'] . '-' . $manufacturer_id['manufacturer_id'];
+                        $params['id'] = 'collection-' . $row['collection_id'] . '-' . $manufacturer['manufacturer_id'];
                         $params['body'] = [];
                         $params['body']['priority'] = \hobotix\ElasticSearch::COLLECTION_PRIORITY;
                         $params['body']['category_id'] = 0;
-                        $params['body']['manufacturer_id'] = $manufacturer_id['manufacturer_id'];
+                        $params['body']['manufacturer_id'] = $manufacturer['manufacturer_id'];
                         $params['body']['collection_id'] = $row['collection_id'];
                         $params['body']['type'] = 'collection';
 
