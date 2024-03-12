@@ -91,7 +91,7 @@ class ControllerCatalogProductExt extends Controller {
                      }
 
                     $this->model_catalog_product->deleteProduct($product_id);
-                     $this->registry->get('elasticSearch')->Indexer->deleteProduct($product_id, true);
+                    $this->registry->get('elasticSearch')->Indexer->deleteProduct($product_id, true);
 
                 }
             }                       

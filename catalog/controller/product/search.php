@@ -112,7 +112,7 @@ class ControllerProductSearch extends Controller {
 			foreach ($manufacturers as $manufacturer_id => $manufacturer){
 				if (empty($data['m' . $manufacturer_id])){
 
-					if (\hobotix\Elasticsearch\StaticFunctions::validateResult($resultManufacturer = $this->elasticSearch->Query->getManufacturer($manufacturer_id))){
+					if (\hobotix\Elasticsearch\StaticFunctions::validateResult($resultManufacturer = $this->elasticSearch->Query->getEntityByID('manufacturer', $manufacturer_id))){
 						$name 	= $resultManufacturer['hits']['hits'][0]['_source'][$field];
 						$href 	= $this->url->link('catalog/manufacturer', 'manufacturer_id=' . $manufacturer_id);						
 						$id 	= $manufacturer_id;
