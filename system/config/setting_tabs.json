@@ -1,14 +1,14 @@
 [
   {
     "tab-general": {
-      "text": "Основное",
+      "text": "Main",
       "icon": "fa-bars",
       "color": ""
     }
   },
   {
     "tab-store": {
-      "text": "Магазин",
+      "text": "Store",
       "icon": "fa-cogs",
       "color": ""
     }
@@ -29,7 +29,7 @@
   },
   {
     "tab-app": {
-      "text": "Приложения",
+      "text": "Apps",
       "icon": "fa-mobile",
       "color": ""
     }
@@ -71,7 +71,7 @@
   },
   {
     "tab-mail": {
-      "text": "Почта",
+      "text": "Mail",
       "icon": "fa-envelope", 
       "color": ""
     }
@@ -129,12 +129,19 @@
     "tab-openai": {
       "text": "OpenAI",
       "icon": "fa-user",
-      "color": ""
+      "color": "cf4a61"
+    }
+  },
+  {
+    "tab-elasticsearch": {
+      "text": "Elastic",
+      "icon": "fa-search",
+      "color": "51A62D"
     }
   },
   {
     "tab-apis": {
-      "text": "Интеграции",
+      "text": "API",
       "icon": "fa-bars",
       "color": "7F00FF"
     }

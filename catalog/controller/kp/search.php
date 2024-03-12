@@ -1,6 +1,4 @@
-<?php
-	use Elasticsearch\ClientBuilder;
-	
+<?php	
 	class ControllerKPSearch extends Controller {
 		
 		
@@ -16,8 +14,7 @@
 			
 			$result = $this->elasticSearch->getProductByID($product_id);
 			
-			$this->log->debug($result);
-			
+			$this->log->debug($result);			
 		}
 		
 		private function createData($hit, $field, $exact, $suggestLogic, $query, &$data){
@@ -25,8 +22,7 @@
 			$id 	= '';
 			$idtype = '';
 			$type 	= '';
-			
-			
+						
 			$name = $hit['_source'][$field];
 			
 			if ($exact && !empty($hit['highlight'][$field])){
@@ -84,10 +80,10 @@
 				
 			}	
 			
-			$name = $this->elasticSearch->checkUAName($name);
+			$name = $this->elasticSearch->Query->checkUAName($name);
 			
 			if ($suggestLogic){
-				$name 	= mb_strtolower($this->elasticSearch->checkUAName($hit['_source'][$field]));
+				$name 	= mb_strtolower($this->elasticSearch->Query->checkUAName($hit['_source'][$field]));
 				
 				if ($query){
 					$name = str_ireplace($query, '<b>' . $query . '</b>', $name);
@@ -128,11 +124,10 @@
 				$this->createData($hit, $field, $exact, false, $query, $data);	
 			}	
 			
-			//Если в выдаче есть брендовые запросы, но их нет в выдаче, то добавляем
 			foreach ($manufacturers as $manufacturer_id => $manufacturer){
 				if (empty($data['m' . $manufacturer_id])){
 					
-					if (\hobotix\ElasticSearch::validateResult($resultManufacturer = $this->elasticSearch->getManufacturer($manufacturer_id))){
+					if (\hobotix\Elasticsearch\StaticFunctions::validateResult($resultManufacturer = $this->elasticSearch->getManufacturer($manufacturer_id))){
 						$name 	= $resultManufacturer['hits']['hits'][0]['_source'][$field];
 						$href 	= $this->url->link('catalog/manufacturer', 'manufacturer_id=' . $manufacturer_id);						
 						$id 	= $manufacturer_id;
@@ -142,7 +137,7 @@
 						
 						
 						$data[$idtype] = array(
-						'name' 		=> $this->elasticSearch->checkUAName($name),
+						'name' 		=> $this->elasticSearch->Query->checkUAName($name),
 						'href' 		=> $href,
 						'id'   		=> $id,
 						'idtype'   	=> $idtype,	
@@ -262,41 +257,40 @@
 				}
 			}
 			
-			try {
-				
+			try {				
 				$query = $this->request->get['query'];
-				$query = $this->elasticSearch->prepareQueryExceptions($query);
+				$query = \hobotix\Elasticsearch\StaticFunctions::prepareQueryExceptions($query);
 				$query = trim(mb_strtolower($query));	
 				$length = mb_strlen($query);
 				
-				$field = $this->elasticSearch->buildField('name');
-				$field2 = $this->elasticSearch->buildField('names');
-				$field3 = $this->elasticSearch->buildField('description');
-				$field4 = $this->elasticSearch->buildField('suggest');
+				$field = $this->elasticSearch->Query->buildField('name');
+				$field2 = $this->elasticSearch->Query->buildField('names');
+				$field3 = $this->elasticSearch->Query->buildField('description');
+				$field4 = $this->elasticSearch->Query->buildField('suggest');
 				
 				
 				if ($length <= 3){
 					
-					$results = $this->elasticSearch->completition('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field4);
+					$results = $this->elasticSearch->Query->completition('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field4);
 					$r1 = $this->prepareResults($results, $field, true, $query);
 					$this->log->debug(json_encode($r1));
 					
 					} else {		
 													
 					$exact = true;
-					$results = $this->elasticSearch->fuzzy('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field4);	
+					$results = $this->elasticSearch->Query->fuzzyCategoriesQuery('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field4);	
 					
-					if (!\hobotix\ElasticSearch::validateResult($results, true)){
+					if (!\hobotix\Elasticsearch\StaticFunctions::validateResult($results, true)){
 						$exact = false;
-						$results = $this->elasticSearch->fuzzy('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field2, $field4);
+						$results = $this->elasticSearch->Query->fuzzyCategoriesQuery('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field2, $field4);
 					}		
 									
-					if (\hobotix\Elasticsearch::validateResult($resultsP = $this->elasticSearch->sku($query)) == 1){				
+					if (\hobotix\Elasticsearch\StaticFunctions::validateResult($resultsP = $this->elasticSearch->Query->nonFuzzySkuQuery($query)) == 1){				
 						} else {
 						
-						$resultsP = $this->elasticSearch->fuzzyP('products' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field2, $field3);		
+						$resultsP = $this->elasticSearch->Query->fuzzyProductsQuery('products' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field2, $field3);		
 						
-						if (!\hobotix\ElasticSearch::validateResult($resultsP)){
+						if (!\hobotix\Elasticsearch\StaticFunctions::validateResult($resultsP)){
 							$resultsP = $this->elasticSearch->sku($query);
 						}
 					}

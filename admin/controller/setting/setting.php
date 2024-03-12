@@ -4452,36 +4452,23 @@ class ControllerSettingSetting extends Controller
             $this->data['config_reacher_helo'] = $this->config->get('config_reacher_helo');
         }
 
+        $elasticseach_settings = [
+            'config_elasticsearch_fuzziness_product',
+            'config_elasticsearch_fuzziness_category',
+            'config_elasticsearch_fuzziness_autcocomplete',
+            'config_elasticsearch_index_suffix',
+            'config_elasticsearch_use_local_stock',            
+            'config_elasticseach_many_models',
+            'config_elasticseach_many_skus',
+            'config_elasticseach_many_textnumbers'               
+        ];
 
-        //ELASTICSEARCH
-        if (isset($this->request->post['config_elasticsearch_fuzziness_product'])) {
-            $this->data['config_elasticsearch_fuzziness_product'] = $this->request->post['config_elasticsearch_fuzziness_product'];
-        } else {
-            $this->data['config_elasticsearch_fuzziness_product'] = $this->config->get('config_elasticsearch_fuzziness_product');
-        }
-
-        if (isset($this->request->post['config_elasticsearch_fuzziness_category'])) {
-            $this->data['config_elasticsearch_fuzziness_category'] = $this->request->post['config_elasticsearch_fuzziness_category'];
-        } else {
-            $this->data['config_elasticsearch_fuzziness_category'] = $this->config->get('config_elasticsearch_fuzziness_category');
-        }
-
-        if (isset($this->request->post['config_elasticsearch_fuzziness_autcocomplete'])) {
-            $this->data['config_elasticsearch_fuzziness_autcocomplete'] = $this->request->post['config_elasticsearch_fuzziness_autcocomplete'];
-        } else {
-            $this->data['config_elasticsearch_fuzziness_autcocomplete'] = $this->config->get('config_elasticsearch_fuzziness_autcocomplete');
-        }
-
-        if (isset($this->request->post['config_elasticsearch_index_suffix'])) {
-            $this->data['config_elasticsearch_index_suffix'] = $this->request->post['config_elasticsearch_index_suffix'];
-        } else {
-            $this->data['config_elasticsearch_index_suffix'] = $this->config->get('config_elasticsearch_index_suffix');
-        }
-
-        if (isset($this->request->post['config_elasticsearch_use_local_stock'])) {
-            $this->data['config_elasticsearch_use_local_stock'] = $this->request->post['config_elasticsearch_use_local_stock'];
-        } else {
-            $this->data['config_elasticsearch_use_local_stock'] = $this->config->get('config_elasticsearch_use_local_stock');
+         foreach ($elasticseach_settings as $elasticseach_setting) {
+            if (isset($this->request->post[$elasticseach_setting])) {
+                $this->data[$elasticseach_setting] = $this->request->post[$elasticseach_setting];
+            } else {
+                $this->data[$elasticseach_setting] = $this->config->get($elasticseach_setting);
+            }
         }
 
         if (isset($this->request->post['config_hotline_feed_enable'])) {
@@ -4772,7 +4759,7 @@ class ControllerSettingSetting extends Controller
             $this->data['config_clickmap_enable'] = $this->config->get('config_clickmap_enable');
         }
 
-        $kpi_settings = [
+        $salary_settings = [
             'config_kpi_complete_cancel_percent_params_0',
             'config_kpi_complete_cancel_percent_params_1',
             'config_kpi_complete_cancel_percent_params_2',
@@ -4801,7 +4788,7 @@ class ControllerSettingSetting extends Controller
             'config_kpi_default_filter_count_days_problem',
         ];
 
-        foreach ($kpi_settings as $salary_setting) {
+        foreach ($salary_settings as $salary_setting) {
             if (isset($this->request->post[$salary_setting])) {
                 $this->data[$salary_setting] = $this->request->post[$salary_setting];
             } else {
