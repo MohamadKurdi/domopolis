@@ -791,11 +791,15 @@ class ControllerYaMarketApi extends Controller
             $product = $this->model_catalog_product->getProductYAM($item->getOfferId(), false);
 
             if ($product) {
+                if ((int)$product[$this->config->get('config_warehouse_identifier_local')] < 0){
+                    $product[$this->config->get('config_warehouse_identifier_local')] = 0;
+                }
+
                 $json['cart']['items'][] = [
-                    'feedId' => (int)$item->getFeedId(),
-                    'offerId' => (string)$item->getOfferId(),
-                    'count' => (int)$product[$this->config->get('config_warehouse_identifier_local')],
-                    'delivery' => true
+                    'feedId'    => (int)$item->getFeedId(),
+                    'offerId'   => (string)$item->getOfferId(),
+                    'count'     => (int)$product[$this->config->get('config_warehouse_identifier_local')],
+                    'delivery'  => true
                 ];
             }
         }
