@@ -75,7 +75,7 @@ if (!class_exists('DB')){
 			} else {
 				try	{
 					$result = $this->connection->query($sql);
-				} catch (Exception $e){	
+				} catch (\Exception $e){
 
 					if (PHP_SAPI  === 'cli' || IS_DEBUG){
 						echo('[DB ERROR] in query: ' . $sql);
