@@ -1,12 +1,5 @@
 <?php
-	/**
-		* HTML Email template extension
-		*
-		* @author: Ben Johnson, opencart-templates
-		* @email: info@opencart-templates.co.uk
-		* @website: http://www.opencart-templates.co.uk
-		*
-	*/
+
 	class ModelModuleEmailTemplate extends Model {
 		
 		
@@ -329,7 +322,7 @@
 			$updates = $this->_build_query($cols, $data);
 			if (!$updates) return false;
 			
-			$sql = "UPDATE emailtemplate_config SET ".implode($updates,", ") . " WHERE emailtemplate_config_id = '{$id}'";
+			$sql = "UPDATE emailtemplate_config SET ".implode(', ', $updates) . " WHERE emailtemplate_config_id = '{$id}'";
 			$this->db->non_cached_query($sql);
 			
 			$this->_deleteCache();
@@ -1021,9 +1014,9 @@
 			$cols = EmailTemplateDAO::describe('emailtemplate_id');
 			
 			$updates = $this->_build_query($cols, $data);
-			
+
 			if ($updates){
-				$sql = "UPDATE emailtemplate SET ".implode($updates,", ") . " WHERE `emailtemplate_id` = '{$id}'";
+				$sql = "UPDATE emailtemplate SET ". implode(", ", $updates) . " WHERE `emailtemplate_id` = '{$id}'";
 				$this->db->non_cached_query($sql);
 				
 				$affected += $this->db->countAffected();
@@ -1050,9 +1043,9 @@
 				
 				$result = $this->db->non_cached_query("SELECT count(`emailtemplate_id`) AS total FROM emailtemplate_description WHERE `emailtemplate_id` = '{$id}' AND `language_id` = '{$langId}'");
 				if($result->row['total'] == 0){
-					$query = "INSERT INTO emailtemplate_description SET `emailtemplate_id` = '{$id}', `language_id` = '{$langId}', ".implode($updates,", ");
+					$query = "INSERT INTO emailtemplate_description SET `emailtemplate_id` = '{$id}', `language_id` = '{$langId}', ". implode(', ', $updates);
 					} else {
-					$query = "UPDATE emailtemplate_description SET ".implode($updates,", ") . " WHERE `emailtemplate_id` = '{$id}' AND `language_id` = '{$langId}'";
+					$query = "UPDATE emailtemplate_description SET ". implode(', ', $updates) . " WHERE `emailtemplate_id` = '{$id}' AND `language_id` = '{$langId}'";
 				}
 				$this->db->non_cached_query($query);
 				
@@ -1302,7 +1295,7 @@
 			$updates = $this->_build_query($cols, $data);
 			if (!$updates) return false;
 			
-			$sql = "UPDATE emailtemplate_shortcode SET ".implode($updates,", ") . " WHERE emailtemplate_shortcode_id = '{$id}'";
+			$sql = "UPDATE emailtemplate_shortcode SET ".implode(', ', $updates) . " WHERE emailtemplate_shortcode_id = '{$id}'";
 			$this->db->non_cached_query($sql);
 			
 			$this->_deleteCache();
