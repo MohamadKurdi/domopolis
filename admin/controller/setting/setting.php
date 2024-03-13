@@ -158,54 +158,49 @@ class ControllerSettingSetting extends Controller
 
     public function editSettingAjax()
     {
-        $store_id = $this->request->get['store_id'];
-        $key = $this->request->post['key'];
-
-        if (isset($this->request->post['value'])) {
-            $value = $this->request->post['value'];
+        if (!$this->user->hasPermission('modify', 'setting/setting')) {
+            $this->response->setJSON(['error' => 'error_permission']);
         } else {
-            $value = '';
-        }
 
-        if (!empty($this->request->post['js_serialized'])) {
-            parse_str(html_entity_decode($value), $result);
-            if (is_array($result) && !empty($result[$key])) {
-                $value = $result[$key];
-            }
-        }
+            $store_id = $this->request->get['store_id'];
+            $key = $this->request->post['key'];
 
-        $serialized = (int)is_array($value);
-        $value      = (is_array($value)) ? serialize($value) : $value;
-        $key        = trim($key, '[]');
-
-        if ($key) {
-            $query = $this->db->query("SELECT * FROM setting WHERE store_id = '" . (int)$store_id . "' AND `group` = 'config' AND `key` = '" . $this->db->escape($key) . "'");
-
-            if ($query->num_rows) {
-                $sql = "UPDATE setting SET `value` = '" . $this->db->escape($value) . "' WHERE `store_id` = '" . (int)$store_id . "' AND `group` = 'config' AND `key` = '" . $this->db->escape($key) . "'";
+            if (isset($this->request->post['value'])) {
+                $value = $this->request->post['value'];
             } else {
-                $sql = "INSERT INTO setting SET `value` = '" . $this->db->escape($value) . "', `store_id` = '" . (int)$store_id . "', `group` = 'config', `key` = '" . $this->db->escape($key) . "', serialized = '" . (int)$serialized . "'";
+                $value = '';
             }
 
-            $query = $this->db->query($sql);
-        }
+            if (!empty($this->request->post['js_serialized'])) {
+                parse_str(html_entity_decode($value), $result);
+                if (is_array($result) && !empty($result[$key])) {
+                    $value = $result[$key];
+                }
+            }
 
-        $this->response->setOutput($sql);
+            $serialized = (int)is_array($value);
+            $value = (is_array($value)) ? serialize($value) : $value;
+            $key = trim($key, '[]');
+
+            if ($key) {
+                $query = $this->db->query("SELECT * FROM setting WHERE store_id = '" . (int)$store_id . "' AND `group` = 'config' AND `key` = '" . $this->db->escape($key) . "'");
+
+                if ($query->num_rows) {
+                    $sql = "UPDATE setting SET `value` = '" . $this->db->escape($value) . "' WHERE `store_id` = '" . (int)$store_id . "' AND `group` = 'config' AND `key` = '" . $this->db->escape($key) . "'";
+                } else {
+                    $sql = "INSERT INTO setting SET `value` = '" . $this->db->escape($value) . "', `store_id` = '" . (int)$store_id . "', `group` = 'config', `key` = '" . $this->db->escape($key) . "', serialized = '" . (int)$serialized . "'";
+                }
+
+                $query = $this->db->query($sql);
+            }
+
+            $this->response->setJSON(['success' => $sql]);
+        }
     }
 
     public function index()
     {
         $this->load->model('setting/setting');
-
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('config', $this->request->post);
-
-
-            $this->session->data['success'] = $this->language->get('text_success');
-
-            $this->redirect($this->url->link('setting/store', 'token=' . $this->session->data['token'], 'SSL'));
-        }
-
         $this->data['tabs'] = loadJSONConfig('setting_tabs');
 
         $this->data += $this->language->load('setting/setting');
@@ -215,162 +210,6 @@ class ControllerSettingSetting extends Controller
             $this->data['error_warning'] = $this->error['warning'];
         } else {
             $this->data['error_warning'] = '';
-        }
-
-        if (isset($this->error['name'])) {
-            $this->data['error_name'] = $this->error['name'];
-        } else {
-            $this->data['error_name'] = '';
-        }
-
-        if (isset($this->error['owner'])) {
-            $this->data['error_owner'] = $this->error['owner'];
-        } else {
-            $this->data['error_owner'] = '';
-        }
-
-        if (isset($this->error['address'])) {
-            $this->data['error_address'] = $this->error['address'];
-        } else {
-            $this->data['error_address'] = '';
-        }
-
-        if (isset($this->error['email'])) {
-            $this->data['error_email'] = $this->error['email'];
-        } else {
-            $this->data['error_email'] = '';
-        }
-
-        if (isset($this->error['telephone'])) {
-            $this->data['error_telephone'] = $this->error['telephone'];
-        } else {
-            $this->data['error_telephone'] = '';
-        }
-
-        if (isset($this->error['title'])) {
-            $this->data['error_title'] = $this->error['title'];
-        } else {
-            $this->data['error_title'] = '';
-        }
-
-        if (isset($this->error['customer_group_display'])) {
-            $this->data['error_customer_group_display'] = $this->error['customer_group_display'];
-        } else {
-            $this->data['error_customer_group_display'] = '';
-        }
-
-        if (isset($this->error['voucher_min'])) {
-            $this->data['error_voucher_min'] = $this->error['voucher_min'];
-        } else {
-            $this->data['error_voucher_min'] = '';
-        }
-
-        if (isset($this->error['voucher_max'])) {
-            $this->data['error_voucher_max'] = $this->error['voucher_max'];
-        } else {
-            $this->data['error_voucher_max'] = '';
-        }
-
-        if (isset($this->error['ftp_host'])) {
-            $this->data['error_ftp_host'] = $this->error['ftp_host'];
-        } else {
-            $this->data['error_ftp_host'] = '';
-        }
-
-        if (isset($this->error['ftp_port'])) {
-            $this->data['error_ftp_port'] = $this->error['ftp_port'];
-        } else {
-            $this->data['error_ftp_port'] = '';
-        }
-
-        if (isset($this->error['ftp_username'])) {
-            $this->data['error_ftp_username'] = $this->error['ftp_username'];
-        } else {
-            $this->data['error_ftp_username'] = '';
-        }
-
-        if (isset($this->error['ftp_password'])) {
-            $this->data['error_ftp_password'] = $this->error['ftp_password'];
-        } else {
-            $this->data['error_ftp_password'] = '';
-        }
-
-        if (isset($this->error['image_category'])) {
-            $this->data['error_image_category'] = $this->error['image_category'];
-        } else {
-            $this->data['error_image_category'] = '';
-        }
-
-        if (isset($this->error['image_thumb'])) {
-            $this->data['error_image_thumb'] = $this->error['image_thumb'];
-        } else {
-            $this->data['error_image_thumb'] = '';
-        }
-
-        if (isset($this->error['image_popup'])) {
-            $this->data['error_image_popup'] = $this->error['image_popup'];
-        } else {
-            $this->data['error_image_popup'] = '';
-        }
-
-        if (isset($this->error['image_product'])) {
-            $this->data['error_image_product'] = $this->error['image_product'];
-        } else {
-            $this->data['error_image_product'] = '';
-        }
-
-        if (isset($this->error['image_additional'])) {
-            $this->data['error_image_additional'] = $this->error['image_additional'];
-        } else {
-            $this->data['error_image_additional'] = '';
-        }
-
-        if (isset($this->error['image_related'])) {
-            $this->data['error_image_related'] = $this->error['image_related'];
-        } else {
-            $this->data['error_image_related'] = '';
-        }
-
-        if (isset($this->error['image_compare'])) {
-            $this->data['error_image_compare'] = $this->error['image_compare'];
-        } else {
-            $this->data['error_image_compare'] = '';
-        }
-
-        if (isset($this->error['image_wishlist'])) {
-            $this->data['error_image_wishlist'] = $this->error['image_wishlist'];
-        } else {
-            $this->data['error_image_wishlist'] = '';
-        }
-
-        if (isset($this->error['image_cart'])) {
-            $this->data['error_image_cart'] = $this->error['image_cart'];
-        } else {
-            $this->data['error_image_cart'] = '';
-        }
-
-        if (isset($this->error['error_filename'])) {
-            $this->data['error_error_filename'] = $this->error['error_filename'];
-        } else {
-            $this->data['error_error_filename'] = '';
-        }
-
-        if (isset($this->error['catalog_limit'])) {
-            $this->data['error_catalog_limit'] = $this->error['catalog_limit'];
-        } else {
-            $this->data['error_catalog_limit'] = '';
-        }
-
-        if (isset($this->error['admin_limit'])) {
-            $this->data['error_admin_limit'] = $this->error['admin_limit'];
-        } else {
-            $this->data['error_admin_limit'] = '';
-        }
-
-        if (isset($this->error['encryption'])) {
-            $this->data['error_encryption'] = $this->error['encryption'];
-        } else {
-            $this->data['error_encryption'] = '';
         }
 
         $this->data['breadcrumbs'] = [];
@@ -566,6 +405,18 @@ class ControllerSettingSetting extends Controller
             $this->data['config_opt_email'] = $this->request->post['config_opt_email'];
         } else {
             $this->data['config_opt_email'] = $this->config->get('config_opt_email');
+        }
+
+        if (isset($this->request->post['config_email_b2b_display'])) {
+            $this->data['config_email_b2b_display'] = $this->request->post['config_email_b2b_display'];
+        } else {
+            $this->data['config_email_b2b_display'] = $this->config->get('config_email_b2b_display');
+        }
+
+        if (isset($this->request->post['config_email_b2b_to'])) {
+            $this->data['config_email_b2b_to'] = $this->request->post['config_email_b2b_to'];
+        } else {
+            $this->data['config_email_b2b_to'] = $this->config->get('config_email_b2b_to');
         }
 
         if (isset($this->request->post['config_display_email'])) {
@@ -2931,7 +2782,7 @@ class ControllerSettingSetting extends Controller
 
         foreach ($forgottencart_config_keys as $forgottencart_config_key) {
             if (isset($this->request->post[$forgottencart_config_key])) {
-                $this->data[$forgottencart_config_key] = $this->request->post[$forgottencart_config_keys];
+                $this->data[$forgottencart_config_key] = $this->request->post[$forgottencart_config_key];
             } else {
                 $this->data[$forgottencart_config_key] = $this->config->get($forgottencart_config_key);
             }
@@ -3182,7 +3033,7 @@ class ControllerSettingSetting extends Controller
 
         foreach ($config_pixels_keys as $config_pixels_key) {
             if (isset($this->request->post[$config_pixels_key])) {
-                $this->data[$config_pixels_key] = $this->request->post[$config_pixels_keys];
+                $this->data[$config_pixels_key] = $this->request->post[$config_pixels_key];
             } else {
                 $this->data[$config_pixels_key] = $this->config->get($config_pixels_key);
             }
@@ -4814,111 +4665,6 @@ class ControllerSettingSetting extends Controller
         );
 
         $this->response->setOutput($this->render());
-    }
-
-    protected function validate()
-    {
-        if (!$this->user->hasPermission('modify', 'setting/setting')) {
-            $this->error['warning'] = $this->language->get('error_permission');
-        }
-
-        if (!$this->request->post['config_name']) {
-            $this->error['name'] = $this->language->get('error_name');
-        }
-
-        if ((utf8_strlen($this->request->post['config_owner']) < 3) || (utf8_strlen($this->request->post['config_owner']) > 64)) {
-            $this->error['owner'] = $this->language->get('error_owner');
-        }
-
-        if ((utf8_strlen($this->request->post['config_address']) < 3) || (utf8_strlen($this->request->post['config_address']) > 256)) {
-            $this->error['address'] = $this->language->get('error_address');
-        }
-
-        if ((utf8_strlen($this->request->post['config_email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['config_email'])) {
-            $this->error['email'] = $this->language->get('error_email');
-        }
-
-        if ((utf8_strlen($this->request->post['config_telephone']) < 3) || (utf8_strlen($this->request->post['config_telephone']) > 32)) {
-            $this->error['telephone'] = $this->language->get('error_telephone');
-        }
-
-        if (!$this->request->post['config_title']) {
-            $this->error['title'] = $this->language->get('error_title');
-        }
-
-        if (!empty($this->request->post['config_customer_group_display']) && !in_array($this->request->post['config_customer_group_id'], $this->request->post['config_customer_group_display'])) {
-            $this->error['customer_group_display'] = $this->language->get('error_customer_group_display');
-        }
-
-        if (!$this->request->post['config_voucher_min']) {
-            $this->error['voucher_min'] = $this->language->get('error_voucher_min');
-        }
-
-        if (!$this->request->post['config_voucher_max']) {
-            $this->error['voucher_max'] = $this->language->get('error_voucher_max');
-        }
-
-        if (!$this->request->post['config_image_category_width'] || !$this->request->post['config_image_category_height']) {
-            $this->error['image_category'] = $this->language->get('error_image_category');
-        }
-
-        if (!$this->request->post['config_image_thumb_width'] || !$this->request->post['config_image_thumb_height']) {
-            $this->error['image_thumb'] = $this->language->get('error_image_thumb');
-        }
-
-        if (!$this->request->post['config_image_popup_width'] || !$this->request->post['config_image_popup_height']) {
-            $this->error['image_popup'] = $this->language->get('error_image_popup');
-        }
-
-        if (!$this->request->post['config_image_product_width'] || !$this->request->post['config_image_product_height']) {
-            $this->error['image_product'] = $this->language->get('error_image_product');
-        }
-
-        if (!$this->request->post['config_image_additional_width'] || !$this->request->post['config_image_additional_height']) {
-            $this->error['image_additional'] = $this->language->get('error_image_additional');
-        }
-
-        if (!$this->request->post['config_image_related_width'] || !$this->request->post['config_image_related_height']) {
-            $this->error['image_related'] = $this->language->get('error_image_related');
-        }
-
-        if (!$this->request->post['config_image_compare_width'] || !$this->request->post['config_image_compare_height']) {
-            $this->error['image_compare'] = $this->language->get('error_image_compare');
-        }
-
-        if (!$this->request->post['config_image_wishlist_width'] || !$this->request->post['config_image_wishlist_height']) {
-            $this->error['image_wishlist'] = $this->language->get('error_image_wishlist');
-        }
-
-        if (!$this->request->post['config_image_cart_width'] || !$this->request->post['config_image_cart_height']) {
-            $this->error['image_cart'] = $this->language->get('error_image_cart');
-        }
-
-        if (!$this->request->post['config_error_filename']) {
-            $this->error['error_filename'] = $this->language->get('error_error_filename');
-        }
-
-        if (!$this->request->post['config_catalog_limit']) {
-            $this->error['catalog_limit'] = $this->language->get('error_limit');
-        }
-
-        if (!$this->request->post['config_admin_limit']) {
-            $this->error['admin_limit'] = $this->language->get('error_limit');
-        }
-
-        if ((utf8_strlen($this->request->post['config_encryption']) < 3) || (utf8_strlen($this->request->post['config_encryption']) > 32)) {
-            $this->error['encryption'] = $this->language->get('error_encryption');
-        }
-
-        if ($this->error && !isset($this->error['warning'])) {
-            $this->error['warning'] = $this->language->get('error_warning');
-        }
-
-        if (!$this->error) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public function template()
