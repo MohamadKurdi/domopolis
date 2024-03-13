@@ -223,7 +223,7 @@ class ModelSaleSupplier extends Model {
 		}
 
 		$sort_data = array(
-			'pao.date_added',
+			'pao.date_added'
 		);
 			
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -391,7 +391,8 @@ class ModelSaleSupplier extends Model {
 		$sort_data = array(
 			'supplier_name',
 			'sort_order',
-			'sort_order, supplier_name'
+			'sort_order, supplier_name',
+			'supplier_inner DESC, supplier_name'
 		);	
 		
 		$sql .= " WHERE 1";
@@ -459,7 +460,8 @@ class ModelSaleSupplier extends Model {
 		$sort_data = array(
 			'supplier_name',
 			'sort_order',
-			'sort_order, supplier_name'
+			'sort_order, supplier_name',
+			'supplier_inner DESC, supplier_name'
 		);	
 		
 		$sql .= " WHERE 1";

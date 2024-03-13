@@ -449,7 +449,7 @@ class ControllerSaleSupplier extends Controller {
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];
 		} else {
-			$sort = 'sort_order, supplier_name';
+			$sort = 'supplier_inner DESC, supplier_name';
 		}
 
 		if (isset($this->request->get['order'])) {
