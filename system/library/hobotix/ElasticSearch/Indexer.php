@@ -504,6 +504,8 @@ class Indexer
                 $response = $this->registry->get('elasticSearch')->connection()->delete($params);
             } catch (\Elasticsearch\Common\Exceptions\Missing404Exception $e) {
                 echoLine('[Indexer::deleteProduct] Product ' . $product_id . ' does not exist', 'w');
+            } catch (\Elasticsearch\Common\Exceptions\NoNodesAvailableException $e) {
+                echoLine('[Indexer::deleteProduct] ElasticSearch error ' . $e->getMessage(), 'e');
             }
         }
     }
