@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace hobotix\Amazon;
 
@@ -84,8 +84,8 @@ class ProductsRetriever extends RainforestRetriever
 	}
 
 		//TODO: refactor
-	public function getProductsWithFullData(){
-		return $this->model_product_get->getProductsWithFullData();
+	public function getProductsWithFullData($start, $filter_data = []){
+		return $this->model_product_get->getProductsWithFullData($start, $filter_data);
 	}
 
 		//TODO: refactor
@@ -238,7 +238,6 @@ class ProductsRetriever extends RainforestRetriever
 		if (!empty($product['videos'])){
 			$videos = [];
 			$sort_order = 0;
-
 
 			$product_video_description = [];
 			foreach ($product['videos'] as $video){
@@ -528,6 +527,21 @@ class ProductsRetriever extends RainforestRetriever
 					echoLine('[ProductsRetriever::parseProductAttributes] Search for attribute: ' . $attribute['name'], 'i');
 
 					$attribute_id = $this->model_product_cached_get->getAttribute($attribute['name']);
+
+                    if (!$attribute_id){
+                        $translated_attribute_name = $this->translateWithCheck($attribute['name'], $this->config->get('config_language'));
+
+                        if ($translated_attribute_name){
+                            echoLine('[ProductsRetriever::parseProductAttributes] Attribute not found, trying to find translated: ' . $translated_attribute_name, 'w');
+                            $attribute_id = $this->model_product_cached_get->getAttributeTranslated($translated_attribute_name);
+                        }
+
+                        if ($attribute_id){
+                            echoLine('[ProductsRetriever::parseProductAttributes] Found translated attribute ' . $translated_attribute_name .  ' with id ' . $attribute_id, 'w');
+                        }
+                    } else {
+                        echoLine('[ProductsRetriever::parseProductAttributes] Found attribute by native name ' . $attribute['name'] .  ' with id ' . $attribute_id, 'w');
+                    }
 
 					if (!$attribute_id){
 						echoLine('[ProductsRetriever::parseProductAttributes] Attribute not found: ' . $attribute['name'], 'e');

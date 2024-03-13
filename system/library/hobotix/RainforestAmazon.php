@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace hobotix;
 
@@ -15,7 +15,6 @@ class RainforestAmazon{
 	public $offersParser 		= null;
 	public $infoUpdater 		= null;
 	public $simpleProductParser = null;
-	public $paramsTranslator 	= null;			
 	public $categoryParser 		= null;
 
 	private $telegramBot 	= null;
@@ -177,7 +176,6 @@ class RainforestAmazon{
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/OffersParser.php');		
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/RainforestRetriever.php');
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/InfoUpdater.php');
-		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/ParamsTranslator.php');
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/CategoryParser.php');
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/CategoryRetriever.php');
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/ProductsRetriever.php');
@@ -185,8 +183,7 @@ class RainforestAmazon{
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/ZipcodesManager.php');
 
 		$this->offersParser 		= new Amazon\OffersParser($registry);
-		$this->infoUpdater 			= new Amazon\InfoUpdater($registry);		
-		$this->paramsTranslator 	= new Amazon\ParamsTranslator();			
+		$this->infoUpdater 			= new Amazon\InfoUpdater($registry);
 		$this->categoryParser 		= new Amazon\CategoryParser($registry, $this->rfClient);		
 		$this->categoryRetriever 	= new Amazon\CategoryRetriever($registry);		
 		$this->productsRetriever 	= new Amazon\ProductsRetriever($registry);		
@@ -432,9 +429,9 @@ class RainforestAmazon{
 		$apiEntities = $this->rfClient->retrieveProducts($rfRequests);		
 
 		if (!$apiEntities){									
-			echoLine('[RainforestAmazon::getProductByASIN] ASIN not found ' . $row['asin'], 'e');			
+			echoLine('[RainforestAmazon::getProductByASIN] ASIN not found ' . $asin, 'e');
 		} else {
-			echoLine('[RainforestAmazon::getProductByASIN] ASIN found ' . $row['asin'], 'i');
+			echoLine('[RainforestAmazon::getProductByASIN] ASIN found ' . $asin, 'i');
 		}
 
 		return $apiEntities;			

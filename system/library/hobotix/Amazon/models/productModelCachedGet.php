@@ -59,6 +59,21 @@ class productModelCachedGet extends hoboModel{
 		return false;
 	}
 
+    public function getAttributeTranslated($name){
+        if ($this->cache->get($this->getKey('attributes.translated', $name), true)){
+            return $this->cache->get($this->getKey('attributes.translated', $name), true);
+        }
+
+        $query = $this->db->ncquery("SELECT attribute_id FROM attribute_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "' AND name LIKE ('" . $this->db->escape($name) . "') LIMIT 1");
+
+        if ($query->num_rows){
+            $this->cache->set($this->getKey('attributes.translated', $name), $query->row['attribute_id']);
+            return $query->row['attribute_id'];
+        }
+
+        return false;
+    }
+
 	public function checkIfTempCategoryExists($name){
 		if ($this->cache->get($this->getKey('categories.temp', $name), true)){			
 			return $this->cache->get($this->getKey('categories.temp', $name), true);
