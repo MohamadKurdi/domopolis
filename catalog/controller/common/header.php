@@ -273,6 +273,9 @@
 			$this->data['contacts'] 				= $this->url->link('information/contact');
 			$this->data['feedback'] 				= $this->url->link('information/feedback');
 			$this->data['loginb2b'] 				= $this->url->link('account/simpleregisterb2b');
+
+            $this->data['href_contact'] 	= $this->url->link('information/contact');
+            $this->data['href_contact_b2b'] = $this->url->link('information/contactb2b');
 			
 			$this->data['text_welcome'] = sprintf($this->language->get('text_welcome'), $this->url->link('account/login'), $this->url->link('account/register'));
 			$this->data['text_logged'] 	= '';

@@ -296,6 +296,7 @@ class ControllerCommonFooter extends Controller {
 		
 		$this->data['href_faq'] 		= $this->url->link('information/faq_system');
 		$this->data['href_contact'] 	= $this->url->link('information/contact');
+        $this->data['href_contact_b2b'] = $this->url->link('information/contactb2b');
 		$this->data['href_shop_rating'] = $this->url->link('information/shop_rating');
 		$this->data['href_sitemap'] 	= $this->url->link('information/sitemap');
 		
