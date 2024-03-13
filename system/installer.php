@@ -133,6 +133,18 @@ final class Installer
                     $db->importSQL(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'structure-main.sql');
                 }
             }
+
+
+            echoLine('[Installer::install] Importing default url_alias structure', 'w');
+            $query = $db->query("SELECT * FROM url_alias WHERE language_id = '-1'");
+
+            if ($query->num_rows){
+                echoLine('[Installer::install] url alias is already imported, skipping', 'w');
+            } else {
+                $db->importSQL(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'structure-url-alias.sql');
+            }
+
+
         } else {
             echoLine('[Installer::install] No database config set, skipping', 'w');
         }
