@@ -9,7 +9,7 @@ class ControllerInformationContactB2b extends Controller
     {
         $this->language->load('information/contact');
 
-        $this->document->setTitle($this->language->get('heading_title'));
+        $this->document->setTitle($this->language->get('heading_title_b2b'));
         $this->data['text_messenger_contact'] = $this->language->get('text_messenger_contact');
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
@@ -34,7 +34,7 @@ class ControllerInformationContactB2b extends Controller
 
             $mail = new Mail($this->registry);
             $mail->setTo($this->config->get('config_email_b2b_to'));
-            $mail->setFrom($this->request->post['email']);
+            $mail->setFrom($this->config->get('config_email'));
             $mail->setSender($this->request->post['name']);
             $mail->setSubject(html_entity_decode(sprintf($this->language->get('email_subject'), $this->request->post['name']), ENT_QUOTES, 'UTF-8'));
             $mail->setText(strip_tags(html_entity_decode($this->request->post['enquiry'], ENT_QUOTES, 'UTF-8')));
@@ -54,7 +54,7 @@ class ControllerInformationContactB2b extends Controller
             'separator' => false
         );
 
-        $this->data['heading_title'] = $this->language->get('heading_title');
+        $this->data['heading_title'] = $this->language->get('heading_title_b2b');
         $this->data['hb_snippets_local_enable'] = $this->config->get('hb_snippets_local_enable');
         $this->data['hb_snippets_local_snippet'] = $this->config->get('hb_snippets_local_snippet');
         $this->data['text_location'] = $this->language->get('text_location');
@@ -65,6 +65,7 @@ class ControllerInformationContactB2b extends Controller
         $this->data['text_fax'] = $this->language->get('text_fax');
         $this->data['entry_name'] = $this->language->get('entry_name');
         $this->data['entry_email'] = $this->language->get('entry_email');
+        $this->data['entry_telephone'] = $this->language->get('entry_telephone');
         $this->data['entry_enquiry'] = $this->language->get('entry_enquiry');
         $this->data['entry_captcha'] = $this->language->get('entry_captcha');
         $this->data['button_continue'] = $this->language->get('button_continue');
@@ -81,6 +82,12 @@ class ControllerInformationContactB2b extends Controller
             $this->data['error_email'] = '';
         }
 
+        if (isset($this->error['telephone'])) {
+            $this->data['error_telephone'] = $this->error['telephone'];
+        } else {
+            $this->data['error_telephone'] = '';
+        }
+
         if (isset($this->error['enquiry'])) {
             $this->data['error_enquiry'] = $this->error['enquiry'];
         } else {
@@ -93,7 +100,7 @@ class ControllerInformationContactB2b extends Controller
             $this->data['error_captcha'] = '';
         }
 
-        $this->data['action'] = $this->url->link('information/contact');
+        $this->data['action'] = $this->url->link('information/contactb2b');
         $this->data['store'] = $this->config->get('config_name');
 
         if (!empty($this->config->get('config_address'))) {

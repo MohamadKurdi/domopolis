@@ -14,6 +14,7 @@ $_['text_thanks_for_enquiry']   = '<p>Спасибо, запрос был усп
 // Entry Fields
 $_['entry_name']     = 'Ваше имя:';
 $_['entry_email']    = 'Ваш E-Mail:';
+$_['entry_telephone']    = 'Ваш номер телефона:';
 $_['entry_enquiry']  = 'Ваш вопрос:';
 $_['entry_captcha']  = 'Введите код, указанный на картинке:';
 
