@@ -16,7 +16,7 @@ class TranslateAdaptor {
 		$this->db 		= $registry->get('db');
 
         if ($this->config->get('config_enable_translation_cache')){
-            echoLine('[TranslateAdaptor::__construct] Translation cache is enabled!', 's');
+            echoLine('[TranslateAdaptor::__construct] Translation cache is enabled!', 'w');
         }
 
         if (!$this->translateObject){
@@ -41,7 +41,7 @@ class TranslateAdaptor {
 			$translateClass = "hobotix" . "\\" . "Translate" . "\\" . $translateClass;
 			$this->translateObject = new $translateClass($this->registry);
 
-			echoLine('[TranslateAdaptor::use] Using ' . $translateClass . ' translation library', 's');
+			echoLine('[TranslateAdaptor::use] Using ' . $translateClass . ' translation library', 'w');
 		} else {
 			echoLine('[TranslateAdaptor::use] Tried to use ' . $translateClass . ' translation library, but failed', 'e');	
 		}
@@ -92,6 +92,8 @@ class TranslateAdaptor {
             translation = '" . $this->db->escape($translation) . "'
             ON DUPLICATE KEY UPDATE
             translation = '" . $this->db->escape($translation) . "'");
+
+        return true;
     }
 
     private function getTranslationStringFromCache($from, $to, $text){
