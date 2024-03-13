@@ -1,6 +1,5 @@
-<div id="tab-elasticearch">
+<div id="tab-elasticsearch">
 	<h2><i class="fa fa-search"></i> Параметры индексирования</h2>
-
 	<table class="form">
 		<tr>
 			<td style="width:15%">									
@@ -101,7 +100,6 @@
 			</td>
 		</tr>
 	</table>
-
 
 	<h2><i class="fa fa-search"></i> Параметры поиска</h2>
 	<table class="form">

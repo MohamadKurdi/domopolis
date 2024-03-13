@@ -4244,6 +4244,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_translation_library'] = $this->config->get('config_translation_library');
         }
 
+        if (isset($this->request->post['config_enable_translation_cache'])) {
+            $this->data['config_enable_translation_cache'] = $this->request->post['config_enable_translation_cache'];
+        } else {
+            $this->data['config_enable_translation_cache'] = $this->config->get('config_enable_translation_cache');
+        }
+
         //Yandex Translate
         if (isset($this->request->post['config_yandex_translate_api_enable'])) {
             $this->data['config_yandex_translate_api_enable'] = $this->request->post['config_yandex_translate_api_enable'];
