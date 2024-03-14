@@ -73,7 +73,11 @@
 			}	
 			
 			if ($suggestLogic){
-				$name 	= mb_strtolower($hit['_source'][$field]);
+				if (is_array($hit['_source'][$field])){
+					$name 	= mb_strtolower($hit['_source'][$field][0]);
+				} else {
+					$name 	= mb_strtolower($hit['_source'][$field]);
+				}
 				
 				if ($query){
 					$name = str_ireplace($query, '<b>' . $query . '</b>', $name);

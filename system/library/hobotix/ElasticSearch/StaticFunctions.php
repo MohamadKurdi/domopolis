@@ -129,7 +129,7 @@ class StaticFunctions{
 	}
 
 	public static function validateResult($results, $checkSuggestion = false){
-		if (is_array($results['hits']) && (int)$results['hits']['total']['value'] > 0){
+		if (!empty($results['hits']) && is_array($results['hits']) && (int)$results['hits']['total']['value'] > 0){
 			return (int)$results['hits']['total']['value'];
 		}
 
