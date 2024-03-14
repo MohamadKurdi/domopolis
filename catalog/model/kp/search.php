@@ -1,34 +1,23 @@
-<?
+<?php
 	class ModelKpSearch extends Model {
 		
 		
 		private static function date_added_sorter($a, $b) {
-			return strtotime($a['date_added']) < strtotime($b['date_added']);
+			return strtotime($a['date_added']) - strtotime($b['date_added']);
 		}
 		
 		
 		public function getPopularSearches(){
-			
-			//$query = $this->db->non_cached_query("SELECT * search_history WHERE customer_id = '" . $this->customer->isLogged() . "' ORDER BY date_added DESC LIMIT 10");
-			
-			//$searches = explode(PHP_EOL, $this->config->get('config_popular_searches'));
-			//shuffle($searches);
-			
-			$query = $this->db->non_cached_query("SELECT * FROM search_history WHERE results > 30 AND times > 5 ORDER BY times DESC LIMIT 10");
-			
+			$query = $this->db->non_cached_query("SELECT * FROM search_history WHERE results > 30 AND times > 5 ORDER BY times DESC LIMIT 10");			
 			shuffle($query->rows);
-			
-			
-			return $query->rows;
-			
-			
+						
+			return $query->rows;				
 		}
 		
 		public function getSearchHistory(){
 			$data = array();
 			
-			if ($this->customer->isLogged()){
-				
+			if ($this->customer->isLogged()){				
 				$query = $this->db->non_cached_query("SELECT * FROM customer_search_history WHERE customer_id = '" . $this->customer->isLogged() . "' ORDER BY date_added DESC LIMIT 10");
 				
 				foreach ($query->rows as $history){
@@ -42,8 +31,7 @@
 				
 				} else {
 				
-				if (!empty($this->session->data['customer_search_history'])){
-					
+				if (!empty($this->session->data['customer_search_history'])){					
 					usort($this->session->data['customer_search_history'], array('ModelKpSearch', 'date_added_sorter'));
 					
 					foreach ($this->session->data['customer_search_history'] as $history){
@@ -51,10 +39,8 @@
 						$history['id'] = !empty($history['id'])?$history['id']:md5($history['text']);
 						$history['date_added'] = date('d.m.Y H:i', strtotime($history['date_added']));
 						$data[] = $history;
-					}
-					
-				}
-				
+					}					
+				}				
 			}
 			
 			return $data;
