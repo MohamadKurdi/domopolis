@@ -12,12 +12,15 @@
 /admin/view/image/flags.*/*
 /admin/view/images/print/*
 /admin/view/image/print/*
+/admin/view/image/logo*
 /admin/icon/*
 /admin/pwa/*
 /admin/manifest.json
 /admin/browserconfig.xml
 /admin/favicon.ico
 /admin/offline.html
+/admin/view/stylesheet/stylesheet.*.css
+/admin/view/stylesheet/stylesheet.color.*.css
 /admin/view/template/overload/*
 /admin/view/template/default/sale/bottom_texts/*
 /admin/view/template/default/sale/actiontemplates/*
