@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace hobotix\Supplier;
 
@@ -179,6 +179,7 @@ class SupplierProduct extends SupplierFrameworkClass {
 				$this->registry->get('supplierAdaptor')->PriceLogic->updateProductPriceNationalToStoreInDatabase($product_id, $price_national, 0);
 			} else {
 				echoLine('[SupplierProduct::parseProductPrice] It is no RRP in feed, doing magic', 'w');
+                /* TO DO PRICELOGIC */
 			}
 			
 		} else {
@@ -199,6 +200,7 @@ class SupplierProduct extends SupplierFrameworkClass {
 				
 				if (!$attribute_id){
 					$attribute_id = $this->model_cached_get->getAttribute($key);
+                    echoLine('[SupplierProduct::parseProductAttributes] Found match by name for ' . $key . ' to attribute ' . $attribute_id);
 				}			
 
 				if (!$attribute_id){
