@@ -27,8 +27,8 @@ class SupplierCategory extends SupplierFrameworkClass {
 				}
 
 				if ($row['supplier_category_full']){
-					$this->categories_extended[$row['supplier_category_full']] 	= $row['category_id'];
-					$this->categories_extended_full[$row['supplier_category']]	= $row;
+					$this->categories_extended[$row['supplier_category_full']] 		= $row['category_id'];
+					$this->categories_extended_full[$row['supplier_category_full']]	= $row;
 				}
 			}
 		}
@@ -91,6 +91,10 @@ class SupplierCategory extends SupplierFrameworkClass {
 
 		if (is_numeric($supplier_category) && !empty($this->categories_ids_full[$supplier_category])){
 			return $this->categories_ids_full[$supplier_category];
+		}
+
+		if (!empty($this->categories_extended_full[$supplier_category])){
+			return $this->categories_extended_full[$supplier_category];
 		}
 
 		if (!empty($this->categories_full[$supplier_category])){

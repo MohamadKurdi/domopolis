@@ -113,6 +113,20 @@ class PosudaUAXMLExportFullv2 extends SuppliersGeneralClass {
 		return $tmp;
 	}
 
+	private function findLongestCategory($categories){
+		$maxlength = 0;
+		$longest   = end($categories);
+
+		foreach ($categories as $category){
+			if (mb_strlen($category['@value']) > $maxlength){
+				$maxlength = mb_strlen($category['@value']);
+				$longest   = $category;
+			}
+		}
+
+		return $longest;
+	}
+
 	private function reparsePosudaUAURI($uri){
 		return str_replace(['http:///', 'https:///'], 'https://posuda.ua/', $uri);
 	}
@@ -129,7 +143,6 @@ class PosudaUAXMLExportFullv2 extends SuppliersGeneralClass {
 		if (!empty($this->content['itemlist'])){
 			if (!empty($this->content['itemlist']['item'])){
 				foreach ($this->content['itemlist']['item'] as $item){		
-
 					$name = [];
 					if (!empty($item['name_ua'])){
 						$name['uk'] = checkCDATA($item['name_ua']);
@@ -164,7 +177,7 @@ class PosudaUAXMLExportFullv2 extends SuppliersGeneralClass {
 					if (!empty($item['product_category']['category'])){
 						$categories = checkValueXMLItem($item['product_category']['category']);
 						$categories = $this->reparseCategories($categories);
-						$category   = end($categories);
+						$category   = $this->findLongestCategory($categories);
 
 						if (!empty($category['@attributes']['id'])){
 							$category = $this->getCategory($category['@attributes']['id']);
@@ -222,10 +235,16 @@ class PosudaUAXMLExportFullv2 extends SuppliersGeneralClass {
 						$item['model'] = $item['sku'];
 					}
 
-					if (empty($item['stock_status']) && !empty($item['model'])){
+					if (empty($item['sku']) && !empty($item['model'])){
 						$item['sku'] = $item['model'];
 					}
 
+					if (!empty($item['related_product_id']) && !empty($item['related_product_id']['id'])){
+						$variants = checkSingleXMLItem($item['related_product_id']['id']);
+					} else {
+						$variants = [];
+					}
+					
 					$products[] = [
 						'supplier_product_id' 	=> $item['product_id'],
 						'status'				=> $item['status'],
@@ -238,17 +257,21 @@ class PosudaUAXMLExportFullv2 extends SuppliersGeneralClass {
 						'stock' 				=> ($item['stock_status'] == 'In Stock')?true:false,
 						'quantity' 				=> (int)$item['quantity'],
 						'price' 				=> (float)$item['price'],						
-						'vendor' 				=> $this->vendor($item['manufacturer'], 'vendor'),
-						'vendor_country'		=> $this->vendor($item['manufacturer'], 'country'),
+						'vendor' 				=> $this->vendor(checkCDATA($item['manufacturer']), 'vendor'),
+						'vendor_country'		=> $this->vendor(checkCDATA($item['manufacturer']), 'country'),
 						'category'  			=> $category,
 						'attributes'            => $product_attributes,
+						'variants' 				=> $variants,
 						'raw' 					=> json_encode($item)
 					];
-
 				}
 			}
 		}
 
 		return $products;
+	}
+
+	public function postAction(){
+
 	}
 }

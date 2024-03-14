@@ -22,7 +22,7 @@ class SupplierProduct extends SupplierFrameworkClass {
 
 			if ($this->getSupplierSetting('skip_no_category')){
 				if (!$category){
-					echoLine('[SupplierProduct::parseProduct] Category is not matched, skipping', 'e');	
+					echoLine('[SupplierProduct::parseProduct] Category ' . $product['category'] . ' is not matched, skipping', 'e');	
 					return;
 				}
 			}
@@ -265,6 +265,32 @@ class SupplierProduct extends SupplierFrameworkClass {
 				$this->model_edit->editProductImages($product_id, $images);
 			}
 		}	
+	}
+
+	public function parseProductVariants($product){
+		$main_product_id = $this->model_get->getProductFromSupplierMatchTable($product, 'supplier_product_id');
+
+		if ($main_product_id){		
+			echoLine('[SupplierProduct::parseProductVariants] Found current matched product, ' . $main_product_id, 's');
+
+			if (!empty($product['variants'])){
+				
+				if ($this->model_get->getProductMainVariantID($main_product_id)){
+					echoLine('[SupplierProduct::parseProductVariants] Current product already has main_variant_id, passing', 's');
+				} else {
+					$this->model_edit->editProductFields($main_product_id, [['type' => 'int', 'name' => 'main_variant_id', 'value' => 0]]);
+
+					foreach ($product['variants'] as $variant_supplier_product_id){
+						$variant_product_id = $this->model_get->getProductFromSupplierMatchTable(['supplier_product_id' => $variant_supplier_product_id], 'supplier_product_id');
+
+						if ($variant_product_id && $variant_product_id != $main_product_id){					
+							echoLine('[SupplierProduct::parseProductVariants] Found variant product in supplier table, setting it', 'i');					
+							$this->model_edit->editProductFields($variant_product_id, [['type' => 'int', 'name' => 'main_variant_id', 'value' => $main_product_id]]);
+						}
+					}
+				}
+			}
+		}
 	}
 
 	public function updateProductManufacturer($product_id, $product){

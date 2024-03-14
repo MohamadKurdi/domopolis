@@ -138,21 +138,35 @@ class ControllerSaleSupplier extends Controller {
 			echoLine('[ControllerSaleSupplier::cron] Working with supplier ' . $supplier['supplier_name'], 'i');
 
 			$products = $this->supplierAdaptor->getProducts();
+			$products_with_variants = [];			
 			echoLine('[ControllerSaleSupplier::cron] Got ' . count($products) . ' products', 'w');
 
-			$i = 1;
+			$i = 1;				
 			foreach ($products as $product){		
 				echoLine('');
 				echoLine('[ControllerSaleSupplier::cron] Now working with product ' . $i . ' of ' . count($products), 'w');			
 				$this->supplierAdaptor->SupplierProduct->parseProduct($product);
+
+				if (!empty($product['variants'])){
+					$products_with_variants[] = $product;
+				}
+
 				$i++;
+			}
+
+			if (!empty($products_with_variants)){
+				echoLine('[ControllerSaleSupplier::cron] Got ' . count($products_with_variants) . ' products with variants, parsing them', 'w');
+
+				unset($product);				
+				foreach ($products_with_variants as $product){		
+					$this->supplierAdaptor->SupplierProduct->parseProductVariants($product);
+				}
 			}
 
 			$this->supplierAdaptor->postAction();
 			$this->supplierAdaptor->SupplierCategory->unsetCategories();
 			$this->supplierAdaptor->SupplierAttribute->unsetAttributes();
 		}
-
 	}
 
 	public function insert() {
@@ -1098,9 +1112,16 @@ class ControllerSaleSupplier extends Controller {
 				$guessed_categories =  $this->model_sale_supplier->tryToGuessCategory($supplier_category['supplier_category']);
 
 				foreach ($guessed_categories as $guessed_category){
+					if (!empty($guessed_category['path'])){
+						$guessed_category_name = strip_tags(html_entity_decode($guessed_category['path'], ENT_QUOTES, 'UTF-8')) . ' > ' . strip_tags(html_entity_decode($guessed_category['name'], ENT_QUOTES, 'UTF-8'));
+					} else {
+						$guessed_category_name = strip_tags(html_entity_decode($guessed_category['name'], ENT_QUOTES, 'UTF-8'));
+					}
+					
+
 					$guessed_data[] = [
 						'category_id' => $guessed_category['category_id'], 
-						'name'        => (!empty($guessed_category['path']))?strip_tags(html_entity_decode($guessed_category['path'], ENT_QUOTES, 'UTF-8')):strip_tags(html_entity_decode($guessed_category['name'], ENT_QUOTES, 'UTF-8'))
+						'name'        => $guessed_category_name
 					];
 				}
 

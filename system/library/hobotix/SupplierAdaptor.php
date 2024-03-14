@@ -209,6 +209,7 @@ class SupplierAdaptor
 						'vendor_country'		=> !empty($product['vendor_country'])?atrim($product['vendor_country']):'',
 						'category'  			=> !empty($product['category'])?atrim($product['category']):'',
 						'attributes'  			=> !empty($product['attributes'])?$product['attributes']:[],
+						'variants'  			=> !empty($product['variants'])?$product['variants']:[],
 						'raw' 					=> $product['raw']
 					];
 				}

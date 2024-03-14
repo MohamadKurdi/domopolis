@@ -8,7 +8,7 @@ class modelGet extends hoboModel{
 		$product_id = false;
 
 		if (!empty($data[$field])){
-			$query = $this->db->query("SELECT * FROM supplier_products WHERE `" . $this->db->escape($field) . "` = '" . $this->db->escape($data[$field]) . "'");
+			$query = $this->db->ncquery("SELECT * FROM supplier_products WHERE `" . $this->db->escape($field) . "` = '" . $this->db->escape($data[$field]) . "'");
 
 			if ($query->num_rows){
 				$product_id = $query->row['product_id'];
@@ -68,7 +68,7 @@ class modelGet extends hoboModel{
 	}	
 
 	public function getProductPriceStatus($product_id){
-		$query = $this->db->query("SELECT price, status FROM product WHERE product_id = '" . (int)$product_id . "'");
+		$query = $this->db->query("SELECT price, status FROM product WHERE product_id = '" . (int)$product_id . "' LIMIT 1");
 
 		return $query->row;
 	}
@@ -92,4 +92,14 @@ class modelGet extends hoboModel{
 
 		return false;
 	}		
+
+	public function getProductMainVariantID($product_id){
+		$query = $this->db->ncquery("SELECT main_variant_id FROM product WHERE product_id = '" . (int)$product_id . "' LIMIT 1");
+
+		return $query->row['main_variant_id'];
+	}
+
+	public function getIfProductIsAlreadyMainVariant($product_id){
+
+	}
 }
