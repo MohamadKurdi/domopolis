@@ -19,7 +19,7 @@
 					<h2>Основная информация</h2>
 					<table class="form">
 						<tr>
-							<td style="width:25%">
+							<td style="width:50%">
 								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF"><?php echo $entry_username; ?></span></p>
 								<input type="text" name="username" value="<?php echo $username; ?>" />
 
@@ -28,7 +28,7 @@
 								<?php } ?>
 							</td>
 
-							<td style="width:25%">
+							<td style="width:50%">
 								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF"><?php echo $entry_firstname; ?></span></p>
 								<input type="text" name="firstname" value="<?php echo $firstname; ?>" />
 
@@ -36,13 +36,14 @@
 									<span class="error"><?php echo $error_firstname; ?></span>
 								<?php } ?>
 							</td>
-
-							<td style="width:25%">
+						<tr>
+						</tr>
+							<td style="width:50%">
 								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF"><?php echo $entry_lastname; ?></span></p>
 								<input type="text" name="lastname" value="<?php echo $lastname; ?>" />
 							</td>
 
-							<td style="width:25%">
+							<td style="width:50%">
 								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF"><?php echo $entry_email; ?></span></p>
 								<input type="text" name="email" value="<?php echo $email; ?>" />
 							</td>							
@@ -52,7 +53,7 @@
 					<h2>Пароль, активность</h2>
 					<table class="form">
 						<tr>		
-							<td style="width:25%">
+							<td style="width:50%">
 								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF"><?php echo $entry_user_group; ?></span></p>
 								<select name="user_group_id">
 									<?php foreach ($user_groups as $user_group) { ?>
@@ -64,7 +65,7 @@
 									<?php } ?>
 								</select>
 							</td>					
-							<td style="width:25%">
+							<td style="width:50%">
 								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_status; ?></span></p>
 								<select name="status">
 									<?php if ($status) { ?>
@@ -76,14 +77,16 @@
 									<?php } ?>
 								</select>
 							</td>
-							<td style="width:25%">
+						<tr>
+						</tr>
+							<td style="width:50%">
 								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_password; ?></span></p>
 								<input type="password" name="password" value="<?php echo $password; ?>"  autocomplete='off' />
 								<?php if ($error_password) { ?>
 									<span class="error"><?php echo $error_password; ?></span>
 								<?php  } ?>
 							</td>						
-							<td style="width:25%">
+							<td style="width:50%">
 								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_confirm; ?></span></p>
 								<input type="password" name="confirm" value="<?php echo $confirm; ?>"  autocomplete='off' />
 								<?php if ($error_confirm) { ?>
@@ -96,22 +99,24 @@
 					<h2>Дополнительные данные</h2>
 					<table class="form">
 						<tr>
-							<td style="width:25%">
+							<td style="width:50%">
 								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Bitrix24 ID</span></p>
 								<input type="text" name="bitrix_id" value="<?php echo $bitrix_id; ?>" />
 								<span class="help">Если настроена интеграция с Bitrix24</span>
 							</td>
-							<td style="width:25%">
+							<td style="width:50%">
 								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Внутренний номер в АТС</span></p>
 								<input type="text" name="internal_pbx_num" value="<?php echo $internal_pbx_num; ?>" />
 								<span class="help">Если настроена интеграция с Asterisk</span>
 							</td>
-							<td style="width:25%">
+						<tr>
+						</tr>
+							<td style="width:50%">
 								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Auth Номер в АТС</span></p>
 								<input type="text" name="internal_auth_pbx_num" value="<?php echo $internal_auth_pbx_num; ?>" placeholder="0000..."/>
 								<span class="help">Если настроена интеграция с Asterisk</span>
 							</td>
-							<td style="width:25%">
+							<td style="width:50%">
 								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Внешний номер в АТС</span></p>
 								<input type="text" name="outbound_pbx_num" value="<?php echo $outbound_pbx_num; ?>" />
 								<span class="help">Если настроена интеграция с Asterisk</span>
