@@ -275,7 +275,7 @@
 				'affiliate' 				=> $this->model_sale_affiliate->getAffiliate($result['affiliate_id']),
 				'totals'         			=> $totals2,
 				'total_discount'         	=> ($total_discount<0)?$this->currency->format($total_discount, $result['currency_code'], '1'):false,
-				'total_discount_percent'    => ($total_discount<0)?round(($total_discount/$sub_total) * 100, 2):false,
+				'total_discount_percent'    => ($total_discount<0 && $sub_total > 0)?round(($total_discount/$sub_total) * 100, 2):false,
 				'customer_segments' 		=> $this->model_sale_customer->getCustomerSegments($result['customer_id']),	
 				'total_customer_orders' 	=> $total_orders,
 				'total_customer_orders_txt' => morphos\Russian\NounPluralization::pluralize($total_orders, 'заказ'),

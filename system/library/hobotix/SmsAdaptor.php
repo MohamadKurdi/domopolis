@@ -60,7 +60,7 @@ class SmsAdaptor {
 			return false;
 		}			
 
-		$result = number_format($result, 0, '', '');
+		$result = number_format((float)$result, 0, '', '');
 
 		if ((int)$result > 5){
 			$this->editOTPSetting(1);

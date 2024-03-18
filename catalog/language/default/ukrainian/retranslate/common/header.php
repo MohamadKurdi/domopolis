@@ -26,6 +26,7 @@ $_['text_customermenu10'] = 'Розсилання';
 $_['text_customermenu11'] = 'Запити на повернення';
 $_['text_customermenu12'] = '';
 $_['text_customermenu13'] = '';
+$_['contact_b2b']         = 'Партнерство';
 
 
 $_['text_retranslate_1'] = 'Інформація';
