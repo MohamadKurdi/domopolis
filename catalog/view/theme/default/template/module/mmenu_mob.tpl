@@ -124,7 +124,7 @@
 			box-shadow: none;
 		}
 		#new_mmenu li.parent > .topmenu .main-center-cat-block .product__item:hover .product__info:after{
-			background: url(/catalog/view/theme/kp/img/shadow.png) bottom repeat-x;
+			background: url(/catalog/view/theme/default/img/shadow.png) bottom repeat-x;
 			content: "";
 			position: absolute;
 			bottom: calc(100% - 1px);

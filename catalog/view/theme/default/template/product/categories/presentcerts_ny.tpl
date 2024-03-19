@@ -153,8 +153,8 @@
 			<?php } ?>
 		<?php } ?>
 		
-		<link rel="stylesheet" href="catalog/view/theme/kp/css/sumoselect.css">
-		<script src="catalog/view/theme/kp/js/sumoselect.min.js"></script>
+		<link rel="stylesheet" href="catalog/view/theme/default/css/sumoselect.css">
+		<script src="catalog/view/theme/default/js/sumoselect.min.js"></script>
 		
 		<script>
 			$('select').SumoSelect();

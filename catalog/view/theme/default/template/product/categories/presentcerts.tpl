@@ -22,8 +22,8 @@
 ?>
 
 <?php echo $header; ?><?php /* echo $column_left; ?><?php echo $column_right; */ ?>
-<link rel="stylesheet" href="/catalog/view/theme/kp/css/sumoselect.css">
-<script src="/catalog/view/theme/kp/js/sumoselect.min.js"></script>
+<link rel="stylesheet" href="/catalog/view/theme/default/css/sumoselect.css">
+<script src="/catalog/view/theme/default/js/sumoselect.min.js"></script>
 <script src="catalog/view/theme/default/js/product/jquery.elevateZoom-3.0.8.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 	$(document).ready(function() {

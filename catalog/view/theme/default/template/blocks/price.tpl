@@ -37,7 +37,7 @@
 			<div class="waitlist-block" style="display: block;width: 100%">
 				<form id="waitlist-form">
 					<div class="row">
-						<img src="/catalog/view/theme/kp/img/Spinners.png" id="ajaxcartloadimg" class="loading_spiner" style="width: 70px;height: 70px;" />
+						<img src="/catalog/view/theme/default/img/Spinners.png" id="ajaxcartloadimg" class="loading_spiner" style="width: 70px;height: 70px;" />
 						<div class="phone_block">
 							<span ><?php echo $text_retranslate_30; ?></span>
 							<input class="waitlist__phone" type="text" name="waitlist-phone" id="waitlist-phone" placeholder="Ваш номер телефона" data-telephone="<?php echo str_replace('9', '_', $mask) ?>" value="<? if ($customer_telephone) { ?><? echo $customer_telephone; ?><? } ?>" />
@@ -158,7 +158,7 @@
 				<div class="waitlist-block">
 					<form id="waitlist-form">
 						<div class="row">
-							<img src="/catalog/view/theme/kp/img/Spinners.png" id="ajaxcartloadimg" class="loading_spiner" style="width: 70px;height: 70px;"/>
+							<img src="/catalog/view/theme/default/img/Spinners.png" id="ajaxcartloadimg" class="loading_spiner" style="width: 70px;height: 70px;"/>
 							<div class="phone_block" >
 								<span><?php echo $text_retranslate_30; ?></span>
 								<input class="waitlist__phone" type="text" name="waitlist-phone" id="waitlist-phone" data-telephone="<?php echo str_replace('9', '_', $mask) ?>" placeholder="<?php echo str_replace('9', '_', $mask) ?>" value="<? if ($customer_telephone) { ?><? echo $customer_telephone; ?><? } ?>" />

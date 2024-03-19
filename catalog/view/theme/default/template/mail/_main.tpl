@@ -126,43 +126,43 @@
 												                          			<tr style="padding-top: 0 !important; vertical-align: top !important;">
 												                          				<td valign="top" align="right" style="text-align: right; vertical-align: middle; padding-bottom: 10px" idth="100%">
 												                          					<a target="_blank" href="https://kitchen-profi.shop/bar-i-steklo" style="margin: 0 3px 0 0">
-															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/kp/template/mail/img/category/1.png" alt="messenger" width="24" height="24">
+															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/default/template/mail/img/category/1.png" alt="messenger" width="24" height="24">
 															                          		</a>
 															                          		<a target="_blank" href="https://kitchen-profi.shop/interer" style="margin: 0 3px">
-															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/kp/template/mail/img/category/2.png" alt="messenger" width="24" height="24">
+															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/default/template/mail/img/category/2.png" alt="messenger" width="24" height="24">
 															                          		</a>
 															                          		<a target="_blank" href="https://kitchen-profi.shop/bytovaya-tehnika" style="margin: 0 3px">
-															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/kp/template/mail/img/category/3.png" alt="messenger" width="24" height="24">
+															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/default/template/mail/img/category/3.png" alt="messenger" width="24" height="24">
 															                          		</a>
 															                          		<a target="_blank" href="https://kitchen-profi.shop/tekstil" style="margin: 0 3px">
-															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/kp/template/mail/img/category/4.png" alt="messenger" width="24" height="24">
+															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/default/template/mail/img/category/4.png" alt="messenger" width="24" height="24">
 															                          		</a>
 															                          		<a target="_blank" href="https://kitchen-profi.shop/stolovye-pribory" style="margin: 0 3px">
-															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/kp/template/mail/img/category/5.png" alt="messenger" width="24" height="24">
+															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/default/template/mail/img/category/5.png" alt="messenger" width="24" height="24">
 															                          		</a>
 															                          		<a target="_blank" href="https://kitchen-profi.shop/prinadlezhnosti" style="margin: 0 3px">
-															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/kp/template/mail/img/category/6.png" alt="messenger" width="24" height="24">
+															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/default/template/mail/img/category/6.png" alt="messenger" width="24" height="24">
 															                          		</a>
 															                          		<a target="_blank" href="https://kitchen-profi.shop/servirovka" style="margin: 0 3px">
-															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/kp/template/mail/img/category/7.png" alt="messenger" width="24" height="24">
+															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/default/template/mail/img/category/7.png" alt="messenger" width="24" height="24">
 															                          		</a>
 															                          		<a target="_blank" href="https://kitchen-profi.shop/posuda" style="margin: 0 3px">
-															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/kp/template/mail/img/category/8.png" alt="messenger" width="24" height="24">
+															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/default/template/mail/img/category/8.png" alt="messenger" width="24" height="24">
 															                          		</a>
 															                          		<a target="_blank" href="https://kitchen-profi.shop/nozhi" style="margin: 0 3px">
-															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/kp/template/mail/img/category/11.png" alt="messenger" width="24" height="24">
+															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/default/template/mail/img/category/11.png" alt="messenger" width="24" height="24">
 															                          		</a>
 															                          		<a target="_blank" href="https://kitchen-profi.shop/kofe-i-chaj" style="margin: 0 3px">
-															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/kp/template/mail/img/category/13.png" alt="messenger" width="24" height="24">
+															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/default/template/mail/img/category/13.png" alt="messenger" width="24" height="24">
 															                          		</a>
 															                          		<a target="_blank" href="https://kitchen-profi.shop/dlya-vypechki" style="margin: 0 3px">
-															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/kp/template/mail/img/category/14.png" alt="messenger" width="24" height="24">
+															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/default/template/mail/img/category/14.png" alt="messenger" width="24" height="24">
 															                          		</a>
 															                          		<a target="_blank" href="https://kitchen-profi.shop/stolovye-pribory" style="margin: 0 3px">
-															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/kp/template/mail/img/category/15.png" alt="messenger" width="24" height="24">
+															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/default/template/mail/img/category/15.png" alt="messenger" width="24" height="24">
 															                          		</a>
 															                          		<a target="_blank" href="https://kitchen-profi.shop/gril-i-barbekyu" style="margin: 0 0 0 3px">
-															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/kp/template/mail/img/category/16.png" alt="messenger" width="24" height="24">
+															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/default/template/mail/img/category/16.png" alt="messenger" width="24" height="24">
 															                          		</a>
 												                          				</td>
 												                          			</tr>
@@ -170,13 +170,13 @@
 												                          				<td valign="top" align="right" style="text-align: right; vertical-align: top; margin-top: 20px;" idth="100%">
 												                          					<span style="height: 24px;display: inline-block;vertical-align: top;line-height: 24px;">Будем рады ответить на Ваши вопросы:</span>
 												                          					<a target="_blank" href="https://m.me/104116757981722" style="display:inline-block;margin: 0 5px;width: 24px;height: 24px;">
-															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/kp/template/mail/img/messenger.png" alt="messenger" width="25" height="25">
+															                          			<img title="messenger" src="https://kitchen-profi.shop/catalog/view/theme/default/template/mail/img/messenger.png" alt="messenger" width="25" height="25">
 															                          		</a>
 															                          		<a target="_blank" href="viber://pa?chatURI=kitchen-profi" style="display:inline-block;margin: 0 10px;width: 24px;height: 24px;">
-															                          			<img title="viber" src="https://kitchen-profi.shop/catalog/view/theme/kp/template/mail/img/viber.png" alt="viber" width="25" height="25">
+															                          			<img title="viber" src="https://kitchen-profi.shop/catalog/view/theme/default/template/mail/img/viber.png" alt="viber" width="25" height="25">
 															                          		</a>
 															                          		<a target="_blank" href="https://teleg.one/kitchenprofi_bot" style="display:inline-block;margin: 0 5px;width: 24px;height: 24px;">
-															                          			<img title="teleg" src="https://kitchen-profi.shop/catalog/view/theme/kp/template/mail/img/telegram.png" alt="teleg" width="25" height="25">
+															                          			<img title="teleg" src="https://kitchen-profi.shop/catalog/view/theme/default/template/mail/img/telegram.png" alt="teleg" width="25" height="25">
 															                          		</a>
 												                          				</td>
 												                          			</tr>

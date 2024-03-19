@@ -231,9 +231,9 @@
 						<?php if ($this->config->get('config_android_playstore_enable')) { ?>
 							<a href="<?php echo $this->config->get('config_android_playstore_link'); ?>" target="_blank" rel="noindex nofollow"> 
 								<?php if ($this->config->get('config_language_id') == 6) { ?>
-									<img src="/catalog/view/theme/kp/img/gplay_ua.svg" height="55px" loading="lazy" alt="logo google play"> 
+									<img src="/catalog/view/theme/default/img/gplay_ua.svg" height="55px" loading="lazy" alt="logo google play">
 									<?php } else { ?>
-									<img src="/catalog/view/theme/kp/img/gplay_ru.svg" height="55px" loading="lazy" alt="logo google play"> 
+									<img src="/catalog/view/theme/default/img/gplay_ru.svg" height="55px" loading="lazy" alt="logo google play">
 								<?php } ?>
 							</a> 
 						<?php } ?>
@@ -241,9 +241,9 @@
 						
                 		<a target="_blank" id="footer_app_button" style="display: none;"> 
                 			<?php if ($this->config->get('config_language_id') == 6) { ?>
-                				<img src="/catalog/view/theme/kp/img/pwa_ua.svg" height="55px" loading="lazy" alt="logo pwa"> 
+                				<img src="/catalog/view/theme/default/img/pwa_ua.svg" height="55px" loading="lazy" alt="logo pwa">
 								<?php } else { ?>
-                				<img src="/catalog/view/theme/kp/img/pwa_ru_new.svg" height="55px" loading="lazy" alt="logo pwa"> 
+                				<img src="/catalog/view/theme/default/img/pwa_ru_new.svg" height="55px" loading="lazy" alt="logo pwa">
 							<?php } ?>
 						</a> 
 					</div>
@@ -278,16 +278,16 @@
 							</div>
 							<ul>
 								<li class="href_ru">
-									<a href="<?php echo $href_ru; ?>"><img src="/catalog/view/theme/kp/img/flags/ru.png" alt="Россия" loading="lazy"></a>
+									<a href="<?php echo $href_ru; ?>"><img src="/catalog/view/theme/default/img/flags/ru.png" alt="Россия" loading="lazy"></a>
 								</li>
 								<li class="href_ua">
-									<a href="<?php echo $href_ua; ?>"><img src="/catalog/view/theme/kp/img/flags/ua.png" alt="Украина" loading="lazy"></a>
+									<a href="<?php echo $href_ua; ?>"><img src="/catalog/view/theme/default/img/flags/ua.png" alt="Украина" loading="lazy"></a>
 								</li>
 								<li class="href_by">
-									<a href="<?php echo $href_by; ?>"><img src="/catalog/view/theme/kp/img/flags/by.png" alt="Беларусь" loading="lazy"></a>
+									<a href="<?php echo $href_by; ?>"><img src="/catalog/view/theme/default/img/flags/by.png" alt="Беларусь" loading="lazy"></a>
 								</li>
 								<li class="href_kz">
-									<a href="<?php echo $href_kz; ?>"><img src="/catalog/view/theme/kp/img/flags/kz.png" alt="Казахстан" loading="lazy"></a>
+									<a href="<?php echo $href_kz; ?>"><img src="/catalog/view/theme/default/img/flags/kz.png" alt="Казахстан" loading="lazy"></a>
 								</li>
 							</ul>
 							
@@ -314,25 +314,25 @@
                 <ul class="footer__payments">
                     <?php if ($this->config->get('config_store_id') == 5) {?>
                         <li>
-                            <img src="/catalog/view/theme/kp/img/all.png" alt="" style="max-width: 486px;" class="by-img"  loading="lazy">
+                            <img src="/catalog/view/theme/default/img/all.png" alt="" style="max-width: 486px;" class="by-img"  loading="lazy">
 						</li>
 						<?php } else { ?>
                         <li>
-                            <img src="/catalog/view/theme/kp/img/master-card.svg" alt=""  loading="lazy">
+                            <img src="/catalog/view/theme/default/img/master-card.svg" alt=""  loading="lazy">
 						</li>
                         <li>
-                            <img src="/catalog/view/theme/kp/img/visa.svg" alt=""  loading="lazy">
+                            <img src="/catalog/view/theme/default/img/visa.svg" alt=""  loading="lazy">
 						</li>
                         <?php if ($this->config->get('config_store_id') == 1) {?>
     						<li>
-                                <img src="/catalog/view/theme/kp/img/LIQPAY.png" alt="" width="47" loading="lazy">
+                                <img src="/catalog/view/theme/default/img/LIQPAY.png" alt="" width="47" loading="lazy">
 							</li>
 						<?php } ?>
                         <li>
-                            <img src="/catalog/view/theme/kp/img/PayKeeper.svg" alt="" loading="lazy">
+                            <img src="/catalog/view/theme/default/img/PayKeeper.svg" alt="" loading="lazy">
 						</li>
                         <li>
-                            <img src="/catalog/view/theme/kp/img/paypal.svg" alt="" loading="lazy">
+                            <img src="/catalog/view/theme/default/img/paypal.svg" alt="" loading="lazy">
 						</li>
 					<?php } ?>
 				</ul>
@@ -370,7 +370,7 @@
 	font-size: 15px;
 	color: #2121217d;
 	cursor: pointer;
-	background-image: url(/catalog/view/theme/kp/img/close-modal.svg);
+	background-image: url(/catalog/view/theme/default/img/close-modal.svg);
 	background-size: 11px 11px;
 	background-repeat: no-repeat;
 	border: 1px solid #000;

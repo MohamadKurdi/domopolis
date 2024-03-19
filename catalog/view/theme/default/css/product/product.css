@@ -814,7 +814,7 @@ header .top-menu .tab-product-wrap #tab_header .tab_header ul a li::after {
     }
     .price__head .reward_wrap .text::before{
         content: '';
-        background-image: url("/catalog/view/theme/kp/img/money.svg");
+        background-image: url("/catalog/view/theme/default/img/money.svg");
         background-size: contain;
         width: 20px;
         height: 18px;

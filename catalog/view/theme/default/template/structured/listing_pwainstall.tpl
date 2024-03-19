@@ -15,9 +15,9 @@
 			
 			<a href="<?php echo $this->config->get('config_android_playstore_link'); ?>" target="_blank" rel="noindex nofollow" style="margin-left: 15px;"> 
 				<?php if ($this->config->get('config_language_id') == 6) { ?>
-					<img src="/catalog/view/theme/kp/img/gplay_ua.svg" width="125" alt="logo google play"> 
+					<img src="/catalog/view/theme/default/img/gplay_ua.svg" width="125" alt="logo google play">
 					<?php } else { ?>
-					<img src="/catalog/view/theme/kp/img/gplay_ru.svg" width="125" alt="logo google play"> 
+					<img src="/catalog/view/theme/default/img/gplay_ru.svg" width="125" alt="logo google play">
 				<?php } ?>
 			</a> 
 		</div>

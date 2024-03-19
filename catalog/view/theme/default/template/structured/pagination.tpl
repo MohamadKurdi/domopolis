@@ -47,7 +47,7 @@
 				dataType : 'html',
 				beforeSend : function(){		
 					$button.addClass('load_product');						
-					$button.html("<img src='/catalog/view/theme/kp/img/load_more_white.svg'>");
+					$button.html("<img src='/catalog/view/theme/default/img/load_more_white.svg'>");
 					$button.on('click', function(){										
 					});
 					$productGrid.css({ "opacity": "0.5" }).addClass('load_product_grid');

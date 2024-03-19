@@ -27,7 +27,7 @@
 			    background-position: center;
 			    background-size: contain;
 			    background-repeat: no-repeat;
-				background-image: url(/catalog/view/theme/kp/img/load_more.svg);
+				background-image: url(/catalog/view/theme/default/img/load_more.svg);
 			}
 			.simplecheckout-warning-block{
 				background: #e16a5d !important;
@@ -58,7 +58,7 @@
 			}
 			.order-cart__item-right .reward_wrap .text::before{
 			content: '';
-			background-image: url("/catalog/view/theme/kp/img/money.svg");
+			background-image: url("/catalog/view/theme/default/img/money.svg");
 			background-size: contain;
 			width: 20px;
 			height: 18px;
@@ -967,7 +967,7 @@
 		
 		<script src="/js/node_modules/select2/dist/js/i18n/ru.js"></script>
 		<script src="/js/node_modules/select2/dist/js/i18n/uk.js"></script>
-		<script src="/catalog/view/theme/kp/js/sumoselect.min.js"></script>
+		<script src="/catalog/view/theme/default/js/sumoselect.min.js"></script>
 
 	</head>
 	<body>

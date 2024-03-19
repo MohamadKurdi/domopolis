@@ -376,7 +376,7 @@
 			font-size: 15px;
 			color: #2121217d;
 			cursor: pointer;
-			background-image: url(/catalog/view/theme/kp/img/close-modal.svg);
+			background-image: url(/catalog/view/theme/default/img/close-modal.svg);
 			background-size: 11px 11px;
 			background-repeat: no-repeat;
 			border: 1px solid #000;
@@ -471,7 +471,7 @@
 			/*.header-banner .swiper-wrapper{height:64px;}*/
 			.header-banner.hide{max-height:0;padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;transition-timing-function:cubic-bezier(0,1,.5,1)}
 			.header-banner .content{position:relative;max-width:60%;margin:auto;padding: 0 !important}
-			.header-banner .close{position:absolute;right:40px;width:15px;height:15px;line-height:15px;top:0;bottom:0;margin:auto;cursor:pointer;background-image:url(/catalog/view/theme/kp/img/close-modal.svg);background-size:15px 15px;background-repeat:no-repeat;text-align:center;background-position:center;opacity:.5;background-color:transparent}
+			.header-banner .close{position:absolute;right:40px;width:15px;height:15px;line-height:15px;top:0;bottom:0;margin:auto;cursor:pointer;background-image:url(/catalog/view/theme/default/img/close-modal.svg);background-size:15px 15px;background-repeat:no-repeat;text-align:center;background-position:center;opacity:.5;background-color:transparent}
 			.header-banner .button-next,.header-banner .button-prev{position:absolute;top:0;bottom:0;margin:auto;width:30px;height:30px;cursor:pointer;transition:.3s ease-in-out;z-index:2}
 			.header-banner .button-prev{left:0}
 			.header-banner .button-next{right:0}
@@ -487,7 +487,7 @@
 			.header-banner .wrap{z-index: 2;}
 			/*.header-banner:before{
 			content: '';
-			background: url(/catalog/view/theme/kp/img/snow1.png);
+			background: url(/catalog/view/theme/default/img/snow1.png);
 			display: block;
 			position: absolute;
 			left: 0;
@@ -499,7 +499,7 @@
 			}
 			.header-banner:after{
 			content: '';
-			background: url(/catalog/view/theme/kp/img/snow1.png);
+			background: url(/catalog/view/theme/default/img/snow1.png);
 			display: block;
 			position: absolute;
 			right: 0;

@@ -24,7 +24,7 @@ height: 25px;
 line-height: 25px;
 color: #2121217d;
 cursor: pointer;
-background-image: url(/catalog/view/theme/kp/img/close-modal.svg);
+background-image: url(/catalog/view/theme/default/img/close-modal.svg);
 background-size: 11px 11px;
 background-repeat: no-repeat;
 border: 1px solid #000;

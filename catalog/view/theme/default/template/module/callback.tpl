@@ -113,7 +113,7 @@
 					
 					$('#button-submit-callback').bind('click', false);
 					$('#button-submit-callback').css({ "opacity": "0.5" }).addClass('load');
-					$('#contact-body').html("<img src='/catalog/view/theme/kp/img/load_more_dark.svg'>");
+					$('#contact-body').html("<img src='/catalog/view/theme/default/img/load_more_dark.svg'>");
 				},
 				complete: function() {									
 				},

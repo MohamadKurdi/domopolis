@@ -17,22 +17,22 @@
 			
 			<a href="<?php echo $this->config->get('config_android_playstore_link'); ?>" target="_blank" rel="noindex nofollow" style="margin-left: 15px; margin-right: 15px; display: flex;"> 
 				<?php if ($this->config->get('config_language_id') == 6) { ?>
-					<img src="/catalog/view/theme/kp/img/gplay_ua.svg" width="125" alt="logo google play" loading="lazy"> 
+					<img src="/catalog/view/theme/default/img/gplay_ua.svg" width="125" alt="logo google play" loading="lazy">
 					<?php } else { ?>
-					<img src="/catalog/view/theme/kp/img/gplay_ru.svg" width="125" alt="logo google play" loading="lazy"> 
+					<img src="/catalog/view/theme/default/img/gplay_ru.svg" width="125" alt="logo google play" loading="lazy">
 				<?php } ?>
 			</a> 
 			<?php if ($this->config->get('config_store_id') == 0) {?>
-				<img src="/catalog/view/theme/kp/img/qr-code-ru.gif" width="80" alt="google play" loading="lazy"> 
+				<img src="/catalog/view/theme/default/img/qr-code-ru.gif" width="80" alt="google play" loading="lazy">
 			<?php } ?>
 			<?php if ($this->config->get('config_store_id') == 1) {?>
-				<img src="/catalog/view/theme/kp/img/qr-code-ua.gif" width="80" alt="google play" loading="lazy"> 
+				<img src="/catalog/view/theme/default/img/qr-code-ua.gif" width="80" alt="google play" loading="lazy">
 			<?php } ?>
 			<?php if ($this->config->get('config_store_id') == 2) {?>
-				<img src="/catalog/view/theme/kp/img/qr-code-kz.gif" width="80" alt="google play" loading="lazy"> 
+				<img src="/catalog/view/theme/default/img/qr-code-kz.gif" width="80" alt="google play" loading="lazy">
 			<?php } ?>
 			<?php if ($this->config->get('config_store_id') == 5) {?>
-				<img src="/catalog/view/theme/kp/img/qr-code-by.gif" width="80" alt="google play" loading="lazy"> 
+				<img src="/catalog/view/theme/default/img/qr-code-by.gif" width="80" alt="google play" loading="lazy">
 			<?php } ?>
 		</div>
 	</div>

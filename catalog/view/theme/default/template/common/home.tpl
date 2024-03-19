@@ -297,7 +297,7 @@
 						<!--pluses__item-->
 						<div class="pluses__item">
 							<div class="pluses__icon">
-								<img src="catalog/view/theme/kp/img/pluses-icon1.svg"  loading="lazy" width="100" height="100" alt="<?php echo $text_retranslate_7; ?> <?php echo $text_retranslate_8; ?>">
+								<img src="catalog/view/theme/default/img/pluses-icon1.svg"  loading="lazy" width="100" height="100" alt="<?php echo $text_retranslate_7; ?> <?php echo $text_retranslate_8; ?>">
 							</div>
 							<div class="pluses__title"><?php echo $text_retranslate_7; ?></div>
 							<p><?php echo $text_retranslate_8; ?></p>
@@ -311,7 +311,7 @@
 						<!--pluses__item-->
 						<div class="pluses__item">
 							<div class="pluses__icon">
-								<img src="catalog/view/theme/kp/img/pluses-icon2.svg" loading="lazy" width="100" height="100" alt="Приятные цены Действительно лучшие цены на рынке">
+								<img src="catalog/view/theme/default/img/pluses-icon2.svg" loading="lazy" width="100" height="100" alt="Приятные цены Действительно лучшие цены на рынке">
 							</div>
 							<div class="pluses__title"><?php echo $text_retranslate_9; ?></div>
 							<p><?php echo $text_retranslate_10; ?></p>
@@ -325,7 +325,7 @@
 						<!--pluses__item-->
 						<div class="pluses__item">
 							<div class="pluses__icon">
-								<img src="catalog/view/theme/kp/img/pluses-icon3.svg" loading="lazy" width="100" height="100" alt="100% гарантия качества от ведущих европейских производителей">
+								<img src="catalog/view/theme/default/img/pluses-icon3.svg" loading="lazy" width="100" height="100" alt="100% гарантия качества от ведущих европейских производителей">
 							</div>
 							<div class="pluses__title"><?php echo $text_retranslate_11; ?></div>
 							<p><?php echo $text_retranslate_12; ?></p>
@@ -339,7 +339,7 @@
 						<!--pluses__item-->
 						<div class="pluses__item">
 							<div class="pluses__icon">
-								<img src="catalog/view/theme/kp/img/pluses-icon4.svg" loading="lazy" width="100" height="100" alt="Постоянные акции и скидки для наших клиентов">
+								<img src="catalog/view/theme/default/img/pluses-icon4.svg" loading="lazy" width="100" height="100" alt="Постоянные акции и скидки для наших клиентов">
 							</div>
 							<div class="pluses__title"><?php echo $text_retranslate_13; ?></div>
 							<p><?php echo $text_retranslate_14; ?></p>
@@ -366,7 +366,7 @@
 						<!--pluses__item-->
 						<div class="pluses__item">
 							<div class="pluses__icon">
-								<img src="catalog/view/theme/kp/img/pluses-icon1.svg" loading="lazy" width="100" height="100" alt="<?php echo $text_retranslate_15; ?> <?php echo $text_retranslate_16; ?>">
+								<img src="catalog/view/theme/default/img/pluses-icon1.svg" loading="lazy" width="100" height="100" alt="<?php echo $text_retranslate_15; ?> <?php echo $text_retranslate_16; ?>">
 							</div>
 							<div class="pluses__title"><?php echo $text_retranslate_15; ?></div>
 							<p><?php echo $text_retranslate_16; ?></p>
@@ -380,7 +380,7 @@
 						<!--pluses__item-->
 						<div class="pluses__item">
 							<div class="pluses__icon">
-								<img src="catalog/view/theme/kp/img/pluses-icon2.svg" loading="lazy" width="100" height="100" alt="<?php echo $text_retranslate_17; ?> <?php echo $text_retranslate_18; ?>">
+								<img src="catalog/view/theme/default/img/pluses-icon2.svg" loading="lazy" width="100" height="100" alt="<?php echo $text_retranslate_17; ?> <?php echo $text_retranslate_18; ?>">
 							</div>
 							<div class="pluses__title"><?php echo $text_retranslate_17; ?></div>
 							<p><?php echo $text_retranslate_18; ?></p>
@@ -394,7 +394,7 @@
 						<!--pluses__item-->
 						<div class="pluses__item">
 							<div class="pluses__icon">
-								<img src="catalog/view/theme/kp/img/pluses-icon3.svg" loading="lazy" width="100" height="100" alt="<?php echo $text_retranslate_19; ?> <?php echo $text_retranslate_20; ?>">
+								<img src="catalog/view/theme/default/img/pluses-icon3.svg" loading="lazy" width="100" height="100" alt="<?php echo $text_retranslate_19; ?> <?php echo $text_retranslate_20; ?>">
 							</div>
 							<div class="pluses__title"><?php echo $text_retranslate_19; ?></div>
 							<p><?php echo $text_retranslate_20; ?></p>
@@ -408,7 +408,7 @@
 						<!--pluses__item-->
 						<div class="pluses__item">
 							<div class="pluses__icon">
-								<img src="catalog/view/theme/kp/img/pluses-icon4.svg" loading="lazy" width="100" height="100" alt="<?php echo $text_retranslate_21; ?> <?php echo $text_retranslate_22; ?>">
+								<img src="catalog/view/theme/default/img/pluses-icon4.svg" loading="lazy" width="100" height="100" alt="<?php echo $text_retranslate_21; ?> <?php echo $text_retranslate_22; ?>">
 							</div>
 							<div class="pluses__title"><?php echo $text_retranslate_21; ?></div>
 							<p><?php echo $text_retranslate_22; ?></p>

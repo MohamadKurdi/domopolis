@@ -786,7 +786,7 @@
 											<td>SVG иконки бонусов</td>
 											<td>
 												<input type="text" name="config_reward_logosvg" value="<?php echo $config_reward_logosvg; ?>" size="30" />
-												<span class="help">/catalog/view/theme/kp/img/money.svg</span>
+												<span class="help">/catalog/view/theme/default/img/money.svg</span>
 											</td>
 										</tr>
 										

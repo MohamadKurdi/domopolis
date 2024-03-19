@@ -523,12 +523,12 @@ unset($this->session->data['gac:listfrom']); }
 										<?php if ($free_delivery) { ?>
 											<?php if ($free_delivery == 'moscow') { ?>
 												<div class="delivery_info_free ruMoskow">
-													<img src="/catalog/view/theme/kp/img/banner-logo.jpg" alt="" loading="lazy">
+													<img src="/catalog/view/theme/default/img/banner-logo.jpg" alt="" loading="lazy">
 													<p><?php echo $text_retranslate_66; ?></p>										
 												</div>
 												<? } elseif($free_delivery == 'kyiv') { ?>
 												<div class="delivery_info_free uaKyiv">
-													<img src="/catalog/view/theme/kp/img/banner-logo.jpg" alt="" loading="lazy">
+													<img src="/catalog/view/theme/default/img/banner-logo.jpg" alt="" loading="lazy">
 													<p><?php echo $text_retranslate_65; ?></p>
 													
 												</div>
@@ -683,13 +683,13 @@ unset($this->session->data['gac:listfrom']); }
 											<ul <? if (empty($bought_for_week)) { ?>style="display: flex;flex-direction: row-reverse;"<? } ?>>
 												<? if ($bought_for_week) { ?>
 													<li>
-														<img src="/catalog/view/theme/kp/img/pluses-icon3.svg" alt="" loading="lazy">
+														<img src="/catalog/view/theme/default/img/pluses-icon3.svg" alt="" loading="lazy">
 														<p><? echo $bought_for_week ?></p>
 													</li>
 												<? } ?>
 												<li>
 													<a href="javascript:void(0)" onclick="do_notification_block(31,'delivery_block');return false;" data-target="info_delivery" class="do-popup-element" >
-														<img src="/catalog/view/theme/kp/img/pluses-icon-dev.svg" alt="" loading="lazy">
+														<img src="/catalog/view/theme/default/img/pluses-icon-dev.svg" alt="" loading="lazy">
 														<p><?php echo $text_retranslate_47; ?> <i class="fas fa-info-circle"></i></p>
 													</a>
 												</li>
@@ -1500,12 +1500,12 @@ unset($this->session->data['gac:listfrom']); }
 									<?php if ($free_delivery) { ?>
 										<?php if ($free_delivery == 'moscow') { ?>
 											<div class="delivery_info_free ruMoskow">
-												<img src="/catalog/view/theme/kp/img/banner-logo.jpg" alt="" loading="lazy">
+												<img src="/catalog/view/theme/default/img/banner-logo.jpg" alt="" loading="lazy">
 												<p><?php echo $text_retranslate_66; ?></p>
 											</div>
 											<? } elseif($free_delivery == 'kyiv') { ?>
 											<div class="delivery_info_free uaKyiv">
-												<img src="/catalog/view/theme/kp/img/banner-logo.jpg" alt="" loading="lazy">
+												<img src="/catalog/view/theme/default/img/banner-logo.jpg" alt="" loading="lazy">
 												<p><?php echo $text_retranslate_65; ?></p>
 											</div>
 										<? } ?>
@@ -1534,13 +1534,13 @@ unset($this->session->data['gac:listfrom']); }
 									<ul>
 										<? if ($bought_for_week) { ?>
 											<li>
-												<img src="/catalog/view/theme/kp/img/pluses-icon3.svg" alt="" loading="lazy">
+												<img src="/catalog/view/theme/default/img/pluses-icon3.svg" alt="" loading="lazy">
 												<p><? echo $bought_for_week ?></p>
 											</li>
 										<? } ?>
 										<li>
 											<a href="javascript:void(0)" onclick="do_notification_block(31,'delivery_block');return false;" data-target="info_delivery" class="do-popup-element" >
-												<img src="/catalog/view/theme/kp/img/pluses-icon-dev.svg" alt="" loading="lazy">
+												<img src="/catalog/view/theme/default/img/pluses-icon-dev.svg" alt="" loading="lazy">
 												<p><?php echo $text_retranslate_47; ?> <i class="fas fa-info-circle"></i></p>
 											</a>
 										</li>

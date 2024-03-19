@@ -145,7 +145,7 @@
 	<div class="wrap">
 		<div class="action_two_column">
 			<div class="action_left">
-				<img src="/catalog/view/theme/kp/img/blackfriday.jpg" alt="<?php echo $text_blackfriday_title; ?>">
+				<img src="/catalog/view/theme/default/img/blackfriday.jpg" alt="<?php echo $text_blackfriday_title; ?>">
 			</div>
 			<div class="action_right">
 				<h1 class="title"><?php echo $text_blackfriday_title; ?></h1>

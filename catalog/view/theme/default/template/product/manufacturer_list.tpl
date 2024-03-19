@@ -199,7 +199,7 @@
                     <div class="manufacturer-country-item">
                         <a href="<?php echo $countrybrand['href']; ?>" title="<?php echo $countrybrand['name']; ?>">
                             <?php if ($countrybrand['flag']) { ?>
-                                <img src="/catalog/view/theme/kp/img/flags/brand/<?php echo $countrybrand['flag']?>.png" alt="<?php echo $countrybrand['name']; ?>">
+                                <img src="/catalog/view/theme/default/img/flags/brand/<?php echo $countrybrand['flag']?>.png" alt="<?php echo $countrybrand['name']; ?>">
                             <?php } ?>
                             <span><?php echo $countrybrand['name']; ?></span>
                         </a>

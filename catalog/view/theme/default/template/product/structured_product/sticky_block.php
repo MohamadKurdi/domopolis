@@ -299,13 +299,13 @@
 			<ul>
 				<? if ($bought_for_week) { ?>
 					<li>
-						<img src="/catalog/view/theme/kp/img/pluses-icon3.svg" alt="">
+						<img src="/catalog/view/theme/default/img/pluses-icon3.svg" alt="">
 						<p><? echo $bought_for_week ?></p>
 					</li>
 				<? } ?>
 				<li>
 					<a href="javascript:void(0)" onclick="do_notification_block(31,'delivery_block');return false;" data-target="info_delivery" class="do-popup-element" >
-						<img src="/catalog/view/theme/kp/img/pluses-icon-dev.svg" alt="">
+						<img src="/catalog/view/theme/default/img/pluses-icon-dev.svg" alt="">
 						<p>Варианты доставки <i class="fas fa-info-circle"></i></p>
 					</a>
 				</li>

@@ -24,8 +24,8 @@ foreach ($products as $product){
 
 
 <?php echo $header; ?>
-<link rel="stylesheet" href="/catalog/view/theme/kp/css/sumoselect.css">
-<script src="/catalog/view/theme/kp/js/sumoselect.min.js"></script>
+<link rel="stylesheet" href="/catalog/view/theme/default/css/sumoselect.css">
+<script src="/catalog/view/theme/default/js/sumoselect.min.js"></script>
 <?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
 <?php echo $column_left; ?><?php echo $column_right; ?>
 

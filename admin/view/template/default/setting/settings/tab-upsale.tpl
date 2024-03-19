@@ -376,7 +376,7 @@
 				<td style="width:25%">
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">SVG иконки бонусов</span></p>
 					<input type="text" name="config_reward_logosvg" value="<?php echo $config_reward_logosvg; ?>" size="30" />
-					<span class="help">/catalog/view/theme/kp/img/money.svg</span>
+					<span class="help">/catalog/view/theme/default/img/money.svg</span>
 				</td>
 			</tr>
 

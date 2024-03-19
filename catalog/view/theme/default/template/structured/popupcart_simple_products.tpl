@@ -1,5 +1,5 @@
 <table id="ajaxtable_table" class="ajaxtable_table">
-	<img src="/catalog/view/theme/kp/img/Spinners.png" id="ajaxcartloadimg"/>
+	<img src="/catalog/view/theme/default/img/Spinners.png" id="ajaxcartloadimg"/>
 	<thead>
 		<tr>
 			<td colspan="5"></td>

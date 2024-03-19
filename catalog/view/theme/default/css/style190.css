@@ -2265,7 +2265,7 @@ h4.title {
     overflow: hidden;
 }
 .news__title:after {
-    background: url(/catalog/view/theme/kp/img/shadow.png) bottom repeat-x;
+    background: url(/catalog/view/theme/default/img/shadow.png) bottom repeat-x;
     content: "";
     position: absolute;
     bottom: 0;
@@ -2305,7 +2305,7 @@ section#product-detail {
 .product-detail .about .desc:after,
 #content .item-column .manufacturer-info-hide:after,
 .news__desc::after {
-    background: url(/catalog/view/theme/kp/img/shadow.png) bottom repeat-x;
+    background: url(/catalog/view/theme/default/img/shadow.png) bottom repeat-x;
     content: "";
     position: absolute;
     bottom: 0;
@@ -2850,16 +2850,16 @@ section#product-detail {
     background-size: contain;
 }
 .footer__language .lang-menu.selected-lang_ru .selected-lang .active-lang {
-    background-image: url(/catalog/view/theme/kp/img/flags/ru.png);
+    background-image: url(/catalog/view/theme/default/img/flags/ru.png);
 }
 .footer__language .lang-menu.selected-lang_ua .selected-lang .active-lang {
-    background-image: url(/catalog/view/theme/kp/img/flags/ua.png);
+    background-image: url(/catalog/view/theme/default/img/flags/ua.png);
 }
 .footer__language .lang-menu.selected-lang_by .selected-lang .active-lang {
-    background-image: url(/catalog/view/theme/kp/img/flags/by.png);
+    background-image: url(/catalog/view/theme/default/img/flags/by.png);
 }
 .footer__language .lang-menu.selected-lang_kz .selected-lang .active-lang {
-    background-image: url(/catalog/view/theme/kp/img/flags/kz.png);
+    background-image: url(/catalog/view/theme/default/img/flags/kz.png);
 }
 .footer__language .lang-menu.selected-lang_ru .href_ru {
     display: none !important;
@@ -3541,7 +3541,7 @@ section#product-detail {
 /*.product__grid__colection .product__item .product__middle__colection .reward_wrap .text::before,*/
 .product__info .reward_wrap .text::before{
     content: '';
-    background-image: url("/catalog/view/theme/kp/img/money.svg");
+    background-image: url("/catalog/view/theme/default/img/money.svg");
     background-size: contain;
     width: 20px;
     height: 18px;
@@ -3617,7 +3617,7 @@ section#product-detail {
 #ajaxtable_table tr .price-block .reward_wrap .text::before,
 .price__head .reward_wrap .text::before{
     content: '';
-    background-image: url("/catalog/view/theme/kp/img/money.svg");
+    background-image: url("/catalog/view/theme/default/img/money.svg");
     background-size: contain;
     width: 20px;
     height: 18px;
@@ -4539,7 +4539,7 @@ section.slider-section {
 }
 
 .reviews-slider-v1 .product__title:after {
-    background: url(/catalog/view/theme/kp/img/shadow.png) bottom repeat-x;
+    background: url(/catalog/view/theme/default/img/shadow.png) bottom repeat-x;
     content: "";
     position: absolute;
     bottom: 0;
@@ -9214,7 +9214,7 @@ a[data-readmore-toggle] svg {
     top: -7px;
     margin: auto;
     cursor: pointer;
-    background-image: url(/catalog/view/theme/kp/img/close-modal.svg);
+    background-image: url(/catalog/view/theme/default/img/close-modal.svg);
     background-size: 9px 9px;
     background-repeat: no-repeat;
     text-align: center;
@@ -11676,7 +11676,7 @@ a[data-readmore-toggle] svg {
 }
 
 .summary-rate-star-show.star-change {
-    background: url("/catalog/view/theme/kp/img/rate-stars.png") repeat-x 0 -30px;
+    background: url("/catalog/view/theme/default/img/rate-stars.png") repeat-x 0 -30px;
     margin: 0;
     height: 20px;
 }
@@ -11694,7 +11694,7 @@ a[data-readmore-toggle] svg {
 .shop_summary_detail_line .star {
     width: 30px;
     height: 15px;
-    background: url("/catalog/view/theme/kp/img/rate-stars.png") no-repeat bottom right;
+    background: url("/catalog/view/theme/default/img/rate-stars.png") no-repeat bottom right;
     background-size: auto;
     background-size: 15px auto;
     display: inline-block;
@@ -11746,7 +11746,7 @@ a[data-readmore-toggle] svg {
 .rate-star-show {
     width: 21px;
     height: 20px;
-    background: url("/catalog/view/theme/kp/img/rate-stars.png") top center no-repeat;
+    background: url("/catalog/view/theme/default/img/rate-stars.png") top center no-repeat;
     background-size: 100% auto;
     display: inline-block;
 }
@@ -13542,7 +13542,7 @@ a[data-readmore-toggle] svg {
     top: 59px;
     bottom: 0;
     margin-left: 15px;
-    background: url("/catalog/view/theme/kp/img/arrow-down__yellow.svg") 0 0 no-repeat;
+    background: url("/catalog/view/theme/default/img/arrow-down__yellow.svg") 0 0 no-repeat;
     background-size: auto;
     background-size: auto;
     width: 30px;
@@ -14569,7 +14569,7 @@ a[data-readmore-toggle] svg {
         position: relative;
     }
     header #header-small-cart .content .mini-cart-info table td.name a:after {
-        background: url(/catalog/view/theme/kp/img/shadow.png) bottom repeat-x;
+        background: url(/catalog/view/theme/default/img/shadow.png) bottom repeat-x;
         content: "";
         position: absolute;
         bottom: 0;
@@ -15223,7 +15223,7 @@ a[data-readmore-toggle] svg {
     .product__grid__colection .product__item .product__middle__colection .reward_wrap .text::before, 
     .product__info .reward_wrap .text::before {
         content: '';
-        background-image: url("/catalog/view/theme/kp/img/money.svg");
+        background-image: url("/catalog/view/theme/default/img/money.svg");
         background-size: contain;
         width: 16px;
         height: 14px;
@@ -15798,7 +15798,7 @@ a[data-readmore-toggle] svg {
     }
     .product__grid__colection .product__item .product__middle__colection .reward_wrap .text::before, .product__info .reward_wrap .text::before {
         content: '';
-        background-image: url("/catalog/view/theme/kp/img/money.svg");
+        background-image: url("/catalog/view/theme/default/img/money.svg");
         background-size: contain;
         width: 15px;
         height: 14px;
@@ -17022,7 +17022,7 @@ a.mfilter-button-more {
     background: #428bca url(images/icons.png?v7) no-repeat -69px 0;
 }
 .mfilter-free-button.open {
-    /*background-image: url(/catalog/view/theme/kp/img/close-modal-white.svg);*/
+    /*background-image: url(/catalog/view/theme/default/img/close-modal-white.svg);*/
     background-image: url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJDYXBhXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgNTEyLjAwMSA1MTIuMDAxIiBzdHlsZT0iZmlsbDojZmZmIiB4bWw6c3BhY2U9InByZXNlcnZlIj48Zz48Zz48cGF0aCBkPSJNMjg0LjI4NiwyNTYuMDAyTDUwNi4xNDMsMzQuMTQ0YzcuODExLTcuODExLDcuODExLTIwLjQ3NSwwLTI4LjI4NWMtNy44MTEtNy44MS0yMC40NzUtNy44MTEtMjguMjg1LDBMMjU2LDIyNy43MTdMMzQuMTQzLDUuODU5Yy03LjgxMS03LjgxMS0yMC40NzUtNy44MTEtMjguMjg1LDBjLTcuODEsNy44MTEtNy44MTEsMjAuNDc1LDAsMjguMjg1bDIyMS44NTcsMjIxLjg1N0w1Ljg1OCw0NzcuODU5Yy03LjgxMSw3LjgxMS03LjgxMSwyMC40NzUsMCwyOC4yODVjMy45MDUsMy45MDUsOS4wMjQsNS44NTcsMTQuMTQzLDUuODU3YzUuMTE5LDAsMTAuMjM3LTEuOTUyLDE0LjE0My01Ljg1N0wyNTYsMjg0LjI4N2wyMjEuODU3LDIyMS44NTdjMy45MDUsMy45MDUsOS4wMjQsNS44NTcsMTQuMTQzLDUuODU3czEwLjIzNy0xLjk1MiwxNC4xNDMtNS44NTdjNy44MTEtNy44MTEsNy44MTEtMjAuNDc1LDAtMjguMjg1TDI4NC4yODYsMjU2LjAwMnoiLz48L2c+PC9nPjxnPjwvZz48Zz48L2c+PGc+PC9nPjxnPjwvZz48Zz48L2c+PGc+PC9nPjxnPjwvZz48Zz48L2c+PGc+PC9nPjxnPjwvZz48Zz48L2c+PGc+PC9nPjxnPjwvZz48Zz48L2c+PGc+PC9nPjwvc3ZnPg==);
     background-position: center;
     background-size: contain;

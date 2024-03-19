@@ -30,13 +30,13 @@
 								<a href="<?php echo $href_ru; ?>"><img src="/catalog/view/theme/default/img/flags/ru.png" alt="Россия"></a>
 							</li>
 							<li class="href_ua">
-								<a href="<?php echo $href_ua; ?>"><img src="/catalog/view/theme/kp/img/flags/ua.png" alt="Украина"></a>
+								<a href="<?php echo $href_ua; ?>"><img src="/catalog/view/theme/default/img/flags/ua.png" alt="Украина"></a>
 							</li>
 							<li class="href_by">
-								<a href="<?php echo $href_by; ?>"><img src="/catalog/view/theme/kp/img/flags/by.png" alt="Беларусь"></a>
+								<a href="<?php echo $href_by; ?>"><img src="/catalog/view/theme/default/img/flags/by.png" alt="Беларусь"></a>
 							</li>
 							<li class="href_kz">
-								<a href="<?php echo $href_kz; ?>"><img src="/catalog/view/theme/kp/img/flags/kz.png" alt="Казахстан"></a>
+								<a href="<?php echo $href_kz; ?>"><img src="/catalog/view/theme/default/img/flags/kz.png" alt="Казахстан"></a>
 							</li>
 						</ul>						
 					</div>
@@ -58,25 +58,25 @@
 			<ul class="footer__payments">
 				<?php if ($this->config->get('config_store_id') == 5) {?>
 					<li>
-						<img src="/catalog/view/theme/kp/img/all.png" alt="" style="max-width: 486px;" class="by-img">
+						<img src="/catalog/view/theme/default/img/all.png" alt="" style="max-width: 486px;" class="by-img">
 					</li>
 					<?php } else { ?>
 					<li>
-						<img src="/catalog/view/theme/kp/img/master-card.svg" alt="">
+						<img src="/catalog/view/theme/default/img/master-card.svg" alt="">
 					</li>
 					<li>
-						<img src="/catalog/view/theme/kp/img/visa.svg" alt="">
+						<img src="/catalog/view/theme/default/img/visa.svg" alt="">
 					</li>
 					<?php if ($this->config->get('config_store_id') == 1) {?>
 						<li>
-							<img src="/catalog/view/theme/kp/img/LIQPAY.png" alt="" width="47">
+							<img src="/catalog/view/theme/default/img/LIQPAY.png" alt="" width="47">
 						</li>
 					<?php } ?>
 					<li>
-						<img src="/catalog/view/theme/kp/img/PayKeeper.svg" alt="">
+						<img src="/catalog/view/theme/default/img/PayKeeper.svg" alt="">
 					</li>
 					<li>
-						<img src="/catalog/view/theme/kp/img/paypal.svg" alt="">
+						<img src="/catalog/view/theme/default/img/paypal.svg" alt="">
 					</li>
 				<?php } ?>
 			</ul>
