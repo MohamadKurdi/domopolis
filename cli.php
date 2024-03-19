@@ -44,13 +44,17 @@ if (!isset($argv[2])) {
     die();
 }
 
-if (!isset($argv[3])) {
+if ($argv[1] != 'update' && !isset($argv[3])) {
     echoLine('[CLI] No third parameter, must be action controller', 'e');
     die();
 }
 
+if ($argv[1] == 'update'){
+    $argv[3] = 'update';
+}
+
 $application = trim($argv[1]);
-if (!in_array($application, ['admin', 'catalog', 'install'])) {
+if (!in_array($application, ['admin', 'catalog', 'install', 'update'])) {
     echoLine('[CLI] First parameter, must be admin, or catalog', 'e');
     die();
 }
@@ -119,6 +123,13 @@ if ($argv[1] == 'install') {
         $installer->setdomain(trim($argv[3]));
     }
 
+    exit();
+}
+
+if ($argv[1] == 'update') {
+    echoLine('[CLI] Running updater', 'w');
+    require_once(dirname(__FILE__) . '/system/updater.php');
+    $updater = new \hobotix\Updater();
     exit();
 }
 

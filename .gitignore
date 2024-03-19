@@ -123,6 +123,8 @@
 /system/temp
 /system/pids
 
+/system/update/CURRENT
+
 #Директории IDE
 /.cache/
 .idea

@@ -110,7 +110,7 @@ final class Installer
             }
 
         } else {
-            echoLine('[Installer::install]Not found configuration files, exiting', 'e');
+            echoLine('[Installer::install] Not found configuration files, exiting', 'e');
         }
 
         echoLine('[Installer::install] Importing main database structure', 'w');
