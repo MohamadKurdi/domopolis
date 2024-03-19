@@ -4309,7 +4309,58 @@ class ControllerSettingSetting extends Controller
             $this->data['config_reacher_helo'] = $this->config->get('config_reacher_helo');
         }
 
-        $elasticseach_settings = [
+        $this->data['search_libraries'] = $this->searchAdaptor->getSearchAdaptors();
+
+        if (isset($this->request->post['config_search_library'])) {
+            $this->data['config_search_library'] = $this->request->post['config_search_library'];
+        } else {
+            $this->data['config_search_library'] = $this->config->get('config_search_library');
+        }
+
+        if (isset($this->request->post['config_search_catalog_route'])) {
+            $this->data['config_search_catalog_route'] = $this->request->post['config_search_catalog_route'];
+        } else {
+            $this->data['config_search_catalog_route'] = $this->config->get('config_search_catalog_route');
+        }
+
+        if (isset($this->request->post['config_search_ajax_route'])) {
+            $this->data['config_search_ajax_route'] = $this->request->post['config_search_ajax_route'];
+        } else {
+            $this->data['config_search_ajax_route'] = $this->config->get('config_search_ajax_route');
+        }
+
+        $typesense_settings = [
+            'config_typesense_host',
+            'config_typesense_port',
+            'config_typesense_protocol',
+            'config_typesense_api_key',
+            'config_typesense_products_index',
+            'config_typesense_manufacturers_index',
+            'config_typesense_categories_index',
+            'config_typesense_enable_embedded_name_index',
+            'config_typesense_embedded_name_index_model',
+            'config_typesense_embedded_name_index_model_api_key',
+            'config_typesense_enable_description_index',
+            'config_typesense_enable_manufacturer_index',
+            'config_typesense_enable_keyworder_index',
+            'config_typesense_search_num_typos',
+            'config_typesense_search_min_len_1typo',
+            'config_typesense_search_min_len_2typo',
+            'config_typesense_search_split_join_tokens',
+            'config_typesense_search_typo_tokens_threshold'
+        ];
+
+        foreach ($typesense_settings as $typesense_setting) {
+            if (isset($this->request->post[$typesense_setting])) {
+                $this->data[$typesense_setting] = $this->request->post[$typesense_setting];
+            } else {
+                $this->data[$typesense_setting] = $this->config->get($typesense_setting);
+            }
+        }
+
+        $elasticsearch_settings = [
+            'config_elasticsearch_host',
+            'config_elasticsearch_port',
             'config_elasticsearch_fuzziness_product',
             'config_elasticsearch_fuzziness_category',
             'config_elasticsearch_fuzziness_autcocomplete',
@@ -4323,11 +4374,11 @@ class ControllerSettingSetting extends Controller
             'config_elasticseach_index_autocomplete_symbols',
         ];
 
-         foreach ($elasticseach_settings as $elasticseach_setting) {
-            if (isset($this->request->post[$elasticseach_setting])) {
-                $this->data[$elasticseach_setting] = $this->request->post[$elasticseach_setting];
+         foreach ($elasticsearch_settings as $elasticsearch_setting) {
+            if (isset($this->request->post[$elasticsearch_setting])) {
+                $this->data[$elasticsearch_setting] = $this->request->post[$elasticsearch_setting];
             } else {
-                $this->data[$elasticseach_setting] = $this->config->get($elasticseach_setting);
+                $this->data[$elasticsearch_setting] = $this->config->get($elasticsearch_setting);
             }
         }
 

@@ -726,46 +726,6 @@ class ControllerCommonPanel extends Controller {
 
 	}
 
-	public function getElasticInfo(){
-		$body = '';
-		$class= 'good';
-
-		$this->load->library('hobotix/ElasticSearch');
-
-		try{
-			$elasticSearch = new \hobotix\ElasticSearch($this->registry, true);
-
-			if ($elasticSearch){
-				$field = $elasticSearch->buildField('name');
-				$field2 = $elasticSearch->buildField('names');
-				$field3 = $elasticSearch->buildField('description');
-
-				$product_total = $elasticSearch->fuzzyP('products' . $this->config->get('config_elasticsearch_index_suffix'), 'тарелка', $field, $field2, $field3, ['getTotal' => true]);
-
-				$body =  $product_total;
-
-				if ($product_total){					
-					$class= 'good';
-				} else {
-					$class= 'warn';
-				}
-			}
-
-		} catch (Exception $e){
-			$body = $e->getMessage();
-			$class= 'bad';
-		}
-
-		$json = [
-		'body'  	=> $body,
-		'class' 	=> $class,
-		];
-
-		$this->response->setOutput(json_encode($json));	
-
-
-	}
-
 	public function getAsteriskInfo(){
 		$body = '';
 		$class= 'good';

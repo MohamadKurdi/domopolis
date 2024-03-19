@@ -133,8 +133,8 @@
     }
   },
   {
-    "tab-elasticsearch": {
-      "text": "Elastic",
+    "tab-search": {
+      "text": "Search",
       "icon": "fa-search",
       "color": "51A62D"
     }
