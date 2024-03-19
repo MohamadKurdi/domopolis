@@ -35,5 +35,4 @@ final class CatLoader {
 
 		return '<i class="fa fa-spinner fa-spin"></i>';
 	}
-
 }

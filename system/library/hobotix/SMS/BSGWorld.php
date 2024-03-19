@@ -11,7 +11,7 @@ class BSGWorld {
 		$this->config 	= $registry->get('config');
 		$this->db 		= $registry->get('db');
 
-		$this->BSG = new \BSG($this->config->get('config_smsgate_api_key'));
+		$this->BSG = new \BSG\BSG($this->config->get('config_smsgate_api_key'));
 	}
 
 	public function check($answer){

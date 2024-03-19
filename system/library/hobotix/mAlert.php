@@ -5,15 +5,10 @@ namespace hobotix;
 class mAlert {
 	private $prefix = 'ALERT_QUEUE_';
 	private $queue = null;
-	
 	private $db 	= null;
 	private $cache 	= null;
 	private $config = null;
-	
-	//alert stucture: type:text:entity_type:entity_id
-	//example: sales:information:'Оформлен новый заказ':order:11816
-	//example: 
-		
+    
 	public function __construct($registry) {
 		$this->cache 	= $registry->get('cache');
 		$this->db 		= $registry->get('db');	
@@ -38,7 +33,7 @@ class mAlert {
 		}
 	}
 		
-	public function insertAlertForGroup($for_who, $data = array()){
+	public function insertAlertForGroup($for_who, $data = []){
 		if ($this->config->get('config_enable_malert_in_admin')){
 			if (isset($this->queue[$for_who])){
 
@@ -53,7 +48,7 @@ class mAlert {
 		return false;						
 	}
 	
-	public function insertAlertForOne($user_id, $data = array()){	
+	public function insertAlertForOne($user_id, $data = []){	
 		if ($this->config->get('config_enable_malert_in_admin')){		
 			$this->cache->addtolist($this->prefix . '_user' . (int)$user_id, serialize($data), 600);		
 		}

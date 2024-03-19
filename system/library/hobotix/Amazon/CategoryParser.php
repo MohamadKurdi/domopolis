@@ -30,10 +30,7 @@ class CategoryParser
 			loadAndRenameAnyModels(DIR_APPLICATION . '../admin/model/catalog/category.php', 'ModelCatalogCategory', 'ModelAdminCatalogCategory');
 			$this->model_catalog_category = new \ModelAdminCatalogCategory($this->registry);
 
-			if ($this->config->get('config_rainforest_enable_translation')){
-				require_once(DIR_SYSTEM . 'library/hobotix/TranslateAdaptor.php');
-				$this->translateAdaptor = new \hobotix\TranslateAdaptor($this->registry);
-			}			
+            $this->translateAdaptor = $registry->get('translateAdaptor');
 		}
 
 	public function doRequest($params = [], $endpoint = 'categories'){
