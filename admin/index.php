@@ -42,39 +42,17 @@ if ($httpHOST != parse_url(HTTPS_CATALOG, PHP_URL_HOST)){
 	die('sorry');
 }
 
-require_once(DIR_SYSTEM . 'startup.php');	
-require_once(DIR_SYSTEM . 'library/currency.php');
-require_once(DIR_SYSTEM . 'library/hobotix/EngineExtended/UserExtended.php');
-require_once(DIR_SYSTEM . 'library/weight.php');
-require_once(DIR_SYSTEM . 'library/length.php');
-require_once(DIR_SYSTEM . 'library/cart.php');
-require_once(DIR_SYSTEM . 'library/template.php');
-require_once(DIR_SYSTEM . 'library/hobotix/Bitrix24.php');
-require_once(DIR_SYSTEM . 'library/hobotix/SmsQueue.php');
-require_once(DIR_SYSTEM . 'library/hobotix/PushQueue.php');
-require_once(DIR_SYSTEM . 'library/hobotix/mAlert.php');
-require_once(DIR_SYSTEM . 'library/hobotix/ShortAlias.php');
-require_once(DIR_SYSTEM . 'library/hobotix/SmsAdaptor.php');
-require_once(DIR_SYSTEM . 'library/hobotix/MailAdaptor.php');
-require_once(DIR_SYSTEM . 'library/hobotix/EngineExtended/CustomerExtended.php');
-require_once(DIR_SYSTEM . 'library/hobotix/SessionDBHandler.php');
-require_once(DIR_SYSTEM . 'library/hobotix/PageCache.php');
-require_once(DIR_SYSTEM . 'library/hobotix/CourierServices.php');
-require_once(DIR_SYSTEM . 'library/hobotix/EmailBlackList.php');
-require_once(DIR_SYSTEM . 'library/hobotix/RainforestAmazon.php');
-require_once(DIR_SYSTEM . 'library/hobotix/PricevaAdaptor.php');
-require_once(DIR_SYSTEM . 'library/hobotix/OpenAIAdaptor.php');
-require_once(DIR_SYSTEM . 'library/hobotix/SimpleProcess.php');
-require_once(DIR_SYSTEM . 'library/hobotix/TranslateAdaptor.php');
-require_once(DIR_SYSTEM . 'library/hobotix/CheckBoxUA.php');		
-require_once(DIR_SYSTEM . 'library/hobotix/Fiscalisation.php');
-require_once(DIR_SYSTEM . 'library/hobotix/SupplierAdaptor.php');
-require_once(DIR_SYSTEM . 'library/hobotix/ElasticSearch.php');
-if (class_exists('chillerlan\QRCode\Output\QRGdImage')){
-	require_once(DIR_SYSTEM . 'library/hobotix/QRCodeExtender.php');
+if (!empty($loaderConfig['startup'])) {
+    foreach ($loaderConfig['startup'] as $startupFile) {
+        require_once(DIR_SYSTEM . $startupFile . '.php');
+    }
 }
-require_once(DIR_SYSTEM . 'library/hobotix/CouponRandom.php');
-require_once(DIR_SYSTEM . 'library/hobotix/CatLoader.php');
+
+if (!empty($loaderConfig['libraries'])) {
+    foreach ($loaderConfig['libraries'] as $libraryFile) {
+        require_once(DIR_SYSTEM . 'library/' . $libraryFile . '.php');
+    }
+}
 
 $registry 	= new Registry();
 $loader 	= new Loader($registry);
@@ -121,8 +99,8 @@ if (count($configFileExploded = explode('.', $configFile)) == 3){
 }
 $registry->get('config')->set('config_config_file_prefix', $configFilesPrefix);
 
-$request = new Request();
-$registry->set('request', $request);
+$registry->set('request', new Request());
+$registry->set('session', new Session($registry));
 
 $response = new Response();
 $response->addHeader('Content-Type: text/html; charset=utf-8');
@@ -193,40 +171,21 @@ if ($registry->get('config')->get('config_order_default')){
 
 $registry->set('customer_group_id', $registry->get('config')->get('config_customer_group_id'));
 
-$registry->set('url',  				new Url(HTTPS_SERVER, $registry));
-$registry->set('session', 			new Session()); 
-$registry->set('document', 			new Document());
-$registry->set('templateLib',		new Template());
-$registry->set('currency', 			new Currency($registry));
-$registry->set('smsQueue', 			new hobotix\smsQueue($registry)); 	
-$registry->set('smsAdaptor', 		new hobotix\SmsAdaptor($registry));
-$registry->set('customer', 			new hobotix\CustomerExtended($registry));			
-$registry->set('weight', 			new Weight($registry));
-$registry->set('length', 			new Length($registry));
-$registry->set('user', 				new hobotix\UserExtended($registry));
-$registry->set('cart', 				new Cart($registry));
-$registry->set('encryption', 		new Encryption($registry->get('config')->get('config_encryption')));
-$registry->set('Bitrix24', 			new hobotix\Bitrix24($registry));
-$registry->set('pushQueue', 		new hobotix\pushQueue($registry));
-$registry->set('shortAlias', 		new hobotix\shortAlias($registry));
-$registry->set('simpleProcess', 	new hobotix\simpleProcess());
-$registry->set('mAlert', 			new hobotix\mAlert($registry));
-$registry->set('courierServices', 	new hobotix\CourierServices($registry));
-$registry->set('emailBlackList', 	new hobotix\EmailBlackList($registry));
-$registry->set('mailAdaptor', 		new hobotix\MailAdaptor($registry));
-$registry->set('openaiAdaptor', 	new hobotix\OpenAIAdaptor($registry));
-$registry->set('translateAdaptor', 	new hobotix\TranslateAdaptor($registry));
-$registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
-$registry->set('checkBoxUA', 		new hobotix\CheckBoxUA($registry));
-$registry->set('Fiscalisation',		new hobotix\Fiscalisation($registry));
-$registry->set('supplierAdaptor',	new hobotix\SupplierAdaptor($registry));
-$registry->set('couponRandom',		new hobotix\CouponRandom($registry));
-$registry->set('elasticSearch',		new hobotix\ElasticSearch($registry));
-
 if (!$registry->get('config')->get('config_enable_amazon_specific_modes')){
-	$registry->set('bypass_rainforest_caches_and_settings', true);
+    $registry->set('bypass_rainforest_caches_and_settings', true);
 }
-$registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
+
+$registry->set('url',  				new Url(HTTPS_SERVER, $registry));
+
+foreach ($loaderConfig['global_libraries'] as $global_library => $global_library_config){
+    if (in_array('admin', $global_library_config['load'])){
+        if ($global_library_config['registry']){
+            $registry->set($global_library, new $global_library_config['class']($registry));
+        } else {
+            $registry->set($global_library, new $global_library_config['class']());
+        }
+    }
+}
 
 $controller = new Front($registry);
 
@@ -234,12 +193,12 @@ $controller->addPreAction(new Action('common/home/login'));
 $controller->addPreAction(new Action('common/home/permission'));
 
 /* We can need this to get front URLs in admin while getting some ajax templates */
-if (!empty($request->request['use_seo_urls'])){
+if (!empty($registry->get('request')->request['use_seo_urls'])){
 	$controller->addPreAction(new Action('common/seo_pro'));
 }
 
-if (isset($request->get['route'])) {
-	$action = new Action($request->get['route']);
+if (isset($registry->get('request')->get['route'])) {
+	$action = new Action($registry->get('request')->get['route']);
 } else {
 	$action = new Action('common/home');
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8e446c26c46be49046929a0bf4aadbbe",
+    "content-hash": "74e8927165d4e2762996185e25b351c9",
     "packages": [
         {
             "name": "alextartan/xml2array",
@@ -388,28 +388,28 @@
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.4.1",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "3ce240142f6d59b808dd65c1f52f7a1c252e6cfd"
+                "reference": "0c5ccfcfea312b5c5a190a21ac5cef93f74baf99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/3ce240142f6d59b808dd65c1f52f7a1c252e6cfd",
-                "reference": "3ce240142f6d59b808dd65c1f52f7a1c252e6cfd",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/0c5ccfcfea312b5c5a190a21ac5cef93f74baf99",
+                "reference": "0c5ccfcfea312b5c5a190a21ac5cef93f74baf99",
                 "shasum": ""
             },
             "require": {
                 "ext-openssl": "*",
                 "ext-pcre": "*",
-                "php": "^5.3.2 || ^7.0 || ^8.0"
+                "php": "^7.2 || ^8.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^0.12.55",
+                "phpstan/phpstan": "^1.10",
                 "psr/log": "^1.0",
                 "symfony/phpunit-bridge": "^4.2 || ^5",
-                "symfony/process": "^2.5 || ^3.0 || ^4.0 || ^5.0 || ^6.0 || ^7.0"
+                "symfony/process": "^4.0 || ^5.0 || ^6.0 || ^7.0"
             },
             "type": "library",
             "extra": {
@@ -444,7 +444,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/ca-bundle/issues",
-                "source": "https://github.com/composer/ca-bundle/tree/1.4.1"
+                "source": "https://github.com/composer/ca-bundle/tree/1.5.0"
             },
             "funding": [
                 {
@@ -460,7 +460,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-23T10:16:52+00:00"
+            "time": "2024-03-15T14:00:32+00:00"
         },
         {
             "name": "daveearley/daves-email-validation-tool",
@@ -1124,16 +1124,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.337.0",
+            "version": "v0.340.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "0f2a9a00c91a903b2f30f4f531a09af948df384e"
+                "reference": "c89999ea477da2b0803b2b4f14c9e7fc23b6344a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/0f2a9a00c91a903b2f30f4f531a09af948df384e",
-                "reference": "0f2a9a00c91a903b2f30f4f531a09af948df384e",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/c89999ea477da2b0803b2b4f14c9e7fc23b6344a",
+                "reference": "c89999ea477da2b0803b2b4f14c9e7fc23b6344a",
                 "shasum": ""
             },
             "require": {
@@ -1162,9 +1162,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.337.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.340.0"
             },
-            "time": "2024-02-26T01:00:27+00:00"
+            "time": "2024-03-17T00:56:17+00:00"
         },
         {
             "name": "google/auth",
@@ -2497,16 +2497,16 @@
         },
         {
             "name": "matthiasmullie/minify",
-            "version": "1.3.71",
+            "version": "1.3.73",
             "source": {
                 "type": "git",
                 "url": "https://github.com/matthiasmullie/minify.git",
-                "reference": "ae42a47d7fecc1fbb7277b2f2d84c37a33edc3b1"
+                "reference": "cb7a9297b4ab070909cefade30ee95054d4ae87a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/ae42a47d7fecc1fbb7277b2f2d84c37a33edc3b1",
-                "reference": "ae42a47d7fecc1fbb7277b2f2d84c37a33edc3b1",
+                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/cb7a9297b4ab070909cefade30ee95054d4ae87a",
+                "reference": "cb7a9297b4ab070909cefade30ee95054d4ae87a",
                 "shasum": ""
             },
             "require": {
@@ -2556,7 +2556,7 @@
             ],
             "support": {
                 "issues": "https://github.com/matthiasmullie/minify/issues",
-                "source": "https://github.com/matthiasmullie/minify/tree/1.3.71"
+                "source": "https://github.com/matthiasmullie/minify/tree/1.3.73"
             },
             "funding": [
                 {
@@ -2564,7 +2564,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-04-25T20:33:03+00:00"
+            "time": "2024-03-15T10:27:10+00:00"
         },
         {
             "name": "matthiasmullie/path-converter",
@@ -2898,16 +2898,16 @@
         },
         {
             "name": "mpdf/mpdf",
-            "version": "v8.2.2",
+            "version": "v8.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mpdf/mpdf.git",
-                "reference": "596a87b876d7793be7be060a8ac13424de120dd5"
+                "reference": "6f723a96becf989a831e38caf758d28364a69939"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/596a87b876d7793be7be060a8ac13424de120dd5",
-                "reference": "596a87b876d7793be7be060a8ac13424de120dd5",
+                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/6f723a96becf989a831e38caf758d28364a69939",
+                "reference": "6f723a96becf989a831e38caf758d28364a69939",
                 "shasum": ""
             },
             "require": {
@@ -2975,7 +2975,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2023-11-07T13:52:14+00:00"
+            "time": "2024-03-11T12:55:53+00:00"
         },
         {
             "name": "mpdf/psr-http-message-shim",
@@ -3840,16 +3840,16 @@
         },
         {
             "name": "php-http/promise",
-            "version": "1.3.0",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/promise.git",
-                "reference": "2916a606d3b390f4e9e8e2b8dd68581508be0f07"
+                "reference": "fc85b1fba37c169a69a07ef0d5a8075770cc1f83"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/promise/zipball/2916a606d3b390f4e9e8e2b8dd68581508be0f07",
-                "reference": "2916a606d3b390f4e9e8e2b8dd68581508be0f07",
+                "url": "https://api.github.com/repos/php-http/promise/zipball/fc85b1fba37c169a69a07ef0d5a8075770cc1f83",
+                "reference": "fc85b1fba37c169a69a07ef0d5a8075770cc1f83",
                 "shasum": ""
             },
             "require": {
@@ -3886,9 +3886,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-http/promise/issues",
-                "source": "https://github.com/php-http/promise/tree/1.3.0"
+                "source": "https://github.com/php-http/promise/tree/1.3.1"
             },
-            "time": "2024-01-04T18:49:48+00:00"
+            "time": "2024-03-15T13:55:21+00:00"
         },
         {
             "name": "phpoffice/phpspreadsheet",
@@ -5861,6 +5861,75 @@
             "time": "2023-12-08T13:03:43+00:00"
         },
         {
+            "name": "typesense/typesense-php",
+            "version": "v4.9.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/typesense/typesense-php.git",
+                "reference": "f91fd292ee587609972e9587d4392df0e423fa6b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/typesense/typesense-php/zipball/f91fd292ee587609972e9587d4392df0e423fa6b",
+                "reference": "f91fd292ee587609972e9587d4392df0e423fa6b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "monolog/monolog": "^2.1 || ^3.0 || ^3.3",
+                "nyholm/psr7": "^1.3",
+                "php": ">=7.4",
+                "php-http/client-common": "^1.0 || ^2.3",
+                "php-http/discovery": "^1.0",
+                "php-http/httplug": "^1.0 || ^2.2",
+                "psr/http-client-implementation": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.0 || ^2.0"
+            },
+            "require-dev": {
+                "squizlabs/php_codesniffer": "3.*",
+                "symfony/http-client": "^5.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Typesense\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Typesense",
+                    "email": "contact@typesense.org",
+                    "homepage": "https://typesense.org",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Abdullah Al-Faqeir",
+                    "email": "abdullah@devloops.net",
+                    "homepage": "https://www.devloops.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP client for Typesense Search Server: https://github.com/typesense/typesense",
+            "homepage": "https://github.com/typesense/typesense-php",
+            "support": {
+                "docs": "https://typesense.org/api",
+                "issues": "https://github.com/typesense/typesense-php/issues",
+                "source": "https://github.com/typesense/typesense-php"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/typesense",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-12-05T04:46:30+00:00"
+        },
+        {
             "name": "umpirsky/transliterator",
             "version": "v0.1.0",
             "source": {
@@ -6356,252 +6425,6 @@
             "time": "2018-11-23T01:37:27+00:00"
         },
         {
-            "name": "vzaichikov/barcode-validator",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/vzaichikov/barcode-validator.git",
-                "reference": "73c847ddf489b5c30fe507c9db9c556464078447"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/vzaichikov/barcode-validator/zipball/73c847ddf489b5c30fe507c9db9c556464078447",
-                "reference": "73c847ddf489b5c30fe507c9db9c556464078447",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "phpdocumentor/phpdocumentor": "*"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "barcode-validator.php"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ivan Melgrati",
-                    "homepage": "http://imelgrat.me",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Victor Zaichikov",
-                    "homepage": "https://hobotix.com.ua",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A PHP class for validating EAN, IMEI, ISBN, GTIN, SSCC, GSIN, UPC and other barcodes.",
-            "homepage": "https://github.com/imelgrat/barcode-validator",
-            "keywords": [
-                "EAN",
-                "EAN code",
-                "GTIN",
-                "GTIN code",
-                "IMEI",
-                "IMEI code",
-                "ISBN",
-                "ISBN code",
-                "UPC",
-                "UPC code",
-                "code validation"
-            ],
-            "support": {
-                "source": "https://github.com/vzaichikov/barcode-validator/tree/master"
-            },
-            "time": "2022-02-04T14:53:48+00:00"
-        },
-        {
-            "name": "vzaichikov/bsg-php",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/vzaichikov/bsg-php.git",
-                "reference": "13da623b93f789dd557a273a8e4301722899221b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/vzaichikov/bsg-php/zipball/13da623b93f789dd557a273a8e4301722899221b",
-                "reference": "13da623b93f789dd557a273a8e4301722899221b",
-                "shasum": ""
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^5.7"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/BSG.php"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "description": "BSG Client Fork to use with composer via vsc repo",
-            "homepage": "https://github.com/bsgworld/bsg-php",
-            "keywords": [
-                "bsg",
-                "bsg-world",
-                "sms"
-            ],
-            "support": {
-                "source": "https://github.com/vzaichikov/bsg-php/tree/master"
-            },
-            "time": "2023-04-20T13:30:01+00:00"
-        },
-        {
-            "name": "vzaichikov/epochta",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/vzaichikov/epochta.git",
-                "reference": "f3995f27c05bf8ed31a09a0731c491ff41bde95d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/vzaichikov/epochta/zipball/f3995f27c05bf8ed31a09a0731c491ff41bde95d",
-                "reference": "f3995f27c05bf8ed31a09a0731c491ff41bde95d",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^7.4",
-                "guzzlehttp/uri-template": "^1.0",
-                "php": ">=5.5.9"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "~1.12.2"
-            },
-            "suggest": {
-                "illuminate/support": "Required to use with Laravel Framework (~5.1)."
-            },
-            "default-branch": true,
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Enniel\\Epochta\\": "src"
-                }
-            },
-            "scripts": {
-                "test": [
-                    "@phpcs"
-                ],
-                "phpcs": [
-                    "php vendor/bin/php-cs-fixer --diff --dry-run -v fix"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Evgeni Razumov",
-                    "email": "razumov.evgeni@gmail.com"
-                }
-            ],
-            "description": "Epochta PHP client",
-            "homepage": "https://github.com/enniel/epochta",
-            "keywords": [
-                "epochta",
-                "sms"
-            ],
-            "support": {
-                "source": "https://github.com/vzaichikov/epochta/tree/master"
-            },
-            "time": "2023-02-21T11:47:02+00:00"
-        },
-        {
-            "name": "vzaichikov/notificore-php",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/vzaichikov/notificore-php.git",
-                "reference": "a2ea488a8fadb5f0cb32fdaa7d2f2f4766503eee"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/vzaichikov/notificore-php/zipball/a2ea488a8fadb5f0cb32fdaa7d2f2f4766503eee",
-                "reference": "a2ea488a8fadb5f0cb32fdaa7d2f2f4766503eee",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^5.7"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/Notificore.php"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "support": {
-                "source": "https://github.com/vzaichikov/notificore-php/tree/master"
-            },
-            "time": "2024-03-09T12:49:22+00:00"
-        },
-        {
-            "name": "vzaichikov/sms-sender",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/vzaichikov/sms-sender.git",
-                "reference": "d515b37b4195a47522a129a2db7615f6dd88a607"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/vzaichikov/sms-sender/zipball/d515b37b4195a47522a129a2db7615f6dd88a607",
-                "reference": "d515b37b4195a47522a129a2db7615f6dd88a607",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "ext-json": "*",
-                "php": "~5.4|~7.0|~8.0"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "SmsSender\\": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "1-Yuriy",
-                    "email": "yuriy@rand.pp.ua"
-                }
-            ],
-            "description": "Сервис отправки SMS-сообщений",
-            "keywords": [
-                "sender",
-                "sms"
-            ],
-            "support": {
-                "source": "https://github.com/vzaichikov/sms-sender/tree/main"
-            },
-            "time": "2024-02-23T10:48:39+00:00"
-        },
-        {
             "name": "wapmorgan/morphos",
             "version": "3.2.29",
             "source": {
@@ -6791,16 +6614,11 @@
         "jaybizzle/crawler-detect": 20,
         "clegginabox/pdf-merger": 20,
         "chillerlan/php-qrcode": 20,
-        "vzaichikov/barcode-validator": 20,
-        "simplehtmldom/simplehtmldom": 20,
-        "vzaichikov/epochta": 20,
-        "vzaichikov/bsg-php": 20,
-        "vzaichikov/notificore-php": 20,
-        "vzaichikov/sms-sender": 20
+        "simplehtmldom/simplehtmldom": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.2.0"
 }

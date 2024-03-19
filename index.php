@@ -135,7 +135,6 @@ $registry->set('db', new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB
 $registry->set('cache', new Cache(CACHE_DRIVER));
 $registry->set('request', new Request());
 $registry->set('session', new Session($registry));
-$session = $registry->get('session');
 $registry->set('log', new Log('php-errors-catalog.log'));
 
 
@@ -389,30 +388,17 @@ $registry->set('response', $response);
 
 
 //Other libraries
-$registry->set('document', new Document());
-$registry->set('affiliate', new Affiliate($registry));
-$registry->set('currency', new Currency($registry));
-$registry->set('smsQueue', new hobotix\SmsQueue($registry));
-$registry->set('phoneValidator', new hobotix\phoneValidator($registry));
-$registry->set('smsAdaptor', new hobotix\SmsAdaptor($registry));
-$registry->set('otpLogin', new hobotix\OTP($registry));
-$registry->set('emailBlackList', new hobotix\EmailBlackList($registry));
-$registry->set('customer', new hobotix\CustomerExtended($registry));
-$registry->set('tax', new Tax($registry));
-$registry->set('weight', new Weight($registry));
-$registry->set('length', new Length($registry));
-$registry->set('cart', new Cart($registry));
-$registry->set('encryption', new Encryption($registry->get('config')->get('config_encryption')));
-$registry->set('Bitrix24', new hobotix\Bitrix24($registry));
-$registry->set('mAlert', new hobotix\mAlert($registry));
-$registry->set('shortAlias', new hobotix\shortAlias($registry));
-$registry->set('elasticSearch', new hobotix\ElasticSearch($registry));
-$registry->set('courierServices', new hobotix\CourierServices($registry));
-$registry->set('openaiAdaptor', new hobotix\OpenAIAdaptor($registry));
-$registry->set('Fiscalisation', new hobotix\Fiscalisation($registry));
-$registry->set('couponRandom', new hobotix\CouponRandom($registry));
 $registry->set('bypass_rainforest_caches_and_settings', true);
-$registry->set('rainforestAmazon', new hobotix\RainforestAmazon($registry));
+
+foreach ($loaderConfig['global_libraries'] as $global_library => $global_library_config){
+    if (in_array('index', $global_library_config['load'])){
+        if ($global_library_config['registry']){
+            $registry->set($global_library, new $global_library_config['class']($registry));
+        } else {
+            $registry->set($global_library, new $global_library_config['class']());
+        }
+    }
+}
 
 //Preauth by utoken logic
 if (!empty($registry->get('request')->get['utoken']) && !empty($registry->get('request')->get['utm_term'])) {

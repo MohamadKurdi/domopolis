@@ -335,35 +335,15 @@ $response->addHeader('Content-Type: text/html; charset=utf-8');
 $response->setCompression($registry->get('config')->get('config_compression'));
 $registry->set('response', $response);
 
-$registry->set('document',          new Document());                     
-$registry->set('affiliate',         new Affiliate($registry));
-$registry->set('currency',          new Currency($registry));
-$registry->set('smsQueue',          new hobotix\SmsQueue($registry));
-$registry->set('phoneValidator',    new hobotix\phoneValidator($registry));
-$registry->set('smsAdaptor',        new hobotix\SmsAdaptor($registry));
-$registry->set('customer',          new hobotix\CustomerExtended($registry));
-$registry->set('tax',               new Tax($registry));
-$registry->set('weight',            new Weight($registry));
-$registry->set('length',            new Length($registry));
-$registry->set('cart',              new Cart($registry));
-$registry->set('user',              new hobotix\UserExtended($registry));
-$registry->set('encryption',        new Encryption($registry->get('config')->get('config_encryption')));
-$registry->set('Bitrix24',          new hobotix\Bitrix24($registry));   
-$registry->set('mAlert',            new hobotix\mAlert($registry)); 
-$registry->set('shortAlias',        new hobotix\shortAlias($registry)); 
-$registry->set('courierServices',   new hobotix\CourierServices($registry));
-$registry->set('openaiAdaptor',     new hobotix\OpenAIAdaptor($registry));
-$registry->set('emailBlackList',    new hobotix\EmailBlackList($registry));
-$registry->set('elasticSearch',     new hobotix\ElasticSearch($registry));
-$registry->set('openaiAdaptor',     new hobotix\OpenAIAdaptor($registry));
-$registry->set('translateAdaptor',  new hobotix\TranslateAdaptor($registry));
-$registry->set('rainforestAmazon',  new hobotix\RainforestAmazon($registry));
-$registry->set('pricevaAdaptor',    new hobotix\PricevaAdaptor($registry));
-$registry->set('courierServices',   new hobotix\CourierServices($registry));
-$registry->set('checkBoxUA',        new hobotix\CheckBoxUA($registry));
-$registry->set('Fiscalisation',     new hobotix\Fiscalisation($registry));
-$registry->set('supplierAdaptor',   new hobotix\SupplierAdaptor($registry));
-$registry->set('couponRandom',      new hobotix\CouponRandom($registry));
+foreach ($loaderConfig['global_libraries'] as $global_library => $global_library_config){
+    if (in_array('api', $global_library_config['load'])){
+        if ($global_library_config['registry']){
+            $registry->set($global_library, new $global_library_config['class']($registry));
+        } else {
+            $registry->set($global_library, new $global_library_config['class']());
+        }
+    }
+}
 
 if ($registry->get('customer')->getTracking()) {
     setcookie('tracking', $registry->get('customer')->getTracking(), time() + 3600 * 24 * 1000, '/');
