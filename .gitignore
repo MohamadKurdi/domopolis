@@ -81,7 +81,6 @@
 /api/
 
 #Шаблоны
-/catalog/view/theme/*
 /catalog/view/theme/_dev/*
 /catalog/view/theme/_old/*
 
