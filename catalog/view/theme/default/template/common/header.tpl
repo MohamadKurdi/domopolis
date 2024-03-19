@@ -774,7 +774,7 @@
 						</div>
 						<!--/sub-head-->
 
-						<?php include($this->checkTemplate(dirname( __FILE__), '/../search/elastic.tpl')); ?>
+						<?php include($this->checkTemplate(dirname( __FILE__), '/../search/' . mb_strtolower($this->config->get('config_search_library')) . '.tpl')); ?>
 						
 					</div>
 					<!--/middle-->

@@ -1,30 +1,6 @@
 $(document).ready(function() {
 	/* Search */
-	$('.button-search').bind('click', function() {
-		url = $('base').prop('href') + 'index.php?route=product/search';
-				 
-		var search = $('input[name=\'search\']').prop('value');
-		
-		if (search) {
-			url += '&search=' + encodeURIComponent(search);
-		}
-		
-		location = url;
-	});
-	
-	$('#header input[name=\'search\']').bind('keydown', function(e) {
-		if (e.keyCode == 13) {
-			url = $('base').prop('href') + 'index.php?route=product/search';
-			 
-			var search = $('input[name=\'search\']').prop('value');
-			
-			if (search) {
-				url += '&search=' + encodeURIComponent(search);
-			}
-			
-			location = url;
-		}
-	});
+
 	
 	/* Ajax Cart */
 	$('#cart > .heading a').live('click', function() {
