@@ -32,7 +32,7 @@ Information
 
 💡Using Redis and flat HTML Caching with afterload info blocks updates. Down to 0.1 seconds TTFB in caching mode with 400k products
 
-💡Smart search via ElasticSearch integrated
+💡Smart search via ElasticSearch or TypeSense integrated
 
 🤣By the way, contains a lot of shit-code, because of being one-business specific for a long time.
 
