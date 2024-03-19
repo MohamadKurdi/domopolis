@@ -1,5 +1,8 @@
-<?php 
+<?php
 
+function date_added_sort($a, $b) {
+    return strtotime($a['date_added']) - strtotime($b['date_added']);
+}
 
 function reformatDate($date){
 	return date('Y-m-d', strtotime($date['year'] . '-' . $date['month'] . '-' . $date['day']));
