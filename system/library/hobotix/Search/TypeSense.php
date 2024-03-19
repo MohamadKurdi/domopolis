@@ -49,7 +49,8 @@ class TypeSense
                         ],
                         "model_config" => [
                             "model_name"    => "openai/text-embedding-3-small",
-                            "api_key"       => "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"
+                            /* OLD KEY IS ALREADY DELETED, SORRY, SHIT HAPPENS, LOL */
+                            "api_key"       => $this->config->get('config_typesense_embedded_name_index_model_api_key')
                         ]
                     ]
                 ],
