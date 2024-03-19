@@ -329,18 +329,6 @@
 				</div>
 
 				<div class="tile-block">
-					<div class="tile info-loader unknown" data-path="common/panel/getElasticInfo">
-						<div class="tile-heading">Elastic</div>
-						<div class="tile-body"><i class="fa fa-search"></i>
-							<span class="tile-result"></span>
-						</div>
-						<div class="tile-footer">
-							результатов по запросу тарелка
-						</div>
-					</div>
-				</div>				
-
-				<div class="tile-block">
 					<div class="tile info-loader unknown" data-path="common/panel/getLDAPInfo">
 						<div class="tile-heading">Сервер LDAP</div>
 						<div class="tile-body"><i class="fa fa-user"></i>

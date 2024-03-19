@@ -264,7 +264,6 @@ class ControllerCatalogProduct extends Controller {
 					echo 'P CND'; die();
 				} else {
 					$this->model_catalog_product->deleteProduct($product_id);
-					$this->model_kp_product->deleteElastic($product_id);					
 				}
 			}
 
