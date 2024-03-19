@@ -111,7 +111,7 @@
 
     $('#header input[name=\'search\']').bind('keydown', function(e) {
         if (e.keyCode == 13) {
-            url = $('base').prop('href') + 'index.php?route=<?php echo $this->config->get('config_search_catalog_route');';
+            url = $('base').prop('href') + 'index.php?route=<?php echo $this->config->get('config_search_catalog_route'); ?>';
 
             var search = $('input[name=\'search\']').prop('value');
 
