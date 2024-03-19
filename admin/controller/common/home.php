@@ -516,7 +516,7 @@
 
 			$orders 			= $this->model_sale_order->getTotalOrders($filter_data);			
 			$orders['discount'] = $this->model_sale_order->getTotalOrdersDiscounts($filter_data); 
-			$orders['percent'] 	= $orders['sum']?round(($orders['discount'] / $orders['sum'])*100, 2):0;
+			$orders['percent'] 	= ((float)$orders['sum'] > 0)?round(($orders['discount'] / $orders['sum'])*100, 2):0;
 
 			$orders['sum'] 		= $this->currency->format($orders['sum'], $currency,'1');				
 			$orders['discount'] = $this->currency->format($orders['discount'], $currency,'1');

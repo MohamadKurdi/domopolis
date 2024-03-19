@@ -97,6 +97,32 @@
 </script>
 
 <script type="text/javascript">
+    $(document).ready(function () {
+
+          $('.search__btn').bind('click', function () {
+            url = $('base').attr('href') + 'index.php?route=<?php echo $this->config->get('config_search_catalog_route'); ?>';
+            var s = $('input[name=\'search\']').prop('value');
+            if (s) {
+              url += '&search=' + encodeURIComponent(s);
+            }
+            location = url;
+          }),
+
+          $(document).on('keydown','keypress', function (e) {
+            if (keycode == 13) {
+              url = $('base').attr('href') + 'index.php?route=<?php echo $this->config->get('config_search_catalog_route'); ?>';
+              var t = $('header input[name=\'search\']').prop('value');
+              t && (url += '&search=' + encodeURIComponent(t)),
+              location = url
+            }
+          });
+
+
+
+
+
+
+        }); 
     $('.button-search').bind('click', function() {
         url = $('base').prop('href') + 'index.php?route=<?php echo $this->config->get('config_search_catalog_route'); ?>';
 
