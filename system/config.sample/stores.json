@@ -1,3 +1,6 @@
-{	
-	"store.domain" 	: "0"
+{
+  "store.domain": {
+    "config": "config.dp.php",
+    "store_id": 0
+  }
 }

@@ -16,8 +16,8 @@ if (!empty($loaderConfig['preload'])){
 $FPCTimer = new \hobotix\FPCTimer();
 
 $httpHOST 			= str_replace('www.', '', $_SERVER['HTTP_HOST']);
-$configFiles 		= loadJsonConfig('configs');
-$domainRedirects 	= loadJsonConfig('domainredirect');
+$storesConfig 		= loadJsonConfig('stores');
+$domainRedirects 	= loadJsonConfig('redirect');
 
 if (isset($domainRedirects[$httpHOST])){		
 	$newLocation = 'https://' . $domainRedirects[$httpHOST] . $_SERVER['REQUEST_URI'];
@@ -26,10 +26,10 @@ if (isset($domainRedirects[$httpHOST])){
 	exit(); 
 }
 
-if (isset($configFiles[$httpHOST])){		
-	if (file_exists($configFiles[$httpHOST])) {
-		$configFile = $configFiles[$httpHOST];
-		require_once($configFiles[$httpHOST]);
+if (isset($storesConfig[$httpHOST])){
+    $configFile = $storesConfig[$httpHOST]['config'];
+	if (file_exists($configFile)) {
+		require_once($configFile);
 	} else {
 		die ('no config file!');
 	}
@@ -91,13 +91,13 @@ foreach ($query->rows as $setting) {
 	}
 }
 
-$configFilesPrefix = '';
+$storesConfigPrefix = '';
 if (count($configFileExploded = explode('.', $configFile)) == 3){
 	if (mb_strlen($configFileExploded[1]) == 2){
-		$configFilesPrefix = trim($configFileExploded[1]);
+		$storesConfigPrefix = trim($configFileExploded[1]);
 	}
 }
-$registry->get('config')->set('config_config_file_prefix', $configFilesPrefix);
+$registry->get('config')->set('config_config_file_prefix', $storesConfigPrefix);
 
 $registry->set('request', new Request());
 $registry->set('session', new Session($registry));

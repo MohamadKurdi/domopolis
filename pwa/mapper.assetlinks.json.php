@@ -8,15 +8,13 @@
 	header('Content-Type: application/json');
 	
 	$httpHOST = str_replace('www.', '', $_SERVER['HTTP_HOST']);
-	
-	$stores = loadJsonConfig('stores');
-	$assetlinks = loadJsonConfig('assetlinks');
+
+	$assetlinks = loadJsonConfig('pwa');
 	
 	if (isset($assetlinks[$httpHOST])){
 		
-		$assetlinkFile = $assetlinks[$httpHOST];
-			
-		
+		$assetlinkFile = $assetlinks[$httpHOST]['assetlinks'];
+
 		$assetlinkContent = file_get_contents(dirname(__FILE__) . '/assetlinks/' . $assetlinkFile);		
 		die($assetlinkContent);
 		

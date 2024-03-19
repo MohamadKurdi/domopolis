@@ -13,6 +13,8 @@ $apisConfig = loadJsonConfig('api');
 
 if (empty($_GET['_route_']) && !empty($_GET['route'])) {
     $_GET['_route_'] = $_GET['route'];
+} elseif (empty($_GET['_route_'])){
+    $_GET['_route_'] = 'route/empty';
 }
 
 $_GET['_route_'] = ltrim($_GET['_route_'], '/');
@@ -53,15 +55,14 @@ $FPCTimer = new \hobotix\FPCTimer();
 
 $httpHOST           = str_replace('www.', '', $_SERVER['HTTP_HOST']);
 $storesConfig       = loadJsonConfig('stores');
-$configFiles        = loadJsonConfig('configs');
-$domainRedirects    = loadJsonConfig('domainredirect');
+$domainRedirects    = loadJsonConfig('redirect');
 
-if (empty($configFiles[$httpHOST])) {
+if (empty($storesConfig[$httpHOST])) {
     header("HTTP/1.1 500 Not served HTTP_HOST");
     die('Not served HTTP_HOST');
 } else {
     $configFilesPrefix = false;
-    if (count($configFileExploded = explode('.', $configFiles[$httpHOST])) == 3) {
+    if (count($configFileExploded = explode('.', $storesConfig[$httpHOST]['config'])) == 3) {
         if (mb_strlen($configFileExploded[1]) == 2) {
             $configFilesPrefix = trim($configFileExploded[1]);
         }
@@ -93,7 +94,7 @@ if ($configFilesPrefix) {
 }
 
 if (!file_exists(APPLICATION_DIRECTORY . '/' . $currentConfigFile)) {
-    $currentConfigFile = $configFiles[$httpHOST];
+    $currentConfigFile = $storesConfig[$httpHOST]['config'];
 }
 
 header('X-CONFIG-FILE: ' . $currentConfigFile);
@@ -101,7 +102,7 @@ header('X-CONFIG-FILE: ' . $currentConfigFile);
 require_once(APPLICATION_DIRECTORY . '/' . $currentConfigFile);
 
 if (isset($storesConfig[$httpHOST])) {
-    $store_id = $storesConfig[$httpHOST];
+    $store_id = (int)$storesConfig[$httpHOST]['store_id'];
 } else {
     die('we do not serve this shit');
 }

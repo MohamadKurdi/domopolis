@@ -1,0 +1,6 @@
+{
+  "store.domain" : {
+    "assetlinks" : "assetlinks.json",
+    "manifest": "manifest.ua.json"
+  }
+}

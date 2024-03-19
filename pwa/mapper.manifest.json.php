@@ -8,13 +8,11 @@
 	header('Content-Type: application/json');
 	
 	$httpHOST = str_replace('www.', '', $_SERVER['HTTP_HOST']);
-	
-	$stores = loadJsonConfig('stores');
 	$manifests = loadJsonConfig('manifest');
 	
 	if (isset($manifests[$httpHOST])){
 		
-		$manifestFile = $manifests[$httpHOST];
+		$manifestFile = $manifests[$httpHOST]['manifest'];
 		
 		if (!empty($_COOKIE['language']) && $_COOKIE['language'] == 'uk'){
 			if (isset($manifests[$httpHOST  . '/ua'])){

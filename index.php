@@ -28,13 +28,12 @@ $FPCTimer = new \hobotix\FPCTimer();
 //find http host
 $httpHOST = str_replace('www.', '', $_SERVER['HTTP_HOST']);
 $storesConfig = loadJsonConfig('stores');
-$configFiles = loadJsonConfig('configs');
 $domainRedirects = loadJsonConfig('domainredirect');
 
 //Echo
-if (isset($storesConfig[$httpHOST]) && !is_numeric($storesConfig[$httpHOST])) {
-    if (file_exists(dirname(__FILE__) . '/' . trim($storesConfig[$httpHOST]))) {
-        $content = file_get_contents(dirname(__FILE__) . '/' . trim($storesConfig[$httpHOST]));
+if (isset($storesConfig[$httpHOST]) && isset($storesConfig[$httpHOST]['error_file'])) {
+    if (file_exists(dirname(__FILE__) . '/' . trim($storesConfig[$httpHOST]['error_file']))) {
+        $content = file_get_contents(dirname(__FILE__) . '/' . trim($storesConfig[$httpHOST]['error_file']));
         if ($_SERVER['REQUEST_URI'] == '/') {
             header('HTTP/1.1 200 OK');
         } else {
@@ -57,9 +56,9 @@ if (isset($domainRedirects[$httpHOST])) {
 
 //Конфигурационный файл	основной выбор с переназначением
 $currentConfigFile = false;
-if (!empty($configFiles[$httpHOST])) {
-    if (file_exists($configFiles[$httpHOST])) {
-        $currentConfigFile = ($configFiles[$httpHOST]);
+if (!empty($storesConfig[$httpHOST])) {
+    if (file_exists($storesConfig[$httpHOST]['config'])) {
+        $currentConfigFile = ($storesConfig[$httpHOST]['config']);
     } else {
         die ('no config file!');
     }
@@ -91,7 +90,7 @@ if (thisIsAjax() && !empty($_GET['route'])) {
 require_once($currentConfigFile);
 
 if (isset($storesConfig[$httpHOST])) {
-    $store_id = $storesConfig[$httpHOST];
+    $store_id = (int)$storesConfig[$httpHOST]['store_id'];
 } else {
     die ('we do not serve this shit');
 }
