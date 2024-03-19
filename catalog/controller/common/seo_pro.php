@@ -1012,7 +1012,7 @@
 			$url 		= str_replace('&amp;', '&', $config_ssl . ltrim($this->request->server['REQUEST_URI'], '/'));
 			$seo 		= str_replace('&amp;', '&', $this->url->link($this->request->get['route'], $this->getQueryString(array('route')), 'SSL'));
 					
-			if ((php_sapi_name()!=="cli") && (rawurldecode($url) != rawurldecode($seo)) && strpos($url,'mfp=') === false && (strpos($url, '/search') === false)) {
+			if ((php_sapi_name()!=="cli") && (rawurldecode($url) != rawurldecode($seo)) && strpos($url,'mfp=') === false && (strpos($url, 'search') === false)) {
 				header('X-REDIRECT: SeoProLib::validate');		 
 				header($this->request->server['SERVER_PROTOCOL'] . ' 301 Moved Permanently');
 				$this->response->redirect($seo, 301);

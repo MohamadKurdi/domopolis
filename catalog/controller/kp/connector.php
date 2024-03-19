@@ -1,4 +1,4 @@
-<?
+<?php
 	
 	class ControllerKPConnector extends Controller {		
 		
