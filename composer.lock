@@ -1789,12 +1789,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JayBizzle/Crawler-Detect.git",
-                "reference": "92ed056c80391ad9f29d5d22a50b8b1cd8cbf118"
+                "reference": "6785557f03d0fa9e2205352ebae9a12a4484cc8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/92ed056c80391ad9f29d5d22a50b8b1cd8cbf118",
-                "reference": "92ed056c80391ad9f29d5d22a50b8b1cd8cbf118",
+                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/6785557f03d0fa9e2205352ebae9a12a4484cc8e",
+                "reference": "6785557f03d0fa9e2205352ebae9a12a4484cc8e",
                 "shasum": ""
             },
             "require": {
@@ -1834,7 +1834,7 @@
                 "issues": "https://github.com/JayBizzle/Crawler-Detect/issues",
                 "source": "https://github.com/JayBizzle/Crawler-Detect/tree/master"
             },
-            "time": "2023-11-11T11:12:19+00:00"
+            "time": "2024-03-19T22:51:22+00:00"
         },
         {
             "name": "jbroadway/urlify",
