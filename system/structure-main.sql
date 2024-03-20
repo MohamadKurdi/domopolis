@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 13, 2024 at 02:31 PM
--- Server version: 10.6.7-MariaDB-2ubuntu1.1-log
--- PHP Version: 8.1.9
+-- Generation Time: Mar 20, 2024 at 11:08 AM
+-- Server version: 10.11.7-MariaDB-1:10.11.7+maria~ubu2204
+-- PHP Version: 8.1.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -27,20 +27,21 @@ SET time_zone = "+00:00";
 -- Table structure for table `actions`
 --
 
+DROP TABLE IF EXISTS `actions`;
 CREATE TABLE IF NOT EXISTS `actions` (
   `actions_id` int(11) NOT NULL AUTO_INCREMENT,
-  `image` varchar(255) COLLATE utf8mb3_bin DEFAULT NULL,
-  `image_to_cat` varchar(500) COLLATE utf8mb3_bin NOT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `image_to_cat` varchar(500) NOT NULL,
   `image_size` int(11) NOT NULL DEFAULT 0,
   `date_start` int(11) NOT NULL DEFAULT 0,
   `date_end` int(11) NOT NULL DEFAULT 0,
   `status` int(11) NOT NULL DEFAULT 0,
   `fancybox` int(11) NOT NULL DEFAULT 0,
-  `product_related` text COLLATE utf8mb3_bin DEFAULT NULL,
+  `product_related` text DEFAULT NULL,
   `category_related_id` int(11) NOT NULL,
   `category_related_no_intersections` tinyint(1) NOT NULL,
   `category_related_limit_products` int(11) NOT NULL,
-  `ao_group` varchar(100) COLLATE utf8mb3_bin NOT NULL,
+  `ao_group` varchar(100) NOT NULL,
   `manufacturer_id` int(11) NOT NULL,
   `deletenotinstock` tinyint(1) NOT NULL DEFAULT 0,
   `only_in_stock` int(11) NOT NULL DEFAULT 0,
@@ -58,23 +59,24 @@ CREATE TABLE IF NOT EXISTS `actions` (
 -- Table structure for table `actions_description`
 --
 
+DROP TABLE IF EXISTS `actions_description`;
 CREATE TABLE IF NOT EXISTS `actions_description` (
   `actions_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `title` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `meta_keywords` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `meta_description` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `h1` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `caption` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `anonnce` text COLLATE utf8mb3_bin NOT NULL,
-  `description` text COLLATE utf8mb3_bin NOT NULL,
-  `content` text COLLATE utf8mb3_bin NOT NULL,
-  `image_overload` varchar(255) COLLATE utf8mb3_bin NOT NULL,
-  `image_to_cat_overload` varchar(255) COLLATE utf8mb3_bin NOT NULL,
-  `label` varchar(64) COLLATE utf8mb3_bin NOT NULL,
-  `label_background` varchar(32) COLLATE utf8mb3_bin NOT NULL,
-  `label_color` varchar(32) COLLATE utf8mb3_bin NOT NULL,
-  `label_text` text COLLATE utf8mb3_bin NOT NULL,
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `meta_keywords` varchar(255) NOT NULL DEFAULT '',
+  `meta_description` varchar(255) NOT NULL DEFAULT '',
+  `h1` varchar(255) NOT NULL DEFAULT '',
+  `caption` varchar(255) NOT NULL DEFAULT '',
+  `anonnce` text NOT NULL,
+  `description` text NOT NULL,
+  `content` text NOT NULL,
+  `image_overload` varchar(255) NOT NULL,
+  `image_to_cat_overload` varchar(255) NOT NULL,
+  `label` varchar(64) NOT NULL,
+  `label_background` varchar(32) NOT NULL,
+  `label_color` varchar(32) NOT NULL,
+  `label_text` text NOT NULL,
   PRIMARY KEY (`actions_id`,`language_id`),
   KEY `language_id` (`language_id`),
   KEY `title` (`title`),
@@ -87,12 +89,13 @@ CREATE TABLE IF NOT EXISTS `actions_description` (
 -- Table structure for table `actions_to_category`
 --
 
+DROP TABLE IF EXISTS `actions_to_category`;
 CREATE TABLE IF NOT EXISTS `actions_to_category` (
   `actions_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   KEY `action_id` (`actions_id`),
   KEY `category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -100,12 +103,13 @@ CREATE TABLE IF NOT EXISTS `actions_to_category` (
 -- Table structure for table `actions_to_category_in`
 --
 
+DROP TABLE IF EXISTS `actions_to_category_in`;
 CREATE TABLE IF NOT EXISTS `actions_to_category_in` (
   `actions_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   KEY `actions_id` (`actions_id`),
   KEY `category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -113,6 +117,7 @@ CREATE TABLE IF NOT EXISTS `actions_to_category_in` (
 -- Table structure for table `actions_to_layout`
 --
 
+DROP TABLE IF EXISTS `actions_to_layout`;
 CREATE TABLE IF NOT EXISTS `actions_to_layout` (
   `actions_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -128,12 +133,13 @@ CREATE TABLE IF NOT EXISTS `actions_to_layout` (
 -- Table structure for table `actions_to_product`
 --
 
+DROP TABLE IF EXISTS `actions_to_product`;
 CREATE TABLE IF NOT EXISTS `actions_to_product` (
   `actions_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   KEY `actions_id` (`actions_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -141,6 +147,7 @@ CREATE TABLE IF NOT EXISTS `actions_to_product` (
 -- Table structure for table `actions_to_store`
 --
 
+DROP TABLE IF EXISTS `actions_to_store`;
 CREATE TABLE IF NOT EXISTS `actions_to_store` (
   `actions_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -154,6 +161,7 @@ CREATE TABLE IF NOT EXISTS `actions_to_store` (
 -- Table structure for table `actiontemplate`
 --
 
+DROP TABLE IF EXISTS `actiontemplate`;
 CREATE TABLE IF NOT EXISTS `actiontemplate` (
   `actiontemplate_id` int(11) NOT NULL AUTO_INCREMENT,
   `bottom` int(11) NOT NULL DEFAULT 0,
@@ -167,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `actiontemplate` (
   PRIMARY KEY (`actiontemplate_id`),
   KEY `use_for_manual` (`use_for_manual`),
   KEY `use_for_forgotten` (`use_for_forgotten`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -175,6 +183,7 @@ CREATE TABLE IF NOT EXISTS `actiontemplate` (
 -- Table structure for table `actiontemplate_description`
 --
 
+DROP TABLE IF EXISTS `actiontemplate_description`;
 CREATE TABLE IF NOT EXISTS `actiontemplate_description` (
   `actiontemplate_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -187,7 +196,7 @@ CREATE TABLE IF NOT EXISTS `actiontemplate_description` (
   `tag` text DEFAULT NULL,
   PRIMARY KEY (`actiontemplate_id`,`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -195,6 +204,7 @@ CREATE TABLE IF NOT EXISTS `actiontemplate_description` (
 -- Table structure for table `address`
 --
 
+DROP TABLE IF EXISTS `address`;
 CREATE TABLE IF NOT EXISTS `address` (
   `address_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL,
@@ -226,7 +236,7 @@ CREATE TABLE IF NOT EXISTS `address` (
   KEY `for_print` (`for_print`),
   KEY `verified` (`verified`),
   KEY `firstname` (`firstname`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -234,11 +244,12 @@ CREATE TABLE IF NOT EXISTS `address` (
 -- Table structure for table `address_simple_fields`
 --
 
+DROP TABLE IF EXISTS `address_simple_fields`;
 CREATE TABLE IF NOT EXISTS `address_simple_fields` (
   `address_id` int(11) NOT NULL,
   `metadata` text DEFAULT NULL,
   PRIMARY KEY (`address_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -246,6 +257,7 @@ CREATE TABLE IF NOT EXISTS `address_simple_fields` (
 -- Table structure for table `adminlog`
 --
 
+DROP TABLE IF EXISTS `adminlog`;
 CREATE TABLE IF NOT EXISTS `adminlog` (
   `log_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -257,7 +269,7 @@ CREATE TABLE IF NOT EXISTS `adminlog` (
   `date` datetime NOT NULL,
   PRIMARY KEY (`log_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -265,6 +277,7 @@ CREATE TABLE IF NOT EXISTS `adminlog` (
 -- Table structure for table `advanced_coupon`
 --
 
+DROP TABLE IF EXISTS `advanced_coupon`;
 CREATE TABLE IF NOT EXISTS `advanced_coupon` (
   `advanced_coupon_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
@@ -276,7 +289,7 @@ CREATE TABLE IF NOT EXISTS `advanced_coupon` (
   `date_added` date NOT NULL,
   PRIMARY KEY (`advanced_coupon_id`),
   UNIQUE KEY `name` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -284,6 +297,7 @@ CREATE TABLE IF NOT EXISTS `advanced_coupon` (
 -- Table structure for table `advanced_coupon_history`
 --
 
+DROP TABLE IF EXISTS `advanced_coupon_history`;
 CREATE TABLE IF NOT EXISTS `advanced_coupon_history` (
   `advanced_coupon_history_id` int(11) NOT NULL AUTO_INCREMENT,
   `advanced_coupon_id` int(11) NOT NULL,
@@ -295,7 +309,7 @@ CREATE TABLE IF NOT EXISTS `advanced_coupon_history` (
   KEY `advanced_coupon_id` (`advanced_coupon_id`),
   KEY `order_id` (`order_id`),
   KEY `customer_id` (`customer_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -303,6 +317,7 @@ CREATE TABLE IF NOT EXISTS `advanced_coupon_history` (
 -- Table structure for table `affiliate`
 --
 
+DROP TABLE IF EXISTS `affiliate`;
 CREATE TABLE IF NOT EXISTS `affiliate` (
   `affiliate_id` int(11) NOT NULL AUTO_INCREMENT,
   `firstname` varchar(32) NOT NULL,
@@ -357,7 +372,7 @@ CREATE TABLE IF NOT EXISTS `affiliate` (
   KEY `country_id` (`country_id`),
   KEY `zone_id` (`zone_id`),
   KEY `code` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -365,6 +380,7 @@ CREATE TABLE IF NOT EXISTS `affiliate` (
 -- Table structure for table `affiliate_statistics`
 --
 
+DROP TABLE IF EXISTS `affiliate_statistics`;
 CREATE TABLE IF NOT EXISTS `affiliate_statistics` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `affiliate_id` int(11) NOT NULL,
@@ -373,7 +389,7 @@ CREATE TABLE IF NOT EXISTS `affiliate_statistics` (
   `affiliate_ip_name` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `affiliate_id` (`affiliate_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -381,6 +397,7 @@ CREATE TABLE IF NOT EXISTS `affiliate_statistics` (
 -- Table structure for table `affiliate_transaction`
 --
 
+DROP TABLE IF EXISTS `affiliate_transaction`;
 CREATE TABLE IF NOT EXISTS `affiliate_transaction` (
   `affiliate_transaction_id` int(11) NOT NULL AUTO_INCREMENT,
   `affiliate_id` int(11) NOT NULL,
@@ -391,7 +408,7 @@ CREATE TABLE IF NOT EXISTS `affiliate_transaction` (
   PRIMARY KEY (`affiliate_transaction_id`),
   KEY `affiliate_id` (`affiliate_id`),
   KEY `order_id` (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -399,6 +416,7 @@ CREATE TABLE IF NOT EXISTS `affiliate_transaction` (
 -- Table structure for table `albums`
 --
 
+DROP TABLE IF EXISTS `albums`;
 CREATE TABLE IF NOT EXISTS `albums` (
   `album_id` int(11) NOT NULL AUTO_INCREMENT,
   `album_type` int(11) NOT NULL,
@@ -407,7 +425,7 @@ CREATE TABLE IF NOT EXISTS `albums` (
   `last_modified` datetime NOT NULL,
   `album_data` text NOT NULL,
   PRIMARY KEY (`album_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -415,6 +433,7 @@ CREATE TABLE IF NOT EXISTS `albums` (
 -- Table structure for table `alertlog`
 --
 
+DROP TABLE IF EXISTS `alertlog`;
 CREATE TABLE IF NOT EXISTS `alertlog` (
   `alertlog_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -425,7 +444,7 @@ CREATE TABLE IF NOT EXISTS `alertlog` (
   `datetime` datetime NOT NULL,
   PRIMARY KEY (`alertlog_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -433,6 +452,7 @@ CREATE TABLE IF NOT EXISTS `alertlog` (
 -- Table structure for table `alsoviewed`
 --
 
+DROP TABLE IF EXISTS `alsoviewed`;
 CREATE TABLE IF NOT EXISTS `alsoviewed` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `low` int(11) DEFAULT 0,
@@ -444,7 +464,7 @@ CREATE TABLE IF NOT EXISTS `alsoviewed` (
   KEY `low` (`low`),
   KEY `high` (`high`),
   KEY `number` (`number`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -452,6 +472,7 @@ CREATE TABLE IF NOT EXISTS `alsoviewed` (
 -- Table structure for table `amazon_orders`
 --
 
+DROP TABLE IF EXISTS `amazon_orders`;
 CREATE TABLE IF NOT EXISTS `amazon_orders` (
   `order_id` int(11) NOT NULL AUTO_INCREMENT,
   `amazon_id` varchar(255) NOT NULL,
@@ -463,7 +484,7 @@ CREATE TABLE IF NOT EXISTS `amazon_orders` (
   PRIMARY KEY (`order_id`),
   UNIQUE KEY `amazon_id` (`amazon_id`),
   KEY `date_added` (`date_added`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -471,11 +492,12 @@ CREATE TABLE IF NOT EXISTS `amazon_orders` (
 -- Table structure for table `amazon_orders_blobs`
 --
 
+DROP TABLE IF EXISTS `amazon_orders_blobs`;
 CREATE TABLE IF NOT EXISTS `amazon_orders_blobs` (
   `amazon_id` varchar(30) NOT NULL,
   `amazon_blob` longtext NOT NULL,
   UNIQUE KEY `amazon_id` (`amazon_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -483,6 +505,7 @@ CREATE TABLE IF NOT EXISTS `amazon_orders_blobs` (
 -- Table structure for table `amazon_orders_products`
 --
 
+DROP TABLE IF EXISTS `amazon_orders_products`;
 CREATE TABLE IF NOT EXISTS `amazon_orders_products` (
   `order_product_id` int(11) NOT NULL AUTO_INCREMENT,
   `amazon_id` varchar(255) NOT NULL,
@@ -529,7 +552,7 @@ CREATE TABLE IF NOT EXISTS `amazon_orders_products` (
   KEY `date_expected` (`date_expected`),
   KEY `supplier` (`supplier`),
   KEY `delivery_status_ru` (`delivery_status_ru`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -537,6 +560,7 @@ CREATE TABLE IF NOT EXISTS `amazon_orders_products` (
 -- Table structure for table `amazon_zipcodes`
 --
 
+DROP TABLE IF EXISTS `amazon_zipcodes`;
 CREATE TABLE IF NOT EXISTS `amazon_zipcodes` (
   `zipcode_id` int(11) NOT NULL AUTO_INCREMENT,
   `zipcode_area` varchar(255) NOT NULL,
@@ -552,7 +576,7 @@ CREATE TABLE IF NOT EXISTS `amazon_zipcodes` (
   KEY `error_count` (`error_count`),
   KEY `request_count` (`request_count`),
   KEY `dropped` (`dropped`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -560,6 +584,7 @@ CREATE TABLE IF NOT EXISTS `amazon_zipcodes` (
 -- Table structure for table `amzn_add_queue`
 --
 
+DROP TABLE IF EXISTS `amzn_add_queue`;
 CREATE TABLE IF NOT EXISTS `amzn_add_queue` (
   `asin` varchar(32) NOT NULL,
   `date_added` datetime NOT NULL,
@@ -571,7 +596,7 @@ CREATE TABLE IF NOT EXISTS `amzn_add_queue` (
   KEY `product_id` (`product_id`),
   KEY `user_id` (`user_id`),
   KEY `date_added` (`date_added`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -579,6 +604,7 @@ CREATE TABLE IF NOT EXISTS `amzn_add_queue` (
 -- Table structure for table `amzn_add_variants_queue`
 --
 
+DROP TABLE IF EXISTS `amzn_add_variants_queue`;
 CREATE TABLE IF NOT EXISTS `amzn_add_variants_queue` (
   `product_id` int(11) NOT NULL,
   `asin` varchar(16) NOT NULL,
@@ -586,7 +612,7 @@ CREATE TABLE IF NOT EXISTS `amzn_add_variants_queue` (
   UNIQUE KEY `asin` (`asin`),
   KEY `product_id` (`product_id`),
   KEY `date_added` (`date_added`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -594,8 +620,9 @@ CREATE TABLE IF NOT EXISTS `amzn_add_variants_queue` (
 -- Table structure for table `amzn_product_queue`
 --
 
+DROP TABLE IF EXISTS `amzn_product_queue`;
 CREATE TABLE IF NOT EXISTS `amzn_product_queue` (
-  `asin` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `asin` varchar(32) NOT NULL,
   `date_added` datetime NOT NULL,
   UNIQUE KEY `asin` (`asin`),
   KEY `date_added` (`date_added`)
@@ -607,11 +634,12 @@ CREATE TABLE IF NOT EXISTS `amzn_product_queue` (
 -- Table structure for table `apri`
 --
 
+DROP TABLE IF EXISTS `apri`;
 CREATE TABLE IF NOT EXISTS `apri` (
   `order_id` int(11) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -619,10 +647,11 @@ CREATE TABLE IF NOT EXISTS `apri` (
 -- Table structure for table `apri_unsubscribe`
 --
 
+DROP TABLE IF EXISTS `apri_unsubscribe`;
 CREATE TABLE IF NOT EXISTS `apri_unsubscribe` (
   `md5_email` varchar(255) NOT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -630,6 +659,7 @@ CREATE TABLE IF NOT EXISTS `apri_unsubscribe` (
 -- Table structure for table `attribute`
 --
 
+DROP TABLE IF EXISTS `attribute`;
 CREATE TABLE IF NOT EXISTS `attribute` (
   `attribute_id` int(11) NOT NULL AUTO_INCREMENT,
   `attribute_group_id` int(11) NOT NULL,
@@ -638,7 +668,7 @@ CREATE TABLE IF NOT EXISTS `attribute` (
   PRIMARY KEY (`attribute_id`),
   KEY `attribute_group_id` (`attribute_group_id`),
   KEY `dimension_type` (`dimension_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -646,12 +676,13 @@ CREATE TABLE IF NOT EXISTS `attribute` (
 -- Table structure for table `attributes_category`
 --
 
+DROP TABLE IF EXISTS `attributes_category`;
 CREATE TABLE IF NOT EXISTS `attributes_category` (
   `attribute_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   KEY `category_id` (`category_id`),
   KEY `attribute_id` (`attribute_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -659,12 +690,13 @@ CREATE TABLE IF NOT EXISTS `attributes_category` (
 -- Table structure for table `attributes_similar_category`
 --
 
+DROP TABLE IF EXISTS `attributes_similar_category`;
 CREATE TABLE IF NOT EXISTS `attributes_similar_category` (
   `attribute_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   KEY `attribute_id` (`attribute_id`),
   KEY `category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
 
@@ -672,13 +704,14 @@ CREATE TABLE IF NOT EXISTS `attributes_similar_category` (
 -- Table structure for table `attribute_description`
 --
 
+DROP TABLE IF EXISTS `attribute_description`;
 CREATE TABLE IF NOT EXISTS `attribute_description` (
   `attribute_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(512) NOT NULL,
   PRIMARY KEY (`attribute_id`,`language_id`),
   KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -686,11 +719,12 @@ CREATE TABLE IF NOT EXISTS `attribute_description` (
 -- Table structure for table `attribute_group`
 --
 
+DROP TABLE IF EXISTS `attribute_group`;
 CREATE TABLE IF NOT EXISTS `attribute_group` (
   `attribute_group_id` int(11) NOT NULL AUTO_INCREMENT,
   `sort_order` int(11) NOT NULL,
   PRIMARY KEY (`attribute_group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -698,12 +732,13 @@ CREATE TABLE IF NOT EXISTS `attribute_group` (
 -- Table structure for table `attribute_group_description`
 --
 
+DROP TABLE IF EXISTS `attribute_group_description`;
 CREATE TABLE IF NOT EXISTS `attribute_group_description` (
   `attribute_group_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`attribute_group_id`,`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -711,12 +746,13 @@ CREATE TABLE IF NOT EXISTS `attribute_group_description` (
 -- Table structure for table `attribute_group_tooltip`
 --
 
+DROP TABLE IF EXISTS `attribute_group_tooltip`;
 CREATE TABLE IF NOT EXISTS `attribute_group_tooltip` (
   `attribute_group_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `tooltip` text NOT NULL,
   PRIMARY KEY (`attribute_group_id`,`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -724,12 +760,13 @@ CREATE TABLE IF NOT EXISTS `attribute_group_tooltip` (
 -- Table structure for table `attribute_tooltip`
 --
 
+DROP TABLE IF EXISTS `attribute_tooltip`;
 CREATE TABLE IF NOT EXISTS `attribute_tooltip` (
   `attribute_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `tooltip` text NOT NULL,
   PRIMARY KEY (`attribute_id`,`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -737,6 +774,7 @@ CREATE TABLE IF NOT EXISTS `attribute_tooltip` (
 -- Table structure for table `attribute_value_image`
 --
 
+DROP TABLE IF EXISTS `attribute_value_image`;
 CREATE TABLE IF NOT EXISTS `attribute_value_image` (
   `attribute_value_image` int(11) NOT NULL AUTO_INCREMENT,
   `attribute_id` int(11) NOT NULL,
@@ -744,7 +782,7 @@ CREATE TABLE IF NOT EXISTS `attribute_value_image` (
   `image` varchar(255) NOT NULL,
   `information_id` int(11) NOT NULL,
   PRIMARY KEY (`attribute_value_image`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -752,6 +790,7 @@ CREATE TABLE IF NOT EXISTS `attribute_value_image` (
 -- Table structure for table `banner`
 --
 
+DROP TABLE IF EXISTS `banner`;
 CREATE TABLE IF NOT EXISTS `banner` (
   `banner_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
@@ -761,7 +800,7 @@ CREATE TABLE IF NOT EXISTS `banner` (
   `sort_order` int(11) NOT NULL,
   PRIMARY KEY (`banner_id`),
   KEY `status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -769,6 +808,7 @@ CREATE TABLE IF NOT EXISTS `banner` (
 -- Table structure for table `banner_image`
 --
 
+DROP TABLE IF EXISTS `banner_image`;
 CREATE TABLE IF NOT EXISTS `banner_image` (
   `banner_image_id` int(11) NOT NULL AUTO_INCREMENT,
   `banner_id` int(11) NOT NULL,
@@ -786,7 +826,7 @@ CREATE TABLE IF NOT EXISTS `banner_image` (
   `sort_order` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`banner_image_id`),
   KEY `banner_id` (`banner_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -794,6 +834,7 @@ CREATE TABLE IF NOT EXISTS `banner_image` (
 -- Table structure for table `banner_image_description`
 --
 
+DROP TABLE IF EXISTS `banner_image_description`;
 CREATE TABLE IF NOT EXISTS `banner_image_description` (
   `banner_image_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -807,7 +848,7 @@ CREATE TABLE IF NOT EXISTS `banner_image_description` (
   PRIMARY KEY (`banner_image_id`,`language_id`),
   KEY `language_id` (`language_id`),
   KEY `banner_id` (`banner_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -815,6 +856,7 @@ CREATE TABLE IF NOT EXISTS `banner_image_description` (
 -- Table structure for table `callback`
 --
 
+DROP TABLE IF EXISTS `callback`;
 CREATE TABLE IF NOT EXISTS `callback` (
   `call_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(30) NOT NULL,
@@ -836,7 +878,7 @@ CREATE TABLE IF NOT EXISTS `callback` (
   KEY `is_cheaper` (`is_cheaper`),
   KEY `is_missed` (`is_missed`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -844,6 +886,7 @@ CREATE TABLE IF NOT EXISTS `callback` (
 -- Table structure for table `category`
 --
 
+DROP TABLE IF EXISTS `category`;
 CREATE TABLE IF NOT EXISTS `category` (
   `category_id` int(11) NOT NULL AUTO_INCREMENT,
   `image` varchar(255) DEFAULT NULL,
@@ -936,7 +979,7 @@ CREATE TABLE IF NOT EXISTS `category` (
   KEY `special` (`special`),
   KEY `hotline_enable` (`hotline_enable`),
   KEY `need_reprice` (`need_reprice`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -944,6 +987,7 @@ CREATE TABLE IF NOT EXISTS `category` (
 -- Table structure for table `category_amazon_bestseller_tree`
 --
 
+DROP TABLE IF EXISTS `category_amazon_bestseller_tree`;
 CREATE TABLE IF NOT EXISTS `category_amazon_bestseller_tree` (
   `category_id` varchar(255) NOT NULL,
   `parent_id` varchar(255) NOT NULL,
@@ -960,7 +1004,7 @@ CREATE TABLE IF NOT EXISTS `category_amazon_bestseller_tree` (
   KEY `full_name` (`full_name`),
   KEY `full_name_native` (`full_name_native`),
   KEY `name_native` (`name_native`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -968,6 +1012,7 @@ CREATE TABLE IF NOT EXISTS `category_amazon_bestseller_tree` (
 -- Table structure for table `category_amazon_tree`
 --
 
+DROP TABLE IF EXISTS `category_amazon_tree`;
 CREATE TABLE IF NOT EXISTS `category_amazon_tree` (
   `category_id` varchar(255) NOT NULL,
   `parent_id` varchar(255) NOT NULL,
@@ -980,7 +1025,7 @@ CREATE TABLE IF NOT EXISTS `category_amazon_tree` (
   KEY `final_category` (`final_category`),
   KEY `name` (`name`),
   KEY `full_name` (`full_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -988,6 +1033,7 @@ CREATE TABLE IF NOT EXISTS `category_amazon_tree` (
 -- Table structure for table `category_description`
 --
 
+DROP TABLE IF EXISTS `category_description`;
 CREATE TABLE IF NOT EXISTS `category_description` (
   `category_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -1008,7 +1054,7 @@ CREATE TABLE IF NOT EXISTS `category_description` (
   `google_tree` varchar(1024) DEFAULT NULL,
   PRIMARY KEY (`category_id`,`language_id`),
   KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1016,11 +1062,12 @@ CREATE TABLE IF NOT EXISTS `category_description` (
 -- Table structure for table `category_filter`
 --
 
+DROP TABLE IF EXISTS `category_filter`;
 CREATE TABLE IF NOT EXISTS `category_filter` (
   `category_id` int(11) NOT NULL,
   `filter_id` int(11) NOT NULL,
   PRIMARY KEY (`category_id`,`filter_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1028,6 +1075,7 @@ CREATE TABLE IF NOT EXISTS `category_filter` (
 -- Table structure for table `category_hotline_tree`
 --
 
+DROP TABLE IF EXISTS `category_hotline_tree`;
 CREATE TABLE IF NOT EXISTS `category_hotline_tree` (
   `category_id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) NOT NULL,
@@ -1039,7 +1087,7 @@ CREATE TABLE IF NOT EXISTS `category_hotline_tree` (
   KEY `parent_id` (`parent_id`),
   KEY `full_name` (`full_name`),
   KEY `full_name_2` (`full_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1047,6 +1095,7 @@ CREATE TABLE IF NOT EXISTS `category_hotline_tree` (
 -- Table structure for table `category_menu_content`
 --
 
+DROP TABLE IF EXISTS `category_menu_content`;
 CREATE TABLE IF NOT EXISTS `category_menu_content` (
   `category_menu_content_id` int(11) NOT NULL AUTO_INCREMENT,
   `category_id` int(11) NOT NULL,
@@ -1063,7 +1112,7 @@ CREATE TABLE IF NOT EXISTS `category_menu_content` (
   KEY `category_id` (`category_id`),
   KEY `sort_order` (`sort_order`),
   KEY `category_id_2` (`category_id`,`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1071,6 +1120,7 @@ CREATE TABLE IF NOT EXISTS `category_menu_content` (
 -- Table structure for table `category_overprice_rules`
 --
 
+DROP TABLE IF EXISTS `category_overprice_rules`;
 CREATE TABLE IF NOT EXISTS `category_overprice_rules` (
   `rule_id` int(11) NOT NULL AUTO_INCREMENT,
   `category_id` int(11) NOT NULL,
@@ -1083,7 +1133,7 @@ CREATE TABLE IF NOT EXISTS `category_overprice_rules` (
   `max` int(11) NOT NULL,
   PRIMARY KEY (`rule_id`),
   KEY `category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1091,6 +1141,7 @@ CREATE TABLE IF NOT EXISTS `category_overprice_rules` (
 -- Table structure for table `category_path`
 --
 
+DROP TABLE IF EXISTS `category_path`;
 CREATE TABLE IF NOT EXISTS `category_path` (
   `category_id` int(11) NOT NULL,
   `path_id` int(11) NOT NULL,
@@ -1099,7 +1150,7 @@ CREATE TABLE IF NOT EXISTS `category_path` (
   KEY `category_id` (`category_id`),
   KEY `path_id` (`path_id`),
   KEY `level` (`level`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1107,28 +1158,14 @@ CREATE TABLE IF NOT EXISTS `category_path` (
 -- Table structure for table `category_product_count`
 --
 
+DROP TABLE IF EXISTS `category_product_count`;
 CREATE TABLE IF NOT EXISTS `category_product_count` (
   `category_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `product_count` int(11) NOT NULL,
   KEY `store_id` (`store_id`),
   KEY `category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `category_psm_template`
---
-
-CREATE TABLE IF NOT EXISTS `category_psm_template` (
-  `category_psm_template_id` int(11) NOT NULL AUTO_INCREMENT,
-  `category_entity` varchar(64) DEFAULT NULL,
-  `category_id` int(11) DEFAULT NULL,
-  `l_code` varchar(5) DEFAULT NULL,
-  `template` text NOT NULL,
-  PRIMARY KEY (`category_psm_template_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1136,12 +1173,13 @@ CREATE TABLE IF NOT EXISTS `category_psm_template` (
 -- Table structure for table `category_related`
 --
 
+DROP TABLE IF EXISTS `category_related`;
 CREATE TABLE IF NOT EXISTS `category_related` (
   `category_id` int(11) NOT NULL,
   `related_category_id` int(11) NOT NULL,
   UNIQUE KEY `category_id_2` (`category_id`,`related_category_id`),
   KEY `category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1149,6 +1187,7 @@ CREATE TABLE IF NOT EXISTS `category_related` (
 -- Table structure for table `category_review`
 --
 
+DROP TABLE IF EXISTS `category_review`;
 CREATE TABLE IF NOT EXISTS `category_review` (
   `categoryreview_id` int(11) NOT NULL AUTO_INCREMENT,
   `category_id` int(11) NOT NULL,
@@ -1161,7 +1200,7 @@ CREATE TABLE IF NOT EXISTS `category_review` (
   `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`categoryreview_id`),
   KEY `category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1169,6 +1208,7 @@ CREATE TABLE IF NOT EXISTS `category_review` (
 -- Table structure for table `category_search_words`
 --
 
+DROP TABLE IF EXISTS `category_search_words`;
 CREATE TABLE IF NOT EXISTS `category_search_words` (
   `category_search_word_id` int(11) NOT NULL AUTO_INCREMENT,
   `category_id` int(11) NOT NULL,
@@ -1199,7 +1239,7 @@ CREATE TABLE IF NOT EXISTS `category_search_words` (
   KEY `category_word_pages_parsed` (`category_word_pages_parsed`),
   KEY `category_search_auto` (`category_search_auto`),
   KEY `category_word_user_id` (`category_word_user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1207,12 +1247,13 @@ CREATE TABLE IF NOT EXISTS `category_search_words` (
 -- Table structure for table `category_to_actions`
 --
 
+DROP TABLE IF EXISTS `category_to_actions`;
 CREATE TABLE IF NOT EXISTS `category_to_actions` (
   `category_id` int(11) NOT NULL,
   `actions_id` int(11) NOT NULL,
   KEY `category_id` (`category_id`),
   KEY `actions_id` (`actions_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1220,12 +1261,13 @@ CREATE TABLE IF NOT EXISTS `category_to_actions` (
 -- Table structure for table `category_to_layout`
 --
 
+DROP TABLE IF EXISTS `category_to_layout`;
 CREATE TABLE IF NOT EXISTS `category_to_layout` (
   `category_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL,
   PRIMARY KEY (`category_id`,`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1233,11 +1275,12 @@ CREATE TABLE IF NOT EXISTS `category_to_layout` (
 -- Table structure for table `category_to_store`
 --
 
+DROP TABLE IF EXISTS `category_to_store`;
 CREATE TABLE IF NOT EXISTS `category_to_store` (
   `category_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   PRIMARY KEY (`category_id`,`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1245,6 +1288,7 @@ CREATE TABLE IF NOT EXISTS `category_to_store` (
 -- Table structure for table `category_yam_tree`
 --
 
+DROP TABLE IF EXISTS `category_yam_tree`;
 CREATE TABLE IF NOT EXISTS `category_yam_tree` (
   `category_id` int(11) NOT NULL,
   `parent_id` int(11) NOT NULL,
@@ -1255,7 +1299,7 @@ CREATE TABLE IF NOT EXISTS `category_yam_tree` (
   KEY `parent_id` (`parent_id`),
   KEY `category_id` (`category_id`),
   KEY `full_name` (`full_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1263,24 +1307,25 @@ CREATE TABLE IF NOT EXISTS `category_yam_tree` (
 -- Table structure for table `cdek_cities`
 --
 
+DROP TABLE IF EXISTS `cdek_cities`;
 CREATE TABLE IF NOT EXISTS `cdek_cities` (
   `city_id` int(11) NOT NULL AUTO_INCREMENT,
   `code` int(11) NOT NULL,
-  `city` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `kladr_code` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `country_code` varchar(2) COLLATE utf8mb4_bin NOT NULL,
+  `city` varchar(255) NOT NULL,
+  `kladr_code` varchar(255) NOT NULL,
+  `country_code` varchar(2) NOT NULL,
   `country_id` int(11) NOT NULL,
-  `country` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `region` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `country` varchar(255) NOT NULL,
+  `region` varchar(255) NOT NULL,
   `region_code` int(11) NOT NULL,
-  `fias_guid` varchar(64) COLLATE utf8mb4_bin NOT NULL,
-  `sub_region` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `postal_codes` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `longitude` varchar(32) COLLATE utf8mb4_bin NOT NULL,
-  `latitude` varchar(32) COLLATE utf8mb4_bin NOT NULL,
-  `time_zone` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `fias_guid` varchar(64) NOT NULL,
+  `sub_region` varchar(255) NOT NULL,
+  `postal_codes` varchar(255) NOT NULL,
+  `longitude` varchar(32) NOT NULL,
+  `latitude` varchar(32) NOT NULL,
+  `time_zone` varchar(255) NOT NULL,
   `WarehouseCount` int(11) NOT NULL,
-  `dadata_BELTWAY_HIT` varchar(10) COLLATE utf8mb4_bin DEFAULT NULL,
+  `dadata_BELTWAY_HIT` varchar(10) DEFAULT NULL,
   `dadata_BELTWAY_DISTANCE` int(11) NOT NULL DEFAULT 0,
   `deliveryPeriodMin` int(11) NOT NULL,
   `deliveryPeriodMax` int(11) NOT NULL,
@@ -1307,6 +1352,7 @@ CREATE TABLE IF NOT EXISTS `cdek_cities` (
 -- Table structure for table `cdek_city`
 --
 
+DROP TABLE IF EXISTS `cdek_city`;
 CREATE TABLE IF NOT EXISTS `cdek_city` (
   `id` varchar(11) NOT NULL,
   `name` varchar(64) NOT NULL,
@@ -1317,7 +1363,7 @@ CREATE TABLE IF NOT EXISTS `cdek_city` (
   `deliveryPeriodMin` int(11) NOT NULL,
   `deliveryPeriodMax` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1325,29 +1371,30 @@ CREATE TABLE IF NOT EXISTS `cdek_city` (
 -- Table structure for table `cdek_deliverypoints`
 --
 
+DROP TABLE IF EXISTS `cdek_deliverypoints`;
 CREATE TABLE IF NOT EXISTS `cdek_deliverypoints` (
   `deliverypoint_id` int(11) NOT NULL AUTO_INCREMENT,
-  `code` varchar(12) COLLATE utf8mb4_bin NOT NULL,
-  `name` varchar(50) COLLATE utf8mb4_bin NOT NULL,
-  `country_code` varchar(2) COLLATE utf8mb4_bin NOT NULL,
+  `code` varchar(12) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `country_code` varchar(2) NOT NULL,
   `region_code` int(11) NOT NULL,
-  `region` varchar(64) COLLATE utf8mb4_bin NOT NULL,
+  `region` varchar(64) NOT NULL,
   `city_code` int(11) NOT NULL,
-  `city` varchar(64) COLLATE utf8mb4_bin NOT NULL,
-  `postal_сode` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `longitude` varchar(32) COLLATE utf8mb4_bin NOT NULL,
-  `latitude` varchar(32) COLLATE utf8mb4_bin NOT NULL,
-  `address` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `address_full` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `address_comment` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `nearest_station` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `nearest_metro_station` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `work_time` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `phones` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `note` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `type` varchar(32) COLLATE utf8mb4_bin NOT NULL,
-  `owner_сode` varchar(32) COLLATE utf8mb4_bin NOT NULL,
+  `city` varchar(64) NOT NULL,
+  `postal_сode` varchar(255) NOT NULL,
+  `longitude` varchar(32) NOT NULL,
+  `latitude` varchar(32) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `address_full` varchar(255) NOT NULL,
+  `address_comment` varchar(255) NOT NULL,
+  `nearest_station` varchar(255) NOT NULL,
+  `nearest_metro_station` varchar(255) NOT NULL,
+  `work_time` varchar(255) NOT NULL,
+  `phones` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `note` varchar(255) NOT NULL,
+  `type` varchar(32) NOT NULL,
+  `owner_сode` varchar(32) NOT NULL,
   `take_only` tinyint(1) NOT NULL,
   `is_handout` tinyint(1) NOT NULL,
   `is_reception` tinyint(1) NOT NULL,
@@ -1355,12 +1402,12 @@ CREATE TABLE IF NOT EXISTS `cdek_deliverypoints` (
   `have_cashless` tinyint(1) NOT NULL,
   `have_cash` tinyint(1) NOT NULL,
   `allowed_cod` tinyint(1) NOT NULL,
-  `site` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `office_image_list` varchar(500) COLLATE utf8mb4_bin NOT NULL,
-  `work_time_list` text COLLATE utf8mb4_bin NOT NULL,
+  `site` varchar(255) NOT NULL,
+  `office_image_list` varchar(500) NOT NULL,
+  `work_time_list` text NOT NULL,
   `weight_min` decimal(14,2) NOT NULL,
   `weight_max` decimal(14,2) NOT NULL,
-  `weight_limits` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `weight_limits` varchar(255) NOT NULL,
   PRIMARY KEY (`deliverypoint_id`),
   UNIQUE KEY `code` (`code`),
   KEY `region_code` (`region_code`),
@@ -1378,13 +1425,14 @@ CREATE TABLE IF NOT EXISTS `cdek_deliverypoints` (
 -- Table structure for table `cdek_dispatch`
 --
 
+DROP TABLE IF EXISTS `cdek_dispatch`;
 CREATE TABLE IF NOT EXISTS `cdek_dispatch` (
   `dispatch_id` int(11) NOT NULL AUTO_INCREMENT,
   `dispatch_number` varchar(30) NOT NULL,
   `date` varchar(32) NOT NULL,
   `server_date` varchar(32) NOT NULL,
   PRIMARY KEY (`dispatch_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1392,6 +1440,7 @@ CREATE TABLE IF NOT EXISTS `cdek_dispatch` (
 -- Table structure for table `cdek_order`
 --
 
+DROP TABLE IF EXISTS `cdek_order`;
 CREATE TABLE IF NOT EXISTS `cdek_order` (
   `order_id` int(11) NOT NULL,
   `dispatch_id` int(11) NOT NULL,
@@ -1431,7 +1480,7 @@ CREATE TABLE IF NOT EXISTS `cdek_order` (
   PRIMARY KEY (`order_id`),
   UNIQUE KEY `dispatch_id` (`dispatch_id`),
   KEY `dispatch_number` (`dispatch_number`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1439,13 +1488,14 @@ CREATE TABLE IF NOT EXISTS `cdek_order` (
 -- Table structure for table `cdek_order_add_service`
 --
 
+DROP TABLE IF EXISTS `cdek_order_add_service`;
 CREATE TABLE IF NOT EXISTS `cdek_order_add_service` (
   `service_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
   `description` varchar(100) DEFAULT NULL,
   `price` float(8,4) NOT NULL DEFAULT 0.0000,
   PRIMARY KEY (`service_id`,`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1453,6 +1503,7 @@ CREATE TABLE IF NOT EXISTS `cdek_order_add_service` (
 -- Table structure for table `cdek_order_call`
 --
 
+DROP TABLE IF EXISTS `cdek_order_call`;
 CREATE TABLE IF NOT EXISTS `cdek_order_call` (
   `call_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -1468,7 +1519,7 @@ CREATE TABLE IF NOT EXISTS `cdek_order_call` (
   `comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`call_id`),
   KEY `order_id` (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1476,12 +1527,13 @@ CREATE TABLE IF NOT EXISTS `cdek_order_call` (
 -- Table structure for table `cdek_order_call_history_delay`
 --
 
+DROP TABLE IF EXISTS `cdek_order_call_history_delay`;
 CREATE TABLE IF NOT EXISTS `cdek_order_call_history_delay` (
   `order_id` int(11) NOT NULL,
   `date` int(11) NOT NULL,
   `date_next` int(11) NOT NULL,
   KEY `order_id` (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1489,13 +1541,14 @@ CREATE TABLE IF NOT EXISTS `cdek_order_call_history_delay` (
 -- Table structure for table `cdek_order_call_history_fail`
 --
 
+DROP TABLE IF EXISTS `cdek_order_call_history_fail`;
 CREATE TABLE IF NOT EXISTS `cdek_order_call_history_fail` (
   `order_id` int(11) NOT NULL,
   `fail_id` int(11) NOT NULL,
   `date` int(11) NOT NULL,
   `description` varchar(255) NOT NULL,
   KEY `order_id` (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1503,12 +1556,13 @@ CREATE TABLE IF NOT EXISTS `cdek_order_call_history_fail` (
 -- Table structure for table `cdek_order_call_history_good`
 --
 
+DROP TABLE IF EXISTS `cdek_order_call_history_good`;
 CREATE TABLE IF NOT EXISTS `cdek_order_call_history_good` (
   `order_id` int(11) NOT NULL,
   `date` int(11) NOT NULL,
   `date_deliv` int(11) NOT NULL,
   KEY `order_id` (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1516,6 +1570,7 @@ CREATE TABLE IF NOT EXISTS `cdek_order_call_history_good` (
 -- Table structure for table `cdek_order_courier`
 --
 
+DROP TABLE IF EXISTS `cdek_order_courier`;
 CREATE TABLE IF NOT EXISTS `cdek_order_courier` (
   `courier_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -1533,7 +1588,7 @@ CREATE TABLE IF NOT EXISTS `cdek_order_courier` (
   `address_flat` varchar(10) NOT NULL,
   `comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`courier_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1541,13 +1596,14 @@ CREATE TABLE IF NOT EXISTS `cdek_order_courier` (
 -- Table structure for table `cdek_order_delay_history`
 --
 
+DROP TABLE IF EXISTS `cdek_order_delay_history`;
 CREATE TABLE IF NOT EXISTS `cdek_order_delay_history` (
   `order_id` int(11) NOT NULL,
   `delay_id` int(11) NOT NULL,
   `date` int(11) NOT NULL,
   `description` varchar(50) NOT NULL,
   KEY `order_id` (`order_id`,`delay_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1555,6 +1611,7 @@ CREATE TABLE IF NOT EXISTS `cdek_order_delay_history` (
 -- Table structure for table `cdek_order_package`
 --
 
+DROP TABLE IF EXISTS `cdek_order_package`;
 CREATE TABLE IF NOT EXISTS `cdek_order_package` (
   `package_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -1565,7 +1622,7 @@ CREATE TABLE IF NOT EXISTS `cdek_order_package` (
   `size_b` float(15,4) DEFAULT 0.0000,
   `size_c` float(15,4) DEFAULT 0.0000,
   PRIMARY KEY (`package_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1573,6 +1630,7 @@ CREATE TABLE IF NOT EXISTS `cdek_order_package` (
 -- Table structure for table `cdek_order_package_item`
 --
 
+DROP TABLE IF EXISTS `cdek_order_package_item`;
 CREATE TABLE IF NOT EXISTS `cdek_order_package_item` (
   `package_item_id` int(11) NOT NULL AUTO_INCREMENT,
   `package_id` int(11) NOT NULL,
@@ -1584,7 +1642,7 @@ CREATE TABLE IF NOT EXISTS `cdek_order_package_item` (
   `cost` float(15,4) NOT NULL DEFAULT 0.0000,
   `payment` float(15,4) NOT NULL DEFAULT 0.0000,
   PRIMARY KEY (`package_item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1592,13 +1650,14 @@ CREATE TABLE IF NOT EXISTS `cdek_order_package_item` (
 -- Table structure for table `cdek_order_reason`
 --
 
+DROP TABLE IF EXISTS `cdek_order_reason`;
 CREATE TABLE IF NOT EXISTS `cdek_order_reason` (
   `reason_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
   `date` int(11) NOT NULL,
   `description` varchar(100) NOT NULL,
   PRIMARY KEY (`reason_id`,`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1606,6 +1665,7 @@ CREATE TABLE IF NOT EXISTS `cdek_order_reason` (
 -- Table structure for table `cdek_order_schedule`
 --
 
+DROP TABLE IF EXISTS `cdek_order_schedule`;
 CREATE TABLE IF NOT EXISTS `cdek_order_schedule` (
   `attempt_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -1620,7 +1680,7 @@ CREATE TABLE IF NOT EXISTS `cdek_order_schedule` (
   `address_pvz_code` varchar(10) DEFAULT NULL,
   `comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`attempt_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1628,13 +1688,14 @@ CREATE TABLE IF NOT EXISTS `cdek_order_schedule` (
 -- Table structure for table `cdek_order_schedule_delay`
 --
 
+DROP TABLE IF EXISTS `cdek_order_schedule_delay`;
 CREATE TABLE IF NOT EXISTS `cdek_order_schedule_delay` (
   `order_id` int(11) NOT NULL,
   `attempt_id` int(11) NOT NULL,
   `delay_id` int(11) NOT NULL,
   `description` varchar(50) NOT NULL,
   KEY `order_id` (`order_id`,`attempt_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1642,6 +1703,7 @@ CREATE TABLE IF NOT EXISTS `cdek_order_schedule_delay` (
 -- Table structure for table `cdek_order_status_history`
 --
 
+DROP TABLE IF EXISTS `cdek_order_status_history`;
 CREATE TABLE IF NOT EXISTS `cdek_order_status_history` (
   `order_id` int(11) NOT NULL,
   `status_id` int(11) NOT NULL,
@@ -1650,7 +1712,7 @@ CREATE TABLE IF NOT EXISTS `cdek_order_status_history` (
   `city_id` int(11) NOT NULL,
   `city_name` varchar(128) NOT NULL,
   KEY `order_id` (`order_id`,`status_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1658,12 +1720,13 @@ CREATE TABLE IF NOT EXISTS `cdek_order_status_history` (
 -- Table structure for table `cdek_zones`
 --
 
+DROP TABLE IF EXISTS `cdek_zones`;
 CREATE TABLE IF NOT EXISTS `cdek_zones` (
   `zone_id` int(11) NOT NULL AUTO_INCREMENT,
   `country_id` int(11) NOT NULL,
-  `country_code` varchar(2) COLLATE utf8mb4_bin NOT NULL,
-  `country` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `region` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `country_code` varchar(2) NOT NULL,
+  `country` varchar(255) NOT NULL,
+  `region` varchar(255) NOT NULL,
   `region_code` int(11) NOT NULL,
   PRIMARY KEY (`zone_id`),
   UNIQUE KEY `region_code` (`region_code`) USING BTREE,
@@ -1679,6 +1742,7 @@ CREATE TABLE IF NOT EXISTS `cdek_zones` (
 -- Table structure for table `collection`
 --
 
+DROP TABLE IF EXISTS `collection`;
 CREATE TABLE IF NOT EXISTS `collection` (
   `collection_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -1692,7 +1756,7 @@ CREATE TABLE IF NOT EXISTS `collection` (
   `sort_order` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`collection_id`),
   KEY `parent_id` (`parent_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1700,6 +1764,7 @@ CREATE TABLE IF NOT EXISTS `collection` (
 -- Table structure for table `collection_description`
 --
 
+DROP TABLE IF EXISTS `collection_description`;
 CREATE TABLE IF NOT EXISTS `collection_description` (
   `collection_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -1715,7 +1780,7 @@ CREATE TABLE IF NOT EXISTS `collection_description` (
   UNIQUE KEY `collection_id_2` (`collection_id`,`language_id`),
   KEY `collection_id` (`collection_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1723,12 +1788,13 @@ CREATE TABLE IF NOT EXISTS `collection_description` (
 -- Table structure for table `collection_image`
 --
 
+DROP TABLE IF EXISTS `collection_image`;
 CREATE TABLE IF NOT EXISTS `collection_image` (
   `collection_id` int(11) NOT NULL,
   `image` varchar(500) NOT NULL,
   `sort_order` int(11) NOT NULL,
   KEY `collection_id` (`collection_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1736,13 +1802,14 @@ CREATE TABLE IF NOT EXISTS `collection_image` (
 -- Table structure for table `collection_to_store`
 --
 
+DROP TABLE IF EXISTS `collection_to_store`;
 CREATE TABLE IF NOT EXISTS `collection_to_store` (
   `collection_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   UNIQUE KEY `collection_id_2` (`collection_id`,`store_id`),
   KEY `collection_id` (`collection_id`),
   KEY `store_id` (`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1750,13 +1817,14 @@ CREATE TABLE IF NOT EXISTS `collection_to_store` (
 -- Table structure for table `competitors`
 --
 
+DROP TABLE IF EXISTS `competitors`;
 CREATE TABLE IF NOT EXISTS `competitors` (
   `competitor_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `classname` varchar(255) NOT NULL,
   `currency` varchar(5) NOT NULL,
   PRIMARY KEY (`competitor_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1764,6 +1832,7 @@ CREATE TABLE IF NOT EXISTS `competitors` (
 -- Table structure for table `competitor_price`
 --
 
+DROP TABLE IF EXISTS `competitor_price`;
 CREATE TABLE IF NOT EXISTS `competitor_price` (
   `competitor_price_id` int(11) NOT NULL AUTO_INCREMENT,
   `competitor_id` int(11) NOT NULL,
@@ -1779,7 +1848,7 @@ CREATE TABLE IF NOT EXISTS `competitor_price` (
   KEY `sku` (`sku`),
   KEY `currency` (`currency`),
   KEY `date_added` (`date_added`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1787,6 +1856,7 @@ CREATE TABLE IF NOT EXISTS `competitor_price` (
 -- Table structure for table `competitor_urls`
 --
 
+DROP TABLE IF EXISTS `competitor_urls`;
 CREATE TABLE IF NOT EXISTS `competitor_urls` (
   `competitor_id` int(11) NOT NULL,
   `url` text NOT NULL,
@@ -1794,7 +1864,7 @@ CREATE TABLE IF NOT EXISTS `competitor_urls` (
   `sku` varchar(255) NOT NULL,
   KEY `competitor_id` (`competitor_id`),
   KEY `sku` (`sku`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1802,10 +1872,11 @@ CREATE TABLE IF NOT EXISTS `competitor_urls` (
 -- Table structure for table `counters`
 --
 
+DROP TABLE IF EXISTS `counters`;
 CREATE TABLE IF NOT EXISTS `counters` (
   `counter_id` int(11) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) NOT NULL,
-  `counter` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `counter` varchar(32) NOT NULL,
   `value` int(11) NOT NULL,
   PRIMARY KEY (`counter_id`),
   KEY `store_id` (`store_id`),
@@ -1819,6 +1890,7 @@ CREATE TABLE IF NOT EXISTS `counters` (
 -- Table structure for table `country`
 --
 
+DROP TABLE IF EXISTS `country`;
 CREATE TABLE IF NOT EXISTS `country` (
   `country_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
@@ -1830,7 +1902,7 @@ CREATE TABLE IF NOT EXISTS `country` (
   `status` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`country_id`),
   KEY `warehouse_identifier` (`warehouse_identifier`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1838,6 +1910,7 @@ CREATE TABLE IF NOT EXISTS `country` (
 -- Table structure for table `countrybrand`
 --
 
+DROP TABLE IF EXISTS `countrybrand`;
 CREATE TABLE IF NOT EXISTS `countrybrand` (
   `countrybrand_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -1847,7 +1920,7 @@ CREATE TABLE IF NOT EXISTS `countrybrand` (
   `sort_order` int(11) NOT NULL DEFAULT 0,
   `flag` varchar(3) NOT NULL,
   PRIMARY KEY (`countrybrand_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1855,6 +1928,7 @@ CREATE TABLE IF NOT EXISTS `countrybrand` (
 -- Table structure for table `countrybrand_description`
 --
 
+DROP TABLE IF EXISTS `countrybrand_description`;
 CREATE TABLE IF NOT EXISTS `countrybrand_description` (
   `countrybrand_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -1870,7 +1944,7 @@ CREATE TABLE IF NOT EXISTS `countrybrand_description` (
   UNIQUE KEY `countrybrand_id_2` (`countrybrand_id`,`language_id`),
   KEY `countrybrand_id` (`countrybrand_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1878,12 +1952,13 @@ CREATE TABLE IF NOT EXISTS `countrybrand_description` (
 -- Table structure for table `countrybrand_image`
 --
 
+DROP TABLE IF EXISTS `countrybrand_image`;
 CREATE TABLE IF NOT EXISTS `countrybrand_image` (
   `countrybrand_id` int(11) NOT NULL,
   `image` varchar(500) NOT NULL,
   `sort_order` int(11) NOT NULL,
   KEY `countrybrand_id` (`countrybrand_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1891,13 +1966,14 @@ CREATE TABLE IF NOT EXISTS `countrybrand_image` (
 -- Table structure for table `countrybrand_to_store`
 --
 
+DROP TABLE IF EXISTS `countrybrand_to_store`;
 CREATE TABLE IF NOT EXISTS `countrybrand_to_store` (
   `countrybrand_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   UNIQUE KEY `countrybrand_id_2` (`countrybrand_id`,`store_id`),
   KEY `countrybrand_id` (`countrybrand_id`),
   KEY `store_id` (`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1905,11 +1981,12 @@ CREATE TABLE IF NOT EXISTS `countrybrand_to_store` (
 -- Table structure for table `country_to_fias`
 --
 
+DROP TABLE IF EXISTS `country_to_fias`;
 CREATE TABLE IF NOT EXISTS `country_to_fias` (
   `country_id` int(11) NOT NULL,
   `fias_id` int(11) NOT NULL,
   UNIQUE KEY `country_id` (`country_id`,`fias_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1917,6 +1994,7 @@ CREATE TABLE IF NOT EXISTS `country_to_fias` (
 -- Table structure for table `coupon`
 --
 
+DROP TABLE IF EXISTS `coupon`;
 CREATE TABLE IF NOT EXISTS `coupon` (
   `coupon_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
@@ -1967,7 +2045,7 @@ CREATE TABLE IF NOT EXISTS `coupon` (
   KEY `uses_customer` (`uses_customer`),
   KEY `birthday` (`birthday`),
   KEY `display_in_account` (`display_in_account`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1975,12 +2053,13 @@ CREATE TABLE IF NOT EXISTS `coupon` (
 -- Table structure for table `coupon_category`
 --
 
+DROP TABLE IF EXISTS `coupon_category`;
 CREATE TABLE IF NOT EXISTS `coupon_category` (
   `coupon_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   PRIMARY KEY (`coupon_id`,`category_id`),
   KEY `category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1988,12 +2067,13 @@ CREATE TABLE IF NOT EXISTS `coupon_category` (
 -- Table structure for table `coupon_collection`
 --
 
+DROP TABLE IF EXISTS `coupon_collection`;
 CREATE TABLE IF NOT EXISTS `coupon_collection` (
   `coupon_id` int(11) NOT NULL,
   `collection_id` int(11) NOT NULL,
   PRIMARY KEY (`coupon_id`,`collection_id`),
   KEY `collection_id` (`collection_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2001,6 +2081,7 @@ CREATE TABLE IF NOT EXISTS `coupon_collection` (
 -- Table structure for table `coupon_description`
 --
 
+DROP TABLE IF EXISTS `coupon_description`;
 CREATE TABLE IF NOT EXISTS `coupon_description` (
   `coupon_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2010,7 +2091,7 @@ CREATE TABLE IF NOT EXISTS `coupon_description` (
   UNIQUE KEY `coupon_id_2` (`coupon_id`,`language_id`),
   KEY `coupon_id` (`coupon_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2018,6 +2099,7 @@ CREATE TABLE IF NOT EXISTS `coupon_description` (
 -- Table structure for table `coupon_history`
 --
 
+DROP TABLE IF EXISTS `coupon_history`;
 CREATE TABLE IF NOT EXISTS `coupon_history` (
   `coupon_history_id` int(11) NOT NULL AUTO_INCREMENT,
   `coupon_id` int(11) NOT NULL,
@@ -2031,7 +2113,7 @@ CREATE TABLE IF NOT EXISTS `coupon_history` (
   KEY `order_id` (`order_id`),
   KEY `customer_id` (`customer_id`),
   KEY `coupon_id_3` (`coupon_id`,`customer_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2039,12 +2121,13 @@ CREATE TABLE IF NOT EXISTS `coupon_history` (
 -- Table structure for table `coupon_manufacturer`
 --
 
+DROP TABLE IF EXISTS `coupon_manufacturer`;
 CREATE TABLE IF NOT EXISTS `coupon_manufacturer` (
   `coupon_id` int(11) NOT NULL,
   `manufacturer_id` int(11) NOT NULL,
   PRIMARY KEY (`coupon_id`,`manufacturer_id`),
   KEY `manufacturer_id` (`manufacturer_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2052,6 +2135,7 @@ CREATE TABLE IF NOT EXISTS `coupon_manufacturer` (
 -- Table structure for table `coupon_product`
 --
 
+DROP TABLE IF EXISTS `coupon_product`;
 CREATE TABLE IF NOT EXISTS `coupon_product` (
   `coupon_product_id` int(11) NOT NULL AUTO_INCREMENT,
   `coupon_id` int(11) NOT NULL,
@@ -2059,7 +2143,7 @@ CREATE TABLE IF NOT EXISTS `coupon_product` (
   PRIMARY KEY (`coupon_product_id`),
   KEY `coupon_id` (`coupon_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2067,6 +2151,7 @@ CREATE TABLE IF NOT EXISTS `coupon_product` (
 -- Table structure for table `coupon_random`
 --
 
+DROP TABLE IF EXISTS `coupon_random`;
 CREATE TABLE IF NOT EXISTS `coupon_random` (
   `coupon_random_id` int(11) NOT NULL AUTO_INCREMENT,
   `coupon_id` int(11) NOT NULL,
@@ -2075,7 +2160,7 @@ CREATE TABLE IF NOT EXISTS `coupon_random` (
   PRIMARY KEY (`coupon_random_id`),
   KEY `coupon_random` (`coupon_random`),
   KEY `coupon_code` (`coupon_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2083,9 +2168,10 @@ CREATE TABLE IF NOT EXISTS `coupon_random` (
 -- Table structure for table `coupon_review`
 --
 
+DROP TABLE IF EXISTS `coupon_review`;
 CREATE TABLE IF NOT EXISTS `coupon_review` (
   `coupon_id` int(11) NOT NULL,
-  `code` varchar(8) COLLATE utf8mb3_bin NOT NULL,
+  `code` varchar(8) NOT NULL,
   `coupon_history_id` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`code`),
   KEY `coupon_history_id` (`coupon_history_id`)
@@ -2097,13 +2183,14 @@ CREATE TABLE IF NOT EXISTS `coupon_review` (
 -- Table structure for table `csvprice_pro`
 --
 
+DROP TABLE IF EXISTS `csvprice_pro`;
 CREATE TABLE IF NOT EXISTS `csvprice_pro` (
   `setting_id` int(11) NOT NULL AUTO_INCREMENT,
   `key` varchar(64) NOT NULL,
   `value` text DEFAULT NULL,
   `serialized` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`setting_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2111,6 +2198,7 @@ CREATE TABLE IF NOT EXISTS `csvprice_pro` (
 -- Table structure for table `csvprice_pro_crontab`
 --
 
+DROP TABLE IF EXISTS `csvprice_pro_crontab`;
 CREATE TABLE IF NOT EXISTS `csvprice_pro_crontab` (
   `job_id` int(11) NOT NULL AUTO_INCREMENT,
   `profile_id` int(11) NOT NULL,
@@ -2123,7 +2211,7 @@ CREATE TABLE IF NOT EXISTS `csvprice_pro_crontab` (
   `status` tinyint(1) NOT NULL DEFAULT 0,
   `serialized` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`job_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2131,13 +2219,14 @@ CREATE TABLE IF NOT EXISTS `csvprice_pro_crontab` (
 -- Table structure for table `csvprice_pro_images`
 --
 
+DROP TABLE IF EXISTS `csvprice_pro_images`;
 CREATE TABLE IF NOT EXISTS `csvprice_pro_images` (
   `catalog_id` int(11) NOT NULL,
   `image_key` char(32) NOT NULL,
   `image_path` varchar(255) NOT NULL,
   PRIMARY KEY (`catalog_id`,`image_key`),
   KEY `image_key` (`image_key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2145,6 +2234,7 @@ CREATE TABLE IF NOT EXISTS `csvprice_pro_images` (
 -- Table structure for table `csvprice_pro_profiles`
 --
 
+DROP TABLE IF EXISTS `csvprice_pro_profiles`;
 CREATE TABLE IF NOT EXISTS `csvprice_pro_profiles` (
   `profile_id` int(11) NOT NULL AUTO_INCREMENT,
   `key` varchar(64) NOT NULL,
@@ -2152,7 +2242,7 @@ CREATE TABLE IF NOT EXISTS `csvprice_pro_profiles` (
   `value` text DEFAULT NULL,
   `serialized` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`profile_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2160,6 +2250,7 @@ CREATE TABLE IF NOT EXISTS `csvprice_pro_profiles` (
 -- Table structure for table `currency`
 --
 
+DROP TABLE IF EXISTS `currency`;
 CREATE TABLE IF NOT EXISTS `currency` (
   `currency_id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(32) NOT NULL,
@@ -2183,7 +2274,7 @@ CREATE TABLE IF NOT EXISTS `currency` (
   `status` tinyint(1) NOT NULL,
   `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`currency_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2191,6 +2282,7 @@ CREATE TABLE IF NOT EXISTS `currency` (
 -- Table structure for table `customer`
 --
 
+DROP TABLE IF EXISTS `customer`;
 CREATE TABLE IF NOT EXISTS `customer` (
   `customer_id` int(11) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) NOT NULL DEFAULT 0,
@@ -2332,7 +2424,7 @@ CREATE TABLE IF NOT EXISTS `customer` (
   KEY `newsletter_personal_ema_uid` (`newsletter_personal_ema_uid`),
   KEY `viber_news` (`viber_news`),
   KEY `sent_old_alert` (`sent_manual_letter`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2340,12 +2432,13 @@ CREATE TABLE IF NOT EXISTS `customer` (
 -- Table structure for table `customer_ban_ip`
 --
 
+DROP TABLE IF EXISTS `customer_ban_ip`;
 CREATE TABLE IF NOT EXISTS `customer_ban_ip` (
   `customer_ban_ip_id` int(11) NOT NULL AUTO_INCREMENT,
   `ip` varchar(40) NOT NULL,
   PRIMARY KEY (`customer_ban_ip_id`),
   KEY `ip` (`ip`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2353,6 +2446,7 @@ CREATE TABLE IF NOT EXISTS `customer_ban_ip` (
 -- Table structure for table `customer_calls`
 --
 
+DROP TABLE IF EXISTS `customer_calls`;
 CREATE TABLE IF NOT EXISTS `customer_calls` (
   `customer_call_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL,
@@ -2372,7 +2466,7 @@ CREATE TABLE IF NOT EXISTS `customer_calls` (
   KEY `inbound` (`inbound`),
   KEY `length` (`length`),
   KEY `manager_id` (`manager_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2380,9 +2474,10 @@ CREATE TABLE IF NOT EXISTS `customer_calls` (
 -- Table structure for table `customer_emails_blacklist`
 --
 
+DROP TABLE IF EXISTS `customer_emails_blacklist`;
 CREATE TABLE IF NOT EXISTS `customer_emails_blacklist` (
-  `email` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(128) NOT NULL,
+  `status` varchar(32) NOT NULL,
   UNIQUE KEY `email` (`email`),
   KEY `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2393,9 +2488,10 @@ CREATE TABLE IF NOT EXISTS `customer_emails_blacklist` (
 -- Table structure for table `customer_emails_whitelist`
 --
 
+DROP TABLE IF EXISTS `customer_emails_whitelist`;
 CREATE TABLE IF NOT EXISTS `customer_emails_whitelist` (
-  `email` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(128) NOT NULL,
+  `status` varchar(32) NOT NULL,
   UNIQUE KEY `email` (`email`),
   KEY `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2406,6 +2502,7 @@ CREATE TABLE IF NOT EXISTS `customer_emails_whitelist` (
 -- Table structure for table `customer_email_campaigns`
 --
 
+DROP TABLE IF EXISTS `customer_email_campaigns`;
 CREATE TABLE IF NOT EXISTS `customer_email_campaigns` (
   `customer_email_campaigns_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL,
@@ -2417,7 +2514,7 @@ CREATE TABLE IF NOT EXISTS `customer_email_campaigns` (
   UNIQUE KEY `customer_id_2` (`customer_id`,`campaign_id`),
   KEY `campaign_id` (`campaign_id`),
   KEY `customer_id` (`customer_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2425,11 +2522,12 @@ CREATE TABLE IF NOT EXISTS `customer_email_campaigns` (
 -- Table structure for table `customer_email_campaigns_names`
 --
 
+DROP TABLE IF EXISTS `customer_email_campaigns_names`;
 CREATE TABLE IF NOT EXISTS `customer_email_campaigns_names` (
   `email_campaign_mailwizz_id` varchar(100) NOT NULL,
   `email_campaign_name` varchar(255) NOT NULL,
   UNIQUE KEY `email_campaign_mailwizz_id` (`email_campaign_mailwizz_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2437,6 +2535,7 @@ CREATE TABLE IF NOT EXISTS `customer_email_campaigns_names` (
 -- Table structure for table `customer_field`
 --
 
+DROP TABLE IF EXISTS `customer_field`;
 CREATE TABLE IF NOT EXISTS `customer_field` (
   `customer_id` int(11) NOT NULL,
   `custom_field_id` int(11) NOT NULL,
@@ -2447,7 +2546,7 @@ CREATE TABLE IF NOT EXISTS `customer_field` (
   PRIMARY KEY (`customer_id`,`custom_field_id`,`custom_field_value_id`),
   KEY `custom_field_id` (`custom_field_id`),
   KEY `custom_field_value_id` (`custom_field_value_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2455,6 +2554,7 @@ CREATE TABLE IF NOT EXISTS `customer_field` (
 -- Table structure for table `customer_group`
 --
 
+DROP TABLE IF EXISTS `customer_group`;
 CREATE TABLE IF NOT EXISTS `customer_group` (
   `customer_group_id` int(11) NOT NULL AUTO_INCREMENT,
   `approval` int(11) NOT NULL,
@@ -2464,7 +2564,7 @@ CREATE TABLE IF NOT EXISTS `customer_group` (
   `tax_id_required` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL,
   PRIMARY KEY (`customer_group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2472,6 +2572,7 @@ CREATE TABLE IF NOT EXISTS `customer_group` (
 -- Table structure for table `customer_group_description`
 --
 
+DROP TABLE IF EXISTS `customer_group_description`;
 CREATE TABLE IF NOT EXISTS `customer_group_description` (
   `customer_group_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2479,7 +2580,7 @@ CREATE TABLE IF NOT EXISTS `customer_group_description` (
   `description` text NOT NULL,
   PRIMARY KEY (`customer_group_id`,`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2487,12 +2588,13 @@ CREATE TABLE IF NOT EXISTS `customer_group_description` (
 -- Table structure for table `customer_group_price`
 --
 
+DROP TABLE IF EXISTS `customer_group_price`;
 CREATE TABLE IF NOT EXISTS `customer_group_price` (
   `customer_group_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   `price` float NOT NULL,
   `type` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2500,6 +2602,7 @@ CREATE TABLE IF NOT EXISTS `customer_group_price` (
 -- Table structure for table `customer_history`
 --
 
+DROP TABLE IF EXISTS `customer_history`;
 CREATE TABLE IF NOT EXISTS `customer_history` (
   `customer_history_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL,
@@ -2523,7 +2626,7 @@ CREATE TABLE IF NOT EXISTS `customer_history` (
   KEY `manager_id` (`manager_id`),
   KEY `sms_id` (`sms_id`),
   KEY `email_id` (`email_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2531,6 +2634,7 @@ CREATE TABLE IF NOT EXISTS `customer_history` (
 -- Table structure for table `customer_ip`
 --
 
+DROP TABLE IF EXISTS `customer_ip`;
 CREATE TABLE IF NOT EXISTS `customer_ip` (
   `customer_ip_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL,
@@ -2540,7 +2644,7 @@ CREATE TABLE IF NOT EXISTS `customer_ip` (
   KEY `ip` (`ip`),
   KEY `customer_id` (`customer_id`),
   KEY `customer_id_customer_ip` (`customer_id`,`ip`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2548,6 +2652,7 @@ CREATE TABLE IF NOT EXISTS `customer_ip` (
 -- Table structure for table `customer_online`
 --
 
+DROP TABLE IF EXISTS `customer_online`;
 CREATE TABLE IF NOT EXISTS `customer_online` (
   `ip` varchar(40) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2563,7 +2668,7 @@ CREATE TABLE IF NOT EXISTS `customer_online` (
   KEY `is_bot` (`is_bot`),
   KEY `is_pwa` (`is_pwa`),
   KEY `is_bot_2` (`is_bot`,`is_pwa`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2571,11 +2676,12 @@ CREATE TABLE IF NOT EXISTS `customer_online` (
 -- Table structure for table `customer_online_history`
 --
 
+DROP TABLE IF EXISTS `customer_online_history`;
 CREATE TABLE IF NOT EXISTS `customer_online_history` (
   `customer_count` int(11) NOT NULL,
   `date_added` datetime NOT NULL,
   KEY `date_added` (`date_added`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2583,13 +2689,14 @@ CREATE TABLE IF NOT EXISTS `customer_online_history` (
 -- Table structure for table `customer_push_ids`
 --
 
+DROP TABLE IF EXISTS `customer_push_ids`;
 CREATE TABLE IF NOT EXISTS `customer_push_ids` (
   `customer_id` int(11) NOT NULL,
   `sendpulse_push_id` varchar(255) NOT NULL,
   `onesignal_push_id` varchar(255) NOT NULL,
   KEY `customer_id` (`customer_id`),
   KEY `onesignal_push_id` (`onesignal_push_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2597,6 +2704,7 @@ CREATE TABLE IF NOT EXISTS `customer_push_ids` (
 -- Table structure for table `customer_reward`
 --
 
+DROP TABLE IF EXISTS `customer_reward`;
 CREATE TABLE IF NOT EXISTS `customer_reward` (
   `customer_reward_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL DEFAULT 0,
@@ -2617,7 +2725,7 @@ CREATE TABLE IF NOT EXISTS `customer_reward` (
   KEY `date_added` (`date_added`),
   KEY `burned` (`burned`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2625,12 +2733,13 @@ CREATE TABLE IF NOT EXISTS `customer_reward` (
 -- Table structure for table `customer_reward_queue`
 --
 
+DROP TABLE IF EXISTS `customer_reward_queue`;
 CREATE TABLE IF NOT EXISTS `customer_reward_queue` (
   `customer_reward_queue_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
-  `description` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `reason_code` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `reason_code` varchar(32) NOT NULL,
   `date_added` date NOT NULL,
   `points` int(11) NOT NULL,
   `date_activate` date NOT NULL,
@@ -2646,10 +2755,11 @@ CREATE TABLE IF NOT EXISTS `customer_reward_queue` (
 -- Table structure for table `customer_search_history`
 --
 
+DROP TABLE IF EXISTS `customer_search_history`;
 CREATE TABLE IF NOT EXISTS `customer_search_history` (
   `customer_history_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL,
-  `text` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `text` varchar(500) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`customer_history_id`),
   UNIQUE KEY `customer_id_text` (`customer_id`,`text`) USING BTREE,
@@ -2664,6 +2774,7 @@ CREATE TABLE IF NOT EXISTS `customer_search_history` (
 -- Table structure for table `customer_segments`
 --
 
+DROP TABLE IF EXISTS `customer_segments`;
 CREATE TABLE IF NOT EXISTS `customer_segments` (
   `customer_id` int(11) NOT NULL,
   `segment_id` int(11) NOT NULL,
@@ -2672,7 +2783,7 @@ CREATE TABLE IF NOT EXISTS `customer_segments` (
   KEY `customer_id` (`customer_id`),
   KEY `segment_id` (`segment_id`),
   KEY `date_added` (`date_added`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2680,6 +2791,7 @@ CREATE TABLE IF NOT EXISTS `customer_segments` (
 -- Table structure for table `customer_simple_fields`
 --
 
+DROP TABLE IF EXISTS `customer_simple_fields`;
 CREATE TABLE IF NOT EXISTS `customer_simple_fields` (
   `customer_id` int(11) NOT NULL,
   `metadata` text DEFAULT NULL,
@@ -2687,18 +2799,7 @@ CREATE TABLE IF NOT EXISTS `customer_simple_fields` (
   `newsletter_personal` text DEFAULT NULL,
   `viber_news` text DEFAULT NULL,
   PRIMARY KEY (`customer_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `customer_test`
---
-
-CREATE TABLE IF NOT EXISTS `customer_test` (
-  `email` varchar(255) NOT NULL,
-  `firstname` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2706,6 +2807,7 @@ CREATE TABLE IF NOT EXISTS `customer_test` (
 -- Table structure for table `customer_transaction`
 --
 
+DROP TABLE IF EXISTS `customer_transaction`;
 CREATE TABLE IF NOT EXISTS `customer_transaction` (
   `customer_transaction_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL,
@@ -2736,7 +2838,7 @@ CREATE TABLE IF NOT EXISTS `customer_transaction` (
   KEY `pspReference` (`pspReference`),
   KEY `concardis_id` (`concardis_id`),
   KEY `guid` (`guid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2744,6 +2846,7 @@ CREATE TABLE IF NOT EXISTS `customer_transaction` (
 -- Table structure for table `customer_viewed`
 --
 
+DROP TABLE IF EXISTS `customer_viewed`;
 CREATE TABLE IF NOT EXISTS `customer_viewed` (
   `customer_id` int(11) NOT NULL,
   `type` enum('c','m','p') NOT NULL,
@@ -2754,7 +2857,7 @@ CREATE TABLE IF NOT EXISTS `customer_viewed` (
   KEY `type` (`type`),
   KEY `entity_id` (`entity_id`),
   KEY `times` (`times`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2762,6 +2865,7 @@ CREATE TABLE IF NOT EXISTS `customer_viewed` (
 -- Table structure for table `custom_field`
 --
 
+DROP TABLE IF EXISTS `custom_field`;
 CREATE TABLE IF NOT EXISTS `custom_field` (
   `custom_field_id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(32) NOT NULL,
@@ -2771,7 +2875,7 @@ CREATE TABLE IF NOT EXISTS `custom_field` (
   `position` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL,
   PRIMARY KEY (`custom_field_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2779,13 +2883,14 @@ CREATE TABLE IF NOT EXISTS `custom_field` (
 -- Table structure for table `custom_field_description`
 --
 
+DROP TABLE IF EXISTS `custom_field_description`;
 CREATE TABLE IF NOT EXISTS `custom_field_description` (
   `custom_field_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
   PRIMARY KEY (`custom_field_id`,`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2793,12 +2898,13 @@ CREATE TABLE IF NOT EXISTS `custom_field_description` (
 -- Table structure for table `custom_field_to_customer_group`
 --
 
+DROP TABLE IF EXISTS `custom_field_to_customer_group`;
 CREATE TABLE IF NOT EXISTS `custom_field_to_customer_group` (
   `custom_field_id` int(11) NOT NULL,
   `customer_group_id` int(11) NOT NULL,
   PRIMARY KEY (`custom_field_id`,`customer_group_id`),
   KEY `customer_group_id` (`customer_group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2806,13 +2912,14 @@ CREATE TABLE IF NOT EXISTS `custom_field_to_customer_group` (
 -- Table structure for table `custom_field_value`
 --
 
+DROP TABLE IF EXISTS `custom_field_value`;
 CREATE TABLE IF NOT EXISTS `custom_field_value` (
   `custom_field_value_id` int(11) NOT NULL AUTO_INCREMENT,
   `custom_field_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL,
   PRIMARY KEY (`custom_field_value_id`),
   KEY `custom_field_id` (`custom_field_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2820,6 +2927,7 @@ CREATE TABLE IF NOT EXISTS `custom_field_value` (
 -- Table structure for table `custom_field_value_description`
 --
 
+DROP TABLE IF EXISTS `custom_field_value_description`;
 CREATE TABLE IF NOT EXISTS `custom_field_value_description` (
   `custom_field_value_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2828,7 +2936,7 @@ CREATE TABLE IF NOT EXISTS `custom_field_value_description` (
   PRIMARY KEY (`custom_field_value_id`,`language_id`),
   KEY `language_id` (`language_id`),
   KEY `custom_field_id` (`custom_field_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2836,13 +2944,14 @@ CREATE TABLE IF NOT EXISTS `custom_field_value_description` (
 -- Table structure for table `custom_url_404`
 --
 
+DROP TABLE IF EXISTS `custom_url_404`;
 CREATE TABLE IF NOT EXISTS `custom_url_404` (
   `custom_url_404_id` int(11) NOT NULL AUTO_INCREMENT,
   `hit` int(11) DEFAULT NULL,
   `url_404` varchar(255) DEFAULT NULL,
   `url_redirect` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`custom_url_404_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2850,6 +2959,7 @@ CREATE TABLE IF NOT EXISTS `custom_url_404` (
 -- Table structure for table `deleted_asins`
 --
 
+DROP TABLE IF EXISTS `deleted_asins`;
 CREATE TABLE IF NOT EXISTS `deleted_asins` (
   `asin` varchar(16) NOT NULL,
   `name` varchar(1024) NOT NULL,
@@ -2858,19 +2968,7 @@ CREATE TABLE IF NOT EXISTS `deleted_asins` (
   PRIMARY KEY (`asin`),
   KEY `user_id` (`user_id`),
   KEY `name` (`name`(768))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `direct_timezones`
---
-
-CREATE TABLE IF NOT EXISTS `direct_timezones` (
-  `geomd5` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `timezone` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`geomd5`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2878,6 +2976,7 @@ CREATE TABLE IF NOT EXISTS `direct_timezones` (
 -- Table structure for table `download`
 --
 
+DROP TABLE IF EXISTS `download`;
 CREATE TABLE IF NOT EXISTS `download` (
   `download_id` int(11) NOT NULL AUTO_INCREMENT,
   `filename` varchar(128) NOT NULL,
@@ -2885,7 +2984,7 @@ CREATE TABLE IF NOT EXISTS `download` (
   `remaining` int(11) NOT NULL DEFAULT 0,
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`download_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2893,13 +2992,14 @@ CREATE TABLE IF NOT EXISTS `download` (
 -- Table structure for table `download_description`
 --
 
+DROP TABLE IF EXISTS `download_description`;
 CREATE TABLE IF NOT EXISTS `download_description` (
   `download_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`download_id`,`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2907,6 +3007,7 @@ CREATE TABLE IF NOT EXISTS `download_description` (
 -- Table structure for table `emailmarketing_logs`
 --
 
+DROP TABLE IF EXISTS `emailmarketing_logs`;
 CREATE TABLE IF NOT EXISTS `emailmarketing_logs` (
   `emailmarketing_log_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL,
@@ -2932,7 +3033,7 @@ CREATE TABLE IF NOT EXISTS `emailmarketing_logs` (
   KEY `user_id` (`user_id`),
   KEY `mail_opened` (`mail_opened`),
   KEY `mail_clicked` (`mail_clicked`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2940,6 +3041,7 @@ CREATE TABLE IF NOT EXISTS `emailmarketing_logs` (
 -- Table structure for table `emailtemplate`
 --
 
+DROP TABLE IF EXISTS `emailtemplate`;
 CREATE TABLE IF NOT EXISTS `emailtemplate` (
   `emailtemplate_id` int(11) NOT NULL AUTO_INCREMENT,
   `emailtemplate_key` varchar(64) NOT NULL,
@@ -2974,7 +3076,7 @@ CREATE TABLE IF NOT EXISTS `emailtemplate` (
   `order_status_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`emailtemplate_id`),
   KEY `KEY` (`emailtemplate_key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2982,6 +3084,7 @@ CREATE TABLE IF NOT EXISTS `emailtemplate` (
 -- Table structure for table `emailtemplate_config`
 --
 
+DROP TABLE IF EXISTS `emailtemplate_config`;
 CREATE TABLE IF NOT EXISTS `emailtemplate_config` (
   `emailtemplate_config_id` int(11) NOT NULL AUTO_INCREMENT,
   `emailtemplate_config_name` varchar(64) NOT NULL,
@@ -3048,7 +3151,7 @@ CREATE TABLE IF NOT EXISTS `emailtemplate_config` (
   `store_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   PRIMARY KEY (`emailtemplate_config_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3056,6 +3159,7 @@ CREATE TABLE IF NOT EXISTS `emailtemplate_config` (
 -- Table structure for table `emailtemplate_description`
 --
 
+DROP TABLE IF EXISTS `emailtemplate_description`;
 CREATE TABLE IF NOT EXISTS `emailtemplate_description` (
   `emailtemplate_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3067,7 +3171,7 @@ CREATE TABLE IF NOT EXISTS `emailtemplate_description` (
   `emailtemplate_description_comment` longtext NOT NULL,
   `emailtemplate_description_unsubscribe_text` varchar(255) NOT NULL,
   PRIMARY KEY (`emailtemplate_id`,`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3075,6 +3179,7 @@ CREATE TABLE IF NOT EXISTS `emailtemplate_description` (
 -- Table structure for table `emailtemplate_logs`
 --
 
+DROP TABLE IF EXISTS `emailtemplate_logs`;
 CREATE TABLE IF NOT EXISTS `emailtemplate_logs` (
   `emailtemplate_log_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `emailtemplate_log_sent` datetime DEFAULT NULL,
@@ -3105,7 +3210,7 @@ CREATE TABLE IF NOT EXISTS `emailtemplate_logs` (
   KEY `store_id` (`store_id`),
   KEY `marketing` (`marketing`),
   KEY `mail_status` (`mail_status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3113,6 +3218,7 @@ CREATE TABLE IF NOT EXISTS `emailtemplate_logs` (
 -- Table structure for table `emailtemplate_shortcode`
 --
 
+DROP TABLE IF EXISTS `emailtemplate_shortcode`;
 CREATE TABLE IF NOT EXISTS `emailtemplate_shortcode` (
   `emailtemplate_shortcode_id` int(11) NOT NULL AUTO_INCREMENT,
   `emailtemplate_shortcode_code` varchar(255) NOT NULL,
@@ -3121,7 +3227,7 @@ CREATE TABLE IF NOT EXISTS `emailtemplate_shortcode` (
   `emailtemplate_id` int(11) NOT NULL,
   PRIMARY KEY (`emailtemplate_shortcode_id`),
   KEY `emailtemplate_id` (`emailtemplate_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3129,9 +3235,10 @@ CREATE TABLE IF NOT EXISTS `emailtemplate_shortcode` (
 -- Table structure for table `email_emailto`
 --
 
+DROP TABLE IF EXISTS `email_emailto`;
 CREATE TABLE IF NOT EXISTS `email_emailto` (
   `email` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3139,10 +3246,11 @@ CREATE TABLE IF NOT EXISTS `email_emailto` (
 -- Table structure for table `entity_reward`
 --
 
+DROP TABLE IF EXISTS `entity_reward`;
 CREATE TABLE IF NOT EXISTS `entity_reward` (
   `entity_reward_id` int(11) NOT NULL AUTO_INCREMENT,
   `entity_id` int(11) NOT NULL,
-  `entity_type` enum('c','m','co','') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `entity_type` enum('c','m','co','') NOT NULL,
   `points` int(11) NOT NULL DEFAULT 0,
   `percent` int(11) NOT NULL DEFAULT 0,
   `date_start` date NOT NULL DEFAULT '0000-00-00',
@@ -3164,6 +3272,7 @@ CREATE TABLE IF NOT EXISTS `entity_reward` (
 -- Table structure for table `excluded_asins`
 --
 
+DROP TABLE IF EXISTS `excluded_asins`;
 CREATE TABLE IF NOT EXISTS `excluded_asins` (
   `text` varchar(255) NOT NULL,
   `category_id` int(11) NOT NULL DEFAULT 0,
@@ -3172,7 +3281,7 @@ CREATE TABLE IF NOT EXISTS `excluded_asins` (
   `user_id` int(11) NOT NULL,
   KEY `category_id` (`category_id`),
   KEY `text` (`text`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3180,6 +3289,7 @@ CREATE TABLE IF NOT EXISTS `excluded_asins` (
 -- Table structure for table `extension`
 --
 
+DROP TABLE IF EXISTS `extension`;
 CREATE TABLE IF NOT EXISTS `extension` (
   `extension_id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(32) NOT NULL,
@@ -3187,7 +3297,7 @@ CREATE TABLE IF NOT EXISTS `extension` (
   PRIMARY KEY (`extension_id`),
   KEY `type` (`type`),
   KEY `code` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3195,11 +3305,12 @@ CREATE TABLE IF NOT EXISTS `extension` (
 -- Table structure for table `facategory`
 --
 
+DROP TABLE IF EXISTS `facategory`;
 CREATE TABLE IF NOT EXISTS `facategory` (
   `facategory_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`facategory_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3207,11 +3318,12 @@ CREATE TABLE IF NOT EXISTS `facategory` (
 -- Table structure for table `facategory_to_faproduct`
 --
 
+DROP TABLE IF EXISTS `facategory_to_faproduct`;
 CREATE TABLE IF NOT EXISTS `facategory_to_faproduct` (
   `facategory_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   PRIMARY KEY (`facategory_id`,`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3219,11 +3331,12 @@ CREATE TABLE IF NOT EXISTS `facategory_to_faproduct` (
 -- Table structure for table `faproduct_to_facategory`
 --
 
+DROP TABLE IF EXISTS `faproduct_to_facategory`;
 CREATE TABLE IF NOT EXISTS `faproduct_to_facategory` (
   `product_id` int(11) NOT NULL,
   `facategory_id` int(11) NOT NULL,
   PRIMARY KEY (`product_id`,`facategory_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3231,6 +3344,7 @@ CREATE TABLE IF NOT EXISTS `faproduct_to_facategory` (
 -- Table structure for table `faq_category`
 --
 
+DROP TABLE IF EXISTS `faq_category`;
 CREATE TABLE IF NOT EXISTS `faq_category` (
   `category_id` int(11) NOT NULL AUTO_INCREMENT,
   `sort_order` int(11) NOT NULL DEFAULT 0,
@@ -3244,10 +3358,11 @@ CREATE TABLE IF NOT EXISTS `faq_category` (
 -- Table structure for table `faq_category_description`
 --
 
+DROP TABLE IF EXISTS `faq_category_description`;
 CREATE TABLE IF NOT EXISTS `faq_category_description` (
   `category_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
+  `name` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`category_id`,`language_id`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
@@ -3258,6 +3373,7 @@ CREATE TABLE IF NOT EXISTS `faq_category_description` (
 -- Table structure for table `faq_question`
 --
 
+DROP TABLE IF EXISTS `faq_question`;
 CREATE TABLE IF NOT EXISTS `faq_question` (
   `question_id` int(11) NOT NULL AUTO_INCREMENT,
   `category_id` int(11) NOT NULL,
@@ -3272,11 +3388,12 @@ CREATE TABLE IF NOT EXISTS `faq_question` (
 -- Table structure for table `faq_question_description`
 --
 
+DROP TABLE IF EXISTS `faq_question_description`;
 CREATE TABLE IF NOT EXISTS `faq_question_description` (
   `question_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `title` text COLLATE utf8mb3_bin NOT NULL,
-  `description` text COLLATE utf8mb3_bin NOT NULL
+  `title` text NOT NULL,
+  `description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- --------------------------------------------------------
@@ -3285,10 +3402,11 @@ CREATE TABLE IF NOT EXISTS `faq_question_description` (
 -- Table structure for table `feed_queue`
 --
 
+DROP TABLE IF EXISTS `feed_queue`;
 CREATE TABLE IF NOT EXISTS `feed_queue` (
   `category_id` int(11) NOT NULL,
   PRIMARY KEY (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3296,25 +3414,14 @@ CREATE TABLE IF NOT EXISTS `feed_queue` (
 -- Table structure for table `filter`
 --
 
+DROP TABLE IF EXISTS `filter`;
 CREATE TABLE IF NOT EXISTS `filter` (
   `filter_id` int(11) NOT NULL AUTO_INCREMENT,
   `filter_group_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL,
   PRIMARY KEY (`filter_id`),
   KEY `filter_group_id` (`filter_group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `filterpro_seo`
---
-
-CREATE TABLE IF NOT EXISTS `filterpro_seo` (
-  `url` varchar(255) NOT NULL,
-  `data` text NOT NULL,
-  PRIMARY KEY (`url`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3322,6 +3429,7 @@ CREATE TABLE IF NOT EXISTS `filterpro_seo` (
 -- Table structure for table `filter_description`
 --
 
+DROP TABLE IF EXISTS `filter_description`;
 CREATE TABLE IF NOT EXISTS `filter_description` (
   `filter_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3330,7 +3438,7 @@ CREATE TABLE IF NOT EXISTS `filter_description` (
   PRIMARY KEY (`filter_id`,`language_id`),
   KEY `language_id` (`language_id`),
   KEY `filter_group_id` (`filter_group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3338,11 +3446,12 @@ CREATE TABLE IF NOT EXISTS `filter_description` (
 -- Table structure for table `filter_group`
 --
 
+DROP TABLE IF EXISTS `filter_group`;
 CREATE TABLE IF NOT EXISTS `filter_group` (
   `filter_group_id` int(11) NOT NULL AUTO_INCREMENT,
   `sort_order` int(11) NOT NULL,
   PRIMARY KEY (`filter_group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3350,13 +3459,14 @@ CREATE TABLE IF NOT EXISTS `filter_group` (
 -- Table structure for table `filter_group_description`
 --
 
+DROP TABLE IF EXISTS `filter_group_description`;
 CREATE TABLE IF NOT EXISTS `filter_group_description` (
   `filter_group_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`filter_group_id`,`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3364,6 +3474,7 @@ CREATE TABLE IF NOT EXISTS `filter_group_description` (
 -- Table structure for table `geo`
 --
 
+DROP TABLE IF EXISTS `geo`;
 CREATE TABLE IF NOT EXISTS `geo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `zone_id` int(11) NOT NULL,
@@ -3376,82 +3487,24 @@ CREATE TABLE IF NOT EXISTS `geo` (
   `population` double NOT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `geoname_alternatename`
+-- Table structure for table `geonames`
 --
 
-CREATE TABLE IF NOT EXISTS `geoname_alternatename` (
-  `alternatenameId` int(11) NOT NULL,
-  `geonameid` int(11) DEFAULT NULL,
-  `isoLanguage` varchar(7) DEFAULT NULL,
-  `alternateName` varchar(200) DEFAULT NULL,
-  `isPreferredName` tinyint(1) DEFAULT NULL,
-  `isShortName` tinyint(1) DEFAULT NULL,
-  `isColloquial` tinyint(1) DEFAULT NULL,
-  `isHistoric` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`alternatenameId`),
-  KEY `geonameid` (`geonameid`),
-  KEY `isoLanguage` (`isoLanguage`),
-  KEY `alternateName` (`alternateName`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `geoname_geoname`
---
-
-CREATE TABLE IF NOT EXISTS `geoname_geoname` (
-  `geonameid` int(11) NOT NULL,
+DROP TABLE IF EXISTS `geonames`;
+CREATE TABLE IF NOT EXISTS `geonames` (
+  `geoname_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(200) DEFAULT NULL,
-  `asciiname` varchar(200) DEFAULT NULL,
-  `alternatenames` varchar(4000) DEFAULT NULL,
-  `latitude` decimal(10,7) DEFAULT NULL,
-  `longitude` decimal(10,7) DEFAULT NULL,
-  `fclass` char(1) DEFAULT NULL,
-  `fcode` varchar(10) DEFAULT NULL,
   `country` varchar(2) DEFAULT NULL,
-  `cc2` varchar(200) DEFAULT NULL,
-  `admin1` varchar(20) DEFAULT NULL,
-  `admin2` varchar(80) DEFAULT NULL,
-  `admin3` varchar(20) DEFAULT NULL,
-  `admin4` varchar(20) DEFAULT NULL,
-  `population` int(11) DEFAULT NULL,
-  `elevation` int(11) DEFAULT NULL,
-  `gtopo30` int(11) DEFAULT NULL,
   `timezone` varchar(40) DEFAULT NULL,
-  `moddate` date DEFAULT NULL,
-  PRIMARY KEY (`geonameid`),
+  PRIMARY KEY (`geoname_id`),
   KEY `name` (`name`),
-  KEY `asciiname` (`asciiname`),
-  KEY `latitude` (`latitude`),
-  KEY `longitude` (`longitude`),
-  KEY `fclass` (`fclass`),
-  KEY `fcode` (`fcode`),
-  KEY `country` (`country`),
-  KEY `cc2` (`cc2`),
-  KEY `admin1` (`admin1`),
-  KEY `population` (`population`),
-  KEY `elevation` (`elevation`),
-  KEY `timezone` (`timezone`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `geo_ip`
---
-
-CREATE TABLE IF NOT EXISTS `geo_ip` (
-  `start` bigint(20) NOT NULL,
-  `end` bigint(20) NOT NULL,
-  `geo_id` int(11) NOT NULL,
-  PRIMARY KEY (`start`,`end`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  KEY `country` (`country`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3459,6 +3512,7 @@ CREATE TABLE IF NOT EXISTS `geo_ip` (
 -- Table structure for table `geo_zone`
 --
 
+DROP TABLE IF EXISTS `geo_zone`;
 CREATE TABLE IF NOT EXISTS `geo_zone` (
   `geo_zone_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
@@ -3466,7 +3520,7 @@ CREATE TABLE IF NOT EXISTS `geo_zone` (
   `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`geo_zone_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3474,28 +3528,13 @@ CREATE TABLE IF NOT EXISTS `geo_zone` (
 -- Table structure for table `google_base_category`
 --
 
+DROP TABLE IF EXISTS `google_base_category`;
 CREATE TABLE IF NOT EXISTS `google_base_category` (
   `google_base_category_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`google_base_category_id`),
   KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `hj_any_feed_feeds`
---
-
-CREATE TABLE IF NOT EXISTS `hj_any_feed_feeds` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(256) DEFAULT NULL,
-  `settings` blob DEFAULT NULL,
-  `version` varchar(64) DEFAULT NULL,
-  `preset` int(11) DEFAULT NULL,
-  `fields` blob DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3503,6 +3542,7 @@ CREATE TABLE IF NOT EXISTS `hj_any_feed_feeds` (
 -- Table structure for table `imagemaps`
 --
 
+DROP TABLE IF EXISTS `imagemaps`;
 CREATE TABLE IF NOT EXISTS `imagemaps` (
   `imagemap_id` int(11) NOT NULL AUTO_INCREMENT,
   `module_code` varchar(64) NOT NULL,
@@ -3511,7 +3551,7 @@ CREATE TABLE IF NOT EXISTS `imagemaps` (
   PRIMARY KEY (`imagemap_id`),
   KEY `module_code` (`module_code`),
   KEY `module_id` (`module_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3519,6 +3559,7 @@ CREATE TABLE IF NOT EXISTS `imagemaps` (
 -- Table structure for table `information`
 --
 
+DROP TABLE IF EXISTS `information`;
 CREATE TABLE IF NOT EXISTS `information` (
   `information_id` int(11) NOT NULL AUTO_INCREMENT,
   `bottom` int(11) NOT NULL DEFAULT 0,
@@ -3528,7 +3569,7 @@ CREATE TABLE IF NOT EXISTS `information` (
   `igroup` varchar(50) NOT NULL,
   `show_category_id` int(11) NOT NULL,
   PRIMARY KEY (`information_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3536,6 +3577,7 @@ CREATE TABLE IF NOT EXISTS `information` (
 -- Table structure for table `information_attribute`
 --
 
+DROP TABLE IF EXISTS `information_attribute`;
 CREATE TABLE IF NOT EXISTS `information_attribute` (
   `information_attribute_id` int(11) NOT NULL AUTO_INCREMENT,
   `bottom` int(11) NOT NULL DEFAULT 0,
@@ -3545,7 +3587,7 @@ CREATE TABLE IF NOT EXISTS `information_attribute` (
   `igroup` varchar(50) NOT NULL,
   `show_category_id` int(11) NOT NULL,
   PRIMARY KEY (`information_attribute_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3553,6 +3595,7 @@ CREATE TABLE IF NOT EXISTS `information_attribute` (
 -- Table structure for table `information_attribute_description`
 --
 
+DROP TABLE IF EXISTS `information_attribute_description`;
 CREATE TABLE IF NOT EXISTS `information_attribute_description` (
   `information_attribute_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3564,7 +3607,7 @@ CREATE TABLE IF NOT EXISTS `information_attribute_description` (
   `tag` text DEFAULT NULL,
   PRIMARY KEY (`information_attribute_id`,`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3572,6 +3615,7 @@ CREATE TABLE IF NOT EXISTS `information_attribute_description` (
 -- Table structure for table `information_attribute_to_layout`
 --
 
+DROP TABLE IF EXISTS `information_attribute_to_layout`;
 CREATE TABLE IF NOT EXISTS `information_attribute_to_layout` (
   `information_attribute_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -3579,7 +3623,7 @@ CREATE TABLE IF NOT EXISTS `information_attribute_to_layout` (
   PRIMARY KEY (`information_attribute_id`,`store_id`),
   KEY `store_id` (`store_id`),
   KEY `layout_id` (`layout_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3587,12 +3631,13 @@ CREATE TABLE IF NOT EXISTS `information_attribute_to_layout` (
 -- Table structure for table `information_attribute_to_store`
 --
 
+DROP TABLE IF EXISTS `information_attribute_to_store`;
 CREATE TABLE IF NOT EXISTS `information_attribute_to_store` (
   `information_attribute_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   PRIMARY KEY (`information_attribute_id`,`store_id`),
   KEY `store_id` (`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3600,6 +3645,7 @@ CREATE TABLE IF NOT EXISTS `information_attribute_to_store` (
 -- Table structure for table `information_description`
 --
 
+DROP TABLE IF EXISTS `information_description`;
 CREATE TABLE IF NOT EXISTS `information_description` (
   `information_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3611,7 +3657,7 @@ CREATE TABLE IF NOT EXISTS `information_description` (
   `tag` text DEFAULT NULL,
   PRIMARY KEY (`information_id`,`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3619,6 +3665,7 @@ CREATE TABLE IF NOT EXISTS `information_description` (
 -- Table structure for table `information_to_layout`
 --
 
+DROP TABLE IF EXISTS `information_to_layout`;
 CREATE TABLE IF NOT EXISTS `information_to_layout` (
   `information_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -3626,7 +3673,7 @@ CREATE TABLE IF NOT EXISTS `information_to_layout` (
   PRIMARY KEY (`information_id`,`store_id`),
   KEY `store_id` (`store_id`),
   KEY `layout_id` (`layout_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3634,12 +3681,13 @@ CREATE TABLE IF NOT EXISTS `information_to_layout` (
 -- Table structure for table `information_to_store`
 --
 
+DROP TABLE IF EXISTS `information_to_store`;
 CREATE TABLE IF NOT EXISTS `information_to_store` (
   `information_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   PRIMARY KEY (`information_id`,`store_id`),
   KEY `store_id` (`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3647,6 +3695,7 @@ CREATE TABLE IF NOT EXISTS `information_to_store` (
 -- Table structure for table `interplusplus`
 --
 
+DROP TABLE IF EXISTS `interplusplus`;
 CREATE TABLE IF NOT EXISTS `interplusplus` (
   `inter_id` int(11) NOT NULL AUTO_INCREMENT,
   `num_order` int(11) DEFAULT NULL,
@@ -3657,7 +3706,7 @@ CREATE TABLE IF NOT EXISTS `interplusplus` (
   `date_created` datetime DEFAULT NULL,
   `date_enroled` date DEFAULT NULL,
   PRIMARY KEY (`inter_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3665,16 +3714,17 @@ CREATE TABLE IF NOT EXISTS `interplusplus` (
 -- Table structure for table `justin_cities`
 --
 
+DROP TABLE IF EXISTS `justin_cities`;
 CREATE TABLE IF NOT EXISTS `justin_cities` (
   `city_id` int(11) NOT NULL AUTO_INCREMENT,
-  `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Descr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Code` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `RegionUuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `RegionDescr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `RegionDescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `SCOATOU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Uuid` varchar(64) NOT NULL,
+  `Descr` varchar(255) NOT NULL,
+  `DescrRU` varchar(255) NOT NULL,
+  `Code` varchar(255) NOT NULL,
+  `RegionUuid` varchar(64) NOT NULL,
+  `RegionDescr` varchar(255) NOT NULL,
+  `RegionDescrRU` varchar(255) NOT NULL,
+  `SCOATOU` varchar(255) NOT NULL,
   `WarehouseCount` int(11) NOT NULL,
   PRIMARY KEY (`city_id`),
   UNIQUE KEY `Uuid` (`Uuid`),
@@ -3690,16 +3740,17 @@ CREATE TABLE IF NOT EXISTS `justin_cities` (
 -- Table structure for table `justin_city_regions`
 --
 
+DROP TABLE IF EXISTS `justin_city_regions`;
 CREATE TABLE IF NOT EXISTS `justin_city_regions` (
   `region_id` int(11) NOT NULL AUTO_INCREMENT,
-  `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Descr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Code` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityUuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityDescr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityDescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `SCOATOU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Uuid` varchar(64) NOT NULL,
+  `Descr` varchar(255) NOT NULL,
+  `DescrRU` varchar(255) NOT NULL,
+  `Code` varchar(255) NOT NULL,
+  `CityUuid` varchar(64) NOT NULL,
+  `CityDescr` varchar(255) NOT NULL,
+  `CityDescrRU` varchar(255) NOT NULL,
+  `SCOATOU` varchar(255) NOT NULL,
   PRIMARY KEY (`region_id`),
   UNIQUE KEY `Uuid` (`Uuid`),
   KEY `CityUuid` (`CityUuid`)
@@ -3711,15 +3762,16 @@ CREATE TABLE IF NOT EXISTS `justin_city_regions` (
 -- Table structure for table `justin_streets`
 --
 
+DROP TABLE IF EXISTS `justin_streets`;
 CREATE TABLE IF NOT EXISTS `justin_streets` (
   `street_id` int(11) NOT NULL AUTO_INCREMENT,
-  `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Code` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Descr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityUuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityDescr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityDescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Uuid` varchar(64) NOT NULL,
+  `Code` varchar(64) NOT NULL,
+  `Descr` varchar(255) NOT NULL,
+  `DescrRU` varchar(255) NOT NULL,
+  `CityUuid` varchar(64) NOT NULL,
+  `CityDescr` varchar(255) NOT NULL,
+  `CityDescrRU` varchar(255) NOT NULL,
   PRIMARY KEY (`street_id`),
   UNIQUE KEY `Uuid` (`Uuid`),
   KEY `CityUuid` (`CityUuid`)
@@ -3731,33 +3783,34 @@ CREATE TABLE IF NOT EXISTS `justin_streets` (
 -- Table structure for table `justin_warehouses`
 --
 
+DROP TABLE IF EXISTS `justin_warehouses`;
 CREATE TABLE IF NOT EXISTS `justin_warehouses` (
   `warehouse_id` int(11) NOT NULL AUTO_INCREMENT,
-  `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Descr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Code` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `RegionUuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityUuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityDescr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityDescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Uuid` varchar(64) NOT NULL,
+  `Descr` varchar(255) NOT NULL,
+  `DescrRU` varchar(255) NOT NULL,
+  `Code` varchar(64) NOT NULL,
+  `RegionUuid` varchar(64) NOT NULL,
+  `CityUuid` varchar(64) NOT NULL,
+  `CityDescr` varchar(255) NOT NULL,
+  `CityDescrRU` varchar(255) NOT NULL,
   `possibility_to_pay_by_card` tinyint(1) NOT NULL,
   `possibility_to_accept_payment` tinyint(1) NOT NULL,
   `availability_of_parcel_locker` tinyint(1) NOT NULL,
-  `Address` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Lat` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Lng` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Address` varchar(500) NOT NULL,
+  `Lat` varchar(32) NOT NULL,
+  `Lng` varchar(32) NOT NULL,
   `departNumber` int(11) NOT NULL,
-  `houseNumber` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `houseNumber` varchar(32) NOT NULL,
   `StatusDepart` int(11) NOT NULL,
   `parcels_without_pay` tinyint(1) NOT NULL,
-  `Monday` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Tuesday` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Wednesday` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Thursday` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Friday` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Saturday` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Sunday` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Monday` varchar(32) NOT NULL,
+  `Tuesday` varchar(32) NOT NULL,
+  `Wednesday` varchar(32) NOT NULL,
+  `Thursday` varchar(32) NOT NULL,
+  `Friday` varchar(32) NOT NULL,
+  `Saturday` varchar(32) NOT NULL,
+  `Sunday` varchar(32) NOT NULL,
   PRIMARY KEY (`warehouse_id`),
   UNIQUE KEY `Uuid` (`Uuid`),
   KEY `StatusDepart` (`StatusDepart`),
@@ -3775,13 +3828,14 @@ CREATE TABLE IF NOT EXISTS `justin_warehouses` (
 -- Table structure for table `justin_zones`
 --
 
+DROP TABLE IF EXISTS `justin_zones`;
 CREATE TABLE IF NOT EXISTS `justin_zones` (
   `zone_id` int(11) NOT NULL AUTO_INCREMENT,
-  `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Code` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Descr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DescrRu` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `SCOATOU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Uuid` varchar(64) NOT NULL,
+  `Code` varchar(32) NOT NULL,
+  `Descr` varchar(255) NOT NULL,
+  `DescrRu` varchar(255) NOT NULL,
+  `SCOATOU` varchar(255) NOT NULL,
   PRIMARY KEY (`zone_id`),
   UNIQUE KEY `Uuid` (`Uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -3792,16 +3846,17 @@ CREATE TABLE IF NOT EXISTS `justin_zones` (
 -- Table structure for table `justin_zone_regions`
 --
 
+DROP TABLE IF EXISTS `justin_zone_regions`;
 CREATE TABLE IF NOT EXISTS `justin_zone_regions` (
   `region_id` int(11) NOT NULL AUTO_INCREMENT,
-  `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Code` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Descr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ZoneUuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ZoneDescr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ZoneDescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ZoneType` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Uuid` varchar(64) NOT NULL,
+  `Code` varchar(64) NOT NULL,
+  `Descr` varchar(255) NOT NULL,
+  `DescrRU` varchar(255) NOT NULL,
+  `ZoneUuid` varchar(64) NOT NULL,
+  `ZoneDescr` varchar(255) NOT NULL,
+  `ZoneDescrRU` varchar(255) NOT NULL,
+  `ZoneType` varchar(255) NOT NULL,
   PRIMARY KEY (`region_id`),
   UNIQUE KEY `Uuid` (`Uuid`),
   KEY `ZoneUuid` (`ZoneUuid`)
@@ -3813,6 +3868,7 @@ CREATE TABLE IF NOT EXISTS `justin_zone_regions` (
 -- Table structure for table `keyworder`
 --
 
+DROP TABLE IF EXISTS `keyworder`;
 CREATE TABLE IF NOT EXISTS `keyworder` (
   `keyworder_id` int(11) NOT NULL AUTO_INCREMENT,
   `manufacturer_id` int(11) NOT NULL,
@@ -3820,7 +3876,7 @@ CREATE TABLE IF NOT EXISTS `keyworder` (
   PRIMARY KEY (`keyworder_id`),
   KEY `manufacturer_id` (`manufacturer_id`),
   KEY `category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3828,6 +3884,7 @@ CREATE TABLE IF NOT EXISTS `keyworder` (
 -- Table structure for table `keyworder_description`
 --
 
+DROP TABLE IF EXISTS `keyworder_description`;
 CREATE TABLE IF NOT EXISTS `keyworder_description` (
   `keyworder_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3842,7 +3899,7 @@ CREATE TABLE IF NOT EXISTS `keyworder_description` (
   PRIMARY KEY (`keyworder_id`,`language_id`),
   KEY `keyworder_status` (`keyworder_status`),
   KEY `category_status` (`category_status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3850,6 +3907,7 @@ CREATE TABLE IF NOT EXISTS `keyworder_description` (
 -- Table structure for table `landingpage`
 --
 
+DROP TABLE IF EXISTS `landingpage`;
 CREATE TABLE IF NOT EXISTS `landingpage` (
   `landingpage_id` int(11) NOT NULL AUTO_INCREMENT,
   `bottom` int(11) NOT NULL DEFAULT 0,
@@ -3858,7 +3916,7 @@ CREATE TABLE IF NOT EXISTS `landingpage` (
   `image` varchar(255) NOT NULL,
   `viewed` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`landingpage_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3866,6 +3924,7 @@ CREATE TABLE IF NOT EXISTS `landingpage` (
 -- Table structure for table `landingpage_description`
 --
 
+DROP TABLE IF EXISTS `landingpage_description`;
 CREATE TABLE IF NOT EXISTS `landingpage_description` (
   `landingpage_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3877,7 +3936,7 @@ CREATE TABLE IF NOT EXISTS `landingpage_description` (
   `tag` text DEFAULT NULL,
   PRIMARY KEY (`landingpage_id`,`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3885,6 +3944,7 @@ CREATE TABLE IF NOT EXISTS `landingpage_description` (
 -- Table structure for table `landingpage_to_layout`
 --
 
+DROP TABLE IF EXISTS `landingpage_to_layout`;
 CREATE TABLE IF NOT EXISTS `landingpage_to_layout` (
   `landingpage_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -3892,7 +3952,7 @@ CREATE TABLE IF NOT EXISTS `landingpage_to_layout` (
   PRIMARY KEY (`landingpage_id`,`store_id`),
   KEY `store_id` (`store_id`),
   KEY `layout_id` (`layout_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3900,12 +3960,13 @@ CREATE TABLE IF NOT EXISTS `landingpage_to_layout` (
 -- Table structure for table `landingpage_to_store`
 --
 
+DROP TABLE IF EXISTS `landingpage_to_store`;
 CREATE TABLE IF NOT EXISTS `landingpage_to_store` (
   `landingpage_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   PRIMARY KEY (`landingpage_id`,`store_id`),
   KEY `store_id` (`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3913,6 +3974,7 @@ CREATE TABLE IF NOT EXISTS `landingpage_to_store` (
 -- Table structure for table `language`
 --
 
+DROP TABLE IF EXISTS `language`;
 CREATE TABLE IF NOT EXISTS `language` (
   `language_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
@@ -3934,7 +3996,7 @@ CREATE TABLE IF NOT EXISTS `language` (
   KEY `code` (`code`),
   KEY `status` (`status`),
   KEY `front` (`front`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3942,11 +4004,12 @@ CREATE TABLE IF NOT EXISTS `language` (
 -- Table structure for table `layout`
 --
 
+DROP TABLE IF EXISTS `layout`;
 CREATE TABLE IF NOT EXISTS `layout` (
   `layout_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`layout_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3954,6 +4017,7 @@ CREATE TABLE IF NOT EXISTS `layout` (
 -- Table structure for table `layout_route`
 --
 
+DROP TABLE IF EXISTS `layout_route`;
 CREATE TABLE IF NOT EXISTS `layout_route` (
   `layout_route_id` int(11) NOT NULL AUTO_INCREMENT,
   `layout_id` int(11) NOT NULL,
@@ -3966,7 +4030,7 @@ CREATE TABLE IF NOT EXISTS `layout_route` (
   KEY `route` (`route`),
   KEY `store_id_route` (`store_id`,`route`) USING BTREE,
   KEY `layout_id_store_id` (`layout_id`,`store_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3974,6 +4038,7 @@ CREATE TABLE IF NOT EXISTS `layout_route` (
 -- Table structure for table `legalperson`
 --
 
+DROP TABLE IF EXISTS `legalperson`;
 CREATE TABLE IF NOT EXISTS `legalperson` (
   `legalperson_id` int(11) NOT NULL AUTO_INCREMENT,
   `legalperson_name` varchar(255) NOT NULL,
@@ -3986,7 +4051,7 @@ CREATE TABLE IF NOT EXISTS `legalperson` (
   `account_info` mediumtext DEFAULT NULL,
   PRIMARY KEY (`legalperson_id`),
   KEY `legalperson_country_id` (`legalperson_country_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3994,6 +4059,7 @@ CREATE TABLE IF NOT EXISTS `legalperson` (
 -- Table structure for table `length_class`
 --
 
+DROP TABLE IF EXISTS `length_class`;
 CREATE TABLE IF NOT EXISTS `length_class` (
   `length_class_id` int(11) NOT NULL AUTO_INCREMENT,
   `value` decimal(15,8) NOT NULL,
@@ -4003,7 +4069,7 @@ CREATE TABLE IF NOT EXISTS `length_class` (
   PRIMARY KEY (`length_class_id`),
   KEY `system_key` (`system_key`),
   KEY `amazon_key` (`amazon_key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4011,6 +4077,7 @@ CREATE TABLE IF NOT EXISTS `length_class` (
 -- Table structure for table `length_class_description`
 --
 
+DROP TABLE IF EXISTS `length_class_description`;
 CREATE TABLE IF NOT EXISTS `length_class_description` (
   `length_class_id` int(11) NOT NULL AUTO_INCREMENT,
   `language_id` int(11) NOT NULL,
@@ -4018,7 +4085,7 @@ CREATE TABLE IF NOT EXISTS `length_class_description` (
   `unit` varchar(4) NOT NULL,
   PRIMARY KEY (`length_class_id`,`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4026,6 +4093,7 @@ CREATE TABLE IF NOT EXISTS `length_class_description` (
 -- Table structure for table `local_supplier_products`
 --
 
+DROP TABLE IF EXISTS `local_supplier_products`;
 CREATE TABLE IF NOT EXISTS `local_supplier_products` (
   `supplier_id` int(11) NOT NULL,
   `supplier_product_id` int(11) NOT NULL,
@@ -4045,7 +4113,7 @@ CREATE TABLE IF NOT EXISTS `local_supplier_products` (
   KEY `product_ean` (`product_ean`),
   KEY `currency` (`currency`),
   KEY `supplier_product_id` (`supplier_product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4053,6 +4121,7 @@ CREATE TABLE IF NOT EXISTS `local_supplier_products` (
 -- Table structure for table `mailwizz_queue`
 --
 
+DROP TABLE IF EXISTS `mailwizz_queue`;
 CREATE TABLE IF NOT EXISTS `mailwizz_queue` (
   `customer_id` int(11) NOT NULL,
   UNIQUE KEY `customer_id` (`customer_id`)
@@ -4064,13 +4133,14 @@ CREATE TABLE IF NOT EXISTS `mailwizz_queue` (
 -- Table structure for table `manager_kpi`
 --
 
+DROP TABLE IF EXISTS `manager_kpi`;
 CREATE TABLE IF NOT EXISTS `manager_kpi` (
   `manager_id` int(11) NOT NULL,
   `date_added` date NOT NULL,
   `kpi_json` text NOT NULL,
   UNIQUE KEY `manager_id` (`manager_id`,`date_added`),
   KEY `manager_id_2` (`manager_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4078,6 +4148,7 @@ CREATE TABLE IF NOT EXISTS `manager_kpi` (
 -- Table structure for table `manager_order_status_dynamics`
 --
 
+DROP TABLE IF EXISTS `manager_order_status_dynamics`;
 CREATE TABLE IF NOT EXISTS `manager_order_status_dynamics` (
   `manager_id` int(11) NOT NULL,
   `order_status_id` int(11) NOT NULL,
@@ -4086,23 +4157,7 @@ CREATE TABLE IF NOT EXISTS `manager_order_status_dynamics` (
   UNIQUE KEY `manager_id_2` (`manager_id`,`order_status_id`,`date`),
   KEY `manager_id` (`manager_id`),
   KEY `order_status_id` (`order_status_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `manager_order_status_dynamics2`
---
-
-CREATE TABLE IF NOT EXISTS `manager_order_status_dynamics2` (
-  `manager_id` int(11) NOT NULL,
-  `order_status_id` int(11) NOT NULL,
-  `date` date NOT NULL,
-  `count` int(11) NOT NULL,
-  UNIQUE KEY `manager_id_2` (`manager_id`,`order_status_id`,`date`),
-  KEY `manager_id` (`manager_id`),
-  KEY `order_status_id` (`order_status_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4110,6 +4165,7 @@ CREATE TABLE IF NOT EXISTS `manager_order_status_dynamics2` (
 -- Table structure for table `manufacturer`
 --
 
+DROP TABLE IF EXISTS `manufacturer`;
 CREATE TABLE IF NOT EXISTS `manufacturer` (
   `manufacturer_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
@@ -4140,7 +4196,7 @@ CREATE TABLE IF NOT EXISTS `manufacturer` (
   KEY `hotline_enable` (`hotline_enable`),
   KEY `products_total` (`products_total`),
   KEY `product_total_enabled` (`products_total_enabled`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4148,31 +4204,32 @@ CREATE TABLE IF NOT EXISTS `manufacturer` (
 -- Table structure for table `manufacturer_description`
 --
 
+DROP TABLE IF EXISTS `manufacturer_description`;
 CREATE TABLE IF NOT EXISTS `manufacturer_description` (
   `manufacturer_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `description` text COLLATE utf8mb3_bin NOT NULL,
-  `alternate_name` longtext COLLATE utf8mb3_bin NOT NULL,
-  `location` varchar(255) COLLATE utf8mb3_bin NOT NULL,
-  `short_description` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `meta_description` varchar(255) COLLATE utf8mb3_bin NOT NULL,
-  `meta_keyword` varchar(255) COLLATE utf8mb3_bin NOT NULL,
+  `description` text NOT NULL,
+  `alternate_name` longtext NOT NULL,
+  `location` varchar(255) NOT NULL,
+  `short_description` varchar(500) NOT NULL,
+  `meta_description` varchar(255) NOT NULL,
+  `meta_keyword` varchar(255) NOT NULL,
   `auto_gen` tinyint(1) NOT NULL DEFAULT 0,
-  `seo_title` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `seo_h1` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `tag` text COLLATE utf8mb3_bin DEFAULT NULL,
-  `products_title` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `products_meta_description` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `collections_title` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `collections_meta_description` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `categories_title` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `categories_meta_description` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `articles_title` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `articles_meta_description` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `newproducts_title` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `newproducts_meta_description` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `special_title` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `special_meta_description` varchar(500) COLLATE utf8mb3_bin NOT NULL,
+  `seo_title` varchar(255) NOT NULL DEFAULT '',
+  `seo_h1` varchar(255) NOT NULL DEFAULT '',
+  `tag` text DEFAULT NULL,
+  `products_title` varchar(500) NOT NULL,
+  `products_meta_description` varchar(500) NOT NULL,
+  `collections_title` varchar(500) NOT NULL,
+  `collections_meta_description` varchar(500) NOT NULL,
+  `categories_title` varchar(500) NOT NULL,
+  `categories_meta_description` varchar(500) NOT NULL,
+  `articles_title` varchar(500) NOT NULL,
+  `articles_meta_description` varchar(500) NOT NULL,
+  `newproducts_title` varchar(500) NOT NULL,
+  `newproducts_meta_description` varchar(500) NOT NULL,
+  `special_title` varchar(500) NOT NULL,
+  `special_meta_description` varchar(500) NOT NULL,
   PRIMARY KEY (`manufacturer_id`,`language_id`),
   KEY `location` (`location`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
@@ -4183,6 +4240,7 @@ CREATE TABLE IF NOT EXISTS `manufacturer_description` (
 -- Table structure for table `manufacturer_page_content`
 --
 
+DROP TABLE IF EXISTS `manufacturer_page_content`;
 CREATE TABLE IF NOT EXISTS `manufacturer_page_content` (
   `manufacturer_page_content_id` int(11) NOT NULL AUTO_INCREMENT,
   `manufacturer_id` int(11) NOT NULL,
@@ -4195,7 +4253,7 @@ CREATE TABLE IF NOT EXISTS `manufacturer_page_content` (
   `content` text NOT NULL,
   `sort_order` int(11) NOT NULL,
   PRIMARY KEY (`manufacturer_page_content_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4203,12 +4261,13 @@ CREATE TABLE IF NOT EXISTS `manufacturer_page_content` (
 -- Table structure for table `manufacturer_to_layout`
 --
 
+DROP TABLE IF EXISTS `manufacturer_to_layout`;
 CREATE TABLE IF NOT EXISTS `manufacturer_to_layout` (
   `manufacturer_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL,
   PRIMARY KEY (`manufacturer_id`,`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4216,13 +4275,14 @@ CREATE TABLE IF NOT EXISTS `manufacturer_to_layout` (
 -- Table structure for table `manufacturer_to_store`
 --
 
+DROP TABLE IF EXISTS `manufacturer_to_store`;
 CREATE TABLE IF NOT EXISTS `manufacturer_to_store` (
   `manufacturer_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   PRIMARY KEY (`manufacturer_id`,`store_id`),
   KEY `manufacturer_id` (`manufacturer_id`),
   KEY `store_id` (`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4230,12 +4290,13 @@ CREATE TABLE IF NOT EXISTS `manufacturer_to_store` (
 -- Table structure for table `maxmind_geo_country`
 --
 
+DROP TABLE IF EXISTS `maxmind_geo_country`;
 CREATE TABLE IF NOT EXISTS `maxmind_geo_country` (
   `start` bigint(20) NOT NULL,
   `end` bigint(20) NOT NULL,
   `iso_code_2` varchar(2) NOT NULL,
   PRIMARY KEY (`start`,`end`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4243,6 +4304,7 @@ CREATE TABLE IF NOT EXISTS `maxmind_geo_country` (
 -- Table structure for table `mono_orders`
 --
 
+DROP TABLE IF EXISTS `mono_orders`;
 CREATE TABLE IF NOT EXISTS `mono_orders` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `InvoiceId` varchar(50) DEFAULT NULL,
@@ -4258,7 +4320,7 @@ CREATE TABLE IF NOT EXISTS `mono_orders` (
   PRIMARY KEY (`Id`),
   KEY `OrderId` (`OrderId`),
   KEY `CheckoutOrderId` (`CheckoutOrderId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4266,6 +4328,7 @@ CREATE TABLE IF NOT EXISTS `mono_orders` (
 -- Table structure for table `multi_pay_payment`
 --
 
+DROP TABLE IF EXISTS `multi_pay_payment`;
 CREATE TABLE IF NOT EXISTS `multi_pay_payment` (
   `payment_id` int(11) NOT NULL AUTO_INCREMENT,
   `service_cod` varchar(50) DEFAULT NULL,
@@ -4280,7 +4343,7 @@ CREATE TABLE IF NOT EXISTS `multi_pay_payment` (
   PRIMARY KEY (`payment_id`),
   KEY `operation_id` (`operation_id`),
   KEY `datetime` (`datetime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4288,11 +4351,12 @@ CREATE TABLE IF NOT EXISTS `multi_pay_payment` (
 -- Table structure for table `nauthor`
 --
 
+DROP TABLE IF EXISTS `nauthor`;
 CREATE TABLE IF NOT EXISTS `nauthor` (
   `nauthor_id` int(11) NOT NULL AUTO_INCREMENT,
-  `adminid` varchar(64) COLLATE utf8mb3_bin NOT NULL,
-  `name` varchar(64) COLLATE utf8mb3_bin NOT NULL,
-  `image` varchar(255) COLLATE utf8mb3_bin DEFAULT NULL,
+  `adminid` varchar(64) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `image` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`nauthor_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
@@ -4302,13 +4366,14 @@ CREATE TABLE IF NOT EXISTS `nauthor` (
 -- Table structure for table `nauthor_description`
 --
 
+DROP TABLE IF EXISTS `nauthor_description`;
 CREATE TABLE IF NOT EXISTS `nauthor_description` (
   `nauthor_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `ctitle` varchar(255) COLLATE utf8mb3_bin NOT NULL,
-  `description` text COLLATE utf8mb3_bin NOT NULL,
-  `meta_description` varchar(255) COLLATE utf8mb3_bin NOT NULL,
-  `meta_keyword` varchar(255) COLLATE utf8mb3_bin NOT NULL,
+  `ctitle` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `meta_description` varchar(255) NOT NULL,
+  `meta_keyword` varchar(255) NOT NULL,
   PRIMARY KEY (`nauthor_id`,`language_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
@@ -4318,9 +4383,10 @@ CREATE TABLE IF NOT EXISTS `nauthor_description` (
 -- Table structure for table `ncategory`
 --
 
+DROP TABLE IF EXISTS `ncategory`;
 CREATE TABLE IF NOT EXISTS `ncategory` (
   `ncategory_id` int(11) NOT NULL AUTO_INCREMENT,
-  `image` varchar(255) COLLATE utf8mb3_bin DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
   `parent_id` int(11) NOT NULL DEFAULT 0,
   `top` tinyint(1) NOT NULL,
   `column` int(11) NOT NULL,
@@ -4337,13 +4403,14 @@ CREATE TABLE IF NOT EXISTS `ncategory` (
 -- Table structure for table `ncategory_description`
 --
 
+DROP TABLE IF EXISTS `ncategory_description`;
 CREATE TABLE IF NOT EXISTS `ncategory_description` (
   `ncategory_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `description` text COLLATE utf8mb3_bin NOT NULL,
-  `meta_description` varchar(255) COLLATE utf8mb3_bin NOT NULL,
-  `meta_keyword` varchar(255) COLLATE utf8mb3_bin NOT NULL,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `description` text NOT NULL,
+  `meta_description` varchar(255) NOT NULL,
+  `meta_keyword` varchar(255) NOT NULL,
   PRIMARY KEY (`ncategory_id`,`language_id`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
@@ -4354,6 +4421,7 @@ CREATE TABLE IF NOT EXISTS `ncategory_description` (
 -- Table structure for table `ncategory_to_layout`
 --
 
+DROP TABLE IF EXISTS `ncategory_to_layout`;
 CREATE TABLE IF NOT EXISTS `ncategory_to_layout` (
   `ncategory_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -4367,6 +4435,7 @@ CREATE TABLE IF NOT EXISTS `ncategory_to_layout` (
 -- Table structure for table `ncategory_to_store`
 --
 
+DROP TABLE IF EXISTS `ncategory_to_store`;
 CREATE TABLE IF NOT EXISTS `ncategory_to_store` (
   `ncategory_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -4379,13 +4448,14 @@ CREATE TABLE IF NOT EXISTS `ncategory_to_store` (
 -- Table structure for table `ncomments`
 --
 
+DROP TABLE IF EXISTS `ncomments`;
 CREATE TABLE IF NOT EXISTS `ncomments` (
   `ncomment_id` int(11) NOT NULL AUTO_INCREMENT,
   `news_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `reply_id` int(11) NOT NULL DEFAULT 0,
-  `author` varchar(64) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `text` text COLLATE utf8mb3_bin NOT NULL,
+  `author` varchar(64) NOT NULL DEFAULT '',
+  `text` text NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 0,
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -4399,6 +4469,7 @@ CREATE TABLE IF NOT EXISTS `ncomments` (
 -- Table structure for table `news`
 --
 
+DROP TABLE IF EXISTS `news`;
 CREATE TABLE IF NOT EXISTS `news` (
   `news_id` int(11) NOT NULL AUTO_INCREMENT,
   `nauthor_id` int(11) NOT NULL,
@@ -4427,21 +4498,22 @@ CREATE TABLE IF NOT EXISTS `news` (
 -- Table structure for table `news_description`
 --
 
+DROP TABLE IF EXISTS `news_description`;
 CREATE TABLE IF NOT EXISTS `news_description` (
   `news_id` int(11) NOT NULL DEFAULT 0,
   `language_id` int(11) NOT NULL DEFAULT 0,
-  `title` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `ctitle` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `ctitle` varchar(255) NOT NULL DEFAULT '',
   `description` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `description2` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
-  `meta_desc` varchar(255) COLLATE utf8mb3_bin NOT NULL,
-  `meta_key` varchar(255) COLLATE utf8mb3_bin NOT NULL,
+  `meta_desc` varchar(255) NOT NULL,
+  `meta_key` varchar(255) NOT NULL,
   `ntags` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
-  `recipe` text COLLATE utf8mb3_bin NOT NULL,
-  `cfield1` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `cfield2` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `cfield3` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `cfield4` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
+  `recipe` text NOT NULL,
+  `cfield1` varchar(255) NOT NULL DEFAULT '',
+  `cfield2` varchar(255) NOT NULL DEFAULT '',
+  `cfield3` varchar(255) NOT NULL DEFAULT '',
+  `cfield4` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`news_id`,`language_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
@@ -4451,6 +4523,7 @@ CREATE TABLE IF NOT EXISTS `news_description` (
 -- Table structure for table `news_gallery`
 --
 
+DROP TABLE IF EXISTS `news_gallery`;
 CREATE TABLE IF NOT EXISTS `news_gallery` (
   `news_image_id` int(11) NOT NULL AUTO_INCREMENT,
   `news_id` int(11) NOT NULL,
@@ -4458,7 +4531,7 @@ CREATE TABLE IF NOT EXISTS `news_gallery` (
   `text` text NOT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`news_image_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4466,6 +4539,7 @@ CREATE TABLE IF NOT EXISTS `news_gallery` (
 -- Table structure for table `news_related`
 --
 
+DROP TABLE IF EXISTS `news_related`;
 CREATE TABLE IF NOT EXISTS `news_related` (
   `news_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -4478,6 +4552,7 @@ CREATE TABLE IF NOT EXISTS `news_related` (
 -- Table structure for table `news_to_layout`
 --
 
+DROP TABLE IF EXISTS `news_to_layout`;
 CREATE TABLE IF NOT EXISTS `news_to_layout` (
   `news_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -4491,6 +4566,7 @@ CREATE TABLE IF NOT EXISTS `news_to_layout` (
 -- Table structure for table `news_to_ncategory`
 --
 
+DROP TABLE IF EXISTS `news_to_ncategory`;
 CREATE TABLE IF NOT EXISTS `news_to_ncategory` (
   `news_id` int(11) NOT NULL,
   `ncategory_id` int(11) NOT NULL,
@@ -4503,6 +4579,7 @@ CREATE TABLE IF NOT EXISTS `news_to_ncategory` (
 -- Table structure for table `news_to_store`
 --
 
+DROP TABLE IF EXISTS `news_to_store`;
 CREATE TABLE IF NOT EXISTS `news_to_store` (
   `news_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL DEFAULT 0,
@@ -4515,11 +4592,12 @@ CREATE TABLE IF NOT EXISTS `news_to_store` (
 -- Table structure for table `news_video`
 --
 
+DROP TABLE IF EXISTS `news_video`;
 CREATE TABLE IF NOT EXISTS `news_video` (
   `news_video_id` int(11) NOT NULL AUTO_INCREMENT,
   `news_id` int(11) NOT NULL,
-  `text` text COLLATE utf8mb3_bin NOT NULL,
-  `video` varchar(255) COLLATE utf8mb3_bin DEFAULT NULL,
+  `text` text NOT NULL,
+  `video` varchar(255) DEFAULT NULL,
   `width` int(11) NOT NULL,
   `height` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0,
@@ -4532,6 +4610,7 @@ CREATE TABLE IF NOT EXISTS `news_video` (
 -- Table structure for table `novaposhta_cities`
 --
 
+DROP TABLE IF EXISTS `novaposhta_cities`;
 CREATE TABLE IF NOT EXISTS `novaposhta_cities` (
   `CityID` int(11) NOT NULL AUTO_INCREMENT,
   `Ref` varchar(36) NOT NULL,
@@ -4572,7 +4651,7 @@ CREATE TABLE IF NOT EXISTS `novaposhta_cities` (
   KEY `Warehouse` (`Warehouse`),
   KEY `Index1` (`Index1`),
   KEY `Index2` (`Index2`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4580,11 +4659,12 @@ CREATE TABLE IF NOT EXISTS `novaposhta_cities` (
 -- Table structure for table `novaposhta_cities_ww`
 --
 
+DROP TABLE IF EXISTS `novaposhta_cities_ww`;
 CREATE TABLE IF NOT EXISTS `novaposhta_cities_ww` (
   `CityID` int(11) NOT NULL AUTO_INCREMENT,
-  `Ref` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Description` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DescriptionRu` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Ref` varchar(64) NOT NULL,
+  `Description` varchar(255) NOT NULL,
+  `DescriptionRu` varchar(255) NOT NULL,
   `Delivery1` int(11) NOT NULL,
   `Delivery2` int(11) NOT NULL,
   `Delivery3` int(11) NOT NULL,
@@ -4592,9 +4672,9 @@ CREATE TABLE IF NOT EXISTS `novaposhta_cities_ww` (
   `Delivery5` int(11) NOT NULL,
   `Delivery6` int(11) NOT NULL,
   `Delivery7` int(11) NOT NULL,
-  `Area` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `SettlementType` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `SettlementTypeDescriptionRu` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Area` varchar(64) NOT NULL,
+  `SettlementType` varchar(64) NOT NULL,
+  `SettlementTypeDescriptionRu` varchar(255) NOT NULL,
   `SettlementTypeDescription` int(11) NOT NULL,
   `WarehouseCount` int(11) NOT NULL DEFAULT 0,
   `deliveryPeriod` int(11) NOT NULL,
@@ -4612,14 +4692,15 @@ CREATE TABLE IF NOT EXISTS `novaposhta_cities_ww` (
 -- Table structure for table `novaposhta_streets`
 --
 
+DROP TABLE IF EXISTS `novaposhta_streets`;
 CREATE TABLE IF NOT EXISTS `novaposhta_streets` (
   `StreetID` int(11) NOT NULL AUTO_INCREMENT,
-  `Ref` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityRef` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Description` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DescriptionRu` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `StreetsTypeRef` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `StreetsType` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Ref` varchar(64) NOT NULL,
+  `CityRef` varchar(64) NOT NULL,
+  `Description` varchar(500) NOT NULL,
+  `DescriptionRu` varchar(500) NOT NULL,
+  `StreetsTypeRef` varchar(255) NOT NULL,
+  `StreetsType` varchar(255) NOT NULL,
   PRIMARY KEY (`StreetID`),
   UNIQUE KEY `Ref_2` (`Ref`),
   KEY `CityRef` (`CityRef`)
@@ -4631,6 +4712,7 @@ CREATE TABLE IF NOT EXISTS `novaposhta_streets` (
 -- Table structure for table `novaposhta_warehouses`
 --
 
+DROP TABLE IF EXISTS `novaposhta_warehouses`;
 CREATE TABLE IF NOT EXISTS `novaposhta_warehouses` (
   `WarehouseID` int(11) NOT NULL AUTO_INCREMENT,
   `SiteKey` int(11) NOT NULL,
@@ -4671,7 +4753,7 @@ CREATE TABLE IF NOT EXISTS `novaposhta_warehouses` (
   KEY `TypeOfWarehouseRef` (`TypeOfWarehouseRef`),
   KEY `TypeOfWarehouseRu` (`TypeOfWarehouseRu`),
   KEY `WarehouseStatus` (`WarehouseStatus`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4679,12 +4761,13 @@ CREATE TABLE IF NOT EXISTS `novaposhta_warehouses` (
 -- Table structure for table `novaposhta_zones`
 --
 
+DROP TABLE IF EXISTS `novaposhta_zones`;
 CREATE TABLE IF NOT EXISTS `novaposhta_zones` (
   `ZoneID` int(11) NOT NULL AUTO_INCREMENT,
-  `Ref` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Description` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DescriptionRu` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `AreasCenter` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Ref` varchar(64) NOT NULL,
+  `Description` varchar(255) NOT NULL,
+  `DescriptionRu` varchar(255) NOT NULL,
+  `AreasCenter` varchar(64) NOT NULL,
   PRIMARY KEY (`ZoneID`),
   UNIQUE KEY `Ref` (`Ref`) USING BTREE,
   KEY `AreasCenter` (`AreasCenter`)
@@ -4696,6 +4779,7 @@ CREATE TABLE IF NOT EXISTS `novaposhta_zones` (
 -- Table structure for table `ocfilter_option`
 --
 
+DROP TABLE IF EXISTS `ocfilter_option`;
 CREATE TABLE IF NOT EXISTS `ocfilter_option` (
   `option_id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(16) NOT NULL DEFAULT 'checkbox',
@@ -4710,7 +4794,7 @@ CREATE TABLE IF NOT EXISTS `ocfilter_option` (
   KEY `keyword` (`keyword`),
   KEY `status` (`status`),
   KEY `sort_order` (`sort_order`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4718,6 +4802,7 @@ CREATE TABLE IF NOT EXISTS `ocfilter_option` (
 -- Table structure for table `ocfilter_option_description`
 --
 
+DROP TABLE IF EXISTS `ocfilter_option_description`;
 CREATE TABLE IF NOT EXISTS `ocfilter_option_description` (
   `option_id` int(11) NOT NULL,
   `language_id` tinyint(4) NOT NULL,
@@ -4725,7 +4810,7 @@ CREATE TABLE IF NOT EXISTS `ocfilter_option_description` (
   `postfix` varchar(32) NOT NULL DEFAULT '',
   `description` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`option_id`,`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4733,12 +4818,13 @@ CREATE TABLE IF NOT EXISTS `ocfilter_option_description` (
 -- Table structure for table `ocfilter_option_to_category`
 --
 
+DROP TABLE IF EXISTS `ocfilter_option_to_category`;
 CREATE TABLE IF NOT EXISTS `ocfilter_option_to_category` (
   `option_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   PRIMARY KEY (`category_id`,`option_id`),
   KEY `category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4746,11 +4832,12 @@ CREATE TABLE IF NOT EXISTS `ocfilter_option_to_category` (
 -- Table structure for table `ocfilter_option_to_store`
 --
 
+DROP TABLE IF EXISTS `ocfilter_option_to_store`;
 CREATE TABLE IF NOT EXISTS `ocfilter_option_to_store` (
   `option_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   PRIMARY KEY (`store_id`,`option_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4758,6 +4845,7 @@ CREATE TABLE IF NOT EXISTS `ocfilter_option_to_store` (
 -- Table structure for table `ocfilter_option_value`
 --
 
+DROP TABLE IF EXISTS `ocfilter_option_value`;
 CREATE TABLE IF NOT EXISTS `ocfilter_option_value` (
   `value_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `option_id` int(11) NOT NULL DEFAULT 0,
@@ -4767,7 +4855,7 @@ CREATE TABLE IF NOT EXISTS `ocfilter_option_value` (
   `sort_order` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`value_id`,`option_id`),
   KEY `keyword` (`keyword`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4775,6 +4863,7 @@ CREATE TABLE IF NOT EXISTS `ocfilter_option_value` (
 -- Table structure for table `ocfilter_option_value_description`
 --
 
+DROP TABLE IF EXISTS `ocfilter_option_value_description`;
 CREATE TABLE IF NOT EXISTS `ocfilter_option_value_description` (
   `value_id` bigint(20) NOT NULL,
   `option_id` int(11) NOT NULL,
@@ -4783,7 +4872,7 @@ CREATE TABLE IF NOT EXISTS `ocfilter_option_value_description` (
   PRIMARY KEY (`value_id`,`language_id`),
   KEY `option_id` (`option_id`),
   KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4791,6 +4880,7 @@ CREATE TABLE IF NOT EXISTS `ocfilter_option_value_description` (
 -- Table structure for table `ocfilter_option_value_to_product`
 --
 
+DROP TABLE IF EXISTS `ocfilter_option_value_to_product`;
 CREATE TABLE IF NOT EXISTS `ocfilter_option_value_to_product` (
   `ocfilter_option_value_to_product_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL,
@@ -4802,7 +4892,7 @@ CREATE TABLE IF NOT EXISTS `ocfilter_option_value_to_product` (
   KEY `slide_value_min_slide_value_max` (`slide_value_min`,`slide_value_max`),
   KEY `option_id_value_id` (`option_id`,`value_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4810,6 +4900,7 @@ CREATE TABLE IF NOT EXISTS `ocfilter_option_value_to_product` (
 -- Table structure for table `ocfilter_option_value_to_product_description`
 --
 
+DROP TABLE IF EXISTS `ocfilter_option_value_to_product_description`;
 CREATE TABLE IF NOT EXISTS `ocfilter_option_value_to_product_description` (
   `product_id` int(11) NOT NULL,
   `value_id` bigint(20) NOT NULL,
@@ -4817,7 +4908,7 @@ CREATE TABLE IF NOT EXISTS `ocfilter_option_value_to_product_description` (
   `language_id` tinyint(4) NOT NULL,
   `description` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`product_id`,`value_id`,`option_id`,`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4825,6 +4916,7 @@ CREATE TABLE IF NOT EXISTS `ocfilter_option_value_to_product_description` (
 -- Table structure for table `ocfilter_page`
 --
 
+DROP TABLE IF EXISTS `ocfilter_page`;
 CREATE TABLE IF NOT EXISTS `ocfilter_page` (
   `ocfilter_page_id` int(11) NOT NULL AUTO_INCREMENT,
   `category_id` int(11) NOT NULL,
@@ -4839,7 +4931,7 @@ CREATE TABLE IF NOT EXISTS `ocfilter_page` (
   PRIMARY KEY (`ocfilter_page_id`),
   KEY `category_id_ocfilter_params` (`category_id`,`ocfilter_params`),
   KEY `keyword` (`keyword`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4847,6 +4939,7 @@ CREATE TABLE IF NOT EXISTS `ocfilter_page` (
 -- Table structure for table `oc_feedback`
 --
 
+DROP TABLE IF EXISTS `oc_feedback`;
 CREATE TABLE IF NOT EXISTS `oc_feedback` (
   `feedback_id` int(11) NOT NULL AUTO_INCREMENT,
   `sort_order` int(11) NOT NULL DEFAULT 0,
@@ -4854,7 +4947,7 @@ CREATE TABLE IF NOT EXISTS `oc_feedback` (
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`feedback_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4862,13 +4955,14 @@ CREATE TABLE IF NOT EXISTS `oc_feedback` (
 -- Table structure for table `oc_sms_log`
 --
 
+DROP TABLE IF EXISTS `oc_sms_log`;
 CREATE TABLE IF NOT EXISTS `oc_sms_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `phone` varchar(255) NOT NULL,
   `text` text NOT NULL,
   `date_send` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4876,6 +4970,7 @@ CREATE TABLE IF NOT EXISTS `oc_sms_log` (
 -- Table structure for table `oc_yandex_category`
 --
 
+DROP TABLE IF EXISTS `oc_yandex_category`;
 CREATE TABLE IF NOT EXISTS `oc_yandex_category` (
   `yandex_category_id` int(11) NOT NULL AUTO_INCREMENT,
   `level1` varchar(50) NOT NULL,
@@ -4886,7 +4981,7 @@ CREATE TABLE IF NOT EXISTS `oc_yandex_category` (
   PRIMARY KEY (`yandex_category_id`),
   KEY `level1` (`level1`,`level2`,`level3`),
   KEY `level4` (`level4`)
-) ENGINE=InnoDB DEFAULT CHARSET=cp1251;
+) ENGINE=InnoDB DEFAULT CHARSET=cp1251 COLLATE=cp1251_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4894,6 +4989,7 @@ CREATE TABLE IF NOT EXISTS `oc_yandex_category` (
 -- Table structure for table `odinass_product_queue`
 --
 
+DROP TABLE IF EXISTS `odinass_product_queue`;
 CREATE TABLE IF NOT EXISTS `odinass_product_queue` (
   `product_id` int(11) NOT NULL,
   PRIMARY KEY (`product_id`)
@@ -4905,13 +5001,14 @@ CREATE TABLE IF NOT EXISTS `odinass_product_queue` (
 -- Table structure for table `option`
 --
 
+DROP TABLE IF EXISTS `option`;
 CREATE TABLE IF NOT EXISTS `option` (
   `option_id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(32) NOT NULL,
   `sort_order` int(11) NOT NULL,
   PRIMARY KEY (`option_id`),
   KEY `sort_order` (`sort_order`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4919,13 +5016,14 @@ CREATE TABLE IF NOT EXISTS `option` (
 -- Table structure for table `option_description`
 --
 
+DROP TABLE IF EXISTS `option_description`;
 CREATE TABLE IF NOT EXISTS `option_description` (
   `option_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
   PRIMARY KEY (`option_id`,`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4933,12 +5031,13 @@ CREATE TABLE IF NOT EXISTS `option_description` (
 -- Table structure for table `option_tooltip`
 --
 
+DROP TABLE IF EXISTS `option_tooltip`;
 CREATE TABLE IF NOT EXISTS `option_tooltip` (
   `option_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `tooltip` text NOT NULL,
   PRIMARY KEY (`option_id`,`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4946,6 +5045,7 @@ CREATE TABLE IF NOT EXISTS `option_tooltip` (
 -- Table structure for table `option_value`
 --
 
+DROP TABLE IF EXISTS `option_value`;
 CREATE TABLE IF NOT EXISTS `option_value` (
   `option_value_id` int(11) NOT NULL AUTO_INCREMENT,
   `option_id` int(11) NOT NULL,
@@ -4953,7 +5053,7 @@ CREATE TABLE IF NOT EXISTS `option_value` (
   `sort_order` int(11) NOT NULL,
   PRIMARY KEY (`option_value_id`),
   KEY `option_id` (`option_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4961,6 +5061,7 @@ CREATE TABLE IF NOT EXISTS `option_value` (
 -- Table structure for table `option_value_description`
 --
 
+DROP TABLE IF EXISTS `option_value_description`;
 CREATE TABLE IF NOT EXISTS `option_value_description` (
   `option_value_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -4969,7 +5070,7 @@ CREATE TABLE IF NOT EXISTS `option_value_description` (
   PRIMARY KEY (`option_value_id`,`language_id`),
   KEY `language_id` (`language_id`),
   KEY `option_id` (`option_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4977,6 +5078,7 @@ CREATE TABLE IF NOT EXISTS `option_value_description` (
 -- Table structure for table `order`
 --
 
+DROP TABLE IF EXISTS `order`;
 CREATE TABLE IF NOT EXISTS `order` (
   `order_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Номер заказа',
   `order_id2` varchar(30) NOT NULL COMMENT 'Вторичный номер заказа (не используется)',
@@ -5198,7 +5300,7 @@ CREATE TABLE IF NOT EXISTS `order` (
   KEY `amazon_offers_type` (`amazon_offers_type`),
   KEY `yam_campaign_id` (`yam_campaign_id`),
   KEY `yam_express` (`yam_express`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5206,13 +5308,14 @@ CREATE TABLE IF NOT EXISTS `order` (
 -- Table structure for table `order_amazon`
 --
 
+DROP TABLE IF EXISTS `order_amazon`;
 CREATE TABLE IF NOT EXISTS `order_amazon` (
   `order_id` int(11) NOT NULL,
   `amazon_order_id` varchar(255) NOT NULL,
   `free_shipping` tinyint(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (`order_id`),
   KEY `amazon_order_id` (`amazon_order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5220,11 +5323,12 @@ CREATE TABLE IF NOT EXISTS `order_amazon` (
 -- Table structure for table `order_amazon_product`
 --
 
+DROP TABLE IF EXISTS `order_amazon_product`;
 CREATE TABLE IF NOT EXISTS `order_amazon_product` (
   `order_product_id` int(11) NOT NULL,
   `amazon_order_item_code` varchar(255) NOT NULL,
   PRIMARY KEY (`order_product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5232,6 +5336,7 @@ CREATE TABLE IF NOT EXISTS `order_amazon_product` (
 -- Table structure for table `order_amazon_report`
 --
 
+DROP TABLE IF EXISTS `order_amazon_report`;
 CREATE TABLE IF NOT EXISTS `order_amazon_report` (
   `order_id` int(11) NOT NULL,
   `submission_id` varchar(255) NOT NULL,
@@ -5239,7 +5344,7 @@ CREATE TABLE IF NOT EXISTS `order_amazon_report` (
   `text` text NOT NULL,
   PRIMARY KEY (`submission_id`),
   KEY `order_id` (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5247,6 +5352,7 @@ CREATE TABLE IF NOT EXISTS `order_amazon_report` (
 -- Table structure for table `order_courier_history`
 --
 
+DROP TABLE IF EXISTS `order_courier_history`;
 CREATE TABLE IF NOT EXISTS `order_courier_history` (
   `order_id` int(11) NOT NULL,
   `courier_id` varchar(100) NOT NULL,
@@ -5259,7 +5365,7 @@ CREATE TABLE IF NOT EXISTS `order_courier_history` (
   KEY `order_id` (`order_id`),
   KEY `date_added` (`date_added`),
   KEY `status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5267,6 +5373,7 @@ CREATE TABLE IF NOT EXISTS `order_courier_history` (
 -- Table structure for table `order_download`
 --
 
+DROP TABLE IF EXISTS `order_download`;
 CREATE TABLE IF NOT EXISTS `order_download` (
   `order_download_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -5278,7 +5385,7 @@ CREATE TABLE IF NOT EXISTS `order_download` (
   PRIMARY KEY (`order_download_id`),
   KEY `order_id` (`order_id`),
   KEY `order_product_id` (`order_product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5286,6 +5393,7 @@ CREATE TABLE IF NOT EXISTS `order_download` (
 -- Table structure for table `order_field`
 --
 
+DROP TABLE IF EXISTS `order_field`;
 CREATE TABLE IF NOT EXISTS `order_field` (
   `order_id` int(11) NOT NULL,
   `custom_field_id` int(11) NOT NULL,
@@ -5296,7 +5404,7 @@ CREATE TABLE IF NOT EXISTS `order_field` (
   PRIMARY KEY (`order_id`,`custom_field_id`,`custom_field_value_id`),
   KEY `custom_field_id` (`custom_field_id`),
   KEY `custom_field_value_id` (`custom_field_value_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5304,6 +5412,7 @@ CREATE TABLE IF NOT EXISTS `order_field` (
 -- Table structure for table `order_fraud`
 --
 
+DROP TABLE IF EXISTS `order_fraud`;
 CREATE TABLE IF NOT EXISTS `order_fraud` (
   `order_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -5361,7 +5470,7 @@ CREATE TABLE IF NOT EXISTS `order_fraud` (
   PRIMARY KEY (`order_id`),
   KEY `customer_id` (`customer_id`),
   KEY `maxmind_id` (`maxmind_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5369,6 +5478,7 @@ CREATE TABLE IF NOT EXISTS `order_fraud` (
 -- Table structure for table `order_history`
 --
 
+DROP TABLE IF EXISTS `order_history`;
 CREATE TABLE IF NOT EXISTS `order_history` (
   `order_history_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -5386,7 +5496,7 @@ CREATE TABLE IF NOT EXISTS `order_history` (
   KEY `user_id` (`user_id`),
   KEY `date_added` (`date_added`),
   KEY `courier` (`courier`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5394,6 +5504,7 @@ CREATE TABLE IF NOT EXISTS `order_history` (
 -- Table structure for table `order_invoice_history`
 --
 
+DROP TABLE IF EXISTS `order_invoice_history`;
 CREATE TABLE IF NOT EXISTS `order_invoice_history` (
   `order_invoice_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -5406,7 +5517,7 @@ CREATE TABLE IF NOT EXISTS `order_invoice_history` (
   PRIMARY KEY (`order_invoice_id`),
   KEY `order_id` (`order_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5414,6 +5525,7 @@ CREATE TABLE IF NOT EXISTS `order_invoice_history` (
 -- Table structure for table `order_option`
 --
 
+DROP TABLE IF EXISTS `order_option`;
 CREATE TABLE IF NOT EXISTS `order_option` (
   `order_option_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -5429,7 +5541,7 @@ CREATE TABLE IF NOT EXISTS `order_option` (
   KEY `product_option_id` (`product_option_id`),
   KEY `product_option_value_id` (`product_option_value_id`),
   KEY `order_product_id_2` (`order_product_id`,`type`,`name`,`product_option_value_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5437,6 +5549,7 @@ CREATE TABLE IF NOT EXISTS `order_option` (
 -- Table structure for table `order_product`
 --
 
+DROP TABLE IF EXISTS `order_product`;
 CREATE TABLE IF NOT EXISTS `order_product` (
   `order_product_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -5484,7 +5597,7 @@ CREATE TABLE IF NOT EXISTS `order_product` (
   KEY `reward` (`reward`),
   KEY `reward_one` (`reward_one`),
   KEY `ao_id` (`ao_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5492,6 +5605,7 @@ CREATE TABLE IF NOT EXISTS `order_product` (
 -- Table structure for table `order_product_bought`
 --
 
+DROP TABLE IF EXISTS `order_product_bought`;
 CREATE TABLE IF NOT EXISTS `order_product_bought` (
   `bought_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -5500,7 +5614,7 @@ CREATE TABLE IF NOT EXISTS `order_product_bought` (
   `price` decimal(14,2) NOT NULL,
   `supplier` varchar(255) NOT NULL,
   PRIMARY KEY (`bought_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5508,6 +5622,7 @@ CREATE TABLE IF NOT EXISTS `order_product_bought` (
 -- Table structure for table `order_product_history`
 --
 
+DROP TABLE IF EXISTS `order_product_history`;
 CREATE TABLE IF NOT EXISTS `order_product_history` (
   `order_product_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -5530,7 +5645,7 @@ CREATE TABLE IF NOT EXISTS `order_product_history` (
   PRIMARY KEY (`order_product_id`),
   KEY `order_id` (`order_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5538,6 +5653,7 @@ CREATE TABLE IF NOT EXISTS `order_product_history` (
 -- Table structure for table `order_product_nogood`
 --
 
+DROP TABLE IF EXISTS `order_product_nogood`;
 CREATE TABLE IF NOT EXISTS `order_product_nogood` (
   `order_product_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -5569,7 +5685,7 @@ CREATE TABLE IF NOT EXISTS `order_product_nogood` (
   `new_order_id` bigint(20) DEFAULT NULL,
   UNIQUE KEY `order_product_id` (`order_product_id`),
   KEY `customer_id` (`customer_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5577,6 +5693,7 @@ CREATE TABLE IF NOT EXISTS `order_product_nogood` (
 -- Table structure for table `order_product_reserves`
 --
 
+DROP TABLE IF EXISTS `order_product_reserves`;
 CREATE TABLE IF NOT EXISTS `order_product_reserves` (
   `order_reserve_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_product_id` int(11) NOT NULL,
@@ -5588,7 +5705,7 @@ CREATE TABLE IF NOT EXISTS `order_product_reserves` (
   KEY `order_product_id` (`order_product_id`),
   KEY `country_id` (`country_code`),
   KEY `uuid` (`uuid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5596,6 +5713,7 @@ CREATE TABLE IF NOT EXISTS `order_product_reserves` (
 -- Table structure for table `order_product_supply`
 --
 
+DROP TABLE IF EXISTS `order_product_supply`;
 CREATE TABLE IF NOT EXISTS `order_product_supply` (
   `order_product_supply_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -5611,7 +5729,7 @@ CREATE TABLE IF NOT EXISTS `order_product_supply` (
   `url` text NOT NULL,
   `comment` text NOT NULL,
   PRIMARY KEY (`order_product_supply_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5619,6 +5737,7 @@ CREATE TABLE IF NOT EXISTS `order_product_supply` (
 -- Table structure for table `order_product_tracker`
 --
 
+DROP TABLE IF EXISTS `order_product_tracker`;
 CREATE TABLE IF NOT EXISTS `order_product_tracker` (
   `order_product_tracker_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_product` int(11) NOT NULL,
@@ -5628,7 +5747,7 @@ CREATE TABLE IF NOT EXISTS `order_product_tracker` (
   PRIMARY KEY (`order_product_tracker_id`),
   KEY `order_product` (`order_product`),
   KEY `order_product_status` (`order_product_status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5636,6 +5755,7 @@ CREATE TABLE IF NOT EXISTS `order_product_tracker` (
 -- Table structure for table `order_product_untaken`
 --
 
+DROP TABLE IF EXISTS `order_product_untaken`;
 CREATE TABLE IF NOT EXISTS `order_product_untaken` (
   `order_product_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -5672,7 +5792,7 @@ CREATE TABLE IF NOT EXISTS `order_product_untaken` (
   KEY `order_product_id` (`order_product_id`),
   KEY `order_id` (`order_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5680,6 +5800,7 @@ CREATE TABLE IF NOT EXISTS `order_product_untaken` (
 -- Table structure for table `order_receipt`
 --
 
+DROP TABLE IF EXISTS `order_receipt`;
 CREATE TABLE IF NOT EXISTS `order_receipt` (
   `order_receipt_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -5700,7 +5821,7 @@ CREATE TABLE IF NOT EXISTS `order_receipt` (
   KEY `fiscal_code` (`fiscal_code`),
   KEY `is_sent_dps` (`is_sent_dps`),
   KEY `receipt_id` (`receipt_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5708,6 +5829,7 @@ CREATE TABLE IF NOT EXISTS `order_receipt` (
 -- Table structure for table `order_recurring`
 --
 
+DROP TABLE IF EXISTS `order_recurring`;
 CREATE TABLE IF NOT EXISTS `order_recurring` (
   `order_recurring_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -5733,7 +5855,7 @@ CREATE TABLE IF NOT EXISTS `order_recurring` (
   KEY `order_id` (`order_id`),
   KEY `product_id` (`product_id`),
   KEY `profile_id` (`profile_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5741,6 +5863,7 @@ CREATE TABLE IF NOT EXISTS `order_recurring` (
 -- Table structure for table `order_recurring_transaction`
 --
 
+DROP TABLE IF EXISTS `order_recurring_transaction`;
 CREATE TABLE IF NOT EXISTS `order_recurring_transaction` (
   `order_recurring_transaction_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_recurring_id` int(11) NOT NULL,
@@ -5749,7 +5872,7 @@ CREATE TABLE IF NOT EXISTS `order_recurring_transaction` (
   `type` varchar(255) NOT NULL,
   PRIMARY KEY (`order_recurring_transaction_id`),
   KEY `order_recurring_id` (`order_recurring_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5757,13 +5880,14 @@ CREATE TABLE IF NOT EXISTS `order_recurring_transaction` (
 -- Table structure for table `order_reject_reason`
 --
 
+DROP TABLE IF EXISTS `order_reject_reason`;
 CREATE TABLE IF NOT EXISTS `order_reject_reason` (
   `reject_reason_id` int(11) NOT NULL AUTO_INCREMENT,
   `language_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   KEY `reject_reason_id` (`reject_reason_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5771,12 +5895,13 @@ CREATE TABLE IF NOT EXISTS `order_reject_reason` (
 -- Table structure for table `order_related`
 --
 
+DROP TABLE IF EXISTS `order_related`;
 CREATE TABLE IF NOT EXISTS `order_related` (
   `order_id` int(11) NOT NULL,
   `related_order_id` int(11) NOT NULL,
   KEY `order_id` (`order_id`),
   KEY `related_order_id` (`related_order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5784,6 +5909,7 @@ CREATE TABLE IF NOT EXISTS `order_related` (
 -- Table structure for table `order_save_history`
 --
 
+DROP TABLE IF EXISTS `order_save_history`;
 CREATE TABLE IF NOT EXISTS `order_save_history` (
   `order_save_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -5792,7 +5918,7 @@ CREATE TABLE IF NOT EXISTS `order_save_history` (
   `data` longtext NOT NULL,
   PRIMARY KEY (`order_save_id`),
   KEY `datetime` (`datetime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5800,6 +5926,7 @@ CREATE TABLE IF NOT EXISTS `order_save_history` (
 -- Table structure for table `order_set`
 --
 
+DROP TABLE IF EXISTS `order_set`;
 CREATE TABLE IF NOT EXISTS `order_set` (
   `order_set_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -5825,7 +5952,7 @@ CREATE TABLE IF NOT EXISTS `order_set` (
   PRIMARY KEY (`order_set_id`),
   KEY `order_id` (`order_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5833,6 +5960,7 @@ CREATE TABLE IF NOT EXISTS `order_set` (
 -- Table structure for table `order_simple_fields`
 --
 
+DROP TABLE IF EXISTS `order_simple_fields`;
 CREATE TABLE IF NOT EXISTS `order_simple_fields` (
   `order_id` int(11) NOT NULL,
   `metadata` text DEFAULT NULL,
@@ -5862,7 +5990,7 @@ CREATE TABLE IF NOT EXISTS `order_simple_fields` (
   PRIMARY KEY (`order_id`),
   KEY `novaposhta_city_guid` (`novaposhta_city_guid`),
   KEY `cdek_city_guid` (`cdek_city_guid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5870,6 +5998,7 @@ CREATE TABLE IF NOT EXISTS `order_simple_fields` (
 -- Table structure for table `order_sms_history`
 --
 
+DROP TABLE IF EXISTS `order_sms_history`;
 CREATE TABLE IF NOT EXISTS `order_sms_history` (
   `order_history_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -5883,7 +6012,7 @@ CREATE TABLE IF NOT EXISTS `order_sms_history` (
   PRIMARY KEY (`order_history_id`),
   KEY `order_id` (`order_id`),
   KEY `customer_id` (`customer_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5891,6 +6020,7 @@ CREATE TABLE IF NOT EXISTS `order_sms_history` (
 -- Table structure for table `order_status`
 --
 
+DROP TABLE IF EXISTS `order_status`;
 CREATE TABLE IF NOT EXISTS `order_status` (
   `order_status_id` int(11) NOT NULL AUTO_INCREMENT,
   `language_id` int(11) NOT NULL,
@@ -5902,7 +6032,7 @@ CREATE TABLE IF NOT EXISTS `order_status` (
   PRIMARY KEY (`order_status_id`,`language_id`),
   KEY `language_id` (`language_id`),
   KEY `order_status_id` (`order_status_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5910,10 +6040,11 @@ CREATE TABLE IF NOT EXISTS `order_status` (
 -- Table structure for table `order_status_linked`
 --
 
+DROP TABLE IF EXISTS `order_status_linked`;
 CREATE TABLE IF NOT EXISTS `order_status_linked` (
   `order_status_id` int(11) NOT NULL,
   `linked_order_status_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5921,6 +6052,7 @@ CREATE TABLE IF NOT EXISTS `order_status_linked` (
 -- Table structure for table `order_total`
 --
 
+DROP TABLE IF EXISTS `order_total`;
 CREATE TABLE IF NOT EXISTS `order_total` (
   `order_total_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -5938,7 +6070,7 @@ CREATE TABLE IF NOT EXISTS `order_total` (
   KEY `for_delivery` (`for_delivery`),
   KEY `value_national` (`value_national`),
   KEY `code` (`code`,`title`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5946,12 +6078,13 @@ CREATE TABLE IF NOT EXISTS `order_total` (
 -- Table structure for table `order_total_tax`
 --
 
+DROP TABLE IF EXISTS `order_total_tax`;
 CREATE TABLE IF NOT EXISTS `order_total_tax` (
   `order_total_id` int(11) NOT NULL DEFAULT 0,
   `code` varchar(255) DEFAULT NULL,
   `tax` decimal(10,4) NOT NULL,
   PRIMARY KEY (`order_total_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5959,10 +6092,11 @@ CREATE TABLE IF NOT EXISTS `order_total_tax` (
 -- Table structure for table `order_to_1c_queue`
 --
 
+DROP TABLE IF EXISTS `order_to_1c_queue`;
 CREATE TABLE IF NOT EXISTS `order_to_1c_queue` (
   `order_id` int(11) NOT NULL,
   PRIMARY KEY (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5970,6 +6104,7 @@ CREATE TABLE IF NOT EXISTS `order_to_1c_queue` (
 -- Table structure for table `order_tracker`
 --
 
+DROP TABLE IF EXISTS `order_tracker`;
 CREATE TABLE IF NOT EXISTS `order_tracker` (
   `order_tracker_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -5977,7 +6112,7 @@ CREATE TABLE IF NOT EXISTS `order_tracker` (
   `date_added` date NOT NULL,
   PRIMARY KEY (`order_tracker_id`),
   KEY `order_id` (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5985,6 +6120,7 @@ CREATE TABLE IF NOT EXISTS `order_tracker` (
 -- Table structure for table `order_tracker_sms`
 --
 
+DROP TABLE IF EXISTS `order_tracker_sms`;
 CREATE TABLE IF NOT EXISTS `order_tracker_sms` (
   `tracker_sms_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -5995,7 +6131,7 @@ CREATE TABLE IF NOT EXISTS `order_tracker_sms` (
   KEY `partie_num` (`partie_num`),
   KEY `order_id` (`order_id`),
   KEY `tracker_type` (`tracker_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6003,6 +6139,7 @@ CREATE TABLE IF NOT EXISTS `order_tracker_sms` (
 -- Table structure for table `order_ttns`
 --
 
+DROP TABLE IF EXISTS `order_ttns`;
 CREATE TABLE IF NOT EXISTS `order_ttns` (
   `order_ttn_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -6022,7 +6159,7 @@ CREATE TABLE IF NOT EXISTS `order_ttns` (
   KEY `order_id` (`order_id`),
   KEY `rejected` (`rejected`),
   KEY `waiting` (`waiting`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6030,6 +6167,7 @@ CREATE TABLE IF NOT EXISTS `order_ttns` (
 -- Table structure for table `order_ukrcredits`
 --
 
+DROP TABLE IF EXISTS `order_ukrcredits`;
 CREATE TABLE IF NOT EXISTS `order_ukrcredits` (
   `order_id` int(11) NOT NULL,
   `ukrcredits_payment_type` varchar(2) NOT NULL,
@@ -6037,7 +6175,7 @@ CREATE TABLE IF NOT EXISTS `order_ukrcredits` (
   `ukrcredits_order_status` varchar(64) NOT NULL,
   `ukrcredits_order_substatus` varchar(64) NOT NULL,
   PRIMARY KEY (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6045,6 +6183,7 @@ CREATE TABLE IF NOT EXISTS `order_ukrcredits` (
 -- Table structure for table `order_voucher`
 --
 
+DROP TABLE IF EXISTS `order_voucher`;
 CREATE TABLE IF NOT EXISTS `order_voucher` (
   `order_voucher_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -6062,7 +6201,7 @@ CREATE TABLE IF NOT EXISTS `order_voucher` (
   KEY `order_id` (`order_id`),
   KEY `voucher_id` (`voucher_id`),
   KEY `voucher_theme_id` (`voucher_theme_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6070,12 +6209,13 @@ CREATE TABLE IF NOT EXISTS `order_voucher` (
 -- Table structure for table `otp_tries`
 --
 
+DROP TABLE IF EXISTS `otp_tries`;
 CREATE TABLE IF NOT EXISTS `otp_tries` (
   `ip_addr` varchar(128) NOT NULL,
   `tries` int(11) NOT NULL,
   `timestamp` int(11) NOT NULL,
   PRIMARY KEY (`ip_addr`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6083,13 +6223,14 @@ CREATE TABLE IF NOT EXISTS `otp_tries` (
 -- Table structure for table `parser_queue`
 --
 
+DROP TABLE IF EXISTS `parser_queue`;
 CREATE TABLE IF NOT EXISTS `parser_queue` (
   `parser_queue_id` int(11) NOT NULL AUTO_INCREMENT,
   `manufacturer_id` int(11) NOT NULL,
   `add_date` datetime NOT NULL,
   `processed` tinyint(1) NOT NULL,
   PRIMARY KEY (`parser_queue_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6097,12 +6238,13 @@ CREATE TABLE IF NOT EXISTS `parser_queue` (
 -- Table structure for table `pavoslidergroups`
 --
 
+DROP TABLE IF EXISTS `pavoslidergroups`;
 CREATE TABLE IF NOT EXISTS `pavoslidergroups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `params` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6110,6 +6252,7 @@ CREATE TABLE IF NOT EXISTS `pavoslidergroups` (
 -- Table structure for table `pavosliderlayers`
 --
 
+DROP TABLE IF EXISTS `pavosliderlayers`;
 CREATE TABLE IF NOT EXISTS `pavosliderlayers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
@@ -6122,7 +6265,7 @@ CREATE TABLE IF NOT EXISTS `pavosliderlayers` (
   `position` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6130,15 +6273,16 @@ CREATE TABLE IF NOT EXISTS `pavosliderlayers` (
 -- Table structure for table `priceva_data`
 --
 
+DROP TABLE IF EXISTS `priceva_data`;
 CREATE TABLE IF NOT EXISTS `priceva_data` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
-  `name` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `articul` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `category_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brand_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `default_currency` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(512) NOT NULL,
+  `articul` varchar(255) NOT NULL,
+  `category_name` varchar(255) NOT NULL,
+  `brand_name` varchar(255) NOT NULL,
+  `url` varchar(1024) NOT NULL,
+  `default_currency` varchar(5) NOT NULL,
   `default_price` decimal(15,2) NOT NULL,
   `default_available` tinyint(1) NOT NULL,
   `default_discount` decimal(15,2) NOT NULL,
@@ -6158,16 +6302,17 @@ CREATE TABLE IF NOT EXISTS `priceva_data` (
 -- Table structure for table `priceva_sources`
 --
 
+DROP TABLE IF EXISTS `priceva_sources`;
 CREATE TABLE IF NOT EXISTS `priceva_sources` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
-  `url` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url_md5` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `company_name` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `region_name` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url` varchar(2048) NOT NULL,
+  `url_md5` varchar(64) NOT NULL,
+  `company_name` varchar(512) NOT NULL,
+  `region_name` varchar(512) NOT NULL,
   `active` tinyint(1) NOT NULL,
   `status` tinyint(1) NOT NULL,
-  `currency` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `currency` varchar(5) NOT NULL,
   `last_check_date` datetime NOT NULL,
   `relevance_status` int(11) NOT NULL DEFAULT 0,
   `price` decimal(15,2) NOT NULL,
@@ -6189,6 +6334,7 @@ CREATE TABLE IF NOT EXISTS `priceva_sources` (
 -- Table structure for table `product`
 --
 
+DROP TABLE IF EXISTS `product`;
 CREATE TABLE IF NOT EXISTS `product` (
   `product_id` int(11) NOT NULL AUTO_INCREMENT,
   `model` varchar(64) NOT NULL COMMENT 'Артикул или модель',
@@ -6405,7 +6551,7 @@ CREATE TABLE IF NOT EXISTS `product` (
   KEY `hotline_disable` (`hotline_disable`),
   KEY `added_from_supplier` (`added_from_supplier`),
   KEY `product_group_id` (`product_group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6413,6 +6559,7 @@ CREATE TABLE IF NOT EXISTS `product` (
 -- Table structure for table `product_additional_offer`
 --
 
+DROP TABLE IF EXISTS `product_additional_offer`;
 CREATE TABLE IF NOT EXISTS `product_additional_offer` (
   `product_additional_offer_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL,
@@ -6434,7 +6581,7 @@ CREATE TABLE IF NOT EXISTS `product_additional_offer` (
   KEY `ao_product_id` (`ao_product_id`),
   KEY `customer_group_id` (`customer_group_id`),
   KEY `date_start` (`date_start`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6442,6 +6589,7 @@ CREATE TABLE IF NOT EXISTS `product_additional_offer` (
 -- Table structure for table `product_additional_offer_to_store`
 --
 
+DROP TABLE IF EXISTS `product_additional_offer_to_store`;
 CREATE TABLE IF NOT EXISTS `product_additional_offer_to_store` (
   `product_additional_offer_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -6455,13 +6603,14 @@ CREATE TABLE IF NOT EXISTS `product_additional_offer_to_store` (
 -- Table structure for table `product_also_bought`
 --
 
+DROP TABLE IF EXISTS `product_also_bought`;
 CREATE TABLE IF NOT EXISTS `product_also_bought` (
   `product_id` int(11) NOT NULL,
   `also_bought_id` int(11) NOT NULL,
   UNIQUE KEY `product_id_2` (`product_id`,`also_bought_id`) USING BTREE,
   KEY `product_id` (`product_id`),
   KEY `also_bought_id` (`also_bought_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6469,13 +6618,14 @@ CREATE TABLE IF NOT EXISTS `product_also_bought` (
 -- Table structure for table `product_also_viewed`
 --
 
+DROP TABLE IF EXISTS `product_also_viewed`;
 CREATE TABLE IF NOT EXISTS `product_also_viewed` (
   `product_id` int(11) NOT NULL,
   `also_viewed_id` int(11) NOT NULL,
   UNIQUE KEY `product_id_2` (`product_id`,`also_viewed_id`) USING BTREE,
   KEY `product_id` (`product_id`),
   KEY `also_viewed_id` (`also_viewed_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6483,10 +6633,11 @@ CREATE TABLE IF NOT EXISTS `product_also_viewed` (
 -- Table structure for table `product_amzn_data`
 --
 
+DROP TABLE IF EXISTS `product_amzn_data`;
 CREATE TABLE IF NOT EXISTS `product_amzn_data` (
   `product_id` int(11) NOT NULL,
-  `asin` varchar(255) COLLATE utf8mb3_bin NOT NULL,
-  `file` varchar(512) COLLATE utf8mb3_bin NOT NULL,
+  `asin` varchar(255) NOT NULL,
+  `file` varchar(512) NOT NULL,
   `json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   PRIMARY KEY (`product_id`),
   KEY `asin` (`asin`)
@@ -6498,41 +6649,42 @@ CREATE TABLE IF NOT EXISTS `product_amzn_data` (
 -- Table structure for table `product_amzn_offers`
 --
 
+DROP TABLE IF EXISTS `product_amzn_offers`;
 CREATE TABLE IF NOT EXISTS `product_amzn_offers` (
   `amazon_offer_id` int(11) NOT NULL AUTO_INCREMENT,
-  `asin` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `priceCurrency` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `asin` varchar(128) NOT NULL,
+  `priceCurrency` varchar(5) NOT NULL,
   `priceAmount` decimal(15,2) NOT NULL,
-  `importFeeCurrency` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `importFeeCurrency` varchar(5) NOT NULL,
   `importFeeAmount` decimal(15,2) NOT NULL,
-  `deliveryCurrency` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deliveryCurrency` varchar(5) NOT NULL,
   `deliveryAmount` decimal(15,2) NOT NULL,
   `deliveryIsFree` tinyint(1) NOT NULL,
   `deliveryIsFba` tinyint(1) NOT NULL,
   `deliveryIsShippedCrossBorder` tinyint(1) NOT NULL,
-  `deliveryComments` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deliveryComments` varchar(512) NOT NULL,
   `minDays` int(11) NOT NULL,
   `deliveryFrom` date NOT NULL,
   `deliveryTo` date NOT NULL,
   `conditionIsNew` tinyint(1) NOT NULL,
-  `conditionTitle` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `conditionComments` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `sellerName` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `sellerID` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `sellerLink` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `conditionTitle` varchar(512) NOT NULL,
+  `conditionComments` varchar(512) NOT NULL,
+  `sellerName` varchar(512) NOT NULL,
+  `sellerID` varchar(64) NOT NULL,
+  `sellerLink` varchar(1024) NOT NULL,
   `sellerRating50` int(11) NOT NULL,
   `sellerRatingsTotal` int(11) NOT NULL,
   `sellerPositiveRatings100` int(11) NOT NULL,
-  `sellerQuality` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sellerQuality` varchar(5) NOT NULL,
   `date_added` datetime NOT NULL,
   `is_min_price` tinyint(1) NOT NULL,
   `isPrime` tinyint(1) NOT NULL,
   `isBuyBoxWinner` tinyint(1) NOT NULL DEFAULT 0,
   `isBestOffer` tinyint(1) NOT NULL,
   `isNativeOffer` tinyint(1) NOT NULL DEFAULT 0,
-  `offerCountry` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `offerCountry` varchar(3) NOT NULL,
   `offerRating` decimal(15,2) NOT NULL,
-  `offer_id` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `offer_id` varchar(512) NOT NULL,
   PRIMARY KEY (`amazon_offer_id`),
   KEY `product_id` (`asin`),
   KEY `date_added` (`date_added`),
@@ -6552,12 +6704,13 @@ CREATE TABLE IF NOT EXISTS `product_amzn_offers` (
 -- Table structure for table `product_anyrelated`
 --
 
+DROP TABLE IF EXISTS `product_anyrelated`;
 CREATE TABLE IF NOT EXISTS `product_anyrelated` (
   `product_id` int(11) NOT NULL,
   `anyrelated_id` int(11) NOT NULL,
   KEY `product_id` (`product_id`),
   KEY `anyrelated_id` (`anyrelated_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6565,6 +6718,7 @@ CREATE TABLE IF NOT EXISTS `product_anyrelated` (
 -- Table structure for table `product_attribute`
 --
 
+DROP TABLE IF EXISTS `product_attribute`;
 CREATE TABLE IF NOT EXISTS `product_attribute` (
   `product_id` int(11) NOT NULL,
   `attribute_id` int(11) NOT NULL,
@@ -6577,7 +6731,7 @@ CREATE TABLE IF NOT EXISTS `product_attribute` (
   KEY `product_id_language_id` (`product_id`,`language_id`) USING BTREE,
   KEY `attribute_id_language_id` (`attribute_id`,`language_id`) USING BTREE,
   KEY `text` (`text`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6585,11 +6739,12 @@ CREATE TABLE IF NOT EXISTS `product_attribute` (
 -- Table structure for table `product_child`
 --
 
+DROP TABLE IF EXISTS `product_child`;
 CREATE TABLE IF NOT EXISTS `product_child` (
   `product_id` int(11) NOT NULL,
   `child_id` int(11) NOT NULL,
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6597,11 +6752,12 @@ CREATE TABLE IF NOT EXISTS `product_child` (
 -- Table structure for table `product_costs`
 --
 
+DROP TABLE IF EXISTS `product_costs`;
 CREATE TABLE IF NOT EXISTS `product_costs` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `cost` decimal(15,2) NOT NULL,
-  `currency` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `currency` varchar(5) NOT NULL,
   `min_sale_price` decimal(15,2) NOT NULL,
   UNIQUE KEY `product_id_2` (`product_id`,`store_id`),
   KEY `product_id` (`product_id`),
@@ -6615,6 +6771,7 @@ CREATE TABLE IF NOT EXISTS `product_costs` (
 -- Table structure for table `product_description`
 --
 
+DROP TABLE IF EXISTS `product_description`;
 CREATE TABLE IF NOT EXISTS `product_description` (
   `product_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -6657,7 +6814,7 @@ CREATE TABLE IF NOT EXISTS `product_description` (
   KEY `variant_value_1` (`variant_value_1`),
   KEY `variant_value_2` (`variant_value_2`),
   KEY `short_name_d` (`short_name_d`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6665,6 +6822,7 @@ CREATE TABLE IF NOT EXISTS `product_description` (
 -- Table structure for table `product_discount`
 --
 
+DROP TABLE IF EXISTS `product_discount`;
 CREATE TABLE IF NOT EXISTS `product_discount` (
   `product_discount_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL,
@@ -6677,7 +6835,7 @@ CREATE TABLE IF NOT EXISTS `product_discount` (
   `date_end` date NOT NULL DEFAULT '0000-00-00',
   PRIMARY KEY (`product_discount_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6685,6 +6843,7 @@ CREATE TABLE IF NOT EXISTS `product_discount` (
 -- Table structure for table `product_feature`
 --
 
+DROP TABLE IF EXISTS `product_feature`;
 CREATE TABLE IF NOT EXISTS `product_feature` (
   `product_id` int(11) NOT NULL,
   `feature_id` int(11) NOT NULL,
@@ -6695,7 +6854,7 @@ CREATE TABLE IF NOT EXISTS `product_feature` (
   KEY `language_id` (`language_id`),
   KEY `product_id` (`product_id`),
   KEY `product_id_language_id` (`product_id`,`language_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6703,30 +6862,12 @@ CREATE TABLE IF NOT EXISTS `product_feature` (
 -- Table structure for table `product_filter`
 --
 
+DROP TABLE IF EXISTS `product_filter`;
 CREATE TABLE IF NOT EXISTS `product_filter` (
   `product_id` int(11) NOT NULL,
   `filter_id` int(11) NOT NULL,
   PRIMARY KEY (`product_id`,`filter_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `product_front_price`
---
-
-CREATE TABLE IF NOT EXISTS `product_front_price` (
-  `product_id` int(11) NOT NULL,
-  `store_id` int(11) NOT NULL,
-  `price` decimal(15,2) NOT NULL,
-  `special` decimal(15,2) NOT NULL,
-  `reward` decimal(15,2) NOT NULL,
-  `currency` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
-  UNIQUE KEY `product_id_2` (`product_id`,`store_id`),
-  KEY `product_id` (`product_id`),
-  KEY `store_id` (`store_id`),
-  KEY `currency` (`currency`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6734,6 +6875,7 @@ CREATE TABLE IF NOT EXISTS `product_front_price` (
 -- Table structure for table `product_groups`
 --
 
+DROP TABLE IF EXISTS `product_groups`;
 CREATE TABLE IF NOT EXISTS `product_groups` (
   `product_group_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_group_name` varchar(255) NOT NULL,
@@ -6745,7 +6887,7 @@ CREATE TABLE IF NOT EXISTS `product_groups` (
   `product_group_fa_icon` varchar(255) NOT NULL,
   PRIMARY KEY (`product_group_id`),
   KEY `product_group_exclude_remarketing` (`product_group_exclude_remarketing`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6753,6 +6895,7 @@ CREATE TABLE IF NOT EXISTS `product_groups` (
 -- Table structure for table `product_image`
 --
 
+DROP TABLE IF EXISTS `product_image`;
 CREATE TABLE IF NOT EXISTS `product_image` (
   `product_image_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL,
@@ -6761,7 +6904,7 @@ CREATE TABLE IF NOT EXISTS `product_image` (
   PRIMARY KEY (`product_image_id`),
   KEY `product_id` (`product_id`),
   KEY `sort_order` (`sort_order`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6769,13 +6912,14 @@ CREATE TABLE IF NOT EXISTS `product_image` (
 -- Table structure for table `product_master`
 --
 
+DROP TABLE IF EXISTS `product_master`;
 CREATE TABLE IF NOT EXISTS `product_master` (
   `master_product_id` int(11) NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
   `special_attribute_group_id` int(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`master_product_id`,`product_id`,`special_attribute_group_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6783,6 +6927,7 @@ CREATE TABLE IF NOT EXISTS `product_master` (
 -- Table structure for table `product_offers_history`
 --
 
+DROP TABLE IF EXISTS `product_offers_history`;
 CREATE TABLE IF NOT EXISTS `product_offers_history` (
   `offer_history_id` int(11) NOT NULL AUTO_INCREMENT,
   `asin` varchar(32) NOT NULL,
@@ -6800,7 +6945,7 @@ CREATE TABLE IF NOT EXISTS `product_offers_history` (
   KEY `asin` (`asin`),
   KEY `date_added` (`date_added`),
   KEY `store_id` (`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6808,6 +6953,7 @@ CREATE TABLE IF NOT EXISTS `product_offers_history` (
 -- Table structure for table `product_option`
 --
 
+DROP TABLE IF EXISTS `product_option`;
 CREATE TABLE IF NOT EXISTS `product_option` (
   `product_option_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL,
@@ -6817,7 +6963,7 @@ CREATE TABLE IF NOT EXISTS `product_option` (
   PRIMARY KEY (`product_option_id`),
   KEY `product_id` (`product_id`),
   KEY `option_id` (`option_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6825,6 +6971,7 @@ CREATE TABLE IF NOT EXISTS `product_option` (
 -- Table structure for table `product_option_value`
 --
 
+DROP TABLE IF EXISTS `product_option_value`;
 CREATE TABLE IF NOT EXISTS `product_option_value` (
   `product_option_value_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_option_id` int(11) NOT NULL,
@@ -6851,7 +6998,7 @@ CREATE TABLE IF NOT EXISTS `product_option_value` (
   KEY `option_id` (`option_id`),
   KEY `subtract` (`subtract`),
   KEY `quantity` (`quantity`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6859,13 +7006,14 @@ CREATE TABLE IF NOT EXISTS `product_option_value` (
 -- Table structure for table `product_price_history`
 --
 
+DROP TABLE IF EXISTS `product_price_history`;
 CREATE TABLE IF NOT EXISTS `product_price_history` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `price` int(11) NOT NULL,
-  `currency` varchar(8) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `source` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `currency` varchar(8) NOT NULL,
+  `type` varchar(64) NOT NULL,
+  `source` varchar(64) NOT NULL,
   `date_added` datetime NOT NULL,
   KEY `product_id` (`product_id`),
   KEY `store_id` (`store_id`),
@@ -6880,6 +7028,7 @@ CREATE TABLE IF NOT EXISTS `product_price_history` (
 -- Table structure for table `product_price_national_to_store`
 --
 
+DROP TABLE IF EXISTS `product_price_national_to_store`;
 CREATE TABLE IF NOT EXISTS `product_price_national_to_store` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -6896,27 +7045,7 @@ CREATE TABLE IF NOT EXISTS `product_price_national_to_store` (
   KEY `price` (`price`),
   KEY `getProduct` (`product_id`,`store_id`,`price`),
   KEY `price_delayed` (`price_delayed`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `product_price_national_to_store1`
---
-
-CREATE TABLE IF NOT EXISTS `product_price_national_to_store1` (
-  `product_id` int(11) NOT NULL,
-  `store_id` int(11) NOT NULL,
-  `price` decimal(15,2) NOT NULL,
-  `special` decimal(15,2) NOT NULL,
-  `currency` varchar(4) NOT NULL,
-  `dot_not_overload_1c` tinyint(1) NOT NULL DEFAULT 0,
-  `settled_from_1c` tinyint(1) NOT NULL DEFAULT 0,
-  UNIQUE KEY `product_store` (`product_id`,`store_id`) USING BTREE,
-  KEY `product_id` (`product_id`),
-  KEY `store_id` (`store_id`),
-  KEY `currency` (`currency`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6924,6 +7053,7 @@ CREATE TABLE IF NOT EXISTS `product_price_national_to_store1` (
 -- Table structure for table `product_price_national_to_yam`
 --
 
+DROP TABLE IF EXISTS `product_price_national_to_yam`;
 CREATE TABLE IF NOT EXISTS `product_price_national_to_yam` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -6936,7 +7066,7 @@ CREATE TABLE IF NOT EXISTS `product_price_national_to_yam` (
   KEY `product_id` (`product_id`),
   KEY `store_id` (`store_id`),
   KEY `currency` (`currency`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6944,6 +7074,7 @@ CREATE TABLE IF NOT EXISTS `product_price_national_to_yam` (
 -- Table structure for table `product_price_to_store`
 --
 
+DROP TABLE IF EXISTS `product_price_to_store`;
 CREATE TABLE IF NOT EXISTS `product_price_to_store` (
   `product_id` bigint(20) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -6959,7 +7090,7 @@ CREATE TABLE IF NOT EXISTS `product_price_to_store` (
   KEY `dot_not_overload_1c` (`dot_not_overload_1c`),
   KEY `price` (`price`),
   KEY `price_delayed` (`price_delayed`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6967,6 +7098,7 @@ CREATE TABLE IF NOT EXISTS `product_price_to_store` (
 -- Table structure for table `product_product_option`
 --
 
+DROP TABLE IF EXISTS `product_product_option`;
 CREATE TABLE IF NOT EXISTS `product_product_option` (
   `product_product_option_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL,
@@ -6977,7 +7109,7 @@ CREATE TABLE IF NOT EXISTS `product_product_option` (
   PRIMARY KEY (`product_product_option_id`),
   KEY `product_id` (`product_id`),
   KEY `category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6985,6 +7117,7 @@ CREATE TABLE IF NOT EXISTS `product_product_option` (
 -- Table structure for table `product_product_option_value`
 --
 
+DROP TABLE IF EXISTS `product_product_option_value`;
 CREATE TABLE IF NOT EXISTS `product_product_option_value` (
   `product_product_option_value_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_product_option_id` int(11) NOT NULL,
@@ -6995,7 +7128,7 @@ CREATE TABLE IF NOT EXISTS `product_product_option_value` (
   KEY `product_product_option_id` (`product_product_option_id`),
   KEY `product_id` (`product_id`),
   KEY `product_option_id` (`product_option_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7003,12 +7136,13 @@ CREATE TABLE IF NOT EXISTS `product_product_option_value` (
 -- Table structure for table `product_profile`
 --
 
+DROP TABLE IF EXISTS `product_profile`;
 CREATE TABLE IF NOT EXISTS `product_profile` (
   `product_id` int(11) NOT NULL,
   `profile_id` int(11) NOT NULL,
   `customer_group_id` int(11) NOT NULL,
   PRIMARY KEY (`product_id`,`profile_id`,`customer_group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7016,6 +7150,7 @@ CREATE TABLE IF NOT EXISTS `product_profile` (
 -- Table structure for table `product_purchase`
 --
 
+DROP TABLE IF EXISTS `product_purchase`;
 CREATE TABLE IF NOT EXISTS `product_purchase` (
   `purchase_uuid` varchar(64) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -7027,7 +7162,7 @@ CREATE TABLE IF NOT EXISTS `product_purchase` (
   KEY `purchase_uuid` (`purchase_uuid`),
   KEY `product_id` (`product_id`),
   KEY `date_added` (`date_added`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7035,11 +7170,12 @@ CREATE TABLE IF NOT EXISTS `product_purchase` (
 -- Table structure for table `product_recurring`
 --
 
+DROP TABLE IF EXISTS `product_recurring`;
 CREATE TABLE IF NOT EXISTS `product_recurring` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   PRIMARY KEY (`product_id`,`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7047,6 +7183,7 @@ CREATE TABLE IF NOT EXISTS `product_recurring` (
 -- Table structure for table `product_related`
 --
 
+DROP TABLE IF EXISTS `product_related`;
 CREATE TABLE IF NOT EXISTS `product_related` (
   `product_id` int(11) NOT NULL,
   `related_id` int(11) NOT NULL,
@@ -7054,7 +7191,7 @@ CREATE TABLE IF NOT EXISTS `product_related` (
   PRIMARY KEY (`product_id`,`related_id`),
   KEY `product_id` (`product_id`),
   KEY `related_id` (`related_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7062,11 +7199,12 @@ CREATE TABLE IF NOT EXISTS `product_related` (
 -- Table structure for table `product_related_set`
 --
 
+DROP TABLE IF EXISTS `product_related_set`;
 CREATE TABLE IF NOT EXISTS `product_related_set` (
   `product_id` int(11) NOT NULL,
   `related_id` int(11) NOT NULL,
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7074,6 +7212,7 @@ CREATE TABLE IF NOT EXISTS `product_related_set` (
 -- Table structure for table `product_reward`
 --
 
+DROP TABLE IF EXISTS `product_reward`;
 CREATE TABLE IF NOT EXISTS `product_reward` (
   `product_reward_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL DEFAULT 0,
@@ -7093,7 +7232,7 @@ CREATE TABLE IF NOT EXISTS `product_reward` (
   KEY `coupon_acts` (`coupon_acts`),
   KEY `date_start` (`date_start`),
   KEY `date_end` (`date_end`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7101,13 +7240,14 @@ CREATE TABLE IF NOT EXISTS `product_reward` (
 -- Table structure for table `product_shop_by_look`
 --
 
+DROP TABLE IF EXISTS `product_shop_by_look`;
 CREATE TABLE IF NOT EXISTS `product_shop_by_look` (
   `product_id` int(11) NOT NULL,
   `shop_by_look_id` int(11) NOT NULL,
   UNIQUE KEY `product_id_2` (`product_id`,`shop_by_look_id`) USING BTREE,
   KEY `product_id` (`product_id`),
   KEY `shop_by_look_id` (`shop_by_look_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7115,13 +7255,14 @@ CREATE TABLE IF NOT EXISTS `product_shop_by_look` (
 -- Table structure for table `product_similar`
 --
 
+DROP TABLE IF EXISTS `product_similar`;
 CREATE TABLE IF NOT EXISTS `product_similar` (
   `product_id` int(11) NOT NULL,
   `similar_id` int(11) NOT NULL,
   PRIMARY KEY (`product_id`,`similar_id`) USING BTREE,
   KEY `product_id` (`product_id`),
   KEY `similar_id` (`similar_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7129,13 +7270,14 @@ CREATE TABLE IF NOT EXISTS `product_similar` (
 -- Table structure for table `product_similar_to_consider`
 --
 
+DROP TABLE IF EXISTS `product_similar_to_consider`;
 CREATE TABLE IF NOT EXISTS `product_similar_to_consider` (
   `product_id` int(11) NOT NULL,
   `similar_to_consider_id` int(11) NOT NULL,
   UNIQUE KEY `product_id_2` (`product_id`,`similar_to_consider_id`) USING BTREE,
   KEY `product_id` (`product_id`),
   KEY `similar_to_consider_id` (`similar_to_consider_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7143,6 +7285,7 @@ CREATE TABLE IF NOT EXISTS `product_similar_to_consider` (
 -- Table structure for table `product_sources`
 --
 
+DROP TABLE IF EXISTS `product_sources`;
 CREATE TABLE IF NOT EXISTS `product_sources` (
   `product_source_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL,
@@ -7151,7 +7294,7 @@ CREATE TABLE IF NOT EXISTS `product_sources` (
   PRIMARY KEY (`product_source_id`),
   KEY `product_id` (`product_id`),
   KEY `source` (`source`(255))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7159,6 +7302,7 @@ CREATE TABLE IF NOT EXISTS `product_sources` (
 -- Table structure for table `product_special`
 --
 
+DROP TABLE IF EXISTS `product_special`;
 CREATE TABLE IF NOT EXISTS `product_special` (
   `product_special_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL,
@@ -7188,7 +7332,7 @@ CREATE TABLE IF NOT EXISTS `product_special` (
   KEY `date_start` (`date_start`),
   KEY `date_end` (`date_end`),
   KEY `getProduct` (`product_id`,`customer_group_id`,`price`,`store_id`,`date_start`,`date_end`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7196,12 +7340,13 @@ CREATE TABLE IF NOT EXISTS `product_special` (
 -- Table structure for table `product_special_attribute`
 --
 
+DROP TABLE IF EXISTS `product_special_attribute`;
 CREATE TABLE IF NOT EXISTS `product_special_attribute` (
   `product_special_attribute_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `product_id` int(10) UNSIGNED NOT NULL,
   `special_attribute_id` int(11) NOT NULL,
   PRIMARY KEY (`product_special_attribute_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=cp1251;
+) ENGINE=InnoDB DEFAULT CHARSET=cp1251 COLLATE=cp1251_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7209,6 +7354,7 @@ CREATE TABLE IF NOT EXISTS `product_special_attribute` (
 -- Table structure for table `product_special_backup`
 --
 
+DROP TABLE IF EXISTS `product_special_backup`;
 CREATE TABLE IF NOT EXISTS `product_special_backup` (
   `product_special_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -7227,7 +7373,7 @@ CREATE TABLE IF NOT EXISTS `product_special_backup` (
   `set_by_stock_illiquid` tinyint(1) NOT NULL DEFAULT 0,
   `date_settled_by_stock` date NOT NULL DEFAULT '0000-00-00',
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7235,13 +7381,14 @@ CREATE TABLE IF NOT EXISTS `product_special_backup` (
 -- Table structure for table `product_sponsored`
 --
 
+DROP TABLE IF EXISTS `product_sponsored`;
 CREATE TABLE IF NOT EXISTS `product_sponsored` (
   `product_id` int(11) NOT NULL,
   `sponsored_id` int(11) NOT NULL,
   PRIMARY KEY (`product_id`,`sponsored_id`) USING BTREE,
   KEY `product_id` (`product_id`),
   KEY `sponsored_id` (`sponsored_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7249,6 +7396,7 @@ CREATE TABLE IF NOT EXISTS `product_sponsored` (
 -- Table structure for table `product_status`
 --
 
+DROP TABLE IF EXISTS `product_status`;
 CREATE TABLE IF NOT EXISTS `product_status` (
   `product_id` int(11) NOT NULL,
   `status_id` int(11) NOT NULL,
@@ -7257,7 +7405,7 @@ CREATE TABLE IF NOT EXISTS `product_status` (
   `sort_order` int(11) NOT NULL DEFAULT 0,
   KEY `status_id` (`status_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7265,6 +7413,7 @@ CREATE TABLE IF NOT EXISTS `product_status` (
 -- Table structure for table `product_sticker`
 --
 
+DROP TABLE IF EXISTS `product_sticker`;
 CREATE TABLE IF NOT EXISTS `product_sticker` (
   `product_sticker_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL,
@@ -7277,7 +7426,7 @@ CREATE TABLE IF NOT EXISTS `product_sticker` (
   `sort_order` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`product_sticker_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7285,6 +7434,7 @@ CREATE TABLE IF NOT EXISTS `product_sticker` (
 -- Table structure for table `product_stock_limits`
 --
 
+DROP TABLE IF EXISTS `product_stock_limits`;
 CREATE TABLE IF NOT EXISTS `product_stock_limits` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -7295,7 +7445,7 @@ CREATE TABLE IF NOT EXISTS `product_stock_limits` (
   KEY `store_id` (`store_id`),
   KEY `min_buy` (`min_stock`),
   KEY `rec_buy` (`rec_stock`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7303,6 +7453,7 @@ CREATE TABLE IF NOT EXISTS `product_stock_limits` (
 -- Table structure for table `product_stock_status`
 --
 
+DROP TABLE IF EXISTS `product_stock_status`;
 CREATE TABLE IF NOT EXISTS `product_stock_status` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -7318,6 +7469,7 @@ CREATE TABLE IF NOT EXISTS `product_stock_status` (
 -- Table structure for table `product_stock_waits`
 --
 
+DROP TABLE IF EXISTS `product_stock_waits`;
 CREATE TABLE IF NOT EXISTS `product_stock_waits` (
   `product_id` int(11) NOT NULL,
   `quantity_stock` int(11) NOT NULL DEFAULT 0,
@@ -7331,7 +7483,7 @@ CREATE TABLE IF NOT EXISTS `product_stock_waits` (
   KEY `quantity_stockMN` (`quantity_stockMN`),
   KEY `quantity_stockAS` (`quantity_stockAS`),
   KEY `quantity_stock` (`quantity_stock`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7339,12 +7491,13 @@ CREATE TABLE IF NOT EXISTS `product_stock_waits` (
 -- Table structure for table `product_tab`
 --
 
+DROP TABLE IF EXISTS `product_tab`;
 CREATE TABLE IF NOT EXISTS `product_tab` (
   `tab_id` int(11) NOT NULL AUTO_INCREMENT,
   `sort_order` int(11) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 0,
-  `type` enum('default','regular','reserved') COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'regular',
-  `key` varchar(128) COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT '',
+  `type` enum('default','regular','reserved') NOT NULL DEFAULT 'regular',
+  `key` varchar(128) NOT NULL DEFAULT '',
   `login` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`tab_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
@@ -7355,11 +7508,12 @@ CREATE TABLE IF NOT EXISTS `product_tab` (
 -- Table structure for table `product_tab_content`
 --
 
+DROP TABLE IF EXISTS `product_tab_content`;
 CREATE TABLE IF NOT EXISTS `product_tab_content` (
   `product_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `tab_id` int(11) NOT NULL,
-  `content` text COLLATE utf8mb3_unicode_ci NOT NULL,
+  `content` text NOT NULL,
   PRIMARY KEY (`product_id`,`language_id`,`tab_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
@@ -7369,10 +7523,11 @@ CREATE TABLE IF NOT EXISTS `product_tab_content` (
 -- Table structure for table `product_tab_default`
 --
 
+DROP TABLE IF EXISTS `product_tab_default`;
 CREATE TABLE IF NOT EXISTS `product_tab_default` (
   `tab_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `content` text COLLATE utf8mb3_unicode_ci NOT NULL,
+  `content` text NOT NULL,
   PRIMARY KEY (`tab_id`,`language_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
@@ -7382,142 +7537,13 @@ CREATE TABLE IF NOT EXISTS `product_tab_default` (
 -- Table structure for table `product_tab_name`
 --
 
+DROP TABLE IF EXISTS `product_tab_name`;
 CREATE TABLE IF NOT EXISTS `product_tab_name` (
   `tab_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `name` varchar(64) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `name` varchar(64) NOT NULL,
   PRIMARY KEY (`tab_id`,`language_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `product_tmp`
---
-
-CREATE TABLE IF NOT EXISTS `product_tmp` (
-  `product_id` int(11) NOT NULL AUTO_INCREMENT,
-  `model` varchar(64) NOT NULL,
-  `short_name` varchar(50) NOT NULL,
-  `short_name_de` varchar(50) NOT NULL,
-  `sku` varchar(64) NOT NULL,
-  `upc` varchar(255) NOT NULL,
-  `ean` varchar(50) NOT NULL,
-  `jan` varchar(13) NOT NULL,
-  `virtual_isbn` varchar(255) NOT NULL,
-  `isbn` varchar(255) NOT NULL,
-  `mpn` varchar(255) NOT NULL,
-  `asin` varchar(255) NOT NULL,
-  `location` varchar(128) NOT NULL,
-  `source` text NOT NULL,
-  `competitors` text NOT NULL,
-  `competitors_ua` text NOT NULL,
-  `quantity` int(11) NOT NULL DEFAULT 0,
-  `quantity_stock` int(11) NOT NULL DEFAULT 0,
-  `quantity_stockM` int(11) NOT NULL DEFAULT 0,
-  `quantity_stockK` int(11) NOT NULL DEFAULT 0,
-  `quantity_stockMN` int(11) NOT NULL DEFAULT 0,
-  `quantity_stockAS` int(11) NOT NULL DEFAULT 0,
-  `stock_status_id` int(11) NOT NULL,
-  `image` varchar(255) DEFAULT NULL,
-  `manufacturer_id` int(11) NOT NULL,
-  `collection_id` bigint(20) NOT NULL,
-  `shipping` tinyint(1) NOT NULL DEFAULT 1,
-  `cost` decimal(15,2) NOT NULL,
-  `actual_cost` decimal(15,2) NOT NULL DEFAULT 0.00,
-  `actual_cost_date` date NOT NULL,
-  `price` decimal(15,4) NOT NULL DEFAULT 0.0000,
-  `price_national` decimal(15,4) NOT NULL,
-  `mpp_price` decimal(15,4) NOT NULL,
-  `currency` varchar(5) NOT NULL,
-  `historical_price` decimal(15,4) NOT NULL,
-  `points` int(11) NOT NULL DEFAULT 0,
-  `points_only_purchase` tinyint(1) NOT NULL,
-  `tax_class_id` int(11) NOT NULL,
-  `date_available` date NOT NULL,
-  `weight` decimal(15,4) NOT NULL DEFAULT 0.0000,
-  `weight_class_id` int(11) NOT NULL DEFAULT 1,
-  `weight_amazon_key` varchar(100) NOT NULL,
-  `length` decimal(15,8) NOT NULL DEFAULT 0.00000000,
-  `width` decimal(15,8) NOT NULL DEFAULT 0.00000000,
-  `height` decimal(15,8) NOT NULL DEFAULT 0.00000000,
-  `length_class_id` int(11) NOT NULL DEFAULT 0,
-  `length_amazon_key` varchar(100) NOT NULL,
-  `pack_weight` decimal(15,8) NOT NULL,
-  `pack_weight_class_id` int(11) NOT NULL,
-  `pack_weight_amazon_key` varchar(100) NOT NULL,
-  `pack_length` decimal(15,8) NOT NULL,
-  `pack_width` decimal(15,8) NOT NULL,
-  `pack_height` decimal(15,8) NOT NULL,
-  `pack_length_class_id` int(11) NOT NULL,
-  `pack_length_amazon_key` varchar(100) NOT NULL,
-  `subtract` tinyint(1) NOT NULL DEFAULT 1,
-  `minimum` int(11) NOT NULL DEFAULT 1,
-  `package` int(11) NOT NULL DEFAULT 1,
-  `sort_order` int(11) NOT NULL DEFAULT 0,
-  `status` tinyint(1) NOT NULL DEFAULT 0,
-  `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `viewed` int(11) NOT NULL DEFAULT 0,
-  `youtube` text NOT NULL,
-  `special_cost` decimal(15,2) NOT NULL,
-  `historical_cost` decimal(15,2) NOT NULL,
-  `parser_price` decimal(15,2) NOT NULL,
-  `parser_special_price` decimal(15,2) NOT NULL,
-  `skip` int(11) NOT NULL,
-  `tnved` varchar(255) NOT NULL,
-  `ignore_parse` tinyint(1) NOT NULL,
-  `new` tinyint(1) NOT NULL DEFAULT 0,
-  `stock_product_id` int(11) NOT NULL,
-  `is_option_with_id` int(11) NOT NULL,
-  `is_option_for_product_id` int(11) NOT NULL,
-  `color_group` varchar(100) NOT NULL,
-  `is_virtual` tinyint(1) NOT NULL,
-  `is_related_set` tinyint(1) NOT NULL,
-  `has_child` tinyint(1) NOT NULL,
-  `ignore_parse_date_to` date NOT NULL,
-  `new_date_to` date NOT NULL,
-  `min_buy` int(11) NOT NULL,
-  `max_buy` int(11) NOT NULL,
-  `can_be_presented` tinyint(1) NOT NULL,
-  `bought_for_week` int(11) NOT NULL,
-  `bought_for_month` int(11) NOT NULL,
-  `big_business` tinyint(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`product_id`),
-  KEY `model` (`model`),
-  KEY `sku` (`sku`),
-  KEY `ean` (`ean`),
-  KEY `jan` (`jan`),
-  KEY `isbn` (`isbn`),
-  KEY `mpn` (`mpn`),
-  KEY `manufacturer_id` (`manufacturer_id`),
-  KEY `upc` (`upc`) USING BTREE,
-  KEY `product_id` (`product_id`,`model`,`sku`,`manufacturer_id`,`sort_order`,`status`),
-  KEY `virtual_isbn` (`virtual_isbn`),
-  KEY `color_group` (`color_group`),
-  KEY `is_virtual` (`is_virtual`),
-  KEY `asin` (`asin`),
-  KEY `date_available` (`date_available`),
-  KEY `is_option_for_product_id` (`is_option_for_product_id`),
-  KEY `is_option_with_id` (`is_option_with_id`),
-  KEY `collection_id` (`collection_id`),
-  KEY `stock_product_id` (`stock_product_id`),
-  KEY `weight_amazon_key` (`weight_amazon_key`),
-  KEY `length_amazon_key` (`length_amazon_key`),
-  KEY `pack_weight_amazon_key` (`pack_weight_amazon_key`),
-  KEY `pack_length_amazon_key` (`pack_length_amazon_key`),
-  KEY `is_related_set` (`is_related_set`),
-  KEY `has_child` (`has_child`),
-  KEY `big_business` (`big_business`),
-  KEY `quantity` (`quantity`),
-  KEY `weight_class_id` (`weight_class_id`),
-  KEY `length_class_id` (`length_class_id`),
-  KEY `quantity_stock` (`quantity_stock`),
-  KEY `quantity_stockM` (`quantity_stockM`),
-  KEY `quantity_stockK` (`quantity_stockK`),
-  KEY `new` (`new`),
-  KEY `stock_status_id` (`stock_status_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -7525,6 +7551,7 @@ CREATE TABLE IF NOT EXISTS `product_tmp` (
 -- Table structure for table `product_to_category`
 --
 
+DROP TABLE IF EXISTS `product_to_category`;
 CREATE TABLE IF NOT EXISTS `product_to_category` (
   `product_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
@@ -7534,7 +7561,7 @@ CREATE TABLE IF NOT EXISTS `product_to_category` (
   KEY `category_id` (`category_id`),
   KEY `product_id` (`product_id`),
   KEY `main_category` (`main_category`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7542,11 +7569,12 @@ CREATE TABLE IF NOT EXISTS `product_to_category` (
 -- Table structure for table `product_to_download`
 --
 
+DROP TABLE IF EXISTS `product_to_download`;
 CREATE TABLE IF NOT EXISTS `product_to_download` (
   `product_id` int(11) NOT NULL,
   `download_id` int(11) NOT NULL,
   PRIMARY KEY (`product_id`,`download_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7554,12 +7582,13 @@ CREATE TABLE IF NOT EXISTS `product_to_download` (
 -- Table structure for table `product_to_layout`
 --
 
+DROP TABLE IF EXISTS `product_to_layout`;
 CREATE TABLE IF NOT EXISTS `product_to_layout` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL,
   PRIMARY KEY (`product_id`,`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7567,6 +7596,7 @@ CREATE TABLE IF NOT EXISTS `product_to_layout` (
 -- Table structure for table `product_to_set`
 --
 
+DROP TABLE IF EXISTS `product_to_set`;
 CREATE TABLE IF NOT EXISTS `product_to_set` (
   `set_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -7580,7 +7610,7 @@ CREATE TABLE IF NOT EXISTS `product_to_set` (
   KEY `set_id` (`set_id`),
   KEY `clean_product_id` (`clean_product_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7588,13 +7618,14 @@ CREATE TABLE IF NOT EXISTS `product_to_set` (
 -- Table structure for table `product_to_store`
 --
 
+DROP TABLE IF EXISTS `product_to_store`;
 CREATE TABLE IF NOT EXISTS `product_to_store` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`product_id`,`store_id`),
   KEY `store_id` (`store_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7602,6 +7633,7 @@ CREATE TABLE IF NOT EXISTS `product_to_store` (
 -- Table structure for table `product_to_tab`
 --
 
+DROP TABLE IF EXISTS `product_to_tab`;
 CREATE TABLE IF NOT EXISTS `product_to_tab` (
   `product_id` int(11) NOT NULL,
   `tab_id` int(11) NOT NULL,
@@ -7615,6 +7647,7 @@ CREATE TABLE IF NOT EXISTS `product_to_tab` (
 -- Table structure for table `product_ukrcredits`
 --
 
+DROP TABLE IF EXISTS `product_ukrcredits`;
 CREATE TABLE IF NOT EXISTS `product_ukrcredits` (
   `product_id` int(11) NOT NULL,
   `product_pp` int(1) NOT NULL,
@@ -7633,7 +7666,7 @@ CREATE TABLE IF NOT EXISTS `product_ukrcredits` (
   `discount_ii` int(1) NOT NULL,
   `discount_mb` int(1) NOT NULL,
   PRIMARY KEY (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7641,12 +7674,13 @@ CREATE TABLE IF NOT EXISTS `product_ukrcredits` (
 -- Table structure for table `product_variants`
 --
 
+DROP TABLE IF EXISTS `product_variants`;
 CREATE TABLE IF NOT EXISTS `product_variants` (
   `main_asin` varchar(32) NOT NULL,
   `variant_asin` varchar(32) NOT NULL,
   UNIQUE KEY `variant_asin` (`variant_asin`) USING BTREE,
   KEY `main_asin` (`main_asin`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7654,12 +7688,13 @@ CREATE TABLE IF NOT EXISTS `product_variants` (
 -- Table structure for table `product_variants_ids`
 --
 
+DROP TABLE IF EXISTS `product_variants_ids`;
 CREATE TABLE IF NOT EXISTS `product_variants_ids` (
   `product_id` int(11) NOT NULL,
   `variant_id` int(11) NOT NULL,
   UNIQUE KEY `variant_id` (`variant_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7667,6 +7702,7 @@ CREATE TABLE IF NOT EXISTS `product_variants_ids` (
 -- Table structure for table `product_video`
 --
 
+DROP TABLE IF EXISTS `product_video`;
 CREATE TABLE IF NOT EXISTS `product_video` (
   `product_video_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL,
@@ -7676,7 +7712,7 @@ CREATE TABLE IF NOT EXISTS `product_video` (
   PRIMARY KEY (`product_video_id`),
   KEY `product_id` (`product_id`),
   KEY `sort_order` (`sort_order`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7684,6 +7720,7 @@ CREATE TABLE IF NOT EXISTS `product_video` (
 -- Table structure for table `product_video_description`
 --
 
+DROP TABLE IF EXISTS `product_video_description`;
 CREATE TABLE IF NOT EXISTS `product_video_description` (
   `product_video_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -7693,7 +7730,7 @@ CREATE TABLE IF NOT EXISTS `product_video_description` (
   KEY `product_video_id` (`product_video_id`),
   KEY `product_video_id_2` (`product_video_id`,`language_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7701,13 +7738,14 @@ CREATE TABLE IF NOT EXISTS `product_video_description` (
 -- Table structure for table `product_view_to_purchase`
 --
 
+DROP TABLE IF EXISTS `product_view_to_purchase`;
 CREATE TABLE IF NOT EXISTS `product_view_to_purchase` (
   `product_id` int(11) NOT NULL,
   `view_to_purchase_id` int(11) NOT NULL,
   UNIQUE KEY `product_id_2` (`product_id`,`view_to_purchase_id`) USING BTREE,
   KEY `product_id` (`product_id`),
   KEY `view_to_purchase_id` (`view_to_purchase_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7715,13 +7753,14 @@ CREATE TABLE IF NOT EXISTS `product_view_to_purchase` (
 -- Table structure for table `product_yam_data`
 --
 
+DROP TABLE IF EXISTS `product_yam_data`;
 CREATE TABLE IF NOT EXISTS `product_yam_data` (
   `product_id` int(11) NOT NULL,
   `yam_real_price` decimal(15,2) NOT NULL,
-  `yam_hidings` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `yam_category_name` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `yam_hidings` text NOT NULL,
+  `yam_category_name` varchar(1024) NOT NULL,
   `yam_category_id` int(11) NOT NULL,
-  `yam_fees` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `yam_fees` text NOT NULL,
   `AGENCY_COMMISSION` decimal(15,2) NOT NULL,
   `FEE` decimal(15,2) NOT NULL,
   UNIQUE KEY `product_id` (`product_id`),
@@ -7734,10 +7773,11 @@ CREATE TABLE IF NOT EXISTS `product_yam_data` (
 -- Table structure for table `product_yam_recommended_prices`
 --
 
+DROP TABLE IF EXISTS `product_yam_recommended_prices`;
 CREATE TABLE IF NOT EXISTS `product_yam_recommended_prices` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
-  `currency` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `currency` varchar(5) NOT NULL,
   `BUYBOX` decimal(15,2) NOT NULL,
   `DEFAULT_OFFER` decimal(15,2) NOT NULL,
   `MIN_PRICE_MARKET` decimal(15,2) NOT NULL,
@@ -7754,6 +7794,7 @@ CREATE TABLE IF NOT EXISTS `product_yam_recommended_prices` (
 -- Table structure for table `profile`
 --
 
+DROP TABLE IF EXISTS `profile`;
 CREATE TABLE IF NOT EXISTS `profile` (
   `profile_id` int(11) NOT NULL AUTO_INCREMENT,
   `sort_order` int(11) NOT NULL,
@@ -7768,7 +7809,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `trial_duration` int(10) UNSIGNED NOT NULL,
   `trial_cycle` int(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`profile_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7776,13 +7817,14 @@ CREATE TABLE IF NOT EXISTS `profile` (
 -- Table structure for table `profile_description`
 --
 
+DROP TABLE IF EXISTS `profile_description`;
 CREATE TABLE IF NOT EXISTS `profile_description` (
   `profile_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`profile_id`,`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7790,11 +7832,12 @@ CREATE TABLE IF NOT EXISTS `profile_description` (
 -- Table structure for table `queue_mail`
 --
 
+DROP TABLE IF EXISTS `queue_mail`;
 CREATE TABLE IF NOT EXISTS `queue_mail` (
   `queue_mail_id` int(11) NOT NULL AUTO_INCREMENT,
   `body` text NOT NULL,
   PRIMARY KEY (`queue_mail_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7802,13 +7845,14 @@ CREATE TABLE IF NOT EXISTS `queue_mail` (
 -- Table structure for table `queue_push`
 --
 
+DROP TABLE IF EXISTS `queue_push`;
 CREATE TABLE IF NOT EXISTS `queue_push` (
   `queue_push_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL,
   `body` text NOT NULL,
   PRIMARY KEY (`queue_push_id`),
   KEY `customer_id` (`customer_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7816,12 +7860,13 @@ CREATE TABLE IF NOT EXISTS `queue_push` (
 -- Table structure for table `queue_sms`
 --
 
+DROP TABLE IF EXISTS `queue_sms`;
 CREATE TABLE IF NOT EXISTS `queue_sms` (
   `queue_sms_id` int(11) NOT NULL AUTO_INCREMENT,
   `body` text NOT NULL,
   `raw` text NOT NULL,
   PRIMARY KEY (`queue_sms_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7829,11 +7874,12 @@ CREATE TABLE IF NOT EXISTS `queue_sms` (
 -- Table structure for table `redirect`
 --
 
+DROP TABLE IF EXISTS `redirect`;
 CREATE TABLE IF NOT EXISTS `redirect` (
   `redirect_id` int(11) NOT NULL AUTO_INCREMENT,
   `active` tinyint(1) NOT NULL DEFAULT 0,
-  `from_url` varchar(600) COLLATE utf8mb3_bin NOT NULL,
-  `to_url` varchar(600) COLLATE utf8mb3_bin NOT NULL,
+  `from_url` varchar(600) NOT NULL,
+  `to_url` varchar(600) NOT NULL,
   `response_code` int(11) NOT NULL DEFAULT 301,
   `date_start` date NOT NULL DEFAULT '0000-00-00',
   `date_end` date NOT NULL DEFAULT '0000-00-00',
@@ -7851,13 +7897,14 @@ CREATE TABLE IF NOT EXISTS `redirect` (
 -- Table structure for table `referrer_patterns`
 --
 
+DROP TABLE IF EXISTS `referrer_patterns`;
 CREATE TABLE IF NOT EXISTS `referrer_patterns` (
   `pattern_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
   `url_mask` varchar(256) NOT NULL,
   `url_param` varchar(256) NOT NULL,
   PRIMARY KEY (`pattern_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7865,6 +7912,7 @@ CREATE TABLE IF NOT EXISTS `referrer_patterns` (
 -- Table structure for table `return`
 --
 
+DROP TABLE IF EXISTS `return`;
 CREATE TABLE IF NOT EXISTS `return` (
   `return_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -7902,7 +7950,7 @@ CREATE TABLE IF NOT EXISTS `return` (
   KEY `return_action_id` (`return_action_id`),
   KEY `return_status_id` (`return_status_id`),
   KEY `reorder_id` (`reorder_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7910,13 +7958,14 @@ CREATE TABLE IF NOT EXISTS `return` (
 -- Table structure for table `return_action`
 --
 
+DROP TABLE IF EXISTS `return_action`;
 CREATE TABLE IF NOT EXISTS `return_action` (
   `return_action_id` int(11) NOT NULL AUTO_INCREMENT,
   `language_id` int(11) NOT NULL DEFAULT 0,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`return_action_id`,`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7924,6 +7973,7 @@ CREATE TABLE IF NOT EXISTS `return_action` (
 -- Table structure for table `return_history`
 --
 
+DROP TABLE IF EXISTS `return_history`;
 CREATE TABLE IF NOT EXISTS `return_history` (
   `return_history_id` int(11) NOT NULL AUTO_INCREMENT,
   `return_id` int(11) NOT NULL,
@@ -7934,7 +7984,7 @@ CREATE TABLE IF NOT EXISTS `return_history` (
   PRIMARY KEY (`return_history_id`),
   KEY `return_id` (`return_id`),
   KEY `return_status_id` (`return_status_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7942,13 +7992,14 @@ CREATE TABLE IF NOT EXISTS `return_history` (
 -- Table structure for table `return_reason`
 --
 
+DROP TABLE IF EXISTS `return_reason`;
 CREATE TABLE IF NOT EXISTS `return_reason` (
   `return_reason_id` int(11) NOT NULL AUTO_INCREMENT,
   `language_id` int(11) NOT NULL DEFAULT 0,
   `name` varchar(128) NOT NULL,
   PRIMARY KEY (`return_reason_id`,`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7956,13 +8007,14 @@ CREATE TABLE IF NOT EXISTS `return_reason` (
 -- Table structure for table `return_status`
 --
 
+DROP TABLE IF EXISTS `return_status`;
 CREATE TABLE IF NOT EXISTS `return_status` (
   `return_status_id` int(11) NOT NULL AUTO_INCREMENT,
   `language_id` int(11) NOT NULL DEFAULT 0,
   `name` varchar(32) NOT NULL,
   PRIMARY KEY (`return_status_id`,`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7970,6 +8022,7 @@ CREATE TABLE IF NOT EXISTS `return_status` (
 -- Table structure for table `review`
 --
 
+DROP TABLE IF EXISTS `review`;
 CREATE TABLE IF NOT EXISTS `review` (
   `review_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL,
@@ -7999,7 +8052,7 @@ CREATE TABLE IF NOT EXISTS `review` (
   KEY `status` (`status`),
   KEY `date_added` (`date_added`),
   KEY `rewarded` (`rewarded`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8007,13 +8060,14 @@ CREATE TABLE IF NOT EXISTS `review` (
 -- Table structure for table `review_description`
 --
 
+DROP TABLE IF EXISTS `review_description`;
 CREATE TABLE IF NOT EXISTS `review_description` (
   `review_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `text` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `answer` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `bads` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `good` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `text` mediumtext NOT NULL,
+  `answer` mediumtext NOT NULL,
+  `bads` mediumtext NOT NULL,
+  `good` mediumtext NOT NULL,
   UNIQUE KEY `review_id_2` (`review_id`,`language_id`),
   KEY `review_id` (`review_id`),
   KEY `language_id` (`language_id`)
@@ -8025,12 +8079,13 @@ CREATE TABLE IF NOT EXISTS `review_description` (
 -- Table structure for table `review_fields`
 --
 
+DROP TABLE IF EXISTS `review_fields`;
 CREATE TABLE IF NOT EXISTS `review_fields` (
   `review_id` int(11) NOT NULL,
   `mark` varchar(255) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `comm_comfort` text NOT NULL,
   KEY `review_id` (`review_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8038,12 +8093,13 @@ CREATE TABLE IF NOT EXISTS `review_fields` (
 -- Table structure for table `review_name`
 --
 
+DROP TABLE IF EXISTS `review_name`;
 CREATE TABLE IF NOT EXISTS `review_name` (
   `review_name_id` int(11) NOT NULL AUTO_INCREMENT,
   `l_code` varchar(5) DEFAULT NULL,
   `text` text NOT NULL,
   PRIMARY KEY (`review_name_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8051,12 +8107,13 @@ CREATE TABLE IF NOT EXISTS `review_name` (
 -- Table structure for table `review_template`
 --
 
+DROP TABLE IF EXISTS `review_template`;
 CREATE TABLE IF NOT EXISTS `review_template` (
   `review_template_id` int(11) NOT NULL AUTO_INCREMENT,
   `l_code` varchar(5) DEFAULT NULL,
   `text` text NOT NULL,
   PRIMARY KEY (`review_template_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8064,8 +8121,9 @@ CREATE TABLE IF NOT EXISTS `review_template` (
 -- Table structure for table `search_history`
 --
 
+DROP TABLE IF EXISTS `search_history`;
 CREATE TABLE IF NOT EXISTS `search_history` (
-  `text` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `text` varchar(500) NOT NULL,
   `times` int(11) NOT NULL,
   `results` int(11) NOT NULL,
   UNIQUE KEY `text` (`text`),
@@ -8080,6 +8138,7 @@ CREATE TABLE IF NOT EXISTS `search_history` (
 -- Table structure for table `segments`
 --
 
+DROP TABLE IF EXISTS `segments`;
 CREATE TABLE IF NOT EXISTS `segments` (
   `segment_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -8102,7 +8161,7 @@ CREATE TABLE IF NOT EXISTS `segments` (
   PRIMARY KEY (`segment_id`),
   KEY `sort_order` (`sort_order`),
   KEY `group` (`group`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8110,6 +8169,7 @@ CREATE TABLE IF NOT EXISTS `segments` (
 -- Table structure for table `segments_dynamics`
 --
 
+DROP TABLE IF EXISTS `segments_dynamics`;
 CREATE TABLE IF NOT EXISTS `segments_dynamics` (
   `segment_dynamics_id` int(11) NOT NULL AUTO_INCREMENT,
   `segment_id` int(11) NOT NULL,
@@ -8124,7 +8184,7 @@ CREATE TABLE IF NOT EXISTS `segments_dynamics` (
   PRIMARY KEY (`segment_dynamics_id`),
   KEY `segment_id` (`segment_id`) USING BTREE,
   KEY `date_added` (`date_added`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8132,6 +8192,7 @@ CREATE TABLE IF NOT EXISTS `segments_dynamics` (
 -- Table structure for table `seocities`
 --
 
+DROP TABLE IF EXISTS `seocities`;
 CREATE TABLE IF NOT EXISTS `seocities` (
   `seocity_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `seocity_name` varchar(255) NOT NULL,
@@ -8141,7 +8202,7 @@ CREATE TABLE IF NOT EXISTS `seocities` (
   `seocity_delivery_info` varchar(255) NOT NULL,
   `store_id` int(11) NOT NULL,
   PRIMARY KEY (`seocity_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8149,6 +8210,7 @@ CREATE TABLE IF NOT EXISTS `seocities` (
 -- Table structure for table `seo_hreflang`
 --
 
+DROP TABLE IF EXISTS `seo_hreflang`;
 CREATE TABLE IF NOT EXISTS `seo_hreflang` (
   `language_id` int(11) NOT NULL,
   `query` varchar(255) NOT NULL,
@@ -8156,7 +8218,7 @@ CREATE TABLE IF NOT EXISTS `seo_hreflang` (
   UNIQUE KEY `language_id_2` (`language_id`,`query`),
   KEY `language_id` (`language_id`),
   KEY `query` (`query`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8164,6 +8226,7 @@ CREATE TABLE IF NOT EXISTS `seo_hreflang` (
 -- Table structure for table `set`
 --
 
+DROP TABLE IF EXISTS `set`;
 CREATE TABLE IF NOT EXISTS `set` (
   `set_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) DEFAULT NULL,
@@ -8180,7 +8243,7 @@ CREATE TABLE IF NOT EXISTS `set` (
   PRIMARY KEY (`set_id`),
   KEY `product_id` (`product_id`),
   KEY `tax_class_id` (`tax_class_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8188,6 +8251,7 @@ CREATE TABLE IF NOT EXISTS `set` (
 -- Table structure for table `setting`
 --
 
+DROP TABLE IF EXISTS `setting`;
 CREATE TABLE IF NOT EXISTS `setting` (
   `setting_id` int(11) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) NOT NULL DEFAULT 0,
@@ -8201,7 +8265,7 @@ CREATE TABLE IF NOT EXISTS `setting` (
   KEY `key` (`key`),
   KEY `value` (`value`(1024)),
   KEY `group_2` (`group`,`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8209,6 +8273,7 @@ CREATE TABLE IF NOT EXISTS `setting` (
 -- Table structure for table `set_description`
 --
 
+DROP TABLE IF EXISTS `set_description`;
 CREATE TABLE IF NOT EXISTS `set_description` (
   `set_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -8216,7 +8281,7 @@ CREATE TABLE IF NOT EXISTS `set_description` (
   `description` text DEFAULT NULL,
   PRIMARY KEY (`set_id`,`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8224,12 +8289,13 @@ CREATE TABLE IF NOT EXISTS `set_description` (
 -- Table structure for table `set_to_category`
 --
 
+DROP TABLE IF EXISTS `set_to_category`;
 CREATE TABLE IF NOT EXISTS `set_to_category` (
   `set_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   PRIMARY KEY (`set_id`,`category_id`),
   KEY `category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8237,12 +8303,13 @@ CREATE TABLE IF NOT EXISTS `set_to_category` (
 -- Table structure for table `set_to_store`
 --
 
+DROP TABLE IF EXISTS `set_to_store`;
 CREATE TABLE IF NOT EXISTS `set_to_store` (
   `set_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   PRIMARY KEY (`set_id`,`store_id`),
   KEY `store_id` (`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8250,6 +8317,7 @@ CREATE TABLE IF NOT EXISTS `set_to_store` (
 -- Table structure for table `shift`
 --
 
+DROP TABLE IF EXISTS `shift`;
 CREATE TABLE IF NOT EXISTS `shift` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `shift_id` varchar(64) NOT NULL,
@@ -8258,7 +8326,7 @@ CREATE TABLE IF NOT EXISTS `shift` (
   `z_report_id` varchar(64) NOT NULL,
   `all_json_data` mediumtext NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8266,12 +8334,13 @@ CREATE TABLE IF NOT EXISTS `shift` (
 -- Table structure for table `shoputils_citycourier_description`
 --
 
+DROP TABLE IF EXISTS `shoputils_citycourier_description`;
 CREATE TABLE IF NOT EXISTS `shoputils_citycourier_description` (
   `language_id` int(11) NOT NULL,
   `name` text NOT NULL,
   `description` text NOT NULL,
   UNIQUE KEY `IDX_oc_shoputils_citycourier_description` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Shoputils citycourier shipping ';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='Shoputils citycourier shipping ';
 
 -- --------------------------------------------------------
 
@@ -8279,12 +8348,13 @@ CREATE TABLE IF NOT EXISTS `shoputils_citycourier_description` (
 -- Table structure for table `shoputils_cumulative_discounts`
 --
 
+DROP TABLE IF EXISTS `shoputils_cumulative_discounts`;
 CREATE TABLE IF NOT EXISTS `shoputils_cumulative_discounts` (
   `discount_id` int(11) NOT NULL AUTO_INCREMENT,
   `days` int(11) NOT NULL DEFAULT 0,
   `summ` decimal(11,2) NOT NULL DEFAULT 0.00,
   `percent` decimal(5,2) NOT NULL,
-  `currency` varchar(3) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `currency` varchar(3) NOT NULL,
   `products_special` tinyint(1) NOT NULL DEFAULT 0,
   `first_order` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`discount_id`)
@@ -8296,11 +8366,12 @@ CREATE TABLE IF NOT EXISTS `shoputils_cumulative_discounts` (
 -- Table structure for table `shoputils_cumulative_discounts_cmsdata`
 --
 
+DROP TABLE IF EXISTS `shoputils_cumulative_discounts_cmsdata`;
 CREATE TABLE IF NOT EXISTS `shoputils_cumulative_discounts_cmsdata` (
   `language_id` int(11) NOT NULL,
   `store_id` int(11) DEFAULT 0,
-  `description_before` text COLLATE utf8mb3_unicode_ci NOT NULL,
-  `description_after` text COLLATE utf8mb3_unicode_ci NOT NULL
+  `description_before` text NOT NULL,
+  `description_after` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci COMMENT='Cumulative discounts CMS data';
 
 -- --------------------------------------------------------
@@ -8309,10 +8380,11 @@ CREATE TABLE IF NOT EXISTS `shoputils_cumulative_discounts_cmsdata` (
 -- Table structure for table `shoputils_cumulative_discounts_description`
 --
 
+DROP TABLE IF EXISTS `shoputils_cumulative_discounts_description`;
 CREATE TABLE IF NOT EXISTS `shoputils_cumulative_discounts_description` (
   `discount_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `description` text COLLATE utf8mb3_unicode_ci NOT NULL,
+  `description` text NOT NULL,
   UNIQUE KEY `IDX_shoputils_cumulative_discounts_description` (`discount_id`,`language_id`),
   KEY `discount_id` (`discount_id`),
   KEY `language_id` (`language_id`)
@@ -8324,6 +8396,7 @@ CREATE TABLE IF NOT EXISTS `shoputils_cumulative_discounts_description` (
 -- Table structure for table `shoputils_cumulative_discounts_to_customer_group`
 --
 
+DROP TABLE IF EXISTS `shoputils_cumulative_discounts_to_customer_group`;
 CREATE TABLE IF NOT EXISTS `shoputils_cumulative_discounts_to_customer_group` (
   `discount_id` int(11) NOT NULL,
   `customer_group_id` int(11) NOT NULL,
@@ -8338,13 +8411,14 @@ CREATE TABLE IF NOT EXISTS `shoputils_cumulative_discounts_to_customer_group` (
 -- Table structure for table `shoputils_cumulative_discounts_to_manufacturer`
 --
 
+DROP TABLE IF EXISTS `shoputils_cumulative_discounts_to_manufacturer`;
 CREATE TABLE IF NOT EXISTS `shoputils_cumulative_discounts_to_manufacturer` (
   `discount_id` int(11) NOT NULL,
   `manufacturer_id` int(11) NOT NULL,
   UNIQUE KEY `discount_id` (`discount_id`,`manufacturer_id`),
   KEY `discount_id_2` (`discount_id`),
   KEY `manufacturer_id` (`manufacturer_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8352,6 +8426,7 @@ CREATE TABLE IF NOT EXISTS `shoputils_cumulative_discounts_to_manufacturer` (
 -- Table structure for table `shoputils_cumulative_discounts_to_store`
 --
 
+DROP TABLE IF EXISTS `shoputils_cumulative_discounts_to_store`;
 CREATE TABLE IF NOT EXISTS `shoputils_cumulative_discounts_to_store` (
   `discount_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -8366,19 +8441,20 @@ CREATE TABLE IF NOT EXISTS `shoputils_cumulative_discounts_to_store` (
 -- Table structure for table `shop_rating`
 --
 
+DROP TABLE IF EXISTS `shop_rating`;
 CREATE TABLE IF NOT EXISTS `shop_rating` (
   `rate_id` int(11) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) NOT NULL,
   `customer_id` int(11) DEFAULT NULL,
   `date_added` datetime NOT NULL,
   `rate_status` int(11) NOT NULL,
-  `customer_name` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `customer_email` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `customer_name` varchar(255) NOT NULL,
+  `customer_email` varchar(255) NOT NULL,
   `shop_rate` int(11) DEFAULT NULL,
   `site_rate` int(11) DEFAULT NULL,
-  `comment` text COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `good` text COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `bad` text COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `comment` text DEFAULT NULL,
+  `good` text DEFAULT NULL,
+  `bad` text DEFAULT NULL,
   PRIMARY KEY (`rate_id`),
   KEY `store_id` (`store_id`),
   KEY `customer_id` (`customer_id`)
@@ -8390,12 +8466,13 @@ CREATE TABLE IF NOT EXISTS `shop_rating` (
 -- Table structure for table `shop_rating_answers`
 --
 
+DROP TABLE IF EXISTS `shop_rating_answers`;
 CREATE TABLE IF NOT EXISTS `shop_rating_answers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `rate_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `date_added` datetime NOT NULL,
-  `comment` text COLLATE utf8mb3_unicode_ci NOT NULL,
+  `comment` text NOT NULL,
   `notified` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
@@ -8406,9 +8483,10 @@ CREATE TABLE IF NOT EXISTS `shop_rating_answers` (
 -- Table structure for table `shop_rating_custom_types`
 --
 
+DROP TABLE IF EXISTS `shop_rating_custom_types`;
 CREATE TABLE IF NOT EXISTS `shop_rating_custom_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `title` varchar(255) NOT NULL,
   `status` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
@@ -8419,6 +8497,7 @@ CREATE TABLE IF NOT EXISTS `shop_rating_custom_types` (
 -- Table structure for table `shop_rating_custom_values`
 --
 
+DROP TABLE IF EXISTS `shop_rating_custom_values`;
 CREATE TABLE IF NOT EXISTS `shop_rating_custom_values` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `custom_id` int(11) NOT NULL,
@@ -8433,13 +8512,14 @@ CREATE TABLE IF NOT EXISTS `shop_rating_custom_values` (
 -- Table structure for table `shop_rating_description`
 --
 
+DROP TABLE IF EXISTS `shop_rating_description`;
 CREATE TABLE IF NOT EXISTS `shop_rating_description` (
   `rate_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `comment` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `good` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `bad` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `answer` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `comment` mediumtext NOT NULL,
+  `good` mediumtext NOT NULL,
+  `bad` mediumtext NOT NULL,
+  `answer` mediumtext NOT NULL,
   UNIQUE KEY `rate_id_2` (`rate_id`,`language_id`),
   KEY `rate_id` (`rate_id`),
   KEY `language_id` (`language_id`)
@@ -8451,6 +8531,7 @@ CREATE TABLE IF NOT EXISTS `shop_rating_description` (
 -- Table structure for table `short_url_alias`
 --
 
+DROP TABLE IF EXISTS `short_url_alias`;
 CREATE TABLE IF NOT EXISTS `short_url_alias` (
   `url_id` int(11) NOT NULL AUTO_INCREMENT,
   `url` varchar(255) NOT NULL,
@@ -8461,7 +8542,7 @@ CREATE TABLE IF NOT EXISTS `short_url_alias` (
   KEY `url` (`url`),
   KEY `alias` (`alias`),
   KEY `date_added` (`date_added`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8469,6 +8550,7 @@ CREATE TABLE IF NOT EXISTS `short_url_alias` (
 -- Table structure for table `simple_cart`
 --
 
+DROP TABLE IF EXISTS `simple_cart`;
 CREATE TABLE IF NOT EXISTS `simple_cart` (
   `simple_cart_id` int(11) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) DEFAULT NULL,
@@ -8485,7 +8567,7 @@ CREATE TABLE IF NOT EXISTS `simple_cart` (
   KEY `store_id` (`store_id`),
   KEY `customer_id` (`customer_id`),
   KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8493,6 +8575,7 @@ CREATE TABLE IF NOT EXISTS `simple_cart` (
 -- Table structure for table `simple_custom_data`
 --
 
+DROP TABLE IF EXISTS `simple_custom_data`;
 CREATE TABLE IF NOT EXISTS `simple_custom_data` (
   `object_type` tinyint(4) NOT NULL,
   `object_id` int(11) NOT NULL,
@@ -8502,7 +8585,7 @@ CREATE TABLE IF NOT EXISTS `simple_custom_data` (
   KEY `object_id` (`object_id`),
   KEY `object_type` (`object_type`),
   KEY `customer_id` (`customer_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8510,58 +8593,14 @@ CREATE TABLE IF NOT EXISTS `simple_custom_data` (
 -- Table structure for table `sms_log`
 --
 
+DROP TABLE IF EXISTS `sms_log`;
 CREATE TABLE IF NOT EXISTS `sms_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `phone` varchar(255) NOT NULL,
   `text` text NOT NULL,
   `date_send` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `socnetauth2_customer2account`
---
-
-CREATE TABLE IF NOT EXISTS `socnetauth2_customer2account` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `customer_id` varchar(100) NOT NULL,
-  `identity` varchar(300) NOT NULL,
-  `link` varchar(300) NOT NULL,
-  `provider` varchar(300) NOT NULL,
-  `email` varchar(300) NOT NULL,
-  `data` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `socnetauth2_precode`
---
-
-CREATE TABLE IF NOT EXISTS `socnetauth2_precode` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `identity` varchar(300) NOT NULL,
-  `code` varchar(300) NOT NULL,
-  `cdate` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `socnetauth2_records`
---
-
-CREATE TABLE IF NOT EXISTS `socnetauth2_records` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `state` varchar(100) NOT NULL,
-  `redirect` varchar(300) NOT NULL,
-  `cdate` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8569,13 +8608,14 @@ CREATE TABLE IF NOT EXISTS `socnetauth2_records` (
 -- Table structure for table `special_attribute`
 --
 
+DROP TABLE IF EXISTS `special_attribute`;
 CREATE TABLE IF NOT EXISTS `special_attribute` (
   `special_attribute_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `special_attribute_group_id` int(10) UNSIGNED NOT NULL,
   `special_attribute_name` varchar(100) NOT NULL DEFAULT '',
   `special_attribute_value` varchar(2000) NOT NULL DEFAULT '',
   PRIMARY KEY (`special_attribute_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8583,27 +8623,13 @@ CREATE TABLE IF NOT EXISTS `special_attribute` (
 -- Table structure for table `special_attribute_group`
 --
 
+DROP TABLE IF EXISTS `special_attribute_group`;
 CREATE TABLE IF NOT EXISTS `special_attribute_group` (
   `special_attribute_group_id` int(10) UNSIGNED NOT NULL,
   `special_attribute_group_name` varchar(100) NOT NULL DEFAULT '',
   `special_attribute_group_description` varchar(4000) NOT NULL DEFAULT '',
   PRIMARY KEY (`special_attribute_group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `sphinx_suggestions`
---
-
-CREATE TABLE IF NOT EXISTS `sphinx_suggestions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `keyword` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
-  `trigrams` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
-  `freq` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `keyword` (`keyword`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8611,6 +8637,7 @@ CREATE TABLE IF NOT EXISTS `sphinx_suggestions` (
 -- Table structure for table `status`
 --
 
+DROP TABLE IF EXISTS `status`;
 CREATE TABLE IF NOT EXISTS `status` (
   `status_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -8619,7 +8646,7 @@ CREATE TABLE IF NOT EXISTS `status` (
   `url` varchar(255) NOT NULL,
   PRIMARY KEY (`status_id`,`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8627,6 +8654,7 @@ CREATE TABLE IF NOT EXISTS `status` (
 -- Table structure for table `stocks_dynamics`
 --
 
+DROP TABLE IF EXISTS `stocks_dynamics`;
 CREATE TABLE IF NOT EXISTS `stocks_dynamics` (
   `stock_dynamics_id` int(11) NOT NULL AUTO_INCREMENT,
   `date_added` date NOT NULL,
@@ -8635,7 +8663,7 @@ CREATE TABLE IF NOT EXISTS `stocks_dynamics` (
   `q_count` int(11) NOT NULL,
   PRIMARY KEY (`stock_dynamics_id`),
   UNIQUE KEY `date_added` (`date_added`,`warehouse_identifier`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8643,13 +8671,14 @@ CREATE TABLE IF NOT EXISTS `stocks_dynamics` (
 -- Table structure for table `stock_status`
 --
 
+DROP TABLE IF EXISTS `stock_status`;
 CREATE TABLE IF NOT EXISTS `stock_status` (
   `stock_status_id` int(11) NOT NULL AUTO_INCREMENT,
   `language_id` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
   PRIMARY KEY (`stock_status_id`,`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8657,13 +8686,14 @@ CREATE TABLE IF NOT EXISTS `stock_status` (
 -- Table structure for table `store`
 --
 
+DROP TABLE IF EXISTS `store`;
 CREATE TABLE IF NOT EXISTS `store` (
   `store_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
   `url` varchar(255) NOT NULL,
   `ssl` varchar(255) NOT NULL,
   PRIMARY KEY (`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8671,12 +8701,13 @@ CREATE TABLE IF NOT EXISTS `store` (
 -- Table structure for table `subscribe`
 --
 
+DROP TABLE IF EXISTS `subscribe`;
 CREATE TABLE IF NOT EXISTS `subscribe` (
   `subscribe_id` int(11) NOT NULL AUTO_INCREMENT,
   `email` text NOT NULL,
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`subscribe_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8684,12 +8715,13 @@ CREATE TABLE IF NOT EXISTS `subscribe` (
 -- Table structure for table `subscribe_auth_description`
 --
 
+DROP TABLE IF EXISTS `subscribe_auth_description`;
 CREATE TABLE IF NOT EXISTS `subscribe_auth_description` (
   `subscribe_auth_id` int(11) NOT NULL AUTO_INCREMENT,
   `language_id` int(11) NOT NULL,
   `subscribe_authorization` mediumtext NOT NULL,
   PRIMARY KEY (`subscribe_auth_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8697,12 +8729,13 @@ CREATE TABLE IF NOT EXISTS `subscribe_auth_description` (
 -- Table structure for table `subscribe_email_description`
 --
 
+DROP TABLE IF EXISTS `subscribe_email_description`;
 CREATE TABLE IF NOT EXISTS `subscribe_email_description` (
   `subscribe_desc_id` int(11) NOT NULL AUTO_INCREMENT,
   `language_id` int(11) NOT NULL,
   `subscribe_descriptions` mediumtext NOT NULL,
   PRIMARY KEY (`subscribe_desc_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8710,6 +8743,7 @@ CREATE TABLE IF NOT EXISTS `subscribe_email_description` (
 -- Table structure for table `superstat_viewed`
 --
 
+DROP TABLE IF EXISTS `superstat_viewed`;
 CREATE TABLE IF NOT EXISTS `superstat_viewed` (
   `entity_type` enum('p','c','m') NOT NULL,
   `entity_id` int(11) NOT NULL,
@@ -8720,7 +8754,7 @@ CREATE TABLE IF NOT EXISTS `superstat_viewed` (
   KEY `entity_type` (`entity_type`),
   KEY `entity_id` (`entity_id`),
   KEY `store_id` (`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8728,6 +8762,7 @@ CREATE TABLE IF NOT EXISTS `superstat_viewed` (
 -- Table structure for table `suppliers`
 --
 
+DROP TABLE IF EXISTS `suppliers`;
 CREATE TABLE IF NOT EXISTS `suppliers` (
   `supplier_id` int(11) NOT NULL AUTO_INCREMENT,
   `supplier_name` varchar(255) NOT NULL,
@@ -8791,7 +8826,7 @@ CREATE TABLE IF NOT EXISTS `suppliers` (
   KEY `supplier_country` (`supplier_country`),
   KEY `parser_status` (`parser_status`),
   KEY `admin_status` (`admin_status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8799,6 +8834,7 @@ CREATE TABLE IF NOT EXISTS `suppliers` (
 -- Table structure for table `supplier_attributes`
 --
 
+DROP TABLE IF EXISTS `supplier_attributes`;
 CREATE TABLE IF NOT EXISTS `supplier_attributes` (
   `supplier_attribute_id` int(11) NOT NULL AUTO_INCREMENT,
   `supplier_id` int(11) NOT NULL,
@@ -8808,7 +8844,7 @@ CREATE TABLE IF NOT EXISTS `supplier_attributes` (
   UNIQUE KEY `supplier_id_2` (`supplier_id`,`supplier_attribute`),
   KEY `supplier_attribute` (`supplier_attribute`),
   KEY `supplier_id` (`supplier_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8816,6 +8852,7 @@ CREATE TABLE IF NOT EXISTS `supplier_attributes` (
 -- Table structure for table `supplier_categories`
 --
 
+DROP TABLE IF EXISTS `supplier_categories`;
 CREATE TABLE IF NOT EXISTS `supplier_categories` (
   `supplier_category_id` int(11) NOT NULL AUTO_INCREMENT,
   `supplier_id` int(11) NOT NULL,
@@ -8832,7 +8869,25 @@ CREATE TABLE IF NOT EXISTS `supplier_categories` (
   KEY `supplier_id` (`supplier_id`),
   KEY `supplier_infeed_id` (`supplier_infeed_id`),
   KEY `supplier_infeed_parent` (`supplier_infeed_parent`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `supplier_manufacturers`
+--
+
+DROP TABLE IF EXISTS `supplier_manufacturers`;
+CREATE TABLE IF NOT EXISTS `supplier_manufacturers` (
+  `supplier_manufacturer_id` int(11) NOT NULL AUTO_INCREMENT,
+  `supplier_id` int(11) NOT NULL,
+  `manufacturer` varchar(256) NOT NULL,
+  `products` tinyint(1) NOT NULL DEFAULT 0,
+  `prices` tinyint(1) NOT NULL DEFAULT 0,
+  `stocks` tinyint(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`supplier_manufacturer_id`),
+  KEY `supplier_id` (`supplier_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8840,6 +8895,7 @@ CREATE TABLE IF NOT EXISTS `supplier_categories` (
 -- Table structure for table `supplier_products`
 --
 
+DROP TABLE IF EXISTS `supplier_products`;
 CREATE TABLE IF NOT EXISTS `supplier_products` (
   `product_supplier_id` int(11) NOT NULL AUTO_INCREMENT,
   `supplier_id` int(11) NOT NULL,
@@ -8855,7 +8911,7 @@ CREATE TABLE IF NOT EXISTS `supplier_products` (
   UNIQUE KEY `supplier_id_2` (`supplier_id`,`supplier_product_id`),
   KEY `supplier_id` (`supplier_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8863,6 +8919,7 @@ CREATE TABLE IF NOT EXISTS `supplier_products` (
 -- Table structure for table `tax_class`
 --
 
+DROP TABLE IF EXISTS `tax_class`;
 CREATE TABLE IF NOT EXISTS `tax_class` (
   `tax_class_id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(32) NOT NULL,
@@ -8870,7 +8927,7 @@ CREATE TABLE IF NOT EXISTS `tax_class` (
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`tax_class_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8878,6 +8935,7 @@ CREATE TABLE IF NOT EXISTS `tax_class` (
 -- Table structure for table `tax_rate`
 --
 
+DROP TABLE IF EXISTS `tax_rate`;
 CREATE TABLE IF NOT EXISTS `tax_rate` (
   `tax_rate_id` int(11) NOT NULL AUTO_INCREMENT,
   `geo_zone_id` int(11) NOT NULL DEFAULT 0,
@@ -8888,7 +8946,7 @@ CREATE TABLE IF NOT EXISTS `tax_rate` (
   `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`tax_rate_id`),
   KEY `geo_zone_id` (`geo_zone_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8896,12 +8954,13 @@ CREATE TABLE IF NOT EXISTS `tax_rate` (
 -- Table structure for table `tax_rate_to_customer_group`
 --
 
+DROP TABLE IF EXISTS `tax_rate_to_customer_group`;
 CREATE TABLE IF NOT EXISTS `tax_rate_to_customer_group` (
   `tax_rate_id` int(11) NOT NULL,
   `customer_group_id` int(11) NOT NULL,
   PRIMARY KEY (`tax_rate_id`,`customer_group_id`),
   KEY `customer_group_id` (`customer_group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8909,6 +8968,7 @@ CREATE TABLE IF NOT EXISTS `tax_rate_to_customer_group` (
 -- Table structure for table `tax_rule`
 --
 
+DROP TABLE IF EXISTS `tax_rule`;
 CREATE TABLE IF NOT EXISTS `tax_rule` (
   `tax_rule_id` int(11) NOT NULL AUTO_INCREMENT,
   `tax_class_id` int(11) NOT NULL,
@@ -8918,88 +8978,7 @@ CREATE TABLE IF NOT EXISTS `tax_rule` (
   PRIMARY KEY (`tax_rule_id`),
   KEY `tax_class_id` (`tax_class_id`),
   KEY `tax_rate_id` (`tax_rate_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `telegram_chats`
---
-
-CREATE TABLE IF NOT EXISTS `telegram_chats` (
-  `id` bigint(20) NOT NULL DEFAULT 0 COMMENT 'Unique user or chat identifier',
-  `type` char(10) DEFAULT '' COMMENT 'chat type private groupe or channel',
-  `title` char(255) DEFAULT '' COMMENT 'chat title null if case of single chat with the bot',
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Entry date creation',
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Entry date update',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `telegram_messages`
---
-
-CREATE TABLE IF NOT EXISTS `telegram_messages` (
-  `update_id` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'The update''s unique identifier.',
-  `message_id` bigint(20) DEFAULT NULL COMMENT 'Unique message identifier',
-  `user_id` bigint(20) DEFAULT NULL COMMENT 'User identifier',
-  `date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Date the message was sent in timestamp format',
-  `chat_id` bigint(20) NOT NULL DEFAULT 0 COMMENT 'Chat identifier.',
-  `forward_from` bigint(20) NOT NULL DEFAULT 0 COMMENT 'User id. For forwarded messages, sender of the original message',
-  `forward_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'For forwarded messages, date the original message was sent in Unix time',
-  `reply_to_message` longtext DEFAULT NULL COMMENT 'Message object. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.',
-  `text` longtext DEFAULT NULL COMMENT 'For text messages, the actual UTF-8 text of the message',
-  `audio` text DEFAULT NULL COMMENT 'Audio object. Message is an audio file, information about the file',
-  `document` text DEFAULT NULL COMMENT 'Document object. Message is a general file, information about the file',
-  `photo` text DEFAULT NULL COMMENT 'Array of PhotoSize objects. Message is a photo, available sizes of the photo',
-  `sticker` text DEFAULT NULL COMMENT 'Sticker object. Message is a sticker, information about the sticker',
-  `video` text DEFAULT NULL COMMENT 'Video object. Message is a video, information about the video',
-  `voice` text DEFAULT NULL COMMENT 'Voice Object. Message is a Voice, information about the Voice',
-  `caption` longtext DEFAULT NULL COMMENT 'For message with caption, the actual UTF-8 text of the caption',
-  `contact` text DEFAULT NULL COMMENT 'Contact object. Message is a shared contact, information about the contact',
-  `location` text DEFAULT NULL COMMENT 'Location object. Message is a shared location, information about the location',
-  `new_chat_participant` bigint(20) NOT NULL DEFAULT 0 COMMENT 'User id. A new member was added to the group, information about them (this member may be bot itself)',
-  `left_chat_participant` bigint(20) NOT NULL DEFAULT 0 COMMENT 'User id. A member was removed from the group, information about them (this member may be bot itself)',
-  `new_chat_title` char(255) DEFAULT '' COMMENT 'A group title was changed to this value',
-  `new_chat_photo` text DEFAULT NULL COMMENT 'Array of PhotoSize objects. A group photo was change to this value',
-  `delete_chat_photo` tinyint(1) DEFAULT 0 COMMENT 'Informs that the group photo was deleted',
-  `group_chat_created` tinyint(1) DEFAULT 0 COMMENT 'Informs that the group has been created',
-  PRIMARY KEY (`update_id`),
-  KEY `message_id` (`message_id`),
-  KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `telegram_users`
---
-
-CREATE TABLE IF NOT EXISTS `telegram_users` (
-  `id` bigint(20) NOT NULL DEFAULT 0 COMMENT 'Unique user identifier',
-  `first_name` char(255) NOT NULL DEFAULT '' COMMENT 'User first name',
-  `last_name` char(255) DEFAULT '' COMMENT 'User last name',
-  `username` char(255) DEFAULT '' COMMENT 'User username',
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Entry date creation',
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Entry date update',
-  PRIMARY KEY (`id`),
-  KEY `username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `telegram_users_chats`
---
-
-CREATE TABLE IF NOT EXISTS `telegram_users_chats` (
-  `user_id` bigint(20) NOT NULL DEFAULT 0 COMMENT 'Unique user identifier',
-  `chat_id` bigint(20) NOT NULL DEFAULT 0 COMMENT 'Unique user or chat identifier',
-  PRIMARY KEY (`user_id`,`chat_id`),
-  KEY `chat_id` (`chat_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9007,12 +8986,13 @@ CREATE TABLE IF NOT EXISTS `telegram_users_chats` (
 -- Table structure for table `temp`
 --
 
+DROP TABLE IF EXISTS `temp`;
 CREATE TABLE IF NOT EXISTS `temp` (
   `key` varchar(255) NOT NULL,
   `value` longtext NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9020,6 +9000,7 @@ CREATE TABLE IF NOT EXISTS `temp` (
 -- Table structure for table `tickets`
 --
 
+DROP TABLE IF EXISTS `tickets`;
 CREATE TABLE IF NOT EXISTS `tickets` (
   `ticket_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_group_id` int(11) DEFAULT NULL,
@@ -9050,7 +9031,7 @@ CREATE TABLE IF NOT EXISTS `tickets` (
   KEY `entity_type` (`entity_type`),
   KEY `date_at` (`date_at`),
   KEY `is_recall` (`is_recall`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9058,12 +9039,13 @@ CREATE TABLE IF NOT EXISTS `tickets` (
 -- Table structure for table `ticket_sort`
 --
 
+DROP TABLE IF EXISTS `ticket_sort`;
 CREATE TABLE IF NOT EXISTS `ticket_sort` (
   `ticket_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL,
   UNIQUE KEY `ticket_id` (`ticket_id`),
   KEY `sort_order` (`sort_order`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9071,6 +9053,7 @@ CREATE TABLE IF NOT EXISTS `ticket_sort` (
 -- Table structure for table `tracker`
 --
 
+DROP TABLE IF EXISTS `tracker`;
 CREATE TABLE IF NOT EXISTS `tracker` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `ip` varchar(32) DEFAULT NULL,
@@ -9087,7 +9070,7 @@ CREATE TABLE IF NOT EXISTS `tracker` (
   `isbot` int(11) DEFAULT NULL,
   `current_page` varchar(2048) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9095,11 +9078,12 @@ CREATE TABLE IF NOT EXISTS `tracker` (
 -- Table structure for table `translate_stats`
 --
 
+DROP TABLE IF EXISTS `translate_stats`;
 CREATE TABLE IF NOT EXISTS `translate_stats` (
   `time` datetime NOT NULL,
   `amount` int(11) NOT NULL,
   KEY `time` (`time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9107,6 +9091,7 @@ CREATE TABLE IF NOT EXISTS `translate_stats` (
 -- Table structure for table `translation_cache`
 --
 
+DROP TABLE IF EXISTS `translation_cache`;
 CREATE TABLE IF NOT EXISTS `translation_cache` (
   `translation_cache_id` int(11) NOT NULL AUTO_INCREMENT,
   `language_code_from` varchar(3) NOT NULL,
@@ -9118,7 +9103,7 @@ CREATE TABLE IF NOT EXISTS `translation_cache` (
   UNIQUE KEY `language_code_from_2` (`language_code_from`,`language_code_to`,`string`),
   KEY `language_code_from` (`language_code_from`),
   KEY `language_code_to` (`language_code_to`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9126,6 +9111,7 @@ CREATE TABLE IF NOT EXISTS `translation_cache` (
 -- Table structure for table `trigger_history`
 --
 
+DROP TABLE IF EXISTS `trigger_history`;
 CREATE TABLE IF NOT EXISTS `trigger_history` (
   `trigger_history_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -9138,7 +9124,7 @@ CREATE TABLE IF NOT EXISTS `trigger_history` (
   KEY `trigger_history_id_2` (`trigger_history_id`,`order_id`,`actiontemplate_id`),
   KEY `order_id` (`order_id`),
   KEY `type` (`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9146,6 +9132,7 @@ CREATE TABLE IF NOT EXISTS `trigger_history` (
 -- Table structure for table `url_alias`
 --
 
+DROP TABLE IF EXISTS `url_alias`;
 CREATE TABLE IF NOT EXISTS `url_alias` (
   `url_alias_id` int(11) NOT NULL AUTO_INCREMENT,
   `query` varchar(255) NOT NULL,
@@ -9156,7 +9143,7 @@ CREATE TABLE IF NOT EXISTS `url_alias` (
   KEY `keyword` (`keyword`) USING BTREE,
   KEY `language_id` (`language_id`),
   KEY `query` (`query`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9164,13 +9151,14 @@ CREATE TABLE IF NOT EXISTS `url_alias` (
 -- Table structure for table `url_alias_cached`
 --
 
+DROP TABLE IF EXISTS `url_alias_cached`;
 CREATE TABLE IF NOT EXISTS `url_alias_cached` (
   `store_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `route` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `args` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `checksum` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `route` varchar(255) NOT NULL,
+  `args` varchar(255) NOT NULL,
+  `checksum` varchar(64) NOT NULL,
+  `url` varchar(1024) NOT NULL,
   KEY `store_id` (`store_id`),
   KEY `language_id` (`language_id`),
   KEY `route` (`route`),
@@ -9184,6 +9172,7 @@ CREATE TABLE IF NOT EXISTS `url_alias_cached` (
 -- Table structure for table `user`
 --
 
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_group_id` int(11) NOT NULL,
@@ -9225,7 +9214,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   KEY `ip_2` (`ip`,`status`),
   KEY `user_id` (`user_id`,`status`),
   KEY `user_id_2` (`user_id`,`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9233,6 +9222,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 -- Table structure for table `user_content`
 --
 
+DROP TABLE IF EXISTS `user_content`;
 CREATE TABLE IF NOT EXISTS `user_content` (
   `user_id` int(11) NOT NULL,
   `datetime` datetime NOT NULL,
@@ -9245,7 +9235,7 @@ CREATE TABLE IF NOT EXISTS `user_content` (
   KEY `entity_type` (`entity_type`),
   KEY `action` (`action`),
   KEY `user_id_2` (`user_id`,`date`,`action`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9253,6 +9243,7 @@ CREATE TABLE IF NOT EXISTS `user_content` (
 -- Table structure for table `user_group`
 --
 
+DROP TABLE IF EXISTS `user_group`;
 CREATE TABLE IF NOT EXISTS `user_group` (
   `user_group_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
@@ -9267,7 +9258,7 @@ CREATE TABLE IF NOT EXISTS `user_group` (
   KEY `ticket` (`ticket`),
   KEY `sip_queue` (`sip_queue`),
   KEY `bitrix_id` (`bitrix_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9275,12 +9266,13 @@ CREATE TABLE IF NOT EXISTS `user_group` (
 -- Table structure for table `user_group_to_store`
 --
 
+DROP TABLE IF EXISTS `user_group_to_store`;
 CREATE TABLE IF NOT EXISTS `user_group_to_store` (
   `user_group_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   KEY `user_group_id` (`user_group_id`),
   KEY `store_id` (`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9288,6 +9280,7 @@ CREATE TABLE IF NOT EXISTS `user_group_to_store` (
 -- Table structure for table `user_worktime`
 --
 
+DROP TABLE IF EXISTS `user_worktime`;
 CREATE TABLE IF NOT EXISTS `user_worktime` (
   `user_id` int(11) NOT NULL,
   `date` date NOT NULL,
@@ -9312,38 +9305,7 @@ CREATE TABLE IF NOT EXISTS `user_worktime` (
   `customer_manual_count` int(11) NOT NULL DEFAULT 0,
   UNIQUE KEY `user_id` (`user_id`,`date`),
   KEY `user_id_2` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `vk_export_album`
---
-
-CREATE TABLE IF NOT EXISTS `vk_export_album` (
-  `category_id` int(11) NOT NULL,
-  `vk_album_id` varchar(32) NOT NULL,
-  `mode` enum('user','group') NOT NULL,
-  PRIMARY KEY (`category_id`,`vk_album_id`,`mode`),
-  KEY `vk_album_id` (`vk_album_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `vk_export_photo`
---
-
-CREATE TABLE IF NOT EXISTS `vk_export_photo` (
-  `product_id` int(11) NOT NULL,
-  `vk_photo_id` varchar(32) NOT NULL,
-  `category_id` int(11) NOT NULL,
-  `date` datetime NOT NULL,
-  `location` enum('albums','wall') NOT NULL,
-  PRIMARY KEY (`product_id`,`vk_photo_id`),
-  KEY `vk_photo_id` (`vk_photo_id`),
-  KEY `category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9351,6 +9313,7 @@ CREATE TABLE IF NOT EXISTS `vk_export_photo` (
 -- Table structure for table `voucher`
 --
 
+DROP TABLE IF EXISTS `voucher`;
 CREATE TABLE IF NOT EXISTS `voucher` (
   `voucher_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -9369,7 +9332,7 @@ CREATE TABLE IF NOT EXISTS `voucher` (
   PRIMARY KEY (`voucher_id`),
   KEY `order_id` (`order_id`),
   KEY `voucher_theme_id` (`voucher_theme_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9377,6 +9340,7 @@ CREATE TABLE IF NOT EXISTS `voucher` (
 -- Table structure for table `voucher_history`
 --
 
+DROP TABLE IF EXISTS `voucher_history`;
 CREATE TABLE IF NOT EXISTS `voucher_history` (
   `voucher_history_id` int(11) NOT NULL AUTO_INCREMENT,
   `voucher_id` int(11) NOT NULL,
@@ -9386,7 +9350,7 @@ CREATE TABLE IF NOT EXISTS `voucher_history` (
   PRIMARY KEY (`voucher_history_id`),
   KEY `voucher_id` (`voucher_id`),
   KEY `order_id` (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9394,11 +9358,12 @@ CREATE TABLE IF NOT EXISTS `voucher_history` (
 -- Table structure for table `voucher_theme`
 --
 
+DROP TABLE IF EXISTS `voucher_theme`;
 CREATE TABLE IF NOT EXISTS `voucher_theme` (
   `voucher_theme_id` int(11) NOT NULL AUTO_INCREMENT,
   `image` varchar(255) NOT NULL,
   PRIMARY KEY (`voucher_theme_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9406,13 +9371,14 @@ CREATE TABLE IF NOT EXISTS `voucher_theme` (
 -- Table structure for table `voucher_theme_description`
 --
 
+DROP TABLE IF EXISTS `voucher_theme_description`;
 CREATE TABLE IF NOT EXISTS `voucher_theme_description` (
   `voucher_theme_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
   PRIMARY KEY (`voucher_theme_id`,`language_id`),
   KEY `language_id` (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9420,6 +9386,7 @@ CREATE TABLE IF NOT EXISTS `voucher_theme_description` (
 -- Table structure for table `wayforpay_orders`
 --
 
+DROP TABLE IF EXISTS `wayforpay_orders`;
 CREATE TABLE IF NOT EXISTS `wayforpay_orders` (
   `wayforpay_order_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
@@ -9428,35 +9395,7 @@ CREATE TABLE IF NOT EXISTS `wayforpay_orders` (
   `callback` longtext DEFAULT NULL,
   `full_info` longtext DEFAULT NULL,
   PRIMARY KEY (`wayforpay_order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `wc_continents`
---
-
-CREATE TABLE IF NOT EXISTS `wc_continents` (
-  `code` char(2) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `geonameId` char(7) NOT NULL,
-  PRIMARY KEY (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `wc_countries`
---
-
-CREATE TABLE IF NOT EXISTS `wc_countries` (
-  `code` char(2) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `iso3` char(3) NOT NULL,
-  `number` smallint(3) UNSIGNED ZEROFILL NOT NULL,
-  `continent_code` char(2) NOT NULL,
-  PRIMARY KEY (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9464,6 +9403,7 @@ CREATE TABLE IF NOT EXISTS `wc_countries` (
 -- Table structure for table `weight_class`
 --
 
+DROP TABLE IF EXISTS `weight_class`;
 CREATE TABLE IF NOT EXISTS `weight_class` (
   `weight_class_id` int(11) NOT NULL AUTO_INCREMENT,
   `value` decimal(15,8) NOT NULL DEFAULT 0.00000000,
@@ -9472,7 +9412,7 @@ CREATE TABLE IF NOT EXISTS `weight_class` (
   `variants` varchar(2048) NOT NULL,
   PRIMARY KEY (`weight_class_id`),
   KEY `amazon_key` (`amazon_key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9480,6 +9420,7 @@ CREATE TABLE IF NOT EXISTS `weight_class` (
 -- Table structure for table `weight_class_description`
 --
 
+DROP TABLE IF EXISTS `weight_class_description`;
 CREATE TABLE IF NOT EXISTS `weight_class_description` (
   `weight_class_id` int(11) NOT NULL AUTO_INCREMENT,
   `language_id` int(11) NOT NULL,
@@ -9488,7 +9429,7 @@ CREATE TABLE IF NOT EXISTS `weight_class_description` (
   PRIMARY KEY (`weight_class_id`,`language_id`),
   KEY `language_id` (`language_id`),
   KEY `weight_class_id` (`weight_class_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9496,6 +9437,7 @@ CREATE TABLE IF NOT EXISTS `weight_class_description` (
 -- Table structure for table `yandex_feeds`
 --
 
+DROP TABLE IF EXISTS `yandex_feeds`;
 CREATE TABLE IF NOT EXISTS `yandex_feeds` (
   `store_id` int(11) NOT NULL,
   `currency` varchar(5) NOT NULL,
@@ -9504,7 +9446,7 @@ CREATE TABLE IF NOT EXISTS `yandex_feeds` (
   `path` varchar(255) NOT NULL,
   KEY `store_id` (`store_id`),
   KEY `entity_type` (`entity_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9512,10 +9454,11 @@ CREATE TABLE IF NOT EXISTS `yandex_feeds` (
 -- Table structure for table `yandex_queue`
 --
 
+DROP TABLE IF EXISTS `yandex_queue`;
 CREATE TABLE IF NOT EXISTS `yandex_queue` (
   `order_id` int(11) NOT NULL,
-  `status` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `substatus` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(32) NOT NULL,
+  `substatus` varchar(64) NOT NULL,
   PRIMARY KEY (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -9525,8 +9468,9 @@ CREATE TABLE IF NOT EXISTS `yandex_queue` (
 -- Table structure for table `yandex_stock_queue`
 --
 
+DROP TABLE IF EXISTS `yandex_stock_queue`;
 CREATE TABLE IF NOT EXISTS `yandex_stock_queue` (
-  `yam_product_id` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `yam_product_id` varchar(32) NOT NULL,
   `stock` int(11) NOT NULL,
   `updated_at` datetime NOT NULL DEFAULT current_timestamp(),
   UNIQUE KEY `yam_product_id` (`yam_product_id`)
@@ -9538,6 +9482,7 @@ CREATE TABLE IF NOT EXISTS `yandex_stock_queue` (
 -- Table structure for table `zone`
 --
 
+DROP TABLE IF EXISTS `zone`;
 CREATE TABLE IF NOT EXISTS `zone` (
   `zone_id` int(11) NOT NULL AUTO_INCREMENT,
   `country_id` int(11) NOT NULL,
@@ -9546,7 +9491,7 @@ CREATE TABLE IF NOT EXISTS `zone` (
   `status` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`zone_id`),
   KEY `country_id` (`country_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -9554,6 +9499,7 @@ CREATE TABLE IF NOT EXISTS `zone` (
 -- Table structure for table `zone_to_geo_zone`
 --
 
+DROP TABLE IF EXISTS `zone_to_geo_zone`;
 CREATE TABLE IF NOT EXISTS `zone_to_geo_zone` (
   `zone_to_geo_zone_id` int(11) NOT NULL AUTO_INCREMENT,
   `country_id` int(11) NOT NULL,
@@ -9565,29 +9511,7 @@ CREATE TABLE IF NOT EXISTS `zone_to_geo_zone` (
   KEY `country_id` (`country_id`),
   KEY `zone_id` (`zone_id`),
   KEY `geo_zone_id` (`geo_zone_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `_temp`
---
-
-CREATE TABLE IF NOT EXISTS `_temp` (
-  `value` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `_temp_discount`
---
-
-CREATE TABLE IF NOT EXISTS `_temp_discount` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `card_id` varchar(30) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 --
 -- Indexes for dumped tables
@@ -9602,17 +9526,6 @@ ALTER TABLE `category_description` ADD FULLTEXT KEY `FULLTEXT_name` (`name`);
 -- Indexes for table `order_simple_fields`
 --
 ALTER TABLE `order_simple_fields` ADD FULLTEXT KEY `metadata` (`metadata`);
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `telegram_users_chats`
---
-ALTER TABLE `telegram_users_chats`
-  ADD CONSTRAINT `telegram_users_chats_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `telegram_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `telegram_users_chats_ibfk_2` FOREIGN KEY (`chat_id`) REFERENCES `telegram_chats` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
