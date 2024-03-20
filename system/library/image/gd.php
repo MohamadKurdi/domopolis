@@ -19,6 +19,11 @@
 				try {    
 					$this->image = $this->create($file);
 				} catch (Exception $e) {
+
+                    if (!is_dir(DIR_IMAGE)){
+                        mkdir(DIR_IMAGE, 0755, true);
+                    }
+
 					echo $e->getMessage();
 				}
 			} else {				

@@ -14,6 +14,11 @@
 			require_once(DIR_SYSTEM . 'library/log.php');
 			$this->log = new Log('imagick-error.txt');
 
+            if (!is_dir(DIR_IMAGE)){
+                mkdir(DIR_IMAGE, 0755, true);
+                copy(DIR_IMAGE . '..' . DIRECTORY_SEPARATOR . 'no_image_available.jpg', DIR_IMAGE . 'no_image.jpg');
+            }
+
 			if (is_file($file)) {            
 				try {
 					$this->init($file);
