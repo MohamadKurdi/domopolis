@@ -44,26 +44,29 @@ final class Updater
             echoLine('[Updater::install] exec() function is forbidden, run composer install and npm install manually', 'e');
         }
 
-        if (is_file(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'update-db-structure.sql')){
-            require_once (dirname(__FILE__) . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'db.php');
-            require_once (dirname(__FILE__) . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'cache.php');
+        require_once (dirname(__FILE__) . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'db.php');
+        require_once (dirname(__FILE__) . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'cache.php');
 
-            $db = new \DB(\DB_DRIVER, \DB_HOSTNAME, \DB_USERNAME, \DB_PASSWORD, \DB_DATABASE);
+        $db = new \DB(\DB_DRIVER, \DB_HOSTNAME, \DB_USERNAME, \DB_PASSWORD, \DB_DATABASE);
 
-            echoLine('[Updater::update] SQL update file exists, running queries', 'i');
-            try {
-                $db->importSQL(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'update-db-structure.sql');
-            } catch (\Exception $e){
-                echoLine('[Updater::update] Caught exception, maybe tables already exist!', 'w');
+        for ($i=1;$i<=3;$i++){
+            if (is_file(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'update-db-structure-' . $i . '.sql')){
+                echoLine('[Updater::update] SQL update file ' . 'update-db-structure-' . $i . '.sql' . ' exists, running queries', 'i');
+                try {
+                    $db->importSQL(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'update-db-structure-' . $i . '.sql');
+                } catch (\Exception $e){
+                    echoLine('[Updater::update] Caught exception, maybe tables already exist!', 'w');
 
-                if (preg_match('/Table \'(.+)\' already exists/', $e->getMessage(), $matches)) {
-                    echoLine('[Updater::update] Yep that is ok, table ' . $matches[1] . ' just exists', 's');
-                } else {
-                    echoLine('[Updater::update] Well, this is not table exists message, dying. ' . $e->getMessage(), 'e');
-                    die();
+                    if (preg_match('/Table \'(.+)\' already exists/', $e->getMessage(), $matches)) {
+                        echoLine('[Updater::update] Yep that is ok, table ' . $matches[1] . ' just exists', 's');
+                    } else {
+                        echoLine('[Updater::update] Well, this is not table exists message, dying. ' . $e->getMessage(), 'e');
+                        die();
+                    }
                 }
             }
         }
+
 
         $this->current();
     }

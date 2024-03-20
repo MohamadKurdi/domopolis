@@ -293,7 +293,8 @@ TRUNCATE `geo_ip`;
 TRUNCATE `user_content`;
 TRUNCATE `ocfilter_option_value_description`;
 TRUNCATE `affiliate_transaction`;
-TRUNCATE `stocks_dynamics`;TRUNCATE `emailtemplate_logs`;
+TRUNCATE `stocks_dynamics`;
+TRUNCATE `emailtemplate_logs`;
 TRUNCATE `order_save_history`;";
     }
 }

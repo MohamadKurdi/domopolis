@@ -242,7 +242,13 @@ class ControllerKPAmazon extends Controller {
 
 			$products = $this->rainforestAmazon->processAmazonRainforestPageRequestProductResults($result);
 
-			$pagination['total_product_on_page'] = count($products);
+            if ($products){
+                $total = count($products);
+            } else {
+                $total = 0;
+            }
+
+			$pagination['total_product_on_page'] = $total;
 			foreach ($products as &$product){
 				if ($this->rainforestAmazon->productsRetriever->model_product_get->checkIfAsinIsDeleted($product['asin'])){
 					$products_bad['checkIfAsinIsDeleted'][] = $product;

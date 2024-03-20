@@ -1,0 +1,18 @@
+SET foreign_key_checks = 0;
+DROP TABLE IF EXISTS `geoname_alternatename`;
+DROP TABLE IF EXISTS `direct_timezones`;
+DROP TABLE IF EXISTS `category_psm_template`;
+DROP TABLE IF EXISTS `customer_test`;
+DROP TABLE IF EXISTS `filterpro_seo`;
+DROP TABLE IF EXISTS `geo_ip`;
+DROP TABLE IF EXISTS `hj_any_feed_feeds`;
+DROP TABLE IF EXISTS `manager_order_status_dynamics2`;
+DROP TABLE IF EXISTS `product_price_national_to_store1`;
+DROP TABLE IF EXISTS `product_tmp`;
+DROP TABLE IF EXISTS `socnetauth2_customer2account`, `socnetauth2_precode`, `socnetauth2_records`, `sphinx_suggestions`;
+DROP TABLE IF EXISTS `telegram_chats`, `telegram_messages`, `telegram_users`, `telegram_users_chats`;
+DROP TABLE IF EXISTS `vk_export_album`, `vk_export_photo`;
+DROP TABLE IF EXISTS `wc_continents`, `wc_countries`, `_temp`, `_temp_discount`;
+DROP TABLE IF EXISTS `product_front_price`;
+DROP TABLE IF EXISTS`geoname_geoname`;
+SET foreign_key_checks = 1;

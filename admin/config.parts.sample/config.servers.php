@@ -7,6 +7,7 @@ define('HTTPS_CATALOG', HTTP_CATALOG);
 define('HTTP_SERVER', HTTP_CATALOG . 'admin/');
 define('HTTPS_SERVER', HTTP_CATALOG . 'admin/');
 define('HTTP_IMAGE',  HTTP_CATALOG . 'image/');
+define('HTTP_IMAGE_MAIN',  HTTP_CATALOG . 'image/');
 define('HTTPS_IMAGE', HTTP_CATALOG . 'image/');
 define('HTTP_EXPORT', HTTP_CATALOG . 'export/');
 
