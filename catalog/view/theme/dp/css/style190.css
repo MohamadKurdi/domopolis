@@ -3697,7 +3697,6 @@ footer  .contact-footer .social-footer ul li a svg{
     display: flex;
     flex-direction: column;
 }
-}
 .section_slider .product__item {
     height: 100%;
     display: flex;
@@ -9337,7 +9336,7 @@ a[data-readmore-toggle] svg {
     display: inline-block;
     margin-right: 15px;
 }
-.cart__total .reward-code input::-webkit-input-placeholder,,
+.cart__total .reward-code input::-webkit-input-placeholder,
 .cart__total .voucher-code input::-webkit-input-placeholder,
 .cart__total .promo-code input::-webkit-input-placeholder,
 .order-cart .promo-code input::-webkit-input-placeholder {
