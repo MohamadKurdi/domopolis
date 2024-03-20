@@ -83,6 +83,9 @@
 #Шаблоны
 /catalog/view/theme/_dev/*
 /catalog/view/theme/_old/*
+/catalog/view/theme/kpkz/
+/catalog/view/theme/kpua/
+/catalog/view/theme/st/
 
 #Языки
 /catalog/language/*
