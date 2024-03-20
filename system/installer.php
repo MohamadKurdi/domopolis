@@ -268,4 +268,32 @@ final class Installer
 
         return true;
     }
+
+    private function truncate(){
+        $sql = "TRUNCATE `geoname_alternatename`;
+TRUNCATE `geoname_geoname`;
+TRUNCATE `adminlog`;
+TRUNCATE `customer_viewed`;
+TRUNCATE `geo`;
+TRUNCATE `maxmind_geo_country`;
+TRUNCATE `user_worktime`;
+TRUNCATE `translate_stats`;
+TRUNCATE `product_front_price`;
+TRUNCATE `order_sms_history`;
+TRUNCATE `product_stock_limits`;
+TRUNCATE `affiliate_statistics`;
+TRUNCATE `ocfilter_option_value_to_product`;
+TRUNCATE `customer_segments`;
+TRUNCATE `customer_emails_whitelist`;
+TRUNCATE `search_history`;
+TRUNCATE `customer_ip`;
+TRUNCATE `customer_reward`;
+TRUNCATE `product_amzn_data`;
+TRUNCATE `geo_ip`;
+TRUNCATE `user_content`;
+TRUNCATE `ocfilter_option_value_description`;
+TRUNCATE `affiliate_transaction`;
+TRUNCATE `stocks_dynamics`;TRUNCATE `emailtemplate_logs`;
+TRUNCATE `order_save_history`;";
+    }
 }
