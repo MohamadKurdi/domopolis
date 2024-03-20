@@ -12,8 +12,8 @@ class SupplierProduct extends SupplierFrameworkClass {
 
 		if (empty($product['category'])){
 			if ($this->getSupplierSetting('skip_no_category')){
-				echoLine('[SupplierProduct::parseProduct] Category is not set at all, skipping', 'e');	
-				return;
+				echoLine('[SupplierProduct::parseProduct] Category is not set at all, skipping', 'e');
+                return false;
 			}		
 		}
 
@@ -22,18 +22,41 @@ class SupplierProduct extends SupplierFrameworkClass {
 
 			if ($this->getSupplierSetting('skip_no_category')){
 				if (!$category){
-					echoLine('[SupplierProduct::parseProduct] Category ' . $product['category'] . ' is not matched, skipping', 'e');	
-					return;
+					echoLine('[SupplierProduct::parseProduct] Category ' . $product['category'] . ' is not matched, skipping', 'e');
+                    return false;
 				}
 			}
 
 			if ($category && !$category['products']){
 				echoLine('[SupplierProduct::parseProduct] Category ' . $product['category'] . ' has marker not to add products, skipping', 'e');
-				return;
+                return false;
 			}
 		}
 
-		$product_exists = false;
+        if (empty($product['vendor'])){
+            if ($this->getSupplierSetting('skip_no_manufacturer')){
+                echoLine('[SupplierProduct::parseProduct] Vendor is not set at all, skipping', 'e');
+                return false;
+            }
+        }
+
+        if (!empty($product['vendor'])){
+            $manufacturer = $this->registry->get('supplierAdaptor')->SupplierManufacturer->getManufacturerMatch($product['vendor']);
+
+            if ($this->getSupplierSetting('skip_no_manufacturer')){
+                if (!$manufacturer){
+                    echoLine('[SupplierProduct::parseProduct] Vendor ' . $product['vendor'] . ' is not matched, skipping', 'e');
+                    return false;
+                }
+            }
+
+            if ($manufacturer && !$manufacturer['products']){
+                echoLine('[SupplierProduct::parseProduct] Vendor ' . $product['vendor'] . ' has marker not to add products, skipping', 'e');
+                return false;
+            }
+        }
+
+        $product_exists = false;
 		$product_id 	= $this->model_get->getProductFromSupplierMatchTable($product, $this->getSupplierSetting('sync_field'));
 		if (!$product_id){
 			echoLine('[SupplierProduct::parseProduct] Not found matched product in supplier_products', 'e');
@@ -70,7 +93,9 @@ class SupplierProduct extends SupplierFrameworkClass {
 		
 		$this->parseProductStatus($product_id, $product);
 		$this->parseProductStock($product_id, $product);		
-		$this->parseProductPrice($product_id, $product);	
+		$this->parseProductPrice($product_id, $product);
+
+        return $product_id;
 	}
 
 	public function parseProductOtherData($product_id, $product){
@@ -122,6 +147,13 @@ class SupplierProduct extends SupplierFrameworkClass {
 				return false;
 			}
 
+            $manufacturer = $this->registry->get('supplierAdaptor')->SupplierManufacturer->getManufacturerMatch($product['vendor']);
+
+            if ($manufacturer && !$manufacturer['stocks']){
+                echoLine('[SupplierProduct::parseProductStock] Vendor ' . $product['vendor'] . ' has marker not to set stock, skipping', 'e');
+                return;
+            }
+
 			if ($product['stock']){
 				$this->registry->get('supplierAdaptor')->PriceLogic->setProductIsOnStock($product_id, $product);
 			} else {
@@ -148,6 +180,13 @@ class SupplierProduct extends SupplierFrameworkClass {
 				echoLine('[SupplierProduct::parseProductPrice] Category ' . $product['category'] . ' has marker not to set prices, skipping', 'e');
 				return false;
 			}
+
+            $manufacturer = $this->registry->get('supplierAdaptor')->SupplierManufacturer->getManufacturerMatch($product['vendor']);
+
+            if ($manufacturer && !$manufacturer['prices']){
+                echoLine('[SupplierProduct::parseProductPrice] Vendor ' . $product['vendor'] . ' has marker not to set prices, skipping', 'e');
+                return;
+            }
 
 			if ($this->getSupplierSetting('rrp_in_feed')){
 				echoLine('[SupplierProduct::parseProductPrice] We have RRP in feed, updating prices', 's');

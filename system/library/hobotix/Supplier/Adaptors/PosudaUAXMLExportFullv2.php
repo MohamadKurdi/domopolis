@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace hobotix\Supplier\Adaptors;
 
@@ -49,6 +49,30 @@ class PosudaUAXMLExportFullv2 extends SuppliersGeneralClass {
 
 		return $categories;
 	}
+
+    public function getManufacturers(){
+        $manufacturers = [];
+
+        if (!$this->getContent()){
+            $this->setContent();
+        }
+
+        if (!empty($this->content['itemlist'])){
+            if (!empty($this->content['itemlist']['item'])){
+                foreach ($this->content['itemlist']['item'] as $item){
+                    if (!empty($item['manufacturer'])){
+                       $manufacturers[checkCDATA($item['manufacturer'])] = [
+                           'vendor' => $this->vendor(checkCDATA($item['manufacturer']), 'vendor'),
+                           'country' => $this->vendor(checkCDATA($item['manufacturer']), 'country'),
+                           'vendor_full' => checkCDATA($item['manufacturer']),
+                       ];
+                    }
+                }
+            }
+        }
+
+        return $manufacturers;
+    }
 
 	public function getAttributes(){
 		$product_attributes = [];
@@ -142,7 +166,12 @@ class PosudaUAXMLExportFullv2 extends SuppliersGeneralClass {
 
 		if (!empty($this->content['itemlist'])){
 			if (!empty($this->content['itemlist']['item'])){
-				foreach ($this->content['itemlist']['item'] as $item){		
+				foreach ($this->content['itemlist']['item'] as $item){
+
+                    if ($item['sku'] != '642313'){
+                        continue;
+                    }
+
 					$name = [];
 					if (!empty($item['name_ua'])){
 						$name['uk'] = checkCDATA($item['name_ua']);
@@ -258,6 +287,7 @@ class PosudaUAXMLExportFullv2 extends SuppliersGeneralClass {
 						'quantity' 				=> (int)$item['quantity'],
 						'price' 				=> (float)$item['price'],						
 						'vendor' 				=> $this->vendor(checkCDATA($item['manufacturer']), 'vendor'),
+                        'vendor_full'			=> checkCDATA($item['manufacturer']),
 						'vendor_country'		=> $this->vendor(checkCDATA($item['manufacturer']), 'country'),
 						'category'  			=> $category,
 						'attributes'            => $product_attributes,

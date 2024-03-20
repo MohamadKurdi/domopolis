@@ -119,19 +119,9 @@ class SupplierAdaptor
 		}		
 	}
 
-	public function postProductAction($product_id){		
-		if (method_exists($this->supplierObject, 'postAction')){
-			try {
-				$results = $this->supplierObject->postAction($product_id);
-			} catch (\Exception $e){
-				throw new \Exception ($e->getMessage());
-			}
-		} else {
-			echoLine('[SupplierAdaptor::postProductAction] No postProductAction function!', 'e');
-		}		
-	}
+	public function getCategories(){
+        $results = [];
 
-	public function getCategories(){		
 		if (method_exists($this->supplierObject, 'getCategories')){
 			try {
 				$results = $this->supplierObject->getCategories();
@@ -145,7 +135,25 @@ class SupplierAdaptor
 		return $results;
 	}
 
-	public function getAttributes(){		
+    public function getManufacturers(){
+        $results = [];
+
+        if (method_exists($this->supplierObject, 'getManufacturers')){
+            try {
+                $results = $this->supplierObject->getManufacturers();
+            } catch (\Exception $e){
+                throw new \Exception ($e->getMessage());
+            }
+        } else {
+            echoLine('[SupplierAdaptor::getManufacturers] No getManufacturers function!', 'e');
+        }
+
+        return $results;
+    }
+
+	public function getAttributes(){
+        $results = [];
+
 		if (method_exists($this->supplierObject, 'getAttributes')){
 			try {
 				$results = $this->supplierObject->getAttributes();
@@ -205,7 +213,8 @@ class SupplierAdaptor
 						'quantity' 				=> (int)$product['quantity'],
 						'price' 				=> !empty($product['price'])?(float)$product['price']:0,
 						'price_special'			=> !empty($product['price_special'])?(float)$product['price_special']:0,
-						'vendor' 				=> !empty($product['vendor'])?atrim($product['vendor']):'NoName',
+						'vendor' 				=> !empty($product['vendor'])?atrim($product['vendor']):'',
+                        'vendor_full'			=> !empty($product['vendor_full'])?atrim($product['vendor_full']):'',
 						'vendor_country'		=> !empty($product['vendor_country'])?atrim($product['vendor_country']):'',
 						'category'  			=> !empty($product['category'])?atrim($product['category']):'',
 						'attributes'  			=> !empty($product['attributes'])?$product['attributes']:[],

@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace hobotix\Supplier;
 
@@ -80,7 +80,6 @@ class SupplierCategory extends SupplierFrameworkClass {
 				supplier_category_full	= '" . $this->db->escape($category['category_name_full']) . "'");
 		}
 	}
-
 
 	public function getCategoryMatchFull($supplier_category, $supplier_id = null){
 		if (!$supplier_id){

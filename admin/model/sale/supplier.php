@@ -1,7 +1,10 @@
 <?php
-class ModelSaleSupplier extends Model {
-	public function addSupplier($data) {
-		$this->db->query("INSERT INTO suppliers SET 
+
+class ModelSaleSupplier extends Model
+{
+    public function addSupplier($data)
+    {
+        $this->db->query("INSERT INTO suppliers SET 
 		supplier_name 		= '" . $this->db->escape($data['supplier_name']) . "',
 		supplier_code 		= '" . $this->db->escape($data['supplier_code']) . "',
 		supplier_type 		= '" . $this->db->escape($data['supplier_type']) . "', 			
@@ -42,17 +45,19 @@ class ModelSaleSupplier extends Model {
 		admin_status 			= '" . (int)$data['admin_status'] . "',
 		auto_enable 			= '" . (int)$data['auto_enable'] . "',
 		skip_no_category 		= '" . (int)$data['skip_no_category'] . "',
+		skip_no_manufacturer 	= '" . (int)$data['skip_no_manufacturer'] . "',
 		same_as_warehouse 		= '" . (int)$data['same_as_warehouse'] . "',
 		stock 					= '" . (int)$data['stock'] . "',
 		prices 					= '" . (int)$data['prices'] . "'");
-		
-		$supplier_id = $this->db->getLastId();
-		
-		return $supplier_id;
-	}
-	
-	public function editSupplier($supplier_id, $data) {
-		$this->db->query("UPDATE suppliers SET 
+
+        $supplier_id = $this->db->getLastId();
+
+        return $supplier_id;
+    }
+
+    public function editSupplier($supplier_id, $data)
+    {
+        $this->db->query("UPDATE suppliers SET 
 		supplier_name 		= '" . $this->db->escape($data['supplier_name']) . "',
 		supplier_type 		= '" . $this->db->escape($data['supplier_type']) . "', 
 		supplier_country 	= '" . $this->db->escape($data['supplier_country']) . "',
@@ -93,189 +98,227 @@ class ModelSaleSupplier extends Model {
 		admin_status 			= '" . (int)$data['admin_status'] . "',
 		auto_enable 			= '" . (int)$data['auto_enable'] . "',
 		skip_no_category 		= '" . (int)$data['skip_no_category'] . "',
+		skip_no_manufacturer 	= '" . (int)$data['skip_no_manufacturer'] . "',
 		same_as_warehouse 		= '" . (int)$data['same_as_warehouse'] . "',
 		stock 					= '" . (int)$data['stock'] . "',
 		prices 					= '" . (int)$data['prices'] . "'
-		WHERE supplier_id = '" . (int)$supplier_id . "'");				
-	}
-	
-	public function deleteSupplier($supplier_id) {
-		$this->db->query("DELETE FROM suppliers WHERE supplier_id = '" . (int)$supplier_id . "'");		
-	}
-	
-	public function getSupplier($supplier_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM suppliers WHERE supplier_id = '" . (int)$supplier_id . "'");
-		
-		return $query->row;
-	}
+		WHERE supplier_id = '" . (int)$supplier_id . "'");
+    }
 
-	public function getSupplierByAmazonSellerID($amazon_seller_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM suppliers WHERE amazon_seller_id = '" . $this->db->escape($amazon_seller_id) . "'");
-		
-		return $query->row;
-	}
-	
-	public function getSupplierByName($supplier) {
-		$query = $this->db->query("SELECT DISTINCT * FROM suppliers WHERE supplier_name = '" . $this->db->escape(trim($supplier)) . "'");
-		
-		if ($query->num_rows){
-			return $query->row;
-		} else {
-			return false;			
-		}
-	}
+    public function deleteSupplier($supplier_id)
+    {
+        $this->db->query("DELETE FROM suppliers WHERE supplier_id = '" . (int)$supplier_id . "'");
+    }
 
-	public function tryToGuessCategory($name) {
-		$this->load->model('catalog/category');
+    public function getSupplier($supplier_id)
+    {
+        $query = $this->db->query("SELECT DISTINCT * FROM suppliers WHERE supplier_id = '" . (int)$supplier_id . "'");
 
-		$data = [
-			'filter_name_extended' 	=> $name,
-			'start' 				=> 0,
-			'limit' 				=> 5
-		];
+        return $query->row;
+    }
 
-		return $this->model_catalog_category->guessCategories($data);
-	}
+    public function getSupplierByAmazonSellerID($amazon_seller_id)
+    {
+        $query = $this->db->query("SELECT DISTINCT * FROM suppliers WHERE amazon_seller_id = '" . $this->db->escape($amazon_seller_id) . "'");
 
-	public function getSupplierCategories($supplier_id) {
-		$query = $this->db->query("SELECT * FROM supplier_categories WHERE supplier_id = '" . (int)$supplier_id . "'");
+        return $query->row;
+    }
 
-		return $query->rows;
-	}
+    public function getSupplierByName($supplier)
+    {
+        $query = $this->db->query("SELECT DISTINCT * FROM suppliers WHERE supplier_name = '" . $this->db->escape(trim($supplier)) . "'");
 
-	public function getTotalSupplierCategories($supplier_id) {
-		$query = $this->db->query("SELECT COUNT(*) as total FROM supplier_categories WHERE supplier_id = '" . (int)$supplier_id . "'");
+        if ($query->num_rows) {
+            return $query->row;
+        } else {
+            return false;
+        }
+    }
 
-		return $query->row['total'];
-	}
+    public function tryToGuessCategory($name)
+    {
+        $this->load->model('catalog/category');
 
-	public function updateSupplierCategory($supplier_category_id, $category_id) {
-		$query = $this->db->query("UPDATE supplier_categories SET category_id = '" . (int)$category_id . "' WHERE supplier_category_id = '" . (int)$supplier_category_id . "'");		
-	}
+        $data = [
+            'filter_name_extended' => $name,
+            'start' => 0,
+            'limit' => 5
+        ];
 
-	public function updateSupplierCategoryField($supplier_category_id, $field, $value) {
-		$query = $this->db->query("UPDATE supplier_categories SET `" . $this->db->escape($field) . "` = '" . (int)$value . "' WHERE supplier_category_id = '" . (int)$supplier_category_id . "'");		
-	}
+        return $this->model_catalog_category->guessCategories($data);
+    }
 
-	public function tryToGuessAttribute($name) {
-		$this->load->model('catalog/attribute');
+    public function getSupplierCategories($supplier_id)
+    {
+        $query = $this->db->query("SELECT * FROM supplier_categories WHERE supplier_id = '" . (int)$supplier_id . "'");
 
-		$data = [
-			'filter_name' 	=> $name,
-			'start' 		=> 0,
-			'limit' 		=> 5
-		];
+        return $query->rows;
+    }
 
-		$attributes = $this->model_catalog_attribute->guessAttributes($data);
+    public function getTotalSupplierCategories($supplier_id)
+    {
+        $query = $this->db->query("SELECT COUNT(*) as total FROM supplier_categories WHERE supplier_id = '" . (int)$supplier_id . "'");
 
-		if (!$attributes){
-			$regex = '/^(.*?)(?:\s*\([^)]+\))?$/';
-			$result = preg_match($regex, $name, $matches);
+        return $query->row['total'];
+    }
 
-			if ($result) {
-				$data['filter_name'] = $matches[1];
-  				$attributes = $this->model_catalog_attribute->guessAttributes($data);
-			}
-		}
+    public function updateSupplierCategory($supplier_category_id, $category_id)
+    {
+        $query = $this->db->query("UPDATE supplier_categories SET category_id = '" . (int)$category_id . "' WHERE supplier_category_id = '" . (int)$supplier_category_id . "'");
+    }
 
-		return $attributes;
-	}
+    public function updateSupplierCategoryField($supplier_category_id, $field, $value)
+    {
+        $query = $this->db->query("UPDATE supplier_categories SET `" . $this->db->escape($field) . "` = '" . (int)$value . "' WHERE supplier_category_id = '" . (int)$supplier_category_id . "'");
+    }
 
-	public function getSupplierAttributes($supplier_id) {
-		$query = $this->db->query("SELECT * FROM supplier_attributes WHERE supplier_id = '" . (int)$supplier_id . "'");
+    public function getSupplierManufacturers($supplier_id)
+    {
+        $query = $this->db->query("SELECT * FROM supplier_manufacturers WHERE supplier_id = '" . (int)$supplier_id . "'");
 
-		return $query->rows;
-	}
+        return $query->rows;
+    }
 
-	public function getTotalSupplierAttributes($supplier_id) {
-		$query = $this->db->query("SELECT COUNT(*) as total FROM supplier_attributes WHERE supplier_id = '" . (int)$supplier_id . "'");
+    public function getTotalSupplierManufacturers($supplier_id)
+    {
+        $query = $this->db->query("SELECT COUNT(*) as total FROM supplier_manufacturers WHERE supplier_id = '" . (int)$supplier_id . "'");
 
-		return $query->row['total'];
-	}
+        return $query->row['total'];
+    }
 
-	public function updateSupplierAttribute($supplier_Attribute_id, $Attribute_id) {
-		$query = $this->db->query("UPDATE supplier_attributes SET attribute_id = '" . (int)$Attribute_id . "' WHERE supplier_attribute_id = '" . (int)$supplier_Attribute_id . "'");		
-	}
+    public function updateSupplierManufacturerField($supplier_manufacturer_id, $field, $value)
+    {
+        $query = $this->db->query("UPDATE supplier_manufacturers SET `" . $this->db->escape($field) . "` = '" . (int)$value . "' WHERE supplier_manufacturer_id = '" . (int)$supplier_manufacturer_id . "'");
+    }
 
-	public function updateSupplierAttributeField($supplier_Attribute_id, $field, $value) {
-		$query = $this->db->query("UPDATE supplier_attributes SET `" . $this->db->escape($field) . "` = '" . (int)$value . "' WHERE supplier_attribute_id = '" . (int)$supplier_Attribute_id . "'");		
-	}
+    public function tryToGuessAttribute($name)
+    {
+        $this->load->model('catalog/attribute');
 
-	public function getTotalSellerOffers($data = []){
-		$sql = "SELECT COUNT(*) as total FROM product_amzn_offers WHERE 1";
+        $data = [
+            'filter_name' => $name,
+            'start' => 0,
+            'limit' => 5
+        ];
 
-		if (!empty($data['filter_amazon_seller_id'])){
-			$sql .= " AND sellerID = '" . $this->db->escape($data['filter_amazon_seller_id']) . "'";
-		}
+        $attributes = $this->model_catalog_attribute->guessAttributes($data);
 
-		$query = $this->db->query($sql);
+        if (!$attributes) {
+            $regex = '/^(.*?)(?:\s*\([^)]+\))?$/';
+            $result = preg_match($regex, $name, $matches);
 
-		return $query->row['total'];
-	}
+            if ($result) {
+                $data['filter_name'] = $matches[1];
+                $attributes = $this->model_catalog_attribute->guessAttributes($data);
+            }
+        }
 
-	public function getSellerOffers($data = []){
-		$sql = "SELECT DISTINCT pao.*, p.price, p.product_id, p.profitability, p.image, pd.name FROM product_amzn_offers pao ";
-		$sql .= " LEFT JOIN product p ON (pao.asin = p.asin) ";
-		$sql .= " LEFT JOIN product_description pd ON (p.product_id = pd.product_id AND language_id = '" . (int)$this->config->get('config_language_id') . "') WHERE 1 ";
+        return $attributes;
+    }
 
-		if (!empty($data['filter_amazon_seller_id'])){
-			$sql .= " AND sellerID = '" . $this->db->escape($data['filter_amazon_seller_id']) . "'";
-		}
+    public function getSupplierAttributes($supplier_id)
+    {
+        $query = $this->db->query("SELECT * FROM supplier_attributes WHERE supplier_id = '" . (int)$supplier_id . "'");
 
-		$sort_data = array(
-			'pao.date_added'
-		);
-			
-		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-			$sql .= " ORDER BY " . $data['sort'];
-		} else {
-			$sql .= " ORDER BY asin";
-		}
+        return $query->rows;
+    }
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
-			$sql .= " DESC";
-		} else {
-			$sql .= " ASC";
-		}
+    public function getTotalSupplierAttributes($supplier_id)
+    {
+        $query = $this->db->query("SELECT COUNT(*) as total FROM supplier_attributes WHERE supplier_id = '" . (int)$supplier_id . "'");
 
-		if (isset($data['start']) || isset($data['limit'])) {
-			if ($data['start'] < 0) {
-				$data['start'] = 0;
-			}
+        return $query->row['total'];
+    }
 
-			if ($data['limit'] < 1) {
-				$data['limit'] = 20;
-			}
+    public function updateSupplierAttribute($supplier_attribute_id, $attribute_id)
+    {
+        $query = $this->db->query("UPDATE supplier_attributes SET attribute_id = '" . (int)$attribute_id . "' WHERE supplier_attribute_id = '" . (int)$supplier_attribute_id . "'");
+    }
 
-			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
-		}
+    public function updateSupplierAttributeField($supplier_attribute_id, $field, $value)
+    {
+        $query = $this->db->query("UPDATE supplier_attributes SET `" . $this->db->escape($field) . "` = '" . (int)$value . "' WHERE supplier_attribute_id = '" . (int)$supplier_attribute_id . "'");
+    }
 
-		$query = $this->db->query($sql);
+    public function getTotalSellerOffers($data = [])
+    {
+        $sql = "SELECT COUNT(*) as total FROM product_amzn_offers WHERE 1";
 
-		return $query->rows;
-	}
-	
-	public function getTotalAmazonOrders($supplier_id){		
-		$query = $this->db->query("SELECT 
+        if (!empty($data['filter_amazon_seller_id'])) {
+            $sql .= " AND sellerID = '" . $this->db->escape($data['filter_amazon_seller_id']) . "'";
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->row['total'];
+    }
+
+    public function getSellerOffers($data = [])
+    {
+        $sql = "SELECT DISTINCT pao.*, p.price, p.product_id, p.profitability, p.image, pd.name FROM product_amzn_offers pao ";
+        $sql .= " LEFT JOIN product p ON (pao.asin = p.asin) ";
+        $sql .= " LEFT JOIN product_description pd ON (p.product_id = pd.product_id AND language_id = '" . (int)$this->config->get('config_language_id') . "') WHERE 1 ";
+
+        if (!empty($data['filter_amazon_seller_id'])) {
+            $sql .= " AND sellerID = '" . $this->db->escape($data['filter_amazon_seller_id']) . "'";
+        }
+
+        $sort_data = array(
+            'pao.date_added'
+        );
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= " ORDER BY " . $data['sort'];
+        } else {
+            $sql .= " ORDER BY asin";
+        }
+
+        if (isset($data['order']) && ($data['order'] == 'DESC')) {
+            $sql .= " DESC";
+        } else {
+            $sql .= " ASC";
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+    public function getTotalAmazonOrders($supplier_id)
+    {
+        $query = $this->db->query("SELECT 
 			COUNT(DISTINCT amazon_id) as total_orders, 
 			SUM(price * quantity) as total_sum, 
 			SUM(quantity) as total_products
 			FROM amazon_orders_products
 			WHERE supplier_id = '" . (int)$supplier_id . "' GROUP BY supplier_id");
-		
-		if ($query->num_rows){
-			return $query->row;		
-		} else {
-			return array(
-				'total_orders' => 0,
-				'total_sum' => 0,
-				'total_products' =>	0
-			);
-		}		
-	}
-	
-	public function getSupplierEANCodes($product_id){		
-		$query = $this->db->query("SELECT 
+
+        if ($query->num_rows) {
+            return $query->row;
+        } else {
+            return array(
+                'total_orders' => 0,
+                'total_sum' => 0,
+                'total_products' => 0
+            );
+        }
+    }
+
+    public function getSupplierEANCodes($product_id)
+    {
+        $query = $this->db->query("SELECT 
 		lsp.product_ean,
 		s.supplier_name
 		FROM local_supplier_products lsp
@@ -283,44 +326,47 @@ class ModelSaleSupplier extends Model {
 		WHERE 
 		lsp.product_id = '" . (int)$product_id . "'
 		");
-		
-		if ($query->num_rows){
-			return $query->rows;		
-		} else {
-			return false;
-		}		
-	}
-	
-	public function getAllSupplierCountryCodes(){
-		$result = [];
 
-		$query = $this->db->query("SELECT DISTINCT supplier_country FROM suppliers");
+        if ($query->num_rows) {
+            return $query->rows;
+        } else {
+            return false;
+        }
+    }
 
-		foreach ($query->rows as $row){
-			$result[] = $row['supplier_country'];
-		}
+    public function getAllSupplierCountryCodes()
+    {
+        $result = [];
 
-		return $result;
-	}
-	
-	public function getSupplierInfo($product_id){
-		$query = $this->db->query("SELECT 
+        $query = $this->db->query("SELECT DISTINCT supplier_country FROM suppliers");
+
+        foreach ($query->rows as $row) {
+            $result[] = $row['supplier_country'];
+        }
+
+        return $result;
+    }
+
+    public function getSupplierInfo($product_id)
+    {
+        $query = $this->db->query("SELECT 
 			lsp.*,
 			s.supplier_name
 			FROM local_supplier_products lsp
 			LEFT JOIN suppliers s ON s.supplier_id = lsp.supplier_id
 			WHERE 
 			lsp.product_id = '" . (int)$product_id . "'");
-		
-		if ($query->num_rows){
-			return $query->rows;		
-		} else {
-			return false;
-		}		
-	}
-	
-	public function getSupplierStocks($product_id){		
-		$query = $this->db->query("SELECT 
+
+        if ($query->num_rows) {
+            return $query->rows;
+        } else {
+            return false;
+        }
+    }
+
+    public function getSupplierStocks($product_id)
+    {
+        $query = $this->db->query("SELECT 
 			lsp.price,
 			lsp.price_recommend,
 			lsp.currency,
@@ -330,16 +376,17 @@ class ModelSaleSupplier extends Model {
 			LEFT JOIN suppliers s ON s.supplier_id = lsp.supplier_id
 			WHERE 
 			lsp.product_id = '" . (int)$product_id . "'");
-		
-		if ($query->num_rows){
-			return $query->rows;		
-		} else {
-			return false;
-		}				
-	}
-	
-	public function getTotalAmazonOrdersComplex($supplier_id){		
-		$query = $this->db->query("SELECT 
+
+        if ($query->num_rows) {
+            return $query->rows;
+        } else {
+            return false;
+        }
+    }
+
+    public function getTotalAmazonOrdersComplex($supplier_id)
+    {
+        $query = $this->db->query("SELECT 
 			COUNT(DISTINCT ao.amazon_id) as total_orders, 
 			SUM(price * quantity) as total_sum, 
 			AVG(price * quantity) as avg_sum, 
@@ -350,24 +397,25 @@ class ModelSaleSupplier extends Model {
 			FROM amazon_orders_products aop
 			LEFT JOIN amazon_orders ao ON aop.amazon_id = ao.amazon_id
 			WHERE supplier_id = '" . (int)$supplier_id . "' GROUP BY supplier_id");
-		
-		if ($query->num_rows){
-			return $query->row;		
-		} else {
-			return array(
-				'total_orders' => 0,
-				'total_sum' => 0,
-				'avg_sum' =>	0,
-				'avg_price' =>	0,
-				'total_products' =>	0,
-				'total_gift_card' =>	0,
-				'total_cancelled' =>	0,
-			);
-		}		
-	}
-	
-	public function getAmazonBrands($supplier_id){
-		$query = $this->db->query("SELECT 
+
+        if ($query->num_rows) {
+            return $query->row;
+        } else {
+            return array(
+                'total_orders' => 0,
+                'total_sum' => 0,
+                'avg_sum' => 0,
+                'avg_price' => 0,
+                'total_products' => 0,
+                'total_gift_card' => 0,
+                'total_cancelled' => 0,
+            );
+        }
+    }
+
+    public function getAmazonBrands($supplier_id)
+    {
+        $query = $this->db->query("SELECT 
 			m.name,
 			m.manufacturer_id,
 			COUNT(DISTINCT aop.amazon_id) as total_orders,
@@ -381,205 +429,211 @@ class ModelSaleSupplier extends Model {
 			GROUP by m.manufacturer_id
 			ORDER BY total_orders DESC; 						
 			");
-		
-		return $query->rows;
-	}
-	
-	public function getSuppliersMain($data= []) {
-		$sql = "SELECT * FROM suppliers";
-		
-		$sort_data = array(
-			'supplier_name',
-			'sort_order',
-			'sort_order, supplier_name',
-			'supplier_inner DESC, supplier_name'
-		);	
-		
-		$sql .= " WHERE 1";
-		
-		if (!empty($data['filter_name'])) {
-			$sql .= " AND supplier_name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
-		}
 
-		if (!empty($data['filter_supplier_name'])) {
-			$sql .= " AND supplier_name LIKE '%" . $this->db->escape($data['filter_supplier_name']) . "%'";
-		}
-		
-		$sql .= " AND supplier_parent_id = 0";
-		
-		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-			$sql .= " ORDER BY " . $data['sort'];	
-		} else {
-			$sql .= " ORDER BY sort_order, supplier_name";	
-		}
-		
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
-			$sql .= " DESC";
-		} else {
-			$sql .= " ASC";
-		}
-		
-		if (isset($data['start']) || isset($data['limit'])) {
-			if ($data['start'] < 0) {
-				$data['start'] = 0;
-			}					
-			
-			if ($data['limit'] < 1) {
-				$data['limit'] = 200;
-			}	
-			
-			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
-		}
-		
-		$query = $this->db->query($sql);
-		
-		return $query->rows;		
-	}
-	
-	public function getOPSupply($order_product_id){
-		$query = $this->db->query("SELECT DISTINCT * FROM order_product_supply WHERE order_product_id = '" . (int)$order_product_id . "'");
-		
-		return $query->rows;
-	}
-	
-	public function getOPSupplyForSet($set_product_id){
-		$query = $this->db->query("SELECT DISTINCT * FROM order_product_supply WHERE order_set_id = '" . (int)$set_product_id . "'");
-		
-		return $query->rows;
-	}
+        return $query->rows;
+    }
 
-	public function getProductSuppliers($product_id){
-		$query = $this->db->query("SELECT sp.*, s.supplier_name, s.currency FROM `supplier_products` sp LEFT JOIN suppliers s ON (s.supplier_id = sp.supplier_id) WHERE product_id = '" . (int)$product_id . "'");
+    public function getSuppliersMain($data = [])
+    {
+        $sql = "SELECT * FROM suppliers";
 
-		return $query->rows;
-	}
-	
-	public function getSuppliers($data = []) {
-		$sql = "SELECT * FROM suppliers";
-		
-		$sort_data = array(
-			'supplier_name',
-			'sort_order',
-			'sort_order, supplier_name',
-			'supplier_inner DESC, supplier_name'
-		);	
-		
-		$sql .= " WHERE 1";
-		
-		if (!empty($data['filter_name'])) {
-			$sql .= " AND LOWER(supplier_name) LIKE '%" . $this->db->escape(mb_strtolower($data['filter_name'])) . "%'";
-		}
+        $sort_data = array(
+            'supplier_name',
+            'sort_order',
+            'sort_order, supplier_name',
+            'supplier_inner DESC, supplier_name'
+        );
 
-		if (!empty($data['filter_supplier_name'])) {
-			$sql .= " AND LOWER(supplier_name) LIKE '%" . $this->db->escape(mb_strtolower($data['filter_supplier_name'])) . "%'";
-		}
+        $sql .= " WHERE 1";
 
-		if (!empty($data['filter_supplier_country'])) {
-			$sql .= " AND LOWER(supplier_country) LIKE '" . $this->db->escape(mb_strtolower($data['filter_supplier_country'])) . "'";
-		}
-		
-		if (!empty($data['filter_parent_id'])) {
-			$sql .= " AND supplier_parent_id = '" . (int)$data['filter_parent_id'] . "'";
-		}
+        if (!empty($data['filter_name'])) {
+            $sql .= " AND supplier_name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
 
-		if (!empty($data['filter_rating_from'])) {
-			$sql .= " AND rating50 > '" . (int)$data['filter_rating_from'] . "'";
-		}
+        if (!empty($data['filter_supplier_name'])) {
+            $sql .= " AND supplier_name LIKE '%" . $this->db->escape($data['filter_supplier_name']) . "%'";
+        }
 
-		if (!empty($data['filter_reviews_from'])) {
-			$sql .= " AND ratings_total > '" . (int)$data['filter_reviews_from'] . "'";
-		}
+        $sql .= " AND supplier_parent_id = 0";
 
-		if (!empty($data['filter_has_telephone'])) {
-			$sql .= " AND telephone <> ''";
-		}
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= " ORDER BY " . $data['sort'];
+        } else {
+            $sql .= " ORDER BY sort_order, supplier_name";
+        }
 
-		if (!empty($data['filter_has_email'])) {
-			$sql .= " AND email <> ''";
-		}
+        if (isset($data['order']) && ($data['order'] == 'DESC')) {
+            $sql .= " DESC";
+        } else {
+            $sql .= " ASC";
+        }
 
-		if (!empty($data['filter_has_number'])) {
-			$sql .= " AND vat_number <> ''";
-		}
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
 
-		if (!empty($data['filter_parser_enabled'])) {
-			$sql .= " AND parser_status = 1";
-		}
+            if ($data['limit'] < 1) {
+                $data['limit'] = 200;
+            }
 
-		if (!empty($data['filter_admin_enabled'])) {
-			$sql .= " AND admin_status = 1";
-		}
-		
-		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-			$sql .= " ORDER BY " . $data['sort'];	
-		} else {
-			$sql .= " ORDER BY sort_order, supplier_name";	
-		}
-		
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
-			$sql .= " DESC";
-		} else {
-			$sql .= " ASC";
-		}
-		
-		if (isset($data['start']) || isset($data['limit'])) {
-			if ($data['start'] < 0) {
-				$data['start'] = 0;
-			}					
-			
-			if ($data['limit'] < 1) {
-				$data['limit'] = 200;
-			}	
-			
-			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
-		}
-		
-		$query = $this->db->query($sql);
-		
-		return $query->rows;		
-	}
-	
-	public function getTotalSuppliers($data = []) {
-		$sql = "SELECT COUNT(*) AS total FROM suppliers WHERE 1";
-		
-		if (!empty($data['filter_name'])) {
-			$sql .= " AND LOWER(supplier_name) LIKE '%" . $this->db->escape(mb_strtolower($data['filter_name'])) . "%'";
-		}
+            $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+        }
 
-		if (!empty($data['filter_supplier_name'])) {
-			$sql .= " AND LOWER(supplier_name) LIKE '%" . $this->db->escape(mb_strtolower($data['filter_supplier_name'])) . "%'";
-		}
+        $query = $this->db->query($sql);
 
-		if (!empty($data['filter_supplier_country'])) {
-			$sql .= " AND LOWER(supplier_country) LIKE '" . $this->db->escape(mb_strtolower($data['filter_supplier_country'])) . "'";
-		}
-		
-		if (!empty($data['filter_parent_id'])) {
-			$sql .= " AND supplier_parent_id = '" . (int)$data['filter_parent_id'] . "'";
-		}
+        return $query->rows;
+    }
 
-		if (!empty($data['filter_rating_from'])) {
-			$sql .= " AND rating50 > '" . (int)$data['filter_rating_from'] . "'";
-		}
+    public function getOPSupply($order_product_id)
+    {
+        $query = $this->db->query("SELECT DISTINCT * FROM order_product_supply WHERE order_product_id = '" . (int)$order_product_id . "'");
 
-		if (!empty($data['filter_reviews_from'])) {
-			$sql .= " AND ratings_total > '" . (int)$data['filter_reviews_from'] . "'";
-		}
+        return $query->rows;
+    }
 
-		if (!empty($data['filter_has_telephone'])) {
-			$sql .= " AND telephone <> ''";
-		}
+    public function getOPSupplyForSet($set_product_id)
+    {
+        $query = $this->db->query("SELECT DISTINCT * FROM order_product_supply WHERE order_set_id = '" . (int)$set_product_id . "'");
 
-		if (!empty($data['filter_has_email'])) {
-			$sql .= " AND email <> ''";
-		}
+        return $query->rows;
+    }
 
-		if (!empty($data['filter_has_number'])) {
-			$sql .= " AND vat_number <> ''";
-		}
+    public function getProductSuppliers($product_id)
+    {
+        $query = $this->db->query("SELECT sp.*, s.supplier_name, s.currency FROM `supplier_products` sp LEFT JOIN suppliers s ON (s.supplier_id = sp.supplier_id) WHERE product_id = '" . (int)$product_id . "'");
 
-		$query = $this->db->query($sql);
-		
-		return $query->row['total'];
-	}
+        return $query->rows;
+    }
+
+    public function getSuppliers($data = [])
+    {
+        $sql = "SELECT * FROM suppliers";
+
+        $sort_data = array(
+            'supplier_name',
+            'sort_order',
+            'sort_order, supplier_name',
+            'supplier_inner DESC, supplier_name'
+        );
+
+        $sql .= " WHERE 1";
+
+        if (!empty($data['filter_name'])) {
+            $sql .= " AND LOWER(supplier_name) LIKE '%" . $this->db->escape(mb_strtolower($data['filter_name'])) . "%'";
+        }
+
+        if (!empty($data['filter_supplier_name'])) {
+            $sql .= " AND LOWER(supplier_name) LIKE '%" . $this->db->escape(mb_strtolower($data['filter_supplier_name'])) . "%'";
+        }
+
+        if (!empty($data['filter_supplier_country'])) {
+            $sql .= " AND LOWER(supplier_country) LIKE '" . $this->db->escape(mb_strtolower($data['filter_supplier_country'])) . "'";
+        }
+
+        if (!empty($data['filter_parent_id'])) {
+            $sql .= " AND supplier_parent_id = '" . (int)$data['filter_parent_id'] . "'";
+        }
+
+        if (!empty($data['filter_rating_from'])) {
+            $sql .= " AND rating50 > '" . (int)$data['filter_rating_from'] . "'";
+        }
+
+        if (!empty($data['filter_reviews_from'])) {
+            $sql .= " AND ratings_total > '" . (int)$data['filter_reviews_from'] . "'";
+        }
+
+        if (!empty($data['filter_has_telephone'])) {
+            $sql .= " AND telephone <> ''";
+        }
+
+        if (!empty($data['filter_has_email'])) {
+            $sql .= " AND email <> ''";
+        }
+
+        if (!empty($data['filter_has_number'])) {
+            $sql .= " AND vat_number <> ''";
+        }
+
+        if (!empty($data['filter_parser_enabled'])) {
+            $sql .= " AND parser_status = 1";
+        }
+
+        if (!empty($data['filter_admin_enabled'])) {
+            $sql .= " AND admin_status = 1";
+        }
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= " ORDER BY " . $data['sort'];
+        } else {
+            $sql .= " ORDER BY sort_order, supplier_name";
+        }
+
+        if (isset($data['order']) && ($data['order'] == 'DESC')) {
+            $sql .= " DESC";
+        } else {
+            $sql .= " ASC";
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 200;
+            }
+
+            $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+    public function getTotalSuppliers($data = [])
+    {
+        $sql = "SELECT COUNT(*) AS total FROM suppliers WHERE 1";
+
+        if (!empty($data['filter_name'])) {
+            $sql .= " AND LOWER(supplier_name) LIKE '%" . $this->db->escape(mb_strtolower($data['filter_name'])) . "%'";
+        }
+
+        if (!empty($data['filter_supplier_name'])) {
+            $sql .= " AND LOWER(supplier_name) LIKE '%" . $this->db->escape(mb_strtolower($data['filter_supplier_name'])) . "%'";
+        }
+
+        if (!empty($data['filter_supplier_country'])) {
+            $sql .= " AND LOWER(supplier_country) LIKE '" . $this->db->escape(mb_strtolower($data['filter_supplier_country'])) . "'";
+        }
+
+        if (!empty($data['filter_parent_id'])) {
+            $sql .= " AND supplier_parent_id = '" . (int)$data['filter_parent_id'] . "'";
+        }
+
+        if (!empty($data['filter_rating_from'])) {
+            $sql .= " AND rating50 > '" . (int)$data['filter_rating_from'] . "'";
+        }
+
+        if (!empty($data['filter_reviews_from'])) {
+            $sql .= " AND ratings_total > '" . (int)$data['filter_reviews_from'] . "'";
+        }
+
+        if (!empty($data['filter_has_telephone'])) {
+            $sql .= " AND telephone <> ''";
+        }
+
+        if (!empty($data['filter_has_email'])) {
+            $sql .= " AND email <> ''";
+        }
+
+        if (!empty($data['filter_has_number'])) {
+            $sql .= " AND vat_number <> ''";
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->row['total'];
+    }
 }

@@ -7,7 +7,7 @@
 		protected $template 	= null; 
 		protected $output 		= null;
 		protected $minifier 	= null;
-		protected $overrided_template= null;
+
 		protected $children 	= [];
 		protected $data 		= [];
 
@@ -157,8 +157,8 @@
 
 			$absPath = [];
 
-			$settledPath = '/' . $this->config->get('config_template') . '/template/';
-			$defaultPath = '/' . self::default_template . '/template/';
+			$settledPath = DIRECTORY_SEPARATOR . $this->config->get('config_template') . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR;
+			$defaultPath = DIRECTORY_SEPARATOR . self::default_template . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR;
 
 			if (stripos($currentDir, $settledPath) !== false){
 				$absPath['settled'] = $currentDir;
@@ -176,17 +176,17 @@
 		}
 
 		protected function checkTemplateAdmin($currentDir, $includeTemplate){
-			$includeTemplate = ltrim($includeTemplate, '/');
+			$includeTemplate = ltrim($includeTemplate, DIRECTORY_SEPARATOR);
 			
 			if (mb_substr($includeTemplate, -4) != '.tpl'){
 					$includeTemplate = $includeTemplate . '.tpl';
 				}
 
-			if (file_exists( str_replace(self::default_template, self::overload_template . '/' . $this->config->get('config_template'), DIR_TEMPLATE) . $includeTemplate)){
-				return str_replace(self::default_template, self::overload_template . '/' . $this->config->get('config_template'), DIR_TEMPLATE) . $includeTemplate;
-			} else {
-				return DIR_TEMPLATE . $includeTemplate;
-			}		
+			if (file_exists( str_replace(self::default_template, self::overload_template . DIRECTORY_SEPARATOR . $this->config->get('config_template'), DIR_TEMPLATE) . $includeTemplate)){
+				return str_replace(self::default_template, self::overload_template . DIRECTORY_SEPARATOR . $this->config->get('config_template'), DIR_TEMPLATE) . $includeTemplate;
+			}
+
+            return DIR_TEMPLATE . $includeTemplate;
 		}
 		
 		protected function render() {
@@ -208,19 +208,19 @@
 					$this->template = substr($this->template, mb_strlen(self::default_template));
 				}
 
-				$this->template = ltrim($this->template, '/');
-				if (stripos($this->template, 'template/') === 0){
-					$this->template = substr($this->template, mb_strlen('template/'));
+				$this->template = ltrim($this->template, DIRECTORY_SEPARATOR);
+				if (stripos($this->template, 'template' . DIRECTORY_SEPARATOR) === 0){
+					$this->template = substr($this->template, mb_strlen('template' . DIRECTORY_SEPARATOR));
 				}
 
 				if (mb_substr($this->template, -4) != '.tpl'){
 					$this->template = $this->template . '.tpl';
 				}
 
-				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/' . $this->template)){
-					$this->template = $this->config->get('config_template') . '/template/' . $this->template;
+				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . $this->template)){
+					$this->template = $this->config->get('config_template') .  DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . $this->template;
 				} else {
-					$this->template = self::default_template . '/template/' . $this->template;
+					$this->template = self::default_template . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . $this->template;
 				}
 
 				$final_template_file = DIR_TEMPLATE . $this->template;
@@ -229,8 +229,8 @@
 					$this->template = $this->template . '.tpl';
 				}
 
-				if (file_exists( str_replace(self::default_template, self::overload_template . '/' . $this->config->get('config_template'), DIR_TEMPLATE) . $this->template)){
-					$final_template_file = str_replace(self::default_template, self::overload_template . '/' . $this->config->get('config_template'), DIR_TEMPLATE) . $this->template;
+				if (file_exists( str_replace(self::default_template, self::overload_template . DIRECTORY_SEPARATOR . $this->config->get('config_template'), DIR_TEMPLATE) . $this->template)){
+					$final_template_file = str_replace(self::default_template, self::overload_template . DIRECTORY_SEPARATOR . $this->config->get('config_template'), DIR_TEMPLATE) . $this->template;
 				} else {
 					$final_template_file = DIR_TEMPLATE . $this->template;
 				}
