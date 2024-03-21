@@ -362,6 +362,16 @@ class ProductsRetriever extends RainforestRetriever
 					$temp['name'] = atrim($temp['name']);
 					$temp['value'] = atrim($temp['value']);
 
+                    if (!preg_match('/[a-zA-Zа-яА-Я0-9]/u', $temp['name'])){
+                        echoLine('[ProductsRetriever::parseProductAttributes] Found bad name: ' . $temp['name'] . ', skipping', 'e');
+                        continue;
+                    }
+
+                    if (!preg_match('/[a-zA-Zа-яА-Я0-9]/u', $temp['value'])){
+                        echoLine('[ProductsRetriever::parseProductAttributes] Found bad value: ' . $temp['value'] . ', skipping', 'e');
+                        continue;
+                    }
+
 					$mergedProductAttributes[clean_string($temp['name'])] = [
 						'name' 	=> $temp['name'],
 						'value' => $temp['value']
@@ -374,6 +384,16 @@ class ProductsRetriever extends RainforestRetriever
 				foreach ($product['specifications'] as $temp){
 					$temp['name'] = atrim($temp['name']);
 					$temp['value'] = atrim($temp['value']);
+
+                    if (!preg_match('/[a-zA-Zа-яА-Я0-9]/u', $temp['name'])){
+                        echoLine('[ProductsRetriever::parseProductAttributes] Found bad name: ' . $temp['name'] . ', skipping', 'e');
+                        continue;
+                    }
+
+                    if (!preg_match('/[a-zA-Zа-яА-Я0-9]/u', $temp['value'])){
+                        echoLine('[ProductsRetriever::parseProductAttributes] Found bad value: ' . $temp['value'] . ', skipping', 'e');
+                        continue;
+                    }
 
 					$mergedProductAttributes[clean_string($temp['name'])] = [
 						'name' 	=> $temp['name'],
@@ -506,10 +526,12 @@ class ProductsRetriever extends RainforestRetriever
 
                 if (!preg_match('/[a-zA-Zа-яА-Я0-9]/u', $attribute['name'])){
                     echoLine('[ProductsRetriever::parseProductAttributes] Found bad name: ' . $attribute['name'] . ', skipping', 'e');
+                    continue;
                 }
 
                 if (!preg_match('/[a-zA-Zа-яА-Я0-9]/u', $attribute['value'])){
                     echoLine('[ProductsRetriever::parseProductAttributes] Found bad value: ' . $attribute['value'] . ', skipping', 'e');
+                    continue;
                 }
 
 				$mappedAttribute = false;
