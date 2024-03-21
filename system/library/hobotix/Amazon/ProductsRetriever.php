@@ -502,7 +502,15 @@ class ProductsRetriever extends RainforestRetriever
 			foreach ($mergedProductAttributes as $attribute){
 				echoLine('[ProductsRetriever::parseProductAttributes] Attributes: ' . $attribute['name'], 'i');
 				$attribute['name'] = atrim($attribute['name']);
-				$attribute['value'] = atrim($attribute['value']);	
+				$attribute['value'] = atrim($attribute['value']);
+
+                if (!preg_match('/[a-zA-Zа-яА-Я0-9]/u', $attribute['name'])){
+                    echoLine('[ProductsRetriever::parseProductAttributes] Found bad name: ' . $attribute['name'] . ', skipping', 'e');
+                }
+
+                if (!preg_match('/[a-zA-Zа-яА-Я0-9]/u', $attribute['value'])){
+                    echoLine('[ProductsRetriever::parseProductAttributes] Found bad value: ' . $attribute['value'] . ', skipping', 'e');
+                }
 
 				$mappedAttribute = false;
 				if (!empty($this->mapAmazonToStoreFieldsSpecifications[clean_string($attribute['name'])])){
@@ -1149,9 +1157,29 @@ class ProductsRetriever extends RainforestRetriever
 		}
 	}
 
+    private static function parseBadPrice($price){
+        if (empty($price['currency']) && empty($price['value'])){
+            if (!empty($price['raw'])){
+                /* €21,9921,99€ */
+                if (preg_match('/€{1}(\d+,?\d+)(\d+,?\d+)€{1}/', $price['raw'], $matches) === 1){
+                    $price['value'] = str_replace(['€', ','], ['', '.'], $price['raw']);
+                    $price['value'] = (float)substr($price['value'], 0, floor(mb_strlen($price['value']) / 2));
+                    $price['currency'] = 'EUR';
+
+                    echoLine('[ProductRetriever::parseBadPrice] Found bad formatted price: ' . $price['raw'] . ', parsed it to ' . $price['value'], 'd');
+                }
+            }
+        }
+
+        return $price;
+    }
+
 	public function parseProductBuyBoxWinner($product_id, $product){
 		if (!empty($product['buybox_winner'])){
-			if (!empty($product['buybox_winner']['price']) && $product['buybox_winner']['price']['currency'] == 'EUR'){					
+
+            $product['buybox_winner']['price'] = self::parseBadPrice($product['buybox_winner']['price']);
+
+			if (!empty($product['buybox_winner']['price']) && !empty($product['buybox_winner']['price']['currency']) && !empty($product['buybox_winner']['price']['value']) && $product['buybox_winner']['price']['currency'] == 'EUR'){
 				$this->model_product_edit->editProductFields($product_id, [['name' => 'amazon_best_price', 'type' => 'decimal', 'value' => $product['buybox_winner']['price']['value']]]);
 				$this->registry->get('rainforestAmazon')->offersParser->PriceLogic->updateProductPrices($product['asin'], $product['buybox_winner']['price']['value'], true);
 			}
