@@ -152,7 +152,15 @@
             if ($this->config->get('config_rainforest_cleanup_empty_attributes')){
                 echoLine('[optimizeProductsDB] Cleaning empty attributes', 'i');
                 $this->load->model('catalog/attribute');
-                $query = $this->db->query("SELECT a.attribute_id, ad.name FROM attribute a LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id AND language_id = '" . (int)$this->config->get('config_language_id') . "') WHERE attribute_group_id = '" . $this->config->get('config_default_attr_id') . "' AND a.attribute_id NOT IN (SELECT attribute_id FROM product_attribute)");
+
+                $this->db->query("DELETE FROM product_attribute WHERE text = ''");
+                $this->db->query("DELETE FROM product_feature WHERE text = ''");
+                $this->db->query("DELETE FROM attribute_description WHERE name = ''");
+                $this->db->query("DELETE FROM attribute WHERE attribute_id NOT IN (SELECT attribute_id FROM attribute_description)");
+                $this->db->query("DELETE FROM product_attribute WHERE attribute_id NOT IN (SELECT attribute_id FROM attribute)");
+                $this->db->query("DELETE FROM product_attribute WHERE `text` NOT REGEXP '[a-zA-Zа-яА-Я]'");
+
+                $query = $this->db->query("SELECT a.attribute_id, ad.name FROM attribute a LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id AND language_id = '" . (int)$this->config->get('config_language_id') . "') WHERE (a.attribute_id NOT IN (SELECT attribute_id FROM product_attribute) AND a.attribute_id NOT IN (SELECT feature_id FROM product_feature))");
 
                 foreach ($query->rows as $row){
                     echoLine('[optimizeProductsDB] Cleaning attribute: ' . $row['name'] . ' with id ' . $row['attribute_id'], 'w');
@@ -554,7 +562,7 @@
 				$this->db->query($sql);
 			}
 
-			$to_optimize_tables = ['adminlog', 'translate_stats', 'superstat_viewed', 'emailtemplate_logs', 'customer', 'customer_online', 'address', 'customer_history', 'order_invoice_history', 'order_save_history', 'product_offers_history', 'order'];
+			$to_optimize_tables = ['adminlog', 'translate_stats', 'superstat_viewed', 'emailtemplate_logs', 'customer', 'customer_online', 'address', 'customer_history', 'order_invoice_history', 'order_save_history', 'product_offers_history', 'order', 'manufacturer', 'manufacturer_description'];
 			
 			echoLine('[optimizeDB] Optimizing other tables', 'w');
 			foreach ((array)$to_optimize_tables as $table){
