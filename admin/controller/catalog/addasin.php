@@ -509,7 +509,7 @@
 				'status'		=> ($result['product_id'] > 0)?$result['status']:false,
 				'edit'			=> ($result['product_id'] > 0)?$this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'], 'SSL'):false,
 				'view'			=> ($result['product_id'] > 0)?(HTTP_CATALOG . 'index.php?route=product/product&product_id=' . $result['product_id']):false,
-				'date_created'	=> ($result['product_id'] > 0)?date('Y-m-d', strtotime($result['date_created'])):false,		
+				'date_created'	=> ($result['product_id'] > 0 && $result['date_created'])?date('Y-m-d', strtotime($result['date_created'])):false,
 				'image'			=> $result['image']?$this->model_tool_image->resize($result['image'], 50, 50):false,
 				'category_id'	=> $result['category_id'],
 				'category'		=> $result['category_id']?$this->model_catalog_category->getCategory($result['category_id']):false,
