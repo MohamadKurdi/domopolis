@@ -7,6 +7,15 @@ class ControllerSearchCron extends Controller {
             die('CLI ONLY');
         }
 
+        $this->registry->get('searchAdaptor')->fillIndices('entities');
+        $this->registry->get('searchAdaptor')->fillIndices('products');
+    }
+
+    public function createindices(){
+        if (!is_cli()){
+            die('CLI ONLY');
+        }
+
         $this->registry->get('searchAdaptor')->createIndices();
     }
 
