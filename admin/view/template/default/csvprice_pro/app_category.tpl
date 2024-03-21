@@ -203,7 +203,7 @@
 			</div>
 			<!-- end tab_export -->
 			<div id="tab_import" class="f-tabs">
-				<form action="<?php echo $action_import; ?>" method="post" id="form_category_import" enctype="multipart/form-data">
+				<form action="<?php echo $action_import; ?>" method="post" id="form_category_import" enctype="multipart/form-data">					
 					<div class="g-row">
 						<div class="g-12 f-form">
 							<div class="f-row">

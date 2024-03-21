@@ -3,7 +3,7 @@
 define("CSVPRICEPRO_VERSION", "3.4.1.0");
 class ModelCSVPriceProAppSetting extends Model
 {
-    private $TmpDirectory = "csvprice_pro/";
+    private $TmpDirectory = "temp/csvprice_pro/";
     private $error = "";
     private $ImageDataDir = "data/";
     private $FileExtAllowed = [];
@@ -80,6 +80,10 @@ class ModelCSVPriceProAppSetting extends Model
     }
     public function getTmpDir()
     {
+        if (!is_dir(DIR_SYSTEM . $this->TmpDirectory)){
+            mkdir(DIR_SYSTEM . $this->TmpDirectory, 0755, true);
+        }
+
         $_obfuscated_0D331B3C3C3F39052502102930023F2929353E241C3511_ = DIR_SYSTEM . $this->TmpDirectory . "tmp.file";
         if (touch($_obfuscated_0D331B3C3C3F39052502102930023F2929353E241C3511_)) {
             if (file_exists($_obfuscated_0D331B3C3C3F39052502102930023F2929353E241C3511_)) {
