@@ -119,15 +119,17 @@ class ModelKpGeoIP extends Model
 
         try {
             $date = new DateTime("now", new DateTimeZone($timezone));
-        } catch (Exception $e) {
-            $time = false;
-        }
-        if ($full) {
+
+             if ($full) {
             $time = $date->format('Y-m-d H:i:s');
         } else {
             $time = $date->format('H:i');
         }
 
+        } catch (Exception $e) {
+            $time = false;
+        }
+       
         return $time;
     }
 
