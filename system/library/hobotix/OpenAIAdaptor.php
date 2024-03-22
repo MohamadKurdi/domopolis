@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace hobotix;
 
@@ -245,6 +245,46 @@ final class OpenAIAdaptor
 
 		return $name;
 	}
+
+    public function translateAndSynonym($request){
+        if ($this->OpenAI && $this->config->get('config_openai_enable_translate_and_synonym')){
+            if ($this->config->get('config_openai_translate_and_synonym_endpoint') == 'chat'){
+                $response = $this->OpenAI->chat([
+                    'model' 			=> $this->config->get('config_openai_translate_and_synonym_model'),
+                    'messages' 			=> [
+                        [
+                            "role" 		=> "user",
+                            "content" 	=> $request
+                        ]],
+                    'temperature' 		=> (float)$this->config->get('config_openai_translate_and_synonym_temperature'),
+                    'max_tokens' 		=> (int)$this->config->get('config_openai_translate_and_synonym_maxtokens'),
+                    'top_p' 			=> (float)$this->config->get('config_openai_translate_and_synonym_top_p'),
+                    'frequency_penalty' => (float)$this->config->get('config_openai_translate_and_synonym_freq_penalty'),
+                    'presence_penalty' 	=> (float)$this->config->get('config_openai_translate_and_synonym_presence_penalty'),
+                ]);
+
+
+            } elseif ($this->config->get('config_openai_translate_and_synonym_endpoint') == 'completion'){
+                $response = $this->OpenAI->completion([
+                    'model' 			=> $this->config->get('config_openai_translate_and_synonym_model'),
+                    'prompt' 			=> $request,
+                    'temperature' 		=> (float)$this->config->get('config_openai_translate_and_synonym_temperature'),
+                    'max_tokens' 		=> (int)$this->config->get('config_openai_translate_and_synonym_maxtokens'),
+                    'top_p' 			=> (float)$this->config->get('config_openai_translate_and_synonym_top_p'),
+                    'frequency_penalty' => (float)$this->config->get('config_openai_translate_and_synonym_freq_penalty'),
+                    'presence_penalty' 	=> (float)$this->config->get('config_openai_translate_and_synonym_presence_penalty'),
+                ]);
+            }
+
+            if ($text = $this->parseCompletionResponse($response, $this->config->get('config_openai_translate_and_synonym_endpoint'))){
+                return $this->removeListFromResponse($text);
+            } else {
+                return false;
+            }
+        }
+
+        return false;
+    }
 
 	public function prepareHtmlBlockForTextField(){
 	}
