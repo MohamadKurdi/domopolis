@@ -51,7 +51,7 @@
 .remove {
     cursor: pointer;
     display: none;
-    background: url('../image/delete.png') no-repeat;
+    background: url('../image/delete_old.png') no-repeat;
     height: 16px;
     width: 16px;
     position: absolute;

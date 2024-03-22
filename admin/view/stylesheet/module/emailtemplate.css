@@ -341,7 +341,7 @@
 }
 
 #emailtemplate .remove {
-	background: url(../../image/delete.png) no-repeat;
+	background: url(../../image/delete_old.png) no-repeat;
 	cursor: pointer;
 	display: inline-block; *display:inline; *zoom:1;
     height: 16px;

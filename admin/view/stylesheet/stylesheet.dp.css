@@ -2,7 +2,7 @@ html{margin:0;padding:0;height:100%}
 body{margin:0;padding:0;height:100%;background:#FFF}
 body,td,th,input,select,textarea,option,optgroup{font-family:'PT Sans',Tahoma,Arial,Helvetica,sans-serif;font-size:14px;color:#696969}
 input[type='text'],input[type='password'],input{padding:2px;border:1px solid #9b7a94}
-textarea{padding:2px;border:1px solid #dbdbdb;resize:none}
+textarea{padding:5px;border:1px solid #dbdbdb; border-radius:5px;resize:none}
 a,a:visited{color:#036;text-decoration:underline;cursor:pointer}
 a img{border:0}
 form{margin:0;padding:0}
