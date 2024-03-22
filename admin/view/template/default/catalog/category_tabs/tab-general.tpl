@@ -326,7 +326,7 @@
 					request: request,					
 				},
 				success: function(text) {
-					$('#alternate_name2').val(text + '\n' + $('#alternate_name2').val());
+					$('#alternate_name' + language_id).val(text + '\n' + $('#alternate_name' + language_id).val());
 				},
 				beforeSend: function(){
 					elem.next().html('<i class="fa fa-spinner fa-spin"></i>');
