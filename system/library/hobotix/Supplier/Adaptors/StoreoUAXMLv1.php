@@ -64,6 +64,34 @@ class StoreoUAXMLv1 extends SuppliersGeneralClass {
 		return $product_attributes;
 	}
 
+	public function getManufacturers(){
+		$manufacturers = [];
+
+		if (!$this->getContent()){
+			$this->setContent();
+		}
+
+		if (!empty($this->content['yml_catalog'])){
+			if (!empty($this->content['yml_catalog']['shop'])){
+				if (!empty($this->content['yml_catalog']['shop']['offers'])){
+					if (!empty($this->content['yml_catalog']['shop']['offers']['offer'])){
+						foreach ($this->content['yml_catalog']['shop']['offers']['offer'] as $offer){
+							if (!empty($offer['vendor'])){
+								$manufacturers[checkCDATA($offer['vendor'])] = [
+									'vendor' => checkCDATA($offer['vendor']),
+									'country' => checkCDATA($offer['country']),                           
+									'vendor_full' => checkCDATA($offer['vendor']),
+								];
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return $manufacturers;
+	}
+
 
 	public function getProducts(){
 		$products = [];

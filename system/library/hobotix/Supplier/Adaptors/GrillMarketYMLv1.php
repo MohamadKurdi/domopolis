@@ -80,6 +80,32 @@ class GrillMarketYMLv1 extends SuppliersGeneralClass {
 		return $product_attributes;
 	}
 
+	public function getManufacturers(){
+		$manufacturers = [];
+
+		if (!$this->getContent()){
+			$this->setContent();
+		}
+
+		if (!empty($this->content['yml_catalog'])){
+			if (!empty($this->content['yml_catalog']['shop'])){
+				if (!empty($this->content['yml_catalog']['shop']['offers'])){
+					if (!empty($this->content['yml_catalog']['shop']['offers']['offer'])){
+						foreach ($this->content['yml_catalog']['shop']['offers']['offer'] as $offer){
+							if (!empty($offer['vendor'])){
+								$manufacturers[checkCDATA($offer['vendor'])] = [
+									'vendor' => checkCDATA($offer['vendor']),                        
+									'vendor_full' => checkCDATA($offer['vendor']),
+								];
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return $manufacturers;
+	}
 
 	public function getProducts(){
 		$products = [];
@@ -97,12 +123,14 @@ class GrillMarketYMLv1 extends SuppliersGeneralClass {
 						foreach ($this->content['yml_catalog']['shop']['offers']['offer'] as $offer){
 							$name = [];
 							if (!empty($offer['name'])){
-								$name['ru'] = checkCDATA($offer['name']);
+								$name['uk'] = checkCDATA($offer['name']);
+								$name['ru'] = ['translate_from' => 'uk', 'translate_data' => checkCDATA($offer['name'])];
 							}							
 
 							$description = [];
 							if (!empty($offer['description'])){
-								$description['ru'] = checkCDATA($offer['description']);
+								$description['uk'] = checkCDATA($offer['description']);
+								$description['ru'] = ['translate_from' => 'uk', 'translate_data' => checkCDATA($offer['description'])];
 							}
 
 							$image 	= '';	
@@ -140,14 +168,14 @@ class GrillMarketYMLv1 extends SuppliersGeneralClass {
 								'status'				=> (bool)$offer['@attributes']['available'],
 								'name'					=> $name,
 								'description' 			=> $description,
-								'model' 				=> $offer['vendorCode'],
-								'sku' 					=> $offer['vendorCode'],
+								'model' 				=> checkCDATA($offer['vendorCode']),
+								'sku' 					=> checkCDATA($offer['vendorCode']),
 								'image' 				=> $image,
 								'images' 				=> $images,
 								'stock' 				=> ((bool)$offer['@attributes']['available'])?true:false,
 								'quantity' 				=> (int)$offer['quantity_in_stock'],
 								'price' 				=> (float)$offer['price'],						
-								'vendor' 				=> $offer['vendor'],
+								'vendor' 				=> checkCDATA($offer['vendor']),
 								'category'  			=> $offer['categoryId'],
 								'attributes'            => $product_attributes,
 								'raw' 					=> json_encode($offer)

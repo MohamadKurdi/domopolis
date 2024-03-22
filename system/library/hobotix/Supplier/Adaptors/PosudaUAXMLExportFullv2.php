@@ -168,10 +168,6 @@ class PosudaUAXMLExportFullv2 extends SuppliersGeneralClass {
 			if (!empty($this->content['itemlist']['item'])){
 				foreach ($this->content['itemlist']['item'] as $item){
 
-                    if ($item['sku'] != '642313'){
-                        continue;
-                    }
-
 					$name = [];
 					if (!empty($item['name_ua'])){
 						$name['uk'] = checkCDATA($item['name_ua']);
