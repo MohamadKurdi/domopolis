@@ -2326,7 +2326,6 @@
 				</div>
 
 				<div id="tab-store-settings">
-
 					<table class="list">
 						<tr>
 							<td colspan="3" class="left" style="color:#cf4a61;">

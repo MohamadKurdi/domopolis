@@ -3208,7 +3208,16 @@ class ControllerSettingSetting extends Controller
             'config_openai_exportnames_temperature',
             'config_openai_exportnames_top_p',
             'config_openai_exportnames_freq_penalty',
-            'config_openai_exportnames_presence_penalty'
+            'config_openai_exportnames_presence_penalty',
+            'config_openai_enable_translate_and_synonym',
+            'config_openai_translate_and_synonym_model',
+            'config_openai_translate_and_synonym_endpoint',
+            'config_openai_translate_and_synonym_maxtokens',
+            'config_openai_translate_and_synonym_length',
+            'config_openai_translate_and_synonym_temperature',
+            'config_openai_translate_and_synonym_top_p',
+            'config_openai_translate_and_synonym_freq_penalty',
+            'config_openai_translate_and_synonym_presence_penalty'
         ];
 
         foreach ($openai_config_keys as $openai_config_key) {
@@ -3242,6 +3251,12 @@ class ControllerSettingSetting extends Controller
                 $this->data['config_openai_exportnames_query_' . $openai_language['code']] = $this->request->post['config_openai_exportnames_query_' . $openai_language['code']];
             } else {
                 $this->data['config_openai_exportnames_query_' . $openai_language['code']] = $this->config->get('config_openai_exportnames_query_' . $openai_language['code']);
+            }
+
+            if (isset($this->request->post['config_openai_translate_and_synonym_query_' . $openai_language['code']])) {
+                $this->data['config_openai_translate_and_synonym_query_' . $openai_language['code']] = $this->request->post['config_openai_translate_and_synonym_query_' . $openai_language['code']];
+            } else {
+                $this->data['config_openai_translate_and_synonym_query_' . $openai_language['code']] = $this->config->get('config_openai_translate_and_synonym_query_' . $openai_language['code']);
             }
         }
 

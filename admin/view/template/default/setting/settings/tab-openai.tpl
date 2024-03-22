@@ -2,7 +2,7 @@
 		<h2>🤖 Общие настройки</h2>
 		<table class="form">
 			<tr>
-				<td width="33%">	
+				<td style="width:33%">	
 					<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Включить OpenAI</span></p>
 					<select name="config_openai_enable">
 						<?php if ($config_openai_enable) { ?>
@@ -15,12 +15,12 @@
 					</select>									
 				</td>
 				
-				<td width="33%">
+				<td style="width:33%">
 					<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">API KEY</span></p>
 					<input type="text" name="config_openai_api_key" value="<?php echo $config_openai_api_key; ?>" size="50" style="width:250px;" />
 				</td>	
 
-				<td width="33%">
+				<td style="width:33%">
 					<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Модель по-умолчанию</span></p>
 					<select name="config_openai_default_model">
 						<?php foreach ($openai_models_list as $openai_model) { ?>
@@ -439,6 +439,90 @@
 						<div style="margin-bottom: 10px;">											
 							<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <input type="text" name="config_openai_exportnames_query_<?php echo $language['code']; ?>" value="<?php echo ${'config_openai_exportnames_query_' . $language['code']}; ?>" style="width:80%" />
 						</div>
+					<?php } ?>
+				</td>
+			</tr>
+		</table>
+
+		<h2>🤖 Перевод и синонимизация</h2>
+		<table class="form">
+			<tr>
+				<td style="width:15%">
+					<div>
+						<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Включить</span></p>
+						<select name="config_openai_enable_translate_and_synonym">
+							<?php if ($config_openai_enable_translate_and_synonym) { ?>
+							<option value="1" selected="selected">Включить</option>
+							<option value="0">Отключить</option>
+							<?php } else { ?>
+							<option value="1">Включить</option>
+							<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+					</div>
+					<div>
+						<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Точка входа</span></p>
+						<select name="config_openai_translate_and_synonym_endpoint">
+							<?php foreach ($openai_endpoints as $openai_endpoint) { ?>
+							<?php if ($config_openai_translate_and_synonym_endpoint == $openai_endpoint) { ?>
+							<option value="<?php echo $openai_endpoint; ?>" selected="selected"><?php echo $openai_endpoint; ?></option>
+							<?php } else { ?>
+							<option value="<?php echo $openai_endpoint; ?>"><?php echo $openai_endpoint; ?></option>
+							<? } ?>
+							<?php } ?>
+						</select>
+					</div>
+					<div>
+						<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Модель</span></p>
+						<select name="config_openai_translate_and_synonym_model">
+							<?php foreach ($openai_models_list as $openai_model) { ?>
+							<?php if ($config_openai_translate_and_synonym_model == $openai_model['id']) { ?>
+							<option value="<?php echo $openai_model['id']; ?>" selected="selected"><?php echo $openai_model['id']; ?></option>
+							<?php } else { ?>
+							<option value="<?php echo $openai_model['id']; ?>"><?php echo $openai_model['id']; ?></option>
+							<? } ?>
+							<?php } ?>
+						</select>
+					</div>
+				</td>
+
+				<td style="width:15%">
+					<div>
+						<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Длина</span></p>
+						<input type="number" step="1" min="10" max="100" name="config_openai_translate_and_synonym_length" value="<?php echo $config_openai_translate_and_synonym_length; ?>" size="50" style="width:60px;" />
+					</div>
+					<div>
+						<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Max tokens</span></p>
+						<input type="number" step="10" min="100" max="4000" name="config_openai_translate_and_synonym_maxtokens" value="<?php echo $config_openai_translate_and_synonym_maxtokens; ?>" size="50" style="width:60px;" />
+					</div>
+					<div>
+						<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Temperature</span></p>
+						<input type="number" step="0.1" min="0" max="1" name="config_openai_translate_and_synonym_temperature" value="<?php echo $config_openai_translate_and_synonym_temperature; ?>" size="50" style="width:60px;" />
+					</div>
+				</td>
+
+				<td style="width:15%">
+					<div>
+						<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Top P</span></p>
+						<input type="number" step="0.1" min="0" max="1" name="config_openai_translate_and_synonym_top_p" value="<?php echo $config_openai_translate_and_synonym_top_p; ?>" size="50" style="width:60px;" />
+					</div>
+					<div>
+						<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Frequency penalty</span></p>
+						<input type="number" step="0.1" min="0" max="2" name="config_openai_translate_and_synonym_freq_penalty" value="<?php echo $config_openai_translate_and_synonym_freq_penalty; ?>" size="50" style="width:60px;" />
+					</div>
+					<div>
+						<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Presence penalty</span></p>
+						<input type="number" step="0.1" min="0" max="2" name="config_openai_translate_and_synonym_presence_penalty" value="<?php echo $config_openai_translate_and_synonym_presence_penalty; ?>" size="50" style="width:60px;" />
+					</div>
+				</td>
+
+				<td style="width:55%">
+					<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Запрос к AI</span></p>
+					<?php foreach ($languages as $language) { ?>
+					<div style="margin-bottom: 10px;">
+						<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+						<textarea style="width:80%" name="config_openai_translate_and_synonym_query_<?php echo $language['code']; ?>" rows="4"><?php echo ${'config_openai_translate_and_synonym_query_' . $language['code']}; ?></textarea>
+					</div>
 					<?php } ?>
 				</td>
 			</tr>
