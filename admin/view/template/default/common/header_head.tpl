@@ -36,6 +36,8 @@
 		<script type="text/javascript" src="view/javascript/script-mobile.js"></script>
 		<script src="view/javascript/jquery/jpicker-1.1.6.min.js" type="text/javascript"></script>
 		<script type="text/javascript" src="view/javascript/jquery/ui/jquery-ui-timepicker-addon.js"></script>
+		<style>.scrollbox img{height:16px; width:16px;}</style>
+		<style>li.divider{border-bottom:1px solid #e3e3e2; height:1px; width: 100%; margin-bottom:5px;}</style>
 
 		<link href="https://fonts.googleapis.com/css?family=PT+Sans:400,700&amp;subset=cyrillic" rel="stylesheet"> 
 		<?php foreach ($scripts as $script) { ?>
