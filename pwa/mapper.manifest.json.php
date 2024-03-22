@@ -8,7 +8,7 @@
 	header('Content-Type: application/json');
 	
 	$httpHOST = str_replace('www.', '', $_SERVER['HTTP_HOST']);
-	$manifests = loadJsonConfig('manifest');
+	$manifests = loadJsonConfig('pwa');
 	
 	if (isset($manifests[$httpHOST])){
 		
