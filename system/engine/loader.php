@@ -15,7 +15,7 @@
 		}
 		
 		public function library(string $library):void {
-			$file = DIR_SYSTEM . 'library/' . $library . '.php';
+			$file = DIR_SYSTEM . 'library' . DIRECTORY_SEPARATOR . $library . '.php';
 			
 			if (file_exists($file)) {
 				include_once($file);
@@ -26,7 +26,7 @@
 		}
 		
 		public function helper(string $helper):void {
-			$file = DIR_SYSTEM . 'helper/' . $helper . '.php';
+			$file = DIR_SYSTEM . 'helper' . DIRECTORY_SEPARATOR . $helper . '.php';
 			
 			if (file_exists($file)) {
 				include_once($file);
@@ -35,19 +35,27 @@
 				exit();					
 			}
 		}
+
+        public function single_model(string $model, string $load_from = DIR_APPLICATION):void {
+            $file  = $load_from . 'model' . DIRECTORY_SEPARATOR . $model . '.php';
+            $class = 'Model' . preg_replace('/[^a-zA-Z0-9]/', '', $model);
+
+            if (file_exists($file)) {
+                include_once($file);
+
+                $this->registry->set('model_' . str_replace('/', '_', $model), new $class($this->registry));
+            } else {
+                trigger_error('Error: Could not load model ' . $model . '!');
+                exit();
+            }
+        }
 		
-		public function model(string $model, string $load_from = DIR_APPLICATION):void {			
-			$file  = $load_from . 'model/' . $model . '.php';
-			$class = 'Model' . preg_replace('/[^a-zA-Z0-9]/', '', $model);
-			
-			if (file_exists($file)) { 
-				include_once($file);
-				
-				$this->registry->set('model_' . str_replace('/', '_', $model), new $class($this->registry));
-				} else {
-				trigger_error('Error: Could not load model ' . $model . '!');
-				exit();					
-			}
+		public function model(string|array $model, string $load_from = DIR_APPLICATION):void {
+            if (is_array($model)){
+                $this->models($model, $load_from);
+            } else {
+                $this->single_model($model, $load_from);
+            }
 		}
 
 		public function models(array $models = [], string $load_from = DIR_APPLICATION):void {
@@ -61,7 +69,7 @@
 		}
 		
 		public function database($driver, $hostname, $username, $password, $database):void {
-			$file  = DIR_SYSTEM . 'database/' . $driver . '.php';
+			$file  = DIR_SYSTEM . 'database' . DIRECTORY_SEPARATOR . $driver . '.php';
 			$class = 'Database' . preg_replace('/[^a-zA-Z0-9]/', '', $driver);
 			
 			if (file_exists($file)) {

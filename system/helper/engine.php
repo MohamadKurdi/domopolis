@@ -265,6 +265,16 @@ function getproductname($item) {
 	return $item['name'];
 }
 
+function createEOLArray(array $array){
+    $string = '';
+
+    foreach ($array as $line){
+        $string .= ($line . PHP_EOL);
+    }
+
+    return $string;
+}
+
 function prepareEOLArray($string){
 	$result = [];
 
