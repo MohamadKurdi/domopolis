@@ -49,14 +49,27 @@ class productModelCachedGet extends hoboModel{
 			return $this->cache->get($this->getKey('attributes', $name), true);
 		}
 
+        $attribute_id = false;
+
 		$query = $this->db->ncquery("SELECT attribute_id FROM attribute_description WHERE language_id = '" . (int)$this->config->get('config_rainforest_source_language_id') . "' AND name LIKE ('" . $this->db->escape($name) . "') LIMIT 1");
 
 		if ($query->num_rows){
-			$this->cache->set($this->getKey('attributes', $name), $query->row['attribute_id']);
-			return $query->row['attribute_id'];
+            $attribute_id = $query->row['attribute_id'];
 		}
+
+        if (!$attribute_id){
+            $query = $this->db->ncquery("SELECT attribute_id FROM attribute_variants WHERE language_id = '" . (int)$this->config->get('config_rainforest_source_language_id') . "' AND attribute_variant LIKE ('" . $this->db->escape($name) . "') LIMIT 1");
+
+            if ($query->num_rows){
+                $attribute_id = $query->row['attribute_id'];
+            }
+        }
+
+        if ($attribute_id) {
+            $this->cache->set($this->getKey('attributes', $name), $attribute_id);
+        }
 		
-		return false;
+		return $attribute_id;
 	}
 
     public function getAttributeTranslated($name){
@@ -64,14 +77,27 @@ class productModelCachedGet extends hoboModel{
             return $this->cache->get($this->getKey('attributes.translated', $name), true);
         }
 
+        $attribute_id = false;
+
         $query = $this->db->ncquery("SELECT attribute_id FROM attribute_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "' AND name LIKE ('" . $this->db->escape($name) . "') LIMIT 1");
 
         if ($query->num_rows){
-            $this->cache->set($this->getKey('attributes.translated', $name), $query->row['attribute_id']);
-            return $query->row['attribute_id'];
+            $attribute_id = $query->row['attribute_id'];
         }
 
-        return false;
+        if (!$attribute_id){
+            $query = $this->db->ncquery("SELECT attribute_id FROM attribute_variants WHERE language_id = '" . (int)$this->config->get('config_language_id') . "' AND attribute_variant LIKE ('" . $this->db->escape($name) . "') LIMIT 1");
+
+            if ($query->num_rows){
+                $attribute_id = $query->row['attribute_id'];
+            }
+        }
+
+        if ($attribute_id) {
+            $this->cache->set($this->getKey('attributes.translated', $name), $query->row['attribute_id']);
+        }
+
+        return $attribute_id;
     }
 
 	public function checkIfTempCategoryExists($name){
