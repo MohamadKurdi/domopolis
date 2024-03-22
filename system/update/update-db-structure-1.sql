@@ -1,9 +1,34 @@
-CREATE TABLE `attribute_variants` (`attribute_id` INT(11) NOT NULL , `attribute_variant` VARCHAR(256) NOT NULL , INDEX (`attribute_id`)) ENGINE = InnoDB;
-ALTER TABLE `attribute_variants` ADD `attribute_variant_id` INT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (`attribute_variant_id`);
-ALTER TABLE `attribute_variants` ADD `language_id` INT NOT NULL AFTER `attribute_id`, ADD INDEX (`language_id`);
-ALTER TABLE `attribute_variants` ADD INDEX(`attribute_variant`);
-CREATE TABLE `attributes_required_category` (`attribute_id` INT NOT NULL , `category_id` INT NOT NULL , INDEX (`category_id`), INDEX (`attribute_id`)) ENGINE = InnoDB;
+DROP TABLE IF EXISTS `attributes_required_category`;
+CREATE TABLE IF NOT EXISTS `attributes_required_category` (
+                                                              `attribute_id` int(11) NOT NULL,
+                                                              `category_id` int(11) NOT NULL,
+                                                              KEY `category_id` (`category_id`),
+                                                              KEY `attribute_id` (`attribute_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-DROP TABLE IF EXISTS `barbara_blog_category`, `barbara_blog_category_description`, `barbara_blog_category_filter`, `barbara_blog_category_path`, `barbara_blog_category_to_layout`,
-`barbara_blog_category_to_store`, `barbara_blog_post`, `barbara_blog_postmeta`, `barbara_blog_post_description`, `barbara_blog_post_filter`, `barbara_blog_post_to_category`,
-`barbara_blog_post_to_layout`, `barbara_blog_post_to_store`, `barbara_blog_related_product`, `barbara_blog_setting`, `barbara_blog_setting_general`, `barbara_singleclick`, `barbara_stickers`;
+DROP TABLE IF EXISTS `attribute_variants`;
+CREATE TABLE IF NOT EXISTS `attribute_variants` (
+                                                    `attribute_variant_id` int(11) NOT NULL AUTO_INCREMENT,
+                                                    `attribute_id` int(11) NOT NULL,
+                                                    `language_id` int(11) NOT NULL,
+                                                    `attribute_variant` varchar(256) NOT NULL,
+                                                    PRIMARY KEY (`attribute_variant_id`),
+                                                    KEY `attribute_id` (`attribute_id`),
+                                                    KEY `attribute_variant` (`attribute_variant`),
+                                                    KEY `language_id` (`language_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+DROP TABLE IF EXISTS `supplier_manufacturers`;
+CREATE TABLE IF NOT EXISTS `supplier_manufacturers` (
+                                                        `supplier_manufacturer_id` int(11) NOT NULL AUTO_INCREMENT,
+                                                        `supplier_id` int(11) NOT NULL,
+                                                        `manufacturer` varchar(256) NOT NULL,
+                                                        `manufacturer_full` varchar(256) NOT NULL,
+                                                        `products` tinyint(1) NOT NULL DEFAULT 0,
+                                                        `prices` tinyint(1) NOT NULL DEFAULT 0,
+                                                        `stocks` tinyint(1) NOT NULL DEFAULT 0,
+                                                        PRIMARY KEY (`supplier_manufacturer_id`),
+                                                        UNIQUE KEY `supplier_id_2` (`supplier_id`,`manufacturer`),
+                                                        KEY `supplier_id` (`supplier_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
