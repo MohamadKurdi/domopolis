@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS `attribute_variants` (
                                                     KEY `language_id` (`language_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-
 DROP TABLE IF EXISTS `supplier_manufacturers`;
 CREATE TABLE IF NOT EXISTS `supplier_manufacturers` (
                                                         `supplier_manufacturer_id` int(11) NOT NULL AUTO_INCREMENT,
