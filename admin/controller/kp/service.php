@@ -157,6 +157,7 @@
                 $this->db->query("DELETE FROM product_feature WHERE text = ''");
                 $this->db->query("DELETE FROM attribute_description WHERE name = ''");
                 $this->db->query("DELETE FROM attribute WHERE attribute_id NOT IN (SELECT attribute_id FROM attribute_description)");
+                $this->db->query("DELETE FROM product_attribute WHERE product_id NOT IN (SELECT product_id FROM product)");
                 $this->db->query("DELETE FROM product_attribute WHERE attribute_id NOT IN (SELECT attribute_id FROM attribute)");
                 $this->db->query("DELETE FROM product_attribute WHERE `text` NOT REGEXP '[a-zA-Zа-яА-Я]'");
 
