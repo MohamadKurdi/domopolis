@@ -1,5 +1,25 @@
 <?php
 
+function detectFileLineEndings(string $fileContents): string
+{
+    $eol = PHP_EOL;
+    $eol_text = 'DEFAULT_EOL';
+
+    if (strpos($fileContents, "\r\n") !== false) {
+        $eol = "\r\n";
+        $eol_text = 'Windows CRLF';
+    } elseif (strpos($fileContents, "\n") !== false) {
+        $eol = "\n";
+        $eol_text = 'Unix/Linux LF';
+    } elseif (strpos($fileContents, "\r") !== false) {
+        $eol = "\r";
+        $eol_text = 'MacOS CR';
+    }
+
+    echoLine('[detectFileLineEndings] EOL is used: ' . $eol_text, 'd');
+
+    return $eol;
+}
 
 function buildRelativeDate($string){
 	$now = date_create();
@@ -9,7 +29,7 @@ function buildRelativeDate($string){
 	} elseif ($string[0] == '-') {
 		$invert = true;
 	} else {
-		return date();
+		return date('Y-m-d');
 	}
 
 	$string = substr($string, 1);

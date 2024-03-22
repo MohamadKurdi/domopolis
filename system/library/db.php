@@ -142,11 +142,15 @@ if (!class_exists('DB')){
 		}
 
         public function importSQL($file){
-            $sql_file   = file_get_contents($file);
-            $queries    = explode(';' . PHP_EOL, $sql_file);
+            require_once (DIR_SYSTEM . 'helper' . DIRECTORY_SEPARATOR . 'sql.php');
+
+            $sql_file_contents   = file_get_contents($file);
+            $queries    = explode(';' . detectFileLineEndings($sql_file_contents), $sql_file_contents);
+            $total  = count($queries);
+
+            echoLine('[DB::importSQL] Found total queries ' . $total, 'i');
 
             $i      = 1;
-            $total  = count($queries);
             foreach ($queries as $query) {
                 $query = trim($query);
 
