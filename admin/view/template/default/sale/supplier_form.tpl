@@ -87,25 +87,24 @@
                 <div class="clr"></div>
             </div>
             <div class="th_style"></div>
-
+        <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
             <div id="tab-info">
-                <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
                     <div style="width:100%;">
                         <table class="form">
                             <tr>
-                                <td width="20%">
+                                <td style="width:20%">
                                     <span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Наименование</span>
                                 </td>
-                                <td width="20%">
+                                <td style="width:20%">
                                     <span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Business name</span>
                                 </td>
-                                <td width="20%">
+                                <td style="width:20%">
                                     <span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Короткий код</span>
                                 </td>
-                                <td width="20%">
+                                <td style="width:20%">
                                     <span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Тип поставщика</span>
                                 </td>
-                                <td width="20%">
+                                <td style="width:20%">
                                     <span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Головной поставщик</span>
                                 </td>
                             </tr>
@@ -144,19 +143,19 @@
 
                         <table class="form">
                             <tr>
-                                <td width="20%">
+                                <td style="width:20%">
                                     <span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Amazon Seller ID</span>
                                 </td>
-                                <td width="20%">
+                                <td style="width:20%">
                                     <span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Amazon Registration Number</span>
                                 </td>
-                                <td width="20%">
+                                <td style="width:20%">
                                     <span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Amazon VAT NUMBER</span>
                                 </td>
-                                <td width="20%">
+                                <td style="width:20%">
                                     <span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Amazon Business Type</span>
                                 </td>
-                                <td width="20%">
+                                <td style="width:20%">
                                     <span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Ccылка на Amazon</span>
                                 </td>
                             </tr>
@@ -347,13 +346,13 @@
                                 <td width="15%">
                                     <span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Коэффициент - 3</span>
                                 </td>
-                                <td width="20%">
+                                <td style="width:20%">
                                     <span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Сроки доставки - 1</span>
                                 </td>
-                                <td width="20%">
+                                <td style="width:20%">
                                     <span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Сроки доставки - 2</span>
                                 </td>
-                                <td width="20%">
+                                <td style="width:20%">
                                     <span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Склад</span>
                                 </td>
                             </tr>
@@ -418,32 +417,31 @@
                         </table>
                     </div>
                     <div style="clear:both;"></div>
-                </form>
             </div>
 
             <div id="tab-parser">
                 <h2>Фид, парсер, обновление данных</h2>
                 <table class="form">
                     <tr>
-                        <td width="20%">
+                        <td style="width:20%">
                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Фид данных</span>
                         </td>
-                        <td width="10%">
+                        <td style="width:20%">
                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Библиотека разбора</span>
                         </td>
-                        <td width="10%">
+                        <td style="width:10%">
                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Поле</span>
                         </td>
-                        <td width="10%">
+                        <td style="width:10%">
                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Язык в фиде</span>
                         </td>
-                        <td width="10%">
+                        <td style="width:10%">
                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Парсить</span>
                         </td>
-                        <td width="10%">
+                        <td style="width:10%">
                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Фильтр в админке</span>
                         </td>
-                        <td width="10%">
+                        <td style="width:10%">
                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Валюта</span>
                         </td>
                     </tr>
@@ -507,22 +505,22 @@
 
                 <table class="form">
                     <tr>
-                        <td width="20%">
+                        <td style="width:15%">
                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">В фиде РРЦ</span>
                         </td>
-                        <td width="20%">
+                        <td style="width:15%">
                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Обновлять наличие</span>
                         </td>
-                        <td width="20%">
+                        <td style="width:15%">
                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Обновлять цену</span>
                         </td>
-                        <td width="20%">
+                        <td style="width:15%">
                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Сразу включать товары</span>
                         </td>
-                        <td width="20%">
+                        <td style="width:15%">
                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Пропускать без категорий</span>
                         </td>
-                        <td width="20%">
+                        <td style="width:15%">
                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Пропускать без производителей</span>
                         </td>
                     </tr>
@@ -598,13 +596,13 @@
 
                 <table class="form">
                     <tr>
-                        <td width="20%">
+                        <td style="width:30%">
                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Загрузить категории</span>
                         </td>
-                        <td width="30%">
+                        <td style="width:30%">
                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Загрузить атрибуты</span>
                         </td>
-                        <td width="30%">
+                        <td style="width:30%">
                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Загрузить производителей</span>
                         </td>
                     </tr>
@@ -630,6 +628,7 @@
                     </tr>
                 </table>
             </div>
+        </form>
 
             <div id="tab-categories">
                 <table class="list">
