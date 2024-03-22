@@ -246,6 +246,10 @@ class ModelCatalogAttribute extends Model {
 			$sql .= " AND a.attribute_group_id = '" . $this->db->escape($data['filter_attribute_group_id']) . "'";
 		}
 
+        if ($this->config->get('config_use_separate_table_for_features') && $this->config->get('config_special_attr_id')){
+            $sql .= " AND a.attribute_group_id <> '" . $this->config->get('config_special_attr_id') . "'";
+        }
+
 		$sort_data = array(
 			'ad.name',
 			'attribute_group',
@@ -360,8 +364,22 @@ class ModelCatalogAttribute extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalAttributes() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM attribute");
+	public function getTotalAttributes($data = []) {
+        $sql = "SELECT COUNT(*) AS total FROM attribute a LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE ad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
+        if (!empty($data['filter_name'])) {
+            $sql .= " AND ad.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+        }
+
+        if (!empty($data['filter_attribute_group_id'])) {
+            $sql .= " AND a.attribute_group_id = '" . $this->db->escape($data['filter_attribute_group_id']) . "'";
+        }
+
+        if ($this->config->get('config_use_separate_table_for_features') && $this->config->get('config_special_attr_id')){
+            $sql .= " AND a.attribute_group_id <> '" . $this->config->get('config_special_attr_id') . "'";
+        }
+
+		$query = $this->db->query($sql);
 
 		return $query->row['total'];
 	}	
