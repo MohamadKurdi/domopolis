@@ -22,18 +22,21 @@
             </style>
             <table class="list">
                 <thead>
-                    <td>
+                    <td style="width:400px" class="center">
                         Текущее значение
                     </td>
-                    <td>
+                    <td style="width:400px" class="center">
                         Заменить на значение
                     </td>
-                    <td>
+                    <td style="width:50px">
+                        Товаров
+                    </td>
+                    <td class="center">
                        Примеры товаров
                     </td>
-                    <td>
+                    <td style="width:100px">
                     </td>
-                    <td>
+                    <td style="width:100px">
                     </td>
                 </thead>
             <?php $i=1; foreach ($attribute_values as $attribute_value) { $i++; ?>
@@ -44,16 +47,21 @@
                     <td style="width:400px" class="center">
                         <textarea id="to-text-<?php echo $i; ?>" rows="3" style="width:380px;"></textarea>
                     </td>
+                    <td style="width:50px" class="center">
+                        <span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><?php echo $attribute_value['product_count']; ?></span>
+                    </td>
                     <td class="left">
                         <?php foreach ($attribute_value['products'] as $product) { ?>
                         <div>
                             <small><?php echo $product['name']; ?>
-                                <span class="smbtn"><?php echo $product['product_id']; ?></span>
+                                <span class="smbtn" style="padding:3px 5px; background:#32bd38; color:#FFF"><?php echo $product['product_id']; ?></span>
                                 <?php if ($product['asin']) { ?>
-                                <span class="smbtn"><?php echo $product['asin']; ?></span>
+                                <span class="smbtn" style="padding:3px 5px; background:#FF9900; color:#FFF"><?php echo $product['asin']; ?></span>
                                 <?php } ?>
-                                <span class="smbtn"><a href="<?php echo $product['view']?>" target="_blank"><i class="fa fa-eye"></i></a></span>
-                                <span class="smbtn"><a href="<?php echo $product['edit']?>" target="_blank"><i class="fa fa-edit"></i></a></span>
+                                <span class="smbtn" style="padding:3px 5px; background:#e16a5d; color:#FFF"><a href="<?php echo $product['view']?>" target="_blank"><i class="fa
+                                fa-eye"></i></a></span>
+                               </span>
+                                <span class="smbtn" style="padding:3px 5px; background:#e16a5d; color:#FFF"><a href="<?php echo $product['edit']?>" target="_blank"><i class="fa fa-edit"></i></a></span>
                             </small>
                         </div>
                         <?php } ?>

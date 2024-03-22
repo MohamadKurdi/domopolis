@@ -76,6 +76,10 @@ class ControllerCatalogAttribute extends Controller
                 $url .= '&page=' . $this->request->get['page'];
             }
 
+            if (isset($this->request->get['attribute_id'])) {
+                $url .= '&attribute_id=' . $this->request->get['attribute_id'];
+            }
+
             $this->redirect($this->url->link('catalog/attribute/update', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
@@ -179,25 +183,30 @@ class ControllerCatalogAttribute extends Controller
         $this->data['attribute_values'] = [];
         foreach ($results as $result){
             $products = [];
+            $product_count = 0;
             $exploded = explode(',', $result['products']);
-            $exploded = array_slice($exploded, 0 , 10);
+            if ($exploded){
+                $product_count = count($exploded);
+                $exploded = array_slice($exploded, 0 , 3);
 
-            foreach ($exploded as $product_id){
-                $product = $this->model_catalog_product->getProduct($product_id);
+                foreach ($exploded as $product_id){
+                    $product = $this->model_catalog_product->getProduct($product_id);
 
-                if ($product){
-                    $products[] = [
-                        'name' => $product['name'],
-                        'asin' => $product['asin'],
-                        'product_id' => $product['product_id'],
-                        'view' => HTTP_CATALOG . 'index.php?route=product/product&product_id=' . $product['product_id'],
-                        'edit' => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL')
-                    ];
+                    if ($product){
+                        $products[] = [
+                            'name' => $product['name'],
+                            'asin' => $product['asin'],
+                            'product_id' => $product['product_id'],
+                            'view' => HTTP_CATALOG . 'index.php?route=product/product&product_id=' . $product['product_id'],
+                            'edit' => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL')
+                        ];
+                    }
                 }
             }
 
             $this->data['attribute_values'][] = [
                 'text' => $result['text'],
+                'product_count' => $product_count,
                 'products' => $products
             ];
         }

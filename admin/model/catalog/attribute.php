@@ -123,16 +123,16 @@ class ModelCatalogAttribute extends Model {
 
         $sql .= " GROUP BY `text` ORDER BY product_id DESC";
 
-        if (isset($data['start']) || isset($data['limit'])) {
-            if ($data['start'] < 0) {
-                $data['start'] = 0;
+        if (isset($filter_data['start']) || isset($filter_data['limit'])) {
+            if ($filter_data['start'] < 0) {
+                $filter_data['start'] = 0;
             }
 
-            if ($data['limit'] < 1) {
-                $data['limit'] = 20;
+            if ($filter_data['limit'] < 1) {
+                $filter_data['limit'] = 20;
             }
 
-            $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+            $sql .= " LIMIT " . (int)$filter_data['start'] . "," . (int)$filter_data['limit'];
         }
 
 
