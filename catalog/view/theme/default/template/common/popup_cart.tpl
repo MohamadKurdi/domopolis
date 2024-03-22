@@ -1,3 +1,124 @@
+<style type="text/css">
+	.product_popup_list_wrap{
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		width: 100%;
+	}
+	.product_popup_list_wrap .title{
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		font-size: 23px;
+		font-weight: 500;
+		line-height: 1em;
+
+	}
+	.product_popup_list_wrap .title a span{
+		font-size: 12px;
+		color: #e25c1d;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+	.product_popup_list_wrap .title a span i {
+		font-size: 12px;
+		transition: .15s ease-in-out;
+	}
+	.popup_cart_wrap .swiper-container{
+		width: 100%;
+	}
+	.product_popup_list_wrap  .title_wrap{
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 20px;
+		margin-top: 20px;
+	}
+	.product_popup_list_wrap  .title_wrap .nav-group{
+		display: flex;
+		gap: 20px;
+	}
+	.product_popup_list_wrap  .title_wrap .nav-group > div{
+		display: flex;
+		cursor: pointer;
+	}
+	.product_popup_list_wrap .swiper-slide .title_prod{
+		font-size: 15px;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		height: 67.5px;
+		margin-bottom: 10px;
+	}
+	.product_popup_list_wrap .swiper-slide .img{
+		display: flex;
+		max-height: 100px;
+		overflow: hidden;
+		margin-bottom: 10px;
+	}
+	.product_popup_list_wrap .swiper-slide .img img{
+		height: auto;
+		width: auto;
+		object-fit: contain;
+		display: flex;
+	}
+	.product_popup_list_wrap .swiper-slide .product__price{
+		flex-direction: row;
+		flex-wrap: inherit;
+		gap: 10px;
+	}
+	#ajaxcheckout #quick_order_popap{
+		position: relative;
+	}
+	#ajaxcheckout #quick_order_popap .error {
+		position: absolute;
+		top: -22px;
+	}
+	@media screen and (min-width: 1000px){
+		.popup_cart_wrap .mini-cart-infos{
+			max-height: 380px;
+			overflow-y: auto;
+			display: block;
+		}
+		/* width */
+		.popup_cart_wrap .mini-cart-infos::-webkit-scrollbar {
+			width: 5px;
+		}
+
+		/* Track */
+		.popup_cart_wrap .mini-cart-infos::-webkit-scrollbar-track {
+			background: #f1f1f1;
+		}
+
+		/* Handle */
+		.popup_cart_wrap .mini-cart-infos::-webkit-scrollbar-thumb {
+			background: #51a881;
+			border-radius: 2px;
+		}
+
+		/* Handle on hover */
+		.popup_cart_wrap .mini-cart-infos::-webkit-scrollbar-thumb:hover {
+			opacity: 0.8;
+		}
+	}
+	@media screen and (max-width: 560px) {
+		.product_popup_list_wrap .swiper-slide{
+			background: #fff;
+			border-radius: 10px;
+			padding: 10px;
+			border: 1px solid transparent;
+		}
+		#popup-cart .object{
+			overflow-x: hidden;
+		}
+		.product_popup_list_wrap {
+			overflow-x: hidden;
+		}
+	}
+</style>
 <div class="object popup_cart_wrap">
 
 	<div class="overlay-popup-close"></div>
@@ -11,7 +132,7 @@
 			<button id="del_choose" disabled><?php echo $text_retranslate_2; ?></button>
 			<div class="popup-delete">
 				<div class="popup-delete__favorite">
-					<input hidden class="product_id" value="<?=$product['key']; ?>" product-id="<?= $prod_id; ?>" style="display:none;"/>
+					<input hidden class="product_id" value="" product-id="" style="display:none;"/>
 					<a onclick="delWishNew();">
 						<svg width="39" height="34" viewbox="0 0 39 34" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<path d="M34.3012 4.65222C33.446 3.81139 32.4306 3.14438 31.313 2.6893C30.1954 2.23423 28.9975 2 27.7878 2C26.5781 2 25.3802 2.23423 24.2626 2.6893C23.145 3.14438 22.1296 3.81139 21.2744 4.65222L19.4996 6.39642L17.7247 4.65222C15.9972 2.95459 13.6543 2.00088 11.2113 2.00088C8.76832 2.00088 6.42539 2.95459 4.69793 4.65222C2.97048 6.34984 2 8.65231 2 11.0531C2 13.4539 2.97048 15.7564 4.69793 17.454L6.47279 19.1982L19.4996 32L32.5263 19.1982L34.3012 17.454C35.1568 16.6136 35.8355 15.6157 36.2986 14.5174C36.7617 13.4191 37 12.2419 37 11.0531C37 9.86428 36.7617 8.68709 36.2986 7.5888C35.8355 6.49052 35.1568 5.49265 34.3012 4.65222V4.65222Z" stroke="#51A881" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -20,7 +141,7 @@
 					</a>
 				</div>
 				<div class="popup-delete__del">
-					<input hidden class="product_id" value="<?=$product['key']; ?>" product-id="<?= $prod_id; ?>" style="display:none;"/>
+					<input hidden class="product_id" value="" product-id="" style="display:none;"/>
 					<a onclick="delNew();">
 						<svg width="34" height="34" viewbox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<path d="M33 1L1 33M1 1L33 33" stroke="#51A881" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -102,13 +223,13 @@
 						<?php echo $text_retranslate_17; ?></a>
 
 
-
-						<div id="quick_order_popap">
-							<input id="quickfastorder-dialog-phone" class="field" type="tel" value="<?=$telephone ?>" name="quickfastorder-phone" placeholder="<?php echo str_replace('9', '_', $mask) ?>">
-							<input type="button" class=" btn disable-btn" id="quick_order_popap_btn" name="" value="<?php echo $text_retranslate_18; ?>" title="">
-							<div class="error"></div>
-						</div>
-
+						<?php if (!$this->config->get('config_disable_fast_orders')) { ?>
+							<div id="quick_order_popap">
+								<input id="quickfastorder-dialog-phone" class="field" type="tel" value="<?=$telephone ?>" name="quickfastorder-phone" placeholder="<?php echo str_replace('9', '_', $mask) ?>">
+								<input type="button" class=" btn disable-btn" id="quick_order_popap_btn" name="" value="<?php echo $text_retranslate_18; ?>" title="">
+								<div class="error"></div>
+							</div>
+						<?php } ?>
 
 
 						<a href="<?php echo $checkout; ?>" onclick="document.location.href = '<?php echo $checkout; ?>'; " id="gotoorder" class="button btn"><?php echo $text_retranslate_19; ?>
@@ -117,35 +238,100 @@
 						</svg>
 					</a>
 				</div>
+			</div>
+			<?php if (!empty($ajaxcartproducts)) { ?>
 
-				<?php if (!empty($ajaxcartproducts)) { ?>
-					<div style="clear:both;"></div>
-					<div style="width:100%; text-align:center; padding-left: 20px">
-						<div style="background-color: #262626; color:#FFF; margin-bottom:5px; padding:3px;"><?php echo $this->config->get('config_textforproducts'); ?></div>
-						<?php foreach ($ajaxcartproducts as $product) { ?>
-							<div class="view-model" style="float:left; margin-left:10px; margin-right:10px; width:136px; border:1px solid #ddd;">
-								<?php if ($product['thumb']) { ?>
-									<a href="<?php echo $product['href']; ?>">
-										<img  src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" /></a>
-									<?php } ?>
+				<div class="product_popup_list_wrap" >
+					<div class="title_wrap">
+						<span class="title">
+							<?php echo $config_popupcartblocktitle; ?>
+							<!-- <a href="<?php echo $href_view_all; ?>" title="<?php echo $config_popupcartblocktitle; ?>"> -->
 
-									<span class="inf-block"><a href="<?php echo $product['href']; ?>" class="longtext"><?php echo $product['name']; ?></a></span>
-
-									<?php if ($product['price']) { ?>
-										<?php if (!$product['special']) { ?>
-											<span class="inf-price"><?php echo $product['price']; ?></span>
-										<?php } else { ?>
-											<span class="inf-price-old"><?php echo $product['price']; ?></span>
-											<span class="inf-new-price"><?php echo $product['special']; ?></span>
+								<a href="/c6614" title="<?php echo $config_popupcartblocktitle; ?>">
+									<span>
+										<?php echo $text_view_all; ?> 
+										<i class="fa-arrow-circle-right fas"></i>
+									</span>
+								</a>
+							</span>
+							
+							<div class="nav-group">
+								<div class="swiper-prev-slide swiper-button-disabled" tabindex="0" role="button" aria-label="Previous slide" aria-disabled="true"><svg xmlns="https://www.w3.org/2000/svg" fill="none" height="40" viewBox="0 0 60 60" width="40"><rect height="58" stroke="#51A881" stroke-width="2" width="58" x="1" y="1"></rect> <path d="M35 42L23 30L35 18" stroke="#51A881" stroke-width="3"></path></svg> 
+								</div>
+								<div class="swiper-next-slide" tabindex="0" role="button" aria-label="Next slide" aria-disabled="false"><svg xmlns="https://www.w3.org/2000/svg" fill="none" height="40" viewBox="0 0 60 60" width="40"><rect height="58" stroke="#51A881" stroke-width="2" transform="matrix(-1 0 0 1 58 0)" width="58" x="-1" y="1"></rect> <path d="M25 42L37 30L25 18" stroke="#51A881" stroke-width="3"></path></svg> 
+								</div>
+							</div>
+							
+						</div>		
+						<div class="swiper-container">
+							<!-- swiper-wrapper -->
+							<div class="swiper-wrapper">
+								<?php foreach ($ajaxcartproducts as $product) { ?>
+									<div class="swiper-slide">
+										<?php if ($product['thumb']) { ?>
+											<a href="<?php echo $product['href']; ?>" class="img">
+												<img  src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" />
+											</a>
 										<?php } ?>
 
-									<?php } ?>
-								</div>
-							<?php } ?>
-						</div>
-					<?php } ?>
 
-				</div>
+										<a href="<?php echo $product['href']; ?>" class="title_prod"><?php echo $product['name']; ?></a>
+
+
+										<?php if ($product['price']) { ?>
+											<div class="product__price">
+												<?php if (!$product['special']) { ?>
+													<div class="product__price-new"><?php echo $product['special']; ?></div>
+												<?php } else { ?>
+													<div class="product__price-new"><?php echo $product['special']; ?></div>
+													<div class="product__price-old"><?php echo $product['price']; ?></div>
+												<?php } ?>
+											</div>
+										<?php } ?>
+									</div>
+								<?php } ?>
+							</div>
+							<!-- /swiper-wrapper -->
+						</div>
+					</div>
+					<script>
+						var swiperSales = new Swiper(".product_popup_list_wrap .swiper-container", {
+							slidesPerView: 5,
+							loop: false,
+							centeredSlides: false,
+							grabCursor: false,
+							allowTouchMove: false,
+							spaceBetween: 16,
+							navigation: {
+								nextEl: ".product_popup_list_wrap .swiper-next-slide",
+								prevEl: ".product_popup_list_wrap .swiper-prev-slide",
+							},
+							breakpoints: {
+								200: {
+									slidesPerView: 2,
+									spaceBetween: 10,
+									autoHeight: false,
+								},
+								768: {
+									autoHeight: false,
+								},
+								1300: {
+									slidesPerView: 4,
+									spaceBetween: 16,
+								},
+								1400: {
+									spaceBetween: 16,
+									autoHeight: false,
+									slidesPerView: 5,
+								},
+							},
+						});
+						setTimeout(function(){
+							//swiperSales.reInt();
+							swiperSales.update();
+						}, 500);
+					</script>
+				<?php } ?>
 			<?php } else { ?>
 				<div class="mini-cart-infos cart-clear-text">
 					<div id="ajaxcartempty"><?php echo $text_retranslate_20; ?></div>
@@ -156,6 +342,40 @@
 
 
 		<script type="text/javascript">
+
+			<?php if ($this->config->get('config_sendsay_enable_marketing')){ ?>
+				(window['sndsyApiOnReady'] = window['sndsyApiOnReady'] || []).push(function () {
+					sndsyApi.ssecEvent(
+						'BASKET_ADD',
+						[{
+							'transaction_status': 1,
+							'transaction_dt'	: '<?php echo date('Y-m-d H:i:s'); ?>',
+							'transaction_sum'	: '<? echo $google_ecommerce_info['transactionTotal'] ?>',
+							'update_per_item'   : 0,
+							'items': [
+								<? $i=0; foreach ($google_ecommerce_info['transactionProducts'] as $transactionProduct) { ?>
+									{
+										'id' 		: '<? echo $transactionProduct['id']; ?>',
+										'model'		: '<? echo $transactionProduct['model'] ?>',
+										'name' 		: '<? echo $transactionProduct['name'] ?>',
+										'picture' 	: ['<? echo $transactionProduct['image'] ?>'],
+										'vendor' 	: '<? echo $transactionProduct['manufacturer'] ?>',
+										'category_id'		: '<? echo $transactionProduct['main_category_id'] ?>',
+										'category_paths' 	: ['<? echo $transactionProduct['category'] ?>'],
+										'price' 	: '<? echo $transactionProduct['price'] ?>',
+										'qnt' 		: '<? echo $transactionProduct['quantity'] ?>'
+									}	<? if ($i < count($google_ecommerce_info['transactionProducts'])) { ?>,<?php } $i++; ?>
+								<? } ?>
+								]
+						}]
+						<?php /* if ($this->customer->getIfRealEmail()) { ?>,
+							{ email: '<?php echo $this->customer->getIfRealEmail(); ?>' } 
+						<?php } */ ?>
+					);
+				});
+				typeof sndsyApi != 'undefined' && sndsyApi.runQueue();
+			<?php } ?>
+
 
 			function startLoader(){
 				loadImgPopup.show();
@@ -169,7 +389,6 @@
 
 			function pushVKRetargetingInfo(pid, event){
 				if((typeof VK !== 'undefined')){
-
 					$.ajax({
 						url: "/index.php?route=product/product/getEcommerceInfo",
 						data: "product_id=" + pid,
@@ -199,7 +418,6 @@
 			}
 
 			function pushEcommerceInfo(pid, quantity, event){
-
 				$.ajax({
 					url: "/index.php?route=product/product/getEcommerceInfo",
 					data: "product_id=" + pid,
@@ -228,7 +446,6 @@
 						});
 					}
 				});
-
 			}
 
 			function reloadCart(){
@@ -244,7 +461,7 @@
 					},
 					success: function(html) {
 						$('#popup-cart').html(html);
-						$('#header-small-cart').load('/index.php?route=module/cart #header-small-cart');
+						$('#header-small-cart').load('/index.php?route=module/cart');
 						$('#cart').load('index.php?route=module/cart #cart > *');
 						if ((typeof simplecheckout_reload !== "undefined")){
 							console.log('simplecheckout_reload');
@@ -254,50 +471,46 @@
 				});
 			}
 
-
-			$('#quick_order_popap_btn').on('click', function (e) {
-
-				console.log($(this).hasClass('disable-btn'));
-
-				if ($(this).hasClass('disable-btn')){
-					return false;
-				}
-
-
-				$.ajax({
-					type: 'POST',
-					dataType: 'JSON',
-					url: '/index.php?route=checkout/quickorder/createorderfast',
-					data: $('#quick_order_popap #quickfastorder-dialog-phone'),
-					success: function(data, json) {
-						if (data.error) {
-							$('#quick_order_popap .error').html('');
-							$.each(data.error, function (i, v) {
-								$('#quick_order_popap .error').prepend(v+"<br>");
-							});
-						} else {
-							if (data.success) {
-								window.location = data.redirect;
+			<?php if (!$this->config->get('config_disable_fast_orders')) { ?>	
+				$('#quick_order_popap_btn').on('click', function (e) {
+					console.log($(this).hasClass('disable-btn'));
+					if ($(this).hasClass('disable-btn')){
+						return false;
+					}
+					$.ajax({
+						type: 'POST',
+						dataType: 'JSON',
+						url: '/index.php?route=checkout/quickorder/createorderfast',
+						data: $('#quick_order_popap #quickfastorder-dialog-phone'),
+						success: function(data, json) {
+							if (data.error) {
+								$('#quick_order_popap .error').html('');
+								$.each(data.error, function (i, v) {
+									$('#quick_order_popap .error').prepend(v+"<br>");
+								});
+							} else {
+								if (data.success) {
+									window.location = data.redirect;
+								}
 							}
 						}
-
-
-					}
+					});
 				});
-
-			});
+			<?php } ?>
 
 			function checkButtonTrigger(){
-				<? if (mb_strlen($mask, 'UTF-8') > 1) { ?>
-					var phone_length = $('#quickfastorder-dialog-phone').val().length;
+				<?php if (!$this->config->get('config_disable_fast_orders')) { ?>	
+					<? if (mb_strlen($mask, 'UTF-8') > 1) { ?>
+						var phone_length = $('#quickfastorder-dialog-phone').val().length;
 
-					if (phone_length >= 15){
+						if (phone_length >= 15){
+							$('#quick_order_popap_btn').removeClass('disable-btn').addClass('enable-btn');
+						} else {
+							$('#quick_order_popap_btn').removeClass('enable-btn').addClass('disable-btn');
+						}
+					<?php } else { ?>
 						$('#quick_order_popap_btn').removeClass('disable-btn').addClass('enable-btn');
-					} else {
-						$('#quick_order_popap_btn').removeClass('enable-btn').addClass('disable-btn');
-					}
-				<?php } else { ?>
-					$('#quick_order_popap_btn').removeClass('disable-btn').addClass('enable-btn');
+					<?php } ?>
 				<?php } ?>
 			}
 
@@ -309,10 +522,10 @@
 
 
 			<? if (mb_strlen($mask, 'UTF-8') > 1) { ?>
-			// $('#quickfastorder-dialog-phone').mask("<?php echo $mask; ?>");
 				$('#quickfastorder-dialog-phone').inputmask("<?php echo $mask; ?>",{ "clearIncomplete": true });
 			<? } ?>
-		// Увеличения изображения
+
+
 			$(".colorbox-popup").each(function(){
 				$(this).click(function(){
 					var img = $(this);
@@ -372,13 +585,6 @@
 				})
 			});
 
-
-
-
-
-
-
-		// popup cart
 			$('#del_choose').click(function () {
 				$(this).parents('.delete_block').find('.popup-delete').css('display', 'flex');
 				return false;
@@ -417,16 +623,14 @@
 						endLoader();
 						reloadCart();
 					},
-					success:function(data) {
-
-					}
+					success:function(data) {}
 				});
 			}
 
 			function plus(id){
-				let quantity = parseInt($(id).parent().children('.qt').val());
-				let minimum = parseInt($(id).parent().children('.qt').attr('data-minimum')) || 1;
-				quantity = quantity + minimum;
+				let quantity 	= parseInt($(id).parent().children('.qt').val());
+				let minimum 	= parseInt($(id).parent().children('.qt').attr('data-minimum')) || 1;
+				quantity 		= quantity + minimum;
 				(quantity == 0) ? quantity = minimum: false;
 
 				pid = $(id).parent().children('.product_id').val();
@@ -449,9 +653,9 @@
 			}
 
 			function minus(id){
-				let quantity = parseInt($(id).parent().children('.qt').val());
-				let minimum = parseInt($(id).parent().children('.qt').attr('data-minimum')) || 1;
-				quantity = quantity - minimum;
+				let quantity 	= parseInt($(id).parent().children('.qt').val());
+				let minimum 	= parseInt($(id).parent().children('.qt').attr('data-minimum')) || 1;
+				quantity 		= quantity - minimum;
 				(quantity == 0) ? quantity = minimum: false;
 				pid = $(id).parent().children('.product_id').val();
 				$.ajax({
@@ -473,7 +677,6 @@
 			}
 
 			function delNew(){
-				console.log('delNew fired');
 				var checkedData = [];
 				$('.checkbox .choose_input:checked').each(function(){
 					var pid = $(this).parent().children('.product_id').val();
@@ -499,16 +702,13 @@
 							reloadCart();
 						},
 						success: function(data) {
-							
+
 						}
 					});
 				},1000)
-
 			}
 
 			function delWishNew(){
-
-				console.log('delWishNew')
 				var checkedData = [];
 				$('.checkbox .choose_input:checked').each(function(){
 					var pid = $(this).parent().children('.product_id').val();
@@ -540,24 +740,6 @@
 				},1000)
 			}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			$('.close-modal-cart, .overlay-popup-close').on('click', function(){
 				$('#main-overlay-popup').click();
 			});
@@ -569,8 +751,6 @@
 
 				});
 			<?php } ?>
-
 		</script>
-
 	</div>
 </div>
