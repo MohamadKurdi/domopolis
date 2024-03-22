@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "74e8927165d4e2762996185e25b351c9",
+    "content-hash": "bf0c99f0b626eda508fb13673f60b8a6",
     "packages": [
         {
             "name": "alextartan/xml2array",
@@ -6618,7 +6618,9 @@
     },
     "prefer-stable": true,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "ext-curl": "*"
+    },
     "platform-dev": [],
     "plugin-api-version": "2.2.0"
 }
