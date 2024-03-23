@@ -3,8 +3,17 @@
 		protected function index() {
 			$this->language->load('common/footer');
 			
-			$this->data['text_footer'] = sprintf($this->language->get('text_footer'), VERSION);
-						
+			$this->data['oc_version'] = VERSION;
+
+            $updater = new \hobotix\Installer\Updater();
+            $this->data['framework_version'] = $updater->get_global();
+            $this->data['last_commit'] = $updater->last_commit();
+
+            $this->data['query_string'] = '';
+            if (!empty($this->request->server['QUERY_STRING'])){
+                $this->data['query_string'] = $this->request->server['QUERY_STRING'];
+            }
+
 			if ($this->user->isLogged() && isset($this->session->data['token'])) {
 				$this->data['url'] =  $this->url->link('common/home/session', 'token=' . $this->session->data['token']);
 				$this->data['token'] = $this->session->data['token'];

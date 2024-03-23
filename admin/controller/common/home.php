@@ -460,10 +460,12 @@
 			$this->data['total_products_added_week'] 				= formatLongNumber($this->model_catalog_product->getTotalProductsAdded(['from' => date('Y-m-d', strtotime('-1 week')), 'to' => date('Y-m-d')]), $format);
 			$this->data['total_products_added_month'] 				= formatLongNumber($this->model_catalog_product->getTotalProductsAdded(['from' => date('Y-m-d', strtotime('-1 month')), 'to' => date('Y-m-d')]), $format);
 
+            /*
 			$this->data['total_categories'] 						= $this->model_catalog_category->getTotalCategories();
 			$this->data['total_categories_final'] 					= $this->model_catalog_category->getTotalCategoriesAmazonFinal();
 			$this->data['total_categories_enable_load'] 			= $this->model_catalog_category->getTotalCategoriesEnableLoad();
 			$this->data['total_categories_enable_full_load'] 		= $this->model_catalog_category->getTotalCategoriesEnableFullLoad();
+            */
 
 			$this->template = 'homestats/productstats.tpl';
 			if (!empty($this->request->get['tpl']) && $this->request->get['tpl'] == 'rnf'){

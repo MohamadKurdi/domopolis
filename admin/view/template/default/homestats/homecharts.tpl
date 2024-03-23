@@ -8,7 +8,7 @@
 		</div>
 	</div>
 </div>
-<div class="clr"></div>
+<div style="clear:both;  height:10px;"></div>
 
 <div>
 	<div>
@@ -20,7 +20,7 @@
 		</div>
 	</div>
 </div>
-<div class="clr"></div>
+<div style="clear:both;  height:10px;"></div>
 
 <div>
 	<div>
@@ -32,7 +32,7 @@
 		</div>
 	</div>
 </div>
-<div class="clr"></div>
+<div style="clear:both;  height:10px;"></div>
 <div>
 	<div>
 		<div style="width:100%; height:100%;">											

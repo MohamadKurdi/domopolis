@@ -1,6 +1,6 @@
 <style>
-	.list.big thead td, .list.big tr.small td{font-size:12px; font-weight:700;}
-	.list.big tbody td{font-size:16px;}
+	.list.big thead td, .list.big tr.small td{font-size:12px; font-weight:400;}
+	.list.big tbody td{font-size:14px;}
 	.list.small-bottom-margin{margin-bottom: 0px;}
 	.list.no-top-border td{border-top:0px;}
 	.list tbody td a{text-decoration: none; color: gray;}
@@ -90,10 +90,27 @@
 					<td><?php echo $total_product_have_offers; ?></td>
 					<td><?php echo $total_product_have_no_offers; ?></td>
 				</tr>		
-			</table>	
+			</table>
+            <table class="list big small-bottom-margin">
+                <tr class="small">
+                    <td style="color:#66c7a3"><i class="fa fa-language" aria-hidden="true"></i> Час</td>
+                    <td style="color:#66c7a3"><i class="fa fa-language" aria-hidden="true"></i> Сегодня</td>
+                    <td style="color:#3276c2"><i class="fa fa-language" aria-hidden="true"></i> Вчера</td>
+                    <td style="color:#24a4c1"><i class="fa fa-language" aria-hidden="true"></i> Неделя</td>
+                    <td style="color:#fa4934"><i class="fa fa-language" aria-hidden="true"></i> Месяц</td>
+                </tr>
+                <tr class="small">
+                    <td><?php echo $translated_total_hour; ?></td>
+                    <td><?php echo $translated_total_today; ?></td>
+                    <td><?php echo $translated_total_yesterday; ?></td>
+                    <td><?php echo $translated_total_week; ?></td>
+                    <td><?php echo $translated_total_month; ?></td>
+                </tr>
+            </table>
 		</div>
 		<div class="clr"></div>		
 	</div>
+ <?php /*
 	<div>
 		<div style="width:50%; float:left;">
 			<table class="list big small-bottom-margin no-top-border">
@@ -119,30 +136,9 @@
 			</table>
 		</div>
 		<div style="width:50%; float:left;">	
-			<table class="list big small-bottom-margin no-top-border">
-				<thead>
-					<tr>
-						<td colspan="6" class="left">
-							Переводчик
-						</td>
-					</tr>
-					<tr>						
-						<td style="color:#66c7a3"><i class="fa fa-yahoo" aria-hidden="true"></i> Час</td>
-						<td style="color:#66c7a3"><i class="fa fa-yahoo" aria-hidden="true"></i> Сегодня</td>
-						<td style="color:#3276c2"><i class="fa fa-yahoo" aria-hidden="true"></i> Вчера</td>
-						<td style="color:#24a4c1"><i class="fa fa-yahoo" aria-hidden="true"></i> Неделя</td>
-						<td style="color:#fa4934"><i class="fa fa-yahoo" aria-hidden="true"></i> Месяц</td>
-					</tr>
-					<tr>						
-						<td><?php echo $translated_total_hour; ?></td>
-						<td><?php echo $translated_total_today; ?></td>
-						<td><?php echo $translated_total_yesterday; ?></td>
-						<td><?php echo $translated_total_week; ?></td>
-						<td><?php echo $translated_total_month; ?></td>
-					</tr>
-				</thead>
-			</table>
+
 		</div>
 		<div class="clr"></div>		
 	</div>
+*/ ?>
 </div>

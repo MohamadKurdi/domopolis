@@ -1,6 +1,6 @@
 <style>
-	.list.big1 thead td{font-size:14px; font-weight:700;}
-	.list.big1 tbody td{font-size:16px;padding: 5px 3px;}	
+	.list.big1 thead td{font-size:12px; font-weight:400;}
+	.list.big1 tbody td{font-size:12px;padding: 5px 3px;}
 	.list tbody td a{text-decoration: none; color: gray;}
 </style>
 
@@ -46,14 +46,14 @@
 					<?php } ?>
 				</td>
 				<td>
-					<b><? echo $process['name']; ?></b>
+					<? echo $process['name']; ?>
 				</td>
 				<td>
-					<? echo $process['start']; ?>
+                    <small><? echo $process['start']; ?></small>
 				</td>
 				<td>
 					<? if ($process['stop']) { ?>
-						<?php echo $process['stop'] ?>
+                    <small><?php echo $process['stop'] ?></small>
 					<? } else { ?>
 
 						<? if ($process['running']) { ?>

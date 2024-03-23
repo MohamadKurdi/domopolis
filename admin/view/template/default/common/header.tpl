@@ -9,17 +9,19 @@
 						<?php if ($logged) { ?>
 							<style>
 								@media (max-width: 600px) { .hidden-xs{display:none;} .user-name-1{padding-left:0px!important;}  }
-
 							</style>
-							<img class="d_img hidden-xs" src="view/image/<? echo FILE_LOGO; ?>" style="float:left;margin-top:0px; height:38px!important;" title="<?php echo $heading_title; ?>" height="38px" onclick="location = '<?php echo $home; ?>'" />	
+							<img class="d_img hidden-xs" src="view/image/<? echo FILE_LOGO; ?>" style="float:left;margin-top:0px; height:38px!important;" title="<?php echo $heading_title; ?>" height="38px" onclick="location = '<?php echo $home; ?>'" />
+                            <div style="float:left; color:#000; font-weight:700; padding-left:20px;">
+                                <div><small <?php if ($needs_update) { ?>style="color:#ff7815;"<?php } ?>>Local version: <?php echo $current_version; ?></small></div>
+                                <div><small>Global version: <?php echo $global_version; ?></small></div>
+                            </div>
 							<div class="user-name-1" style="float:left; color:#000; font-weight:700; padding-left:20px;">
 								<i class="fa fa-user-o icon_header hidden-xs"></i>
 								<div style="display: inline-block;"><? echo $this->user->getUserFullName(); ?> (<? echo $this->user->getUserName(); ?>) <a style="color:#788084" href="<?php echo $logout; ?>"><b><i class="fa fa-external-link"></i></b></a>
-								<span class="hidden-xs"><br /><?php if ($this->user->getId() == 6) { ?>Властелин Домополиса<?php } else { ?><? echo $this->user->getUserGroupName(); ?><?php } ?></span>
+								<span class="hidden-xs"><br /><? echo $this->user->getUserGroupName(); ?></span>
 								</div>
 							</div>
-						<? } ?>	
-						<?php if ($logged) { ?>
+
 							<div id="menu_top">
 								<ul class="left">
 									<?php if ($this->config->get('config_enable_malert_in_admin')){	?>
