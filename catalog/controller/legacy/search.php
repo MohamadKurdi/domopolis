@@ -123,7 +123,7 @@ class ControllerLegacySearch extends Controller {
         foreach ($manufacturers as $manufacturer_id => $manufacturer){
             if (empty($data['m' . $manufacturer_id])){
 
-                if (hobotix\Search\ElasticFramework\StaticFunctions::validateResult($resultManufacturer = $this->elasticSearch->Query->getEntityByID('manufacturer', $manufacturer_id))){
+                if (\hobotix\Search\ElasticFramework\StaticFunctions::validateResult($resultManufacturer = $this->elasticSearch->Query->getEntityByID('manufacturer', $manufacturer_id))){
                     $name 	= $resultManufacturer['hits']['hits'][0]['_source'][$field];
                     $href 	= $this->url->link('catalog/manufacturer', 'manufacturer_id=' . $manufacturer_id);
                     $id 	= $manufacturer_id;
@@ -254,7 +254,7 @@ class ControllerLegacySearch extends Controller {
 
         try {
             $query = $this->request->get['query'];
-            $query = hobotix\Search\ElasticFramework\StaticFunctions::prepareQueryExceptions($query);
+            $query = \hobotix\Search\ElasticFramework\StaticFunctions::prepareQueryExceptions($query);
             $query = trim(mb_strtolower($query));
             $length = mb_strlen($query);
 
@@ -275,17 +275,17 @@ class ControllerLegacySearch extends Controller {
                 $exact = true;
                 $results = $this->elasticSearch->Query->fuzzyCategoriesQuery('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field4);
 
-                if (!hobotix\Search\ElasticFramework\StaticFunctions::validateResult($results, true)){
+                if (!\hobotix\Search\ElasticFramework\StaticFunctions::validateResult($results, true)){
                     $exact = false;
                     $results = $this->elasticSearch->Query->fuzzyCategoriesQuery('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field2, $field4);
                 }
 
-                if (hobotix\Search\ElasticFramework\StaticFunctions::validateResult($resultsP = $this->elasticSearch->Query->nonFuzzySkuQuery($query)) == 1){
+                if (\hobotix\Search\ElasticFramework\StaticFunctions::validateResult($resultsP = $this->elasticSearch->Query->nonFuzzySkuQuery($query)) == 1){
                 } else {
 
                     $resultsP = $this->elasticSearch->Query->fuzzyProductsQuery('products' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field2, $field3);
 
-                    if (!hobotix\Search\ElasticFramework\StaticFunctions::validateResult($resultsP)){
+                    if (!\hobotix\Search\ElasticFramework\StaticFunctions::validateResult($resultsP)){
                         $resultsP = $this->elasticSearch->Query->nonFuzzySkuQuery($query);
                     }
                 }
@@ -446,7 +446,7 @@ class ControllerLegacySearch extends Controller {
             foreach ($manufacturers as $manufacturer_id => $manufacturer){
                 if (empty($data['m' . $manufacturer_id])){
 
-                    if (hobotix\Search\ElasticFramework\StaticFunctions::validateResult($resultManufacturer = $this->elasticSearch->Query->getEntityByID('manufacturer', $manufacturer_id))){
+                    if (\hobotix\Search\ElasticFramework\StaticFunctions::validateResult($resultManufacturer = $this->elasticSearch->Query->getEntityByID('manufacturer', $manufacturer_id))){
                         $name 	= $resultManufacturer['hits']['hits'][0]['_source'][$field];
                         $href 	= $this->url->link('catalog/manufacturer', 'manufacturer_id=' . $manufacturer_id);
                         $id 	= $manufacturer_id;
@@ -696,13 +696,13 @@ class ControllerLegacySearch extends Controller {
 
             try {
                 $query = !empty($this->request->get['search'])?$this->request->get['search']:'';
-                $query = hobotix\Search\ElasticFramework\StaticFunctions::prepareQueryExceptions($query);
+                $query = \hobotix\Search\ElasticFramework\StaticFunctions::prepareQueryExceptions($query);
                 $query = trim(mb_strtolower($query));
                 $this->search = $query;
                 $this->filter_category_id = $filter_category_id;
                 $this->filter_manufacturer_id = $filter_manufacturer_id;
 
-                if (hobotix\Search\ElasticFramework\StaticFunctions::validateResult($resultSKU = $this->elasticSearch->Query->nonFuzzySkuQuery($query)) == 1){
+                if (\hobotix\Search\ElasticFramework\StaticFunctions::validateResult($resultSKU = $this->elasticSearch->Query->nonFuzzySkuQuery($query)) == 1){
                     if ($productFoundBySKU = $this->elasticSingleProductResult($resultSKU)){
                         $this->response->redirect($this->url->link('product/product', 'product_id=' . $productFoundBySKU['product_id'] . '&search=' .  urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'))));
                     }
@@ -720,13 +720,13 @@ class ControllerLegacySearch extends Controller {
                 $results = $this->elasticResults($resultsE, $field);
 
                 $resultAggregations = $this->elasticSearch->Query->fuzzyProductsQuery('products' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field2, $field3, ['count' => true]);
-                $this->data['intersections'] = $this->prepareManufacturers(hobotix\Search\ElasticFramework\StaticFunctions::validateAggregationResult($resultAggregations, 'manufacturers'));
-                $this->data['intersections2'] = $this->prepareCategories(hobotix\Search\ElasticFramework\StaticFunctions::validateAggregationResult($resultAggregations, 'categories'));
+                $this->data['intersections'] = $this->prepareManufacturers(\hobotix\Search\ElasticFramework\StaticFunctions::validateAggregationResult($resultAggregations, 'manufacturers'));
+                $this->data['intersections2'] = $this->prepareCategories(\hobotix\Search\ElasticFramework\StaticFunctions::validateAggregationResult($resultAggregations, 'categories'));
 
                 $exact = true;
                 $resultsCMA = $this->elasticSearch->Query->fuzzyCategoriesQuery('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field4, ['limit' => 30]);
 
-                if (!hobotix\Search\ElasticFramework\StaticFunctions::validateResult($resultsCMA)){
+                if (!\hobotix\Search\ElasticFramework\StaticFunctions::validateResult($resultsCMA)){
                     $exact = false;
                     $resultsCMA = $this->elasticSearch->Query->fuzzyCategoriesQuery('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field2, $field4, ['limit' => 30]);
                 }
