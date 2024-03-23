@@ -6,7 +6,7 @@
 			$this->data['oc_version'] = VERSION;
 
             $updater = new \hobotix\Installer\Updater();
-            $this->data['framework_version'] = $updater->get_global();
+            $this->data['framework_version'] = $updater->get_current();
             $this->data['last_commit'] = $updater->last_commit();
 
             $this->data['query_string'] = '';

@@ -36,7 +36,7 @@ final class Updater
 
     public function last_commit(): string|bool
     {
-        if (function_exists('proc_open')) {
+        if (function_exists('proc_open') && class_exists('\CzProject\GitPhp\Git')) {
             try {
                 $gitObject = new \CzProject\GitPhp\Git;
                 $repoObject = $gitObject->open(DIR_SYSTEM . '..' . DIRECTORY_SEPARATOR . '.git' . DIRECTORY_SEPARATOR);
