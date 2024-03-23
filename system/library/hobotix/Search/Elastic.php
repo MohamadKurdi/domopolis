@@ -78,11 +78,11 @@ class Elastic{
     }
 
     public function deleteProduct($product_id){
-        return $this->Indexer->deleteProduct($product_id);
+        $this->Indexer->deleteProduct($product_id);
     }
 
     public function reindexProduct($product_id){
-        return $this->Indexer->reindexProduct($product_id);
+        $this->Indexer->reindexProduct($product_id);
     }
 
     public function getProduct($product_id){

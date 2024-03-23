@@ -11,13 +11,14 @@ use function imagecopyresampled, imagecreatefrompng, imagesx, imagesy, is_file, 
 
 class QRImageWithLogo extends QRGdImage{
 
-	/**
-			* @param string|null $file
-			* @param string|null $logo
-			*
-			* @return string
-			* @throws \chillerlan\QRCode\Output\QRCodeOutputException
-	**/
+    /**
+     * @param string|null $file
+     * @param string|null $logo
+     *
+     * @return string
+     * @throws QRCodeOutputException
+     * @throws \ErrorException
+     */
 
 	public function dump(string $file = null, string $logo = null):string{
 		$this->options->returnResource = true;

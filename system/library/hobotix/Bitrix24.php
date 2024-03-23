@@ -53,13 +53,13 @@ final class Bitrix24 {
 		return true;
 	}
 
-		/**
-			* Save application configuration.
-			*
-			* @param $params
-			*
-			* @return bool
-		*/
+    /**
+     * Save application configuration.
+     *
+     * @param $params
+     * @param string $domain
+     * @return bool
+     */
 			public function saveParams($params, $domain = '') {
 
 				$_domain = '';

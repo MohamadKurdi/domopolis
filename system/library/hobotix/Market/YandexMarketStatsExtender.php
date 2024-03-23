@@ -49,13 +49,12 @@ class HobotixStatsClient extends Client
      *
      * @param $campaignId
      * @param array $params
-     * @param array $query
      * @param null $dbgKey
      * @return GetStatsBySkusResponse
-     * @throws GuzzleException
      * @throws ForbiddenException
-     * @throws UnauthorizedException
+     * @throws GuzzleException
      * @throws PartnerRequestException
+     * @throws UnauthorizedException
      */
     public function getStatsBySkus($campaignId, array $params = [], $dbgKey = null)
     {

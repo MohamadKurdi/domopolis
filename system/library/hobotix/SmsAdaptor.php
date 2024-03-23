@@ -189,34 +189,22 @@ class SmsAdaptor {
 		];
 
 		if ($this->config->get('config_smsgate_library_enable_viber')){
-			switch ($data['type']){
-			case 0:
-				return reTemplate($template, $this->config->get('config_viber_transaction_text_type_1'));
-				break;
-			case 1:
-				return reTemplate($template, $this->config->get('config_viber_transaction_text_type_2'));
-				break;
-			case 2:
-				return reTemplate($template, $this->config->get('config_viber_transaction_text_type_3'));
-				break;
-			}
+            return match ($data['type']) {
+                0 => reTemplate($template, $this->config->get('config_viber_transaction_text_type_1')),
+                1 => reTemplate($template, $this->config->get('config_viber_transaction_text_type_2')),
+                2 => reTemplate($template, $this->config->get('config_viber_transaction_text_type_3')),
+                default => reTemplate($template, $this->config->get('config_viber_transaction_text_type_1')),
+            };
 
-			return reTemplate($template, $this->config->get('config_viber_transaction_text_type_1'));
-		} else {
-			switch ($data['type']){
-			case 0:
-				return reTemplate($template, $this->config->get('config_sms_transaction_text_type_1'));
-				break;
-			case 1:
-				return reTemplate($template, $this->config->get('config_sms_transaction_text_type_2'));
-				break;
-			case 2:
-				return reTemplate($template, $this->config->get('config_sms_transaction_text_type_3'));
-				break;
-			}
+        } else {
+            return match ($data['type']) {
+                0 => reTemplate($template, $this->config->get('config_sms_transaction_text_type_1')),
+                1 => reTemplate($template, $this->config->get('config_sms_transaction_text_type_2')),
+                2 => reTemplate($template, $this->config->get('config_sms_transaction_text_type_3')),
+                default => reTemplate($template, $this->config->get('config_sms_transaction_text_type_1')),
+            };
 
-			return reTemplate($template, $this->config->get('config_sms_transaction_text_type_1'));
-		}		
+        }
 
 		return '';
 	}

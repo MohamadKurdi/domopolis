@@ -167,7 +167,7 @@
 
 							$result[$tracking_code] = $code;
 					}
-				}  catch (CdekV2RequestException  $e){
+				}  catch (\AntistressStore\CdekSDK2\Exceptions\CdekV2RequestException  $e){
 					echoLine('[Cdek::trackMultiCodes] ' . $tracking_code . ' ' .  $e->getMessage(), 'e');					
 					
 					if ($this->checkIfUnexistent($e->getMessage())){								
@@ -192,7 +192,7 @@
 					return $this->prettyFormatTrackingInfo($info);
 				}
 
-			}  catch (CdekV2RequestException  $e){
+			}  catch (\AntistressStore\CdekSDK2\Exceptions\CdekV2RequestException  $e){
 				echo $e->getMessage();					
 				return false;
 			} 

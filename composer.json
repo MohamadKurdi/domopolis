@@ -75,7 +75,9 @@
     "ext-zlib": "*",
     "ext-gd": "*",
     "ext-mysqli": "*",
-    "czproject/git-php": "^4.2"
+    "czproject/git-php": "^4.2",
+    "ext-posix": "*",
+    "ext-ctype": "*"
   },
   "autoload": {
     "psr-0": {

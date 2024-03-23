@@ -110,7 +110,7 @@
                 if ($body) {
                     $jsonBody = json_decode($body);
                     
-                    if ($jsonBody && isset($jsonBody->error) && isset($jsonBody->error->message)) {
+                    if (isset($jsonBody->error->message) && $jsonBody) {
                         $message = $jsonBody->error->message;
                     }
                 }

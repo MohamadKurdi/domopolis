@@ -161,27 +161,13 @@
     			return false;
     		}
 
-    		switch ($format) {
-    			case 'pdf':
-    			$url = $this->api_endpoints[$receipt_data['api']]['url'] . $receipt_id . $this->api_endpoints[$receipt_data['api']]['delimiter'] . 'pdf';	    			
-    			break;
-
-    			case 'text':
-    			$url = $this->api_endpoints[$receipt_data['api']]['url'] . $receipt_id . $this->api_endpoints[$receipt_data['api']]['delimiter'] . 'text';
-    			break;
-
-    			case 'png':
-    			$url = $this->api_endpoints[$receipt_data['api']]['url'] . $receipt_id . $this->api_endpoints[$receipt_data['api']]['delimiter'] . 'png';
-    			break;
-
-    			case 'qrcode':
-    			$url = $this->api_endpoints[$receipt_data['api']]['url'] . $receipt_id . $this->api_endpoints[$receipt_data['api']]['delimiter'] . 'qrcode';
-    			break;
-
-    			default:
-    			$url = $this->api_endpoints[$receipt_data['api']]['url'] . $receipt_id . $this->api_endpoints[$receipt_data['api']]['delimiter'] . 'html';
-    			break;
-    		}
+            $url = match ($format) {
+                'pdf' => $this->api_endpoints[$receipt_data['api']]['url'] . $receipt_id . $this->api_endpoints[$receipt_data['api']]['delimiter'] . 'pdf',
+                'text' => $this->api_endpoints[$receipt_data['api']]['url'] . $receipt_id . $this->api_endpoints[$receipt_data['api']]['delimiter'] . 'text',
+                'png' => $this->api_endpoints[$receipt_data['api']]['url'] . $receipt_id . $this->api_endpoints[$receipt_data['api']]['delimiter'] . 'png',
+                'qrcode' => $this->api_endpoints[$receipt_data['api']]['url'] . $receipt_id . $this->api_endpoints[$receipt_data['api']]['delimiter'] . 'qrcode',
+                default => $this->api_endpoints[$receipt_data['api']]['url'] . $receipt_id . $this->api_endpoints[$receipt_data['api']]['delimiter'] . 'html',
+            };
 
     		return $url;
     	}

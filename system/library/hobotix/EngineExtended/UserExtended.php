@@ -96,9 +96,9 @@ class UserExtended {
 				$this->db->ncquery("UPDATE user SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE user_id = '" . (int)$this->session->data['user_id'] . "'");
 
 				$user_group_query 		= $this->db->ncquery("SELECT * FROM user_group WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
-				$this->user_group_name 	= isset($user_group_query->row['name'])?$user_group_query->row['name']:'';
-				$this->template_prefix 	= isset($user_group_query->row['template_prefix'])?$user_group_query->row['template_prefix']:'';
-				$this->alert_namespace 	= isset($user_group_query->row['alert_namespace'])?$user_group_query->row['alert_namespace']:'';
+				$this->user_group_name 	= $user_group_query->row['name'] ?? '';
+				$this->template_prefix 	= $user_group_query->row['template_prefix'] ?? '';
+				$this->alert_namespace 	= $user_group_query->row['alert_namespace'] ?? '';
 
 				$user_group_store_query = $this->db->ncquery("SELECT * FROM user_group_to_store WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
 				if ($user_group_store_query->num_rows){

@@ -262,24 +262,13 @@ class CheckBoxUA {
     }
 
     public function getReceiptLink($receipt_id, $type='html'){
-        switch ($type) {
-            case 'pdf':
-                $url = $this->base_url .'receipts/'.$receipt_id .'/pdf';
-                break;
-            case 'text':
-                $url = $this->base_url .'receipts/'.$receipt_id .'/text';
-                break;
-            case 'png':
-                $url = $this->base_url .'receipts/'.$receipt_id .'/png';
-                break;
-            case 'qrcode':
-                $url = $this->base_url .'receipts/'.$receipt_id .'/qrcode';
-                break;
-            
-            default:
-                $url = $this->base_url .'receipts/'.$receipt_id .'/html';
-                break;
-        }
+        $url = match ($type) {
+            'pdf' => $this->base_url . 'receipts/' . $receipt_id . '/pdf',
+            'text' => $this->base_url . 'receipts/' . $receipt_id . '/text',
+            'png' => $this->base_url . 'receipts/' . $receipt_id . '/png',
+            'qrcode' => $this->base_url . 'receipts/' . $receipt_id . '/qrcode',
+            default => $this->base_url . 'receipts/' . $receipt_id . '/html',
+        };
         return $url;
     }
 
@@ -337,25 +326,14 @@ class CheckBoxUA {
 
     public function getTaxSymbolByCode($code){
         # використовуємо тільки для превю чека!!!
-        switch ($code) {
-            case '1':
-                return 'А';
-                break;
-            case '2':
-                return 'Б';
-                break;
-            case '7':
-                return 'Ж';
-                break;	
-			case '8':
-                return 'З';
-                break;
-            case '9':
-                return 'А';
-                break;
-             
-        }
-        return $code;
+        return match ($code) {
+            '1' => 'А',
+            '2' => 'Б',
+            '7' => 'Ж',
+            '8' => 'З',
+            '9' => 'А',
+            default => $code,
+        };
     }
     
     public function getTax(){
@@ -423,6 +401,7 @@ class CheckBoxUA {
 
             $monoPaymentInfo = $this->model_payment_mono->getPaymentDataByOrderId($order_info['order_id']);
 
+            $payment_data = [];
             if ($monoPaymentInfo){
                 if (empty($monoPaymentInfo['payment_data'])){
                     $payment_data = $this->model_payment_mono->getInvoicePaymentInfo($monoPaymentInfo['invoiceId']);
@@ -452,21 +431,12 @@ class CheckBoxUA {
     }
 
     private function getFullBankName($sender_card_bank){
-        switch ($sender_card_bank) {
-            case 'pb':
-                $bank_name = "ПриватБанк";
-                break;
-            case 'JSC UNIVERSAL BANK':
-                $bank_name = "МоноБанк";
-                break;
-            case 'JSC ALFA-BANK':
-                $bank_name = "Альфа-банк";
-                break;
-            
-            default:
-                $bank_name = $sender_card_bank;
-                break;
-        }
+        $bank_name = match ($sender_card_bank) {
+            'pb' => "ПриватБанк",
+            'JSC UNIVERSAL BANK' => "МоноБанк",
+            'JSC ALFA-BANK' => "Альфа-банк",
+            default => $sender_card_bank,
+        };
         return $bank_name;
     }
 
@@ -709,8 +679,8 @@ class CheckBoxUA {
 
     private function saveReceiptsRequest($request, $data){
        
-        $data['order_id']   = isset($data['order_id']) ? $data['order_id'] : 0;
-        $data['type']       = isset($data['type']) ? $data['type'] : '';
+        $data['order_id']   = $data['order_id'] ?? 0;
+        $data['type']       = $data['type'] ?? '';
 
         $sql = "INSERT INTO order_receipt SET         
             order_id            = '" . (int)$data['order_id'] . "', 
@@ -753,10 +723,10 @@ class CheckBoxUA {
     }
 
     private function saveShiftRequest($request){       
-        $request['id']             = isset($request['id']) ? $request['id'] : '-';
-        $request['serial']         = isset($request['serial']) ? $request['serial'] : 0;
-        $request['status']         = isset($request['status']) ? $request['status'] : 'error';
-        $request['z_report']['id'] = isset($request['z_report']['id']) ? $request['z_report']['id'] : '';
+        $request['id']             = $request['id'] ?? '-';
+        $request['serial']         = $request['serial'] ?? 0;
+        $request['status']         = $request['status'] ?? 'error';
+        $request['z_report']['id'] = $request['z_report']['id'] ?? '';
 
         $sql = "INSERT INTO shift SET     
             shift_id        = '" . $this->db->escape($request['id']) . "',  
@@ -780,11 +750,11 @@ class CheckBoxUA {
         if($this->access_token){
             $request_headers[] = "Authorization: Bearer " . $this->access_token;
             if($this->x_license_key){
-                $request_headers[] = "X-License-Key: {$this->x_license_key}";
+                $request_headers[] = "X-License-Key: $this->x_license_key";
             }
 
             if($this->x_client_name){
-                $request_headers[] = "X-Client-Name: {$this->x_client_name}";
+                $request_headers[] = "X-Client-Name: $this->x_client_name";
             }
         }
         return $request_headers;

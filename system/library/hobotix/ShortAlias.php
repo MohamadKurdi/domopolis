@@ -80,11 +80,11 @@
 			
 			$non_cached_query = $this->db->non_cached_query("SELECT url FROM `short_url_alias` WHERE alias LIKE '" . $this->db->escape(trim($url)) . "' LIMIT 1");
 			
-			if ($non_cached_query->num_rows){
-				return $non_cached_query->row['url'];
-				} else {
-				return false;
-			}
+			if ($non_cached_query->num_rows) {
+                return $non_cached_query->row['url'];
+            }
+
+            return false;
 		}
 		
 		public function shortenURL($url, $domain = false, $length = 7){

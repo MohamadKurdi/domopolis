@@ -11,7 +11,7 @@
 		"explain"			:	"Нова Пошта адресна",
 		"class"				:	"NovaPoshta"
 	},
-	"dostavkaplus.sh13": {
+	"dostavkaplus.sh14": {
 		"name"				:	"УкрПошта",
 		"name_declined"		:	"УкрПоштою",
 		"explain"			:	"УкрПошта будь-яка доставка",

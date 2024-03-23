@@ -209,7 +209,7 @@ class SupplierAdaptor
 						'asin' 					=> !empty($product['asin'])?atrim($product['asin']):'',
 						'image' 				=> !empty($product['image'])?atrim($product['image']):'',
 						'images' 				=> !empty($product['images'])?$product['images']:[],
-						'stock' 				=> isset($product['stock'])?$product['stock']:true,
+						'stock' 				=> $product['stock'] ?? true,
 						'quantity' 				=> (int)$product['quantity'],
 						'price' 				=> !empty($product['price'])?(float)$product['price']:0,
 						'price_special'			=> !empty($product['price_special'])?(float)$product['price_special']:0,

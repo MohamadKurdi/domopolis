@@ -5,15 +5,9 @@ namespace hobotix\SessionHandler;
 class SessionHandler implements \SessionHandlerInterface
 {
 
-    private $savePath;
-    protected $dbConnection;
-    protected $dbTable;
+    protected $dbConnection = null;
+    protected $dbTable = null;
     public $lifeTime = 518400;
-
-    private static function is_cli()
-    {
-        return (php_sapi_name() === 'cli');
-    }
 
     public function setDbDetails($dbHost, $dbUser, $dbPassword, $dbDatabase)
     {
@@ -51,16 +45,11 @@ class SessionHandler implements \SessionHandlerInterface
     public static function unserialize($session_data)
     {
         $method = ini_get("session.serialize_handler");
-        switch ($method) {
-            case "php":
-                return self::unserialize_php($session_data);
-                break;
-            case "php_binary":
-                return self::unserialize_phpbinary($session_data);
-                break;
-            default:
-                throw new \Exception("Unsupported session.serialize_handler: " . $method . ". Supported: php, php_binary");
-        }
+        return match ($method) {
+            "php" => self::unserialize_php($session_data),
+            "php_binary" => self::unserialize_phpbinary($session_data),
+            default => throw new \Exception("Unsupported session.serialize_handler: " . $method . ". Supported: php, php_binary"),
+        };
     }
 
     private static function unserialize_php($session_data)
@@ -98,7 +87,7 @@ class SessionHandler implements \SessionHandlerInterface
         return $return_data;
     }
 
-    public function open($savePath, $sessionName): bool
+    public function open($path, $name): bool
     {
         if ($this->dbConnection) {
             return true;
@@ -117,10 +106,10 @@ class SessionHandler implements \SessionHandlerInterface
         return $this->dbConnection->real_escape_string($value);
     }
 
-    public function read($sessionId): string
+    public function read($id): string
     {
-        $sessionId = $this->escape($sessionId);
-        $sql = "SELECT `data` FROM $this->dbTable WHERE id = '$sessionId' LIMIT 1";
+        $id = $this->escape($id);
+        $sql = "SELECT `data` FROM $this->dbTable WHERE id = '$id' LIMIT 1";
 
         try {
             if ($result = $this->dbConnection->query($sql)) {
@@ -131,7 +120,7 @@ class SessionHandler implements \SessionHandlerInterface
                         $data[] = $row;
                     }
 
-                    return isset($data[0]['data']) ? $data[0]['data'] : '';
+                    return $data[0]['data'] ?? '';
 
                 } else {
                     return '';
@@ -147,13 +136,13 @@ class SessionHandler implements \SessionHandlerInterface
         }
     }
 
-    public function write($sessionId, $sessionData): bool
+    public function write($id, $data): bool
     {
-        $sessionId = $this->escape($sessionId);
-        $sessionData = $this->escape($sessionData);
+        $id = $this->escape($id);
+        $data = $this->escape($data);
         $timestamp = time();
 
-        $sql = "REPLACE INTO $this->dbTable (`id`, `data`, `timestamp`) VALUES('$sessionId', '$sessionData', '$timestamp')";
+        $sql = "REPLACE INTO $this->dbTable (`id`, `data`, `timestamp`) VALUES('$id', '$data', '$timestamp')";
 
         try {
             $result = $this->dbConnection->query($sql);
@@ -165,11 +154,11 @@ class SessionHandler implements \SessionHandlerInterface
         return $result;
     }
 
-    public function destroy($sessionId): bool
+    public function destroy($id): bool
     {
-        $sessionId = $this->escape($sessionId);
+        $id = $this->escape($id);
 
-        $sql = "DELETE FROM $this->dbTable WHERE id = '$sessionId'";
+        $sql = "DELETE FROM $this->dbTable WHERE id = '$id'";
 
         try {
             $result = $this->dbConnection->query($sql);
@@ -181,9 +170,9 @@ class SessionHandler implements \SessionHandlerInterface
         return $result;
     }
 
-    public function gc($maxlifetime): int
+    public function gc($max_lifetime): int
     {
-        $time = time() - intval($maxlifetime);
+        $time = time() - intval($max_lifetime);
 
         $sql = "DELETE FROM $this->dbTable WHERE timestamp < $time";
 

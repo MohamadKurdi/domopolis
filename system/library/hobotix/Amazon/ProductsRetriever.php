@@ -101,9 +101,7 @@ class ProductsRetriever extends RainforestRetriever
 			$real_language_code = $this->mapLanguages[$language_code];
 		}		
 
-		if ($language_code == $this->config->get('config_rainforest_source_language')){
-			$text = $text;	
-		} else {
+        if ($language_code != $this->config->get('config_rainforest_source_language')){
 			if ($this->config->get('config_rainforest_enable_translation') && ($this->config->get('config_rainforest_enable_language_' . $real_language_code) || $this->config->get('config_rainforest_enable_language_' . $language_code))){
 				$text = $this->translateAdaptor->translate($text, $detect?false:$this->config->get('config_rainforest_source_language'), $real_language_code, true);
 			} else {

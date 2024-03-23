@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fd843bc1f49b044596bd79992c05ef20",
+    "content-hash": "3c2d6a87d06678d91df1facf2db30f1f",
     "packages": [
         {
             "name": "alextartan/xml2array",
@@ -6675,7 +6675,9 @@
         "ext-ldap": "*",
         "ext-zlib": "*",
         "ext-gd": "*",
-        "ext-mysqli": "*"
+        "ext-mysqli": "*",
+        "ext-posix": "*",
+        "ext-ctype": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.2.0"

@@ -111,9 +111,10 @@ class SendSay {
     }
 
     /**
-     * Cписок групп     
+     * Cписок групп
      *
      * @return array
+     * @throws \Exception
      */
     public function listGroup(){
         $data = [
@@ -126,9 +127,11 @@ class SendSay {
     }
 
     /**
-     * Прочитать группу     
+     * Прочитать группу
      *
+     * @param $id
      * @return array
+     * @throws \Exception
      */
     public function getGroup($id){
         $data = [

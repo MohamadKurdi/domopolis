@@ -21,9 +21,9 @@ class RainforestLogger extends AbstractLogger {
     /**
      * Logs with an arbitrary level.
      *
-     * @param mixed  $level
-     * @param string $message
-     * @param array  $context
+     * @param mixed $level
+     * @param \Stringable|string $message
+     * @param array $context
      *
      * @return void
      */
