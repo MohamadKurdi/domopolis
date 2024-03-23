@@ -1,29 +1,29 @@
 <?php
 
-define('BIRTHDAY_DISCOUNT_CATEGORY', 8308);
-define('GENERAL_DISCOUNT_CATEGORY', 6614);
-define('GENERAL_MARKDOWN_CATEGORY', 8422);
+const BIRTHDAY_DISCOUNT_CATEGORY = 8308;
+const GENERAL_DISCOUNT_CATEGORY = 6614;
+const GENERAL_MARKDOWN_CATEGORY = 8422;
 
-define('YANDEX_MARKET_CUSTOMER_ID', 11);
-define('MYSQL_NOW_DATE_FORMAT', 'Y-m-d H:i:00');
-define ('DEFAULT_SORT', 'p.quantity DESC, p.date_modified');
-define ('ALERT_QUEUE', 'alert_queue_11');
+const YANDEX_MARKET_CUSTOMER_ID = 11;
+const MYSQL_NOW_DATE_FORMAT = 'Y-m-d H:i:00';
+const DEFAULT_SORT = 'p.quantity DESC, p.date_modified';
+const ALERT_QUEUE = 'alert_queue_11';
 
-define('RESTRICTED_FUNCTIONS', false);
+const RESTRICTED_FUNCTIONS = false;
 
-DEFINE('MANAGER_GROUPS', array(12, 19, 27));
-DEFINE('DEFAULT_QUEUE', 901);
-DEFINE('DEFAULT_QUEUE_UA',  501);
+const MANAGER_GROUPS = array(12, 19, 27);
+const DEFAULT_QUEUE = 901;
+const DEFAULT_QUEUE_UA = 501;
 
-define('SHORTCODES_VERSION', '1.0');
-define('BARBARATHEME', false);
+const SHORTCODES_VERSION = '1.0';
+const BARBARATHEME = false;
 
-define('STOCK', 6474);	
-define('PRESENT', 6475);
-define('PRESENT_UA', 8307);
+const STOCK = 6474;
+const PRESENT = 6475;
+const PRESENT_UA = 8307;
 
-define('DB_CONTENT_SYNC_DRIVER', false);
-define('DB_CONTENT_SYNC_HOSTNAME', false);
-define('DB_CONTENT_SYNC_USERNAME', false);
-define('DB_CONTENT_SYNC_PASSWORD', false);
-define('DB_CONTENT_SYNC_DATABASE', false);
+const DB_CONTENT_SYNC_DRIVER = false;
+const DB_CONTENT_SYNC_HOSTNAME = false;
+const DB_CONTENT_SYNC_USERNAME = false;
+const DB_CONTENT_SYNC_PASSWORD = false;
+const DB_CONTENT_SYNC_DATABASE = false;

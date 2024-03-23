@@ -350,7 +350,9 @@
 				curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($request));
 				$curlResult = curl_exec($ch);             
 				curl_close($ch);
-			}
+			} else {
+                $curlResult = false;
+            }
 			
 			if ($curlResult && $decodedResult = json_decode($curlResult, true)){                            
 				foreach ($decodedResult['suggestions'] as $suggestion){
@@ -395,7 +397,9 @@
 				curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($request));
 				$curlResult = curl_exec($ch);             
 				curl_close($ch);
-			}
+			} else {
+                $curlResult = false;
+            }
 			
 			if ($curlResult && $decodedResult = json_decode($curlResult, true)){                            
 				foreach ($decodedResult['suggestions'] as $suggestion){

@@ -425,10 +425,10 @@ class CheckBoxUA {
 
             if ($monoPaymentInfo){
                 if (empty($monoPaymentInfo['payment_data'])){
-                    $payment_data = $this->model_payment_mono->getInvoicePaymentInfo($json['invoiceId']);
+                    $payment_data = $this->model_payment_mono->getInvoicePaymentInfo($monoPaymentInfo['invoiceId']);
 
                     if ($payment_data){
-                        $this->model_payment_mono->updatePaymentData($json['invoiceId'], $payment_data);               
+                        $this->model_payment_mono->updatePaymentData($monoPaymentInfo['invoiceId'], $payment_data);
                     }
                 } else {
                     $payment_data = json_decode($monoPaymentInfo['payment_data'], true);

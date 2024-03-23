@@ -1,4 +1,4 @@
-<?
+<?php
 
 	namespace hobotix;
 	
@@ -94,7 +94,6 @@
 			}
 			
 			if ($alias = $this->getShortURL($url)){
-				
 				} else {
 				
 				$alias = $this->generateRandomString($length);					
@@ -102,7 +101,7 @@
 				
 				while(!$unique){
 					$alias = $this->generateRandomString($length);							
-					$unique = !($non_cached_query->num_rows);
+					$unique = !$this->getURL($alias);
 				}
 				
 				$this->db->non_cached_query("INSERT INTO short_url_alias SET url = '" . $this->db->escape($alias) . "', alias = '" . $this->db->escape($url) . "', date_added = NOW()");

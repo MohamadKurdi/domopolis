@@ -1,16 +1,16 @@
 <?php
-define('CACHE_DRIVER', 'Empty');
+const CACHE_DRIVER = 'Empty';
 
-define ('BCACHE_TTL', 36000);
-define ('DB_CACHED_EXPIRE', 36000);
+const BCACHE_TTL = 36000;
+const DB_CACHED_EXPIRE = 36000;
 
-define('REDIS_DATABASE', '6');
-define('REDIS_SOCKET', '/var/run/redis/redis.sock');
-define('REDIS_HOST', '127.0.0.1');
-define('REDIS_PORT', '6379');
+const REDIS_DATABASE = '6';
+const REDIS_SOCKET = '/var/run/redis/redis.sock';
+const REDIS_HOST = '127.0.0.1';
+const REDIS_PORT = '6379';
 
-define('MEMCACHE_HOSTNAME', 'localhost');
-define('MEMCACHE_PORT', '11211');
-define('CACHE_NAMESPACE', 'nmspc:');
+const MEMCACHE_HOSTNAME = 'localhost';
+const MEMCACHE_PORT = '11211';
+const CACHE_NAMESPACE = 'nmspc:';
 
-define('ELASTICSEARCH_HOSTPORT', 'http://127.0.0.1:9200');
+const ELASTICSEARCH_HOSTPORT = 'http://127.0.0.1:9200';

@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace hobotix;
 
@@ -44,9 +44,9 @@ class MailAdaptor {
 	public function getMailGates(){
 		$results = [];
 
-		$smsgates = glob(dirname(__FILE__) . '/Mail/*');        
-        foreach ($smsgates as $smsgate) {
-            $results[] = pathinfo($smsgate,  PATHINFO_FILENAME);
+		$mailgates = glob(dirname(__FILE__) . '/Mail/*');
+        foreach ($mailgates as $mailgate) {
+            $results[] = pathinfo($mailgate,  PATHINFO_FILENAME);
         }
 
         return $results;
@@ -67,9 +67,9 @@ class MailAdaptor {
 	}
 
 	public function send($email){
-		if (method_exists($this->smsObject, 'send')){
+		if (method_exists($this->mail_TransactionObject, 'send')){
 			try {
-				$result = $this->smsObject->sendSMS($sms);
+				$result = $this->mail_TransactionObject->send($email);
 			} catch (\Exception $e){
 				$result = $e->getMessage();
 				return false;
@@ -77,11 +77,11 @@ class MailAdaptor {
 		}
 
 		if (empty($result)){
-			echoLine('[SmsAdaptor::sendSMS] Could not send SMS!', 'e');
+			echoLine('[MailAdaptor::send] Could not send Email!', 'e');
 			return false;
 		}			
 
-		echoLine('[SmsAdaptor::sendSMS] Sent SMS, got ID: ' . $result, 's');
+		echoLine('[MailAdaptor::send] Sent Email, got ID: ' . $result, 's');
 
 		return $result;
 	}	

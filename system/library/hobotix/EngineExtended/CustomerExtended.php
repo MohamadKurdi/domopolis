@@ -314,7 +314,7 @@
 					$salt 		= $this->db->ncquery("SELECT salt FROM customer WHERE customer_id = '" . (int)$this->customer_id . "'")->row['salt'];
 					$password_c = sha1($salt . sha1($salt . sha1($password)));
 
-					setcookie('em', $email, time()+60 * 60 * 24 * 30, '/');
+					setcookie('em', $this->email, time()+60 * 60 * 24 * 30, '/');
 					setcookie('p', $password_c, time()+60 * 60 * 24 * 30, '/');
 				}
 												
@@ -324,7 +324,7 @@
 					if($affiliate_info) {
 						$this->affiliateNZ->login($affiliate_info['email'], $password);
 						} else {
-						$this->affiliateNZ->login($email, $password);
+						$this->affiliateNZ->login($this->email, $password);
 					}
 				}
 								

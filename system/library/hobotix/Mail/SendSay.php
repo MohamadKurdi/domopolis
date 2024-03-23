@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace hobotix\Mail;
 
@@ -41,6 +41,7 @@ class SendSay {
         }
 
         if (!empty($data['data']['errors'])){
+            $error = 'Error';
         	if (!empty($data['data']['errors'][0]['id'])){
         		$error = $data['data']['errors'][0]['id'];
         	} elseif ($data['data']['errors'][0]['name']){
@@ -66,6 +67,7 @@ class SendSay {
 		$headers[] = 'Accept-Language: en-US,en;q=0.5';
 		$headers[] = 'Content-Type: application/json; charset=utf-8';
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_URL, $this->apiUri);
 
         switch ($method) {
             case 'POST':
@@ -82,11 +84,11 @@ class SendSay {
                 break;
             default:
                 if (!empty($data)) {
-                    $url .= '?' . http_build_query($data);
+                    curl_setopt($curl, CURLOPT_URL, $this->apiUri . '?' . http_build_query($data));
                 }
         }
 
-        curl_setopt($curl, CURLOPT_URL, $this->apiUri);
+
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

@@ -293,6 +293,8 @@
 			}
 
 			foreach ($json['data'][0]['movement']['passed'] as $movement){
+                $time = time();
+
 				if (!empty($movement['Date'])){
 					$time = $movement['Date'];
 				}
@@ -738,12 +740,12 @@
 					foreach ($result['data'] as $line){	
 						$this->db->query("INSERT INTO novaposhta_streets SET 
 						Ref = '" . $this->db->escape($line['Ref']) . "',
-						CityRef = '" . $this->db->escape($row['Ref']) . "',
+						CityRef = '" . $this->db->escape($line['Ref']) . "',
 						Description = '" . $this->db->escape($line['Description']) . "',				
 						StreetsTypeRef  = '" . $this->db->escape($line['StreetsTypeRef']) . "',
 						StreetsType = '" . $this->db->escape($line['StreetsType']) . "'
 						ON DUPLICATE KEY UPDATE
-						CityRef = '" . $this->db->escape($row['Ref']) . "',
+						CityRef = '" . $this->db->escape($line['Ref']) . "',
 						Description = '" . $this->db->escape($line['Description']) . "',				
 						StreetsTypeRef  = '" . $this->db->escape($line['StreetsTypeRef']) . "',
 						StreetsType = '" . $this->db->escape($line['StreetsType']) . "'");

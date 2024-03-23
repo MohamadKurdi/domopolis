@@ -1,7 +1,7 @@
 <?php
 
-define('DB_SESSION_HOSTNAME', '/run/mysqld/mysqld.sock');
-define('DB_SESSION_DATABASE', 'DB_SESSION_DATABASE');
-define('DB_SESSION_TABLE', 'sessions');
-define('DB_SESSION_USERNAME', 'DB_SESSION_USERNAME');
-define('DB_SESSION_PASSWORD', 'DB_SESSION_PASSWORD');
+const DB_SESSION_HOSTNAME = '/run/mysqld/mysqld.sock';
+const DB_SESSION_DATABASE = 'DB_SESSION_DATABASE';
+const DB_SESSION_TABLE = 'sessions';
+const DB_SESSION_USERNAME = 'DB_SESSION_USERNAME';
+const DB_SESSION_PASSWORD = 'DB_SESSION_PASSWORD';

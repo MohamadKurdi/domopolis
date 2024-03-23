@@ -1,4 +1,4 @@
-<?
+<?php
 
 	/*
 		Class for work only with products asyncronyously		
