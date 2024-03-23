@@ -2,6 +2,8 @@
   "preload": [
     "/system/library/hobotix/FPCTimer",
     "/system/library/hobotix/PageCache",
+    "/system/library/hobotix/Installer/Installer",
+    "/system/library/hobotix/Installer/Updater",
     "/system/functions",
     "/system/constants"
   ],

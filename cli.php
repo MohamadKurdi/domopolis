@@ -6,7 +6,7 @@ define('IS_HTTPS', true);
 define('CLI_SESSION', true);
 ini_set('memory_limit', '4G');
 
-require_once(dirname(__FILE__) . '/system/jsonconfig.php');
+require_once(dirname(__FILE__) . '/system' . DIRECTORY_SEPARATOR . 'jsonconfig.php');
 
 $loaderConfig = loadJsonConfig('loader');
 $stores = loadJsonConfig('stores');
@@ -27,8 +27,7 @@ echoLine('[CLI] We are in CLI mode. PHP version: ' . phpversion() . ', time ' . 
 
 if ($argv[1] == 'preinstall') {
     echoLine('[CLI] Running installation first iteration', 'w');
-    require_once(dirname(__FILE__) . '/system/installer.php');
-    $installer = new \hobotix\Installer();
+    $installer = new \hobotix\Installer\Installer();
     $installer->preinstall();
     exit();
 }
@@ -128,8 +127,8 @@ if ($argv[1] == 'install') {
 
 if ($argv[1] == 'update') {
     echoLine('[CLI] Running updater', 'w');
-    require_once(dirname(__FILE__) . '/system/updater.php');
-    $updater = new \hobotix\Updater();
+    $updater = new \hobotix\Installer\Updater();
+    $updater->check();
     exit();
 }
 
@@ -141,7 +140,7 @@ if (!empty($loaderConfig['startup'])) {
 
 if (!empty($loaderConfig['libraries'])) {
     foreach ($loaderConfig['libraries'] as $libraryFile) {
-        require_once(DIR_SYSTEM . 'library/' . $libraryFile . '.php');
+        require_once(DIR_SYSTEM . 'library' . DIRECTORY_SEPARATOR . $libraryFile . '.php');
     }
 }
 

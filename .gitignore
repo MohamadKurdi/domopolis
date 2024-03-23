@@ -28,7 +28,6 @@
 
 #Основные конфиги
 /config*.php
-!/config.sample.php
 /config.parts/*
 /system/config
 /system/config/*

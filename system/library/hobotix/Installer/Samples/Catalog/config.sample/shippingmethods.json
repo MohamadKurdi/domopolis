@@ -1,0 +1,40 @@
+{
+    "dostavkaplus.sh3": {
+		"name"				:	"Нова Пошта",
+		"name_declined"		:	"Новою Поштою",
+		"explain"			:	"Нова Пошта на відділення",
+		"class"				:	"NovaPoshta"
+	},
+	"dostavkaplus.sh13": {
+		"name"				:	"Нова Пошта",
+		"name_declined"		:	"Новою Поштою",
+		"explain"			:	"Нова Пошта адресна",
+		"class"				:	"NovaPoshta"
+	},
+	"dostavkaplus.sh13": {
+		"name"				:	"УкрПошта",
+		"name_declined"		:	"УкрПоштою",
+		"explain"			:	"УкрПошта будь-яка доставка",
+		"class"				:	"UkrPoshta"
+	},
+	"dostavkaplus.sh4": {
+		"name"				:	"ІнТайм",
+		"name_declined"		:	"ІнТайм",
+		"explain"			:	"ІнТайм",
+		"class"				:	"InTime"
+	},
+	"dostavkaplus.sh15": {
+		"name"				:	"JustIn",
+		"name_declined"		:	"JustIn",
+		"explain"			:	"JustIn",
+		"class"				:	"JustIn"
+	},
+	"pickup_advanced.point_1": {
+		"name"				:	"ПВЗ",
+		"name_declined"		:	"ПВЗ",
+		"explain"			:	"ПВЗ",
+		"address"			:	"",
+		"phone"				:	"",
+		"class"				:	""
+	}
+}

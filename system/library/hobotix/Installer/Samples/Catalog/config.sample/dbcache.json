@@ -1,0 +1,13 @@
+{
+	"uncacheableTables": [
+		"address_simple_fields",
+		"customer_simple_fields",
+		"order_simple_fields",
+		"customer_reward",
+		"customer_reward_queue"
+	],
+	"explicitCacheableTables": [
+		"setting",
+		"url_alias"
+	]
+}
