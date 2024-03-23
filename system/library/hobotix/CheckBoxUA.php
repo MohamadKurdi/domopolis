@@ -254,7 +254,7 @@ class CheckBoxUA {
         }
 
 		if(isset($request['message']) ){
-             echoLine('[CheckBoxUA::getReceipt] Data about receipt is not updated! ' . $message, 'e');
+             echoLine('[CheckBoxUA::getReceipt] Data about receipt is not updated! ' . $request['message'], 'e');
 
             $this->nLog('⬅️ Відповідь на getReceipt: '.json_encode($request));
             return array ('error'=> array('message'=>$request['message'])  );
@@ -875,7 +875,7 @@ class CheckBoxUA {
 
 if(!function_exists("de")){
     function de($var,$exit=false) {
-        $my_print = '<div style="font-family: cursive;font-size: 14;border: 2px solid green;display: inline-block;white-space: pre;margin: 10px;">';
+        $my_print = '<div style="font-family: cursive;font-size: 14px;border: 2px solid green;display: inline-block;white-space: pre;margin: 10px;">';
         $my_print .= '<div style="border: 2px solid blue;">';
         $my_print .= 'type - <b>'. gettype($var).'</b>';
         $my_print .= '<hr>count element - <b>'. count($var).'</b>';

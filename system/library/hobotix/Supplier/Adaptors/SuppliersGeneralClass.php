@@ -57,10 +57,8 @@ class SuppliersGeneralClass {
 			$httpResponse 	= $httpClient->request('GET', $this->feed, ['stream' => true]);	
 			$content 		= $httpResponse->getBody()->getContents();
 
-		} catch (GuzzleHttp\Exception\ValueError $e){
+		} catch (GuzzleHttp\Exception\ValueError|GuzzleHttp\Exception\ClientException $e){
 			echoLine('[SuppliersGeneralClass::setContent]: Could not get data: ' . $e->getMessage(), 'e');				
-		} catch (GuzzleHttp\Exception\ClientException $e){
-			echoLine('[SuppliersGeneralClass::setContent]: Could not get data: ' . $e->getMessage(), 'e');
 		} catch (\Exception $e){
 			echoLine('[SuppliersGeneralClass::setContent]: Could not get data ' . $e->getMessage(), 'e');
 		}
@@ -129,7 +127,7 @@ class SuppliersGeneralClass {
 			$ftpConnection->close();
 
 		} catch (Throwable $e) {
-			echoLine('[SuppliersGeneralClass::getFTP] Got exception!', $e->getMessage(), 'e');
+			echoLine('[SuppliersGeneralClass::getFTP] Got exception ' . $e->getMessage(), 'e');
 		}
 
 		return $content;

@@ -100,7 +100,7 @@
 				echoLine('[SimpleProductParser::parseResponse] --------------------- END DUMPING RESPONSE ---------------------', 'w');
 				echoLine('[SimpleProductParser::parseResponse] Could not parse response, no success marker in it!', 'e');
 				return false;							
-			} elseif (isset($response['request_info']['success']) && $response['request_info']['success'] == false){				
+			} elseif (isset($response['request_info']['success']) && !$response['request_info']['success']){
 				echoLine('[SimpleProductParser::parseResponse] Success marker is false in response, returning false!', 'e');
 				echoLine('[SimpleProductParser::parseResponse] Success marker is false in response, message is:' . $response['request_info']['message'], 'e');
 				return false;

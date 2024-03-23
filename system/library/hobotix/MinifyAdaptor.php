@@ -89,7 +89,7 @@ final class MinifyAdaptor {
 		}
 
 		if ($files){
-			$cacheTime 	= self::getCacheTime(true);
+			$cacheTime 	= self::getCacheTime();
 			$maxTime	= max($times);
 
 			if ($_SERVER['REMOTE_ADDR'] == ''){
@@ -98,7 +98,7 @@ final class MinifyAdaptor {
 
 			if ($maxTime > $cacheTime){
 				self::unlinkCacheDir($cacheTime);
-				$cacheTime 	= self::getCacheTime(true);
+				$cacheTime 	= self::getCacheTime();
 			}
 
 			$code 	  = md5(serialize($files));

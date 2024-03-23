@@ -56,7 +56,7 @@ class smsQueue {
 				}	
 
 				if ($id){
-					echoLine('[LibrarySmsQueue::cron] Success send to ' . $body['to'], ', returned id ' . $id, 's');
+					echoLine('[LibrarySmsQueue::cron] Success send to ' . $body['to'] . ' returned id ' . $id, 's');
 				} else {
 					echoLine('[LibrarySmsQueue::cron] Fail send to ' . $body['to'], 'e');
 				}

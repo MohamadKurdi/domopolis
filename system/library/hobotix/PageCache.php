@@ -219,8 +219,7 @@ final class PageCache{
 	public function prepareCacheDirAndGetCachePath($check = true, $return_simple_path = false){		
 		$cacheRouteString = md5(json_encode($_REQUEST) . $_SERVER['HTTP_HOST'] . (int)ADD_METRICS_TO_FRONT . (int)WEBPACCEPTABLE . (int)AVIFACCEPTABLE . (int)IS_MOBILE_SESSION . (int)IS_TABLET_SESSION);
 
-		$cacheRouteDirShort 	= '';
-		$cacheRouteDirShort .= $cacheRouteString[0] . $cacheRouteString[1] . '/';  
+        $cacheRouteDirShort = $cacheRouteString[0] . $cacheRouteString[1] . '/';
 		$cacheRouteDirShort .= $cacheRouteString[2] . $cacheRouteString[3] . '/';
 		$cacheRouteDirShort .= $cacheRouteString[4] . $cacheRouteString[5] . '/';
 
@@ -381,19 +380,14 @@ final class PageCache{
 				}
 
 			}
-		} catch (\GuzzleHttp\Exception\ClientException $e){
+		} catch (\GuzzleHttp\Exception\ClientException|\GuzzleHttp\Exception\ServerException $e){
 
 			$body  = $e->getMessage();
 			$class = 'bad';
 
-		} catch (\GuzzleHttp\Exception\ServerException $e) {
-
-			$body  = 	$e->getMessage();
-			$class = 	'bad';
-
 		}
 
-		$json = [
+        $json = [
 			'body'  	=> $body,
 			'engine'	=> $engine,
 			'class' 	=> $class,
@@ -449,19 +443,14 @@ final class PageCache{
 
 			}
 
-		} catch (\GuzzleHttp\Exception\ClientException $e){
-
-			$body  = 	$e->getMessage();
-			$class = 	'bad';
-
-		} catch (\GuzzleHttp\Exception\ServerException $e) {
+		} catch (\GuzzleHttp\Exception\ClientException|\GuzzleHttp\Exception\ServerException $e){
 
 			$body  = 	$e->getMessage();
 			$class = 	'bad';
 
 		}
 
-		$json = [
+        $json = [
 			'body'  	=> $body,
 			'engine'	=> $engine,
 			'class' 	=> $class,

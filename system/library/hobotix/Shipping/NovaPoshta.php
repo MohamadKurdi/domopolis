@@ -126,7 +126,7 @@
 		}
 
 		private function checkIfRedelivering($code){
-			$redelivery =  ((int)in_array($code['StatusCode'], ['104']) && !empty($code['RedeliveryNum'])) || (!empty($code['Redelivery']) && (int)$code['Redelivery'] && !empty($code['RedeliveryNum']));
+			$redelivery =  ((int)($code['StatusCode'] == '104') && !empty($code['RedeliveryNum'])) || (!empty($code['Redelivery']) && (int)$code['Redelivery'] && !empty($code['RedeliveryNum']));
 
 			if ($redelivery){
 				echoLine('[NovaPoshta::checkIfRedelivering] Parsel is redelivered: ' . $code['Number'] . '->' . $code['RedeliveryNum'], 'w');
