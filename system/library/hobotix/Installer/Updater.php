@@ -14,11 +14,13 @@ final class Updater
         $this->globalVersion = trim(file_get_contents(DIR_SYSTEM . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . 'GLOBAL'));
     }
 
-    public function get_current():string{
+    public function get_current(): string
+    {
         return $this->currentVersion;
     }
 
-    public function get_global():string{
+    public function get_global(): string
+    {
         return $this->globalVersion;
     }
 
@@ -32,15 +34,20 @@ final class Updater
         }
     }
 
-    public function last_commit(): string{
-        if (function_exists('proc_open')){
-            $gitObject = new \CzProject\GitPhp\Git;
-            $repoObject = $gitObject->open(DIR_SYSTEM . '..' . DIRECTORY_SEPARATOR . '.git' . DIRECTORY_SEPARATOR);
+    public function last_commit(): string|bool
+    {
+        if (function_exists('proc_open')) {
+            try {
+                $gitObject = new \CzProject\GitPhp\Git;
+                $repoObject = $gitObject->open(DIR_SYSTEM . '..' . DIRECTORY_SEPARATOR . '.git' . DIRECTORY_SEPARATOR);
 
-            return $repoObject->getLastCommitId();
+                return $repoObject->getLastCommitId();
+            } catch (\CzProject\GitPhp\GitException $e) {
+                return false;
+            }
         }
 
-        return '';
+        return false;
     }
 
     /**
